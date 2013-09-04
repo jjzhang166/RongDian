@@ -29,6 +29,7 @@ public:
 	void			OnClick(TNotifyUI& msg);
 	void			OnItemActive(TNotifyUI& msg);
 	void			OnItemClick(TNotifyUI& msg);
+	void			OnItemSelect(TNotifyUI& msg);
 	void			OnTextChanged(TNotifyUI& msg);
 	void			OnShowSysMenu(TNotifyUI& msg);
 	void			OnFinalMessage(HWND hWnd);

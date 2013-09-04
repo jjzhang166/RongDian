@@ -24,6 +24,7 @@ DUI_BEGIN_MESSAGE_MAP(CMainFrame, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick) // 这是单击
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive) // 这是List节点双击
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK,OnItemClick) //list中的item点击
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnItemSelect)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged) // 这是文本框内容改变
 	DUI_ON_MENU_CTRNAME(kMenuBtn, OnShowSysMenu)
 DUI_END_MESSAGE_MAP()
@@ -291,6 +292,15 @@ void CMainFrame::OnItemClick(TNotifyUI& msg)
 			return;
 		if(pList->GetName()==GetPickerListName())
 			OnPickerItemClick(msg);
+	}
+}
+
+void CMainFrame::OnItemSelect(TNotifyUI& msg)
+{
+	CDuiString controlName = msg.pSender->GetName();
+	if(controlName==GetIPConfigComboName())
+	{
+		OnIPConfigItemSelect(msg);
 	}
 }
 

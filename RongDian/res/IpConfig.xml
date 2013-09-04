@@ -6,7 +6,7 @@
 				<Control width="5" />
 				<Label name="setting_list_text" width="80" />
 				<Control width="3" />
-				<Combo name="ipconfig_solution" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" >
+				<Combo name="ipconfig_solution" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
 					<ListLabelElement text="方案一" selected="true" />
 					<ListLabelElement text="方案二" />
 				</Combo>
@@ -93,49 +93,49 @@
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_idesc_text" width="100" />
-					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_mac_text" width="100" />
-					<Edit name="ipconfig_i_mac_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_mac_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_dhcp_text" width="100" />
-					<Edit name="ipconfig_i_dhcp_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_dhcp_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_ip_text" width="100" />
-					<Edit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_mask_text" width="100" />
-					<Edit name="ipconfig_i_mask_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_mask_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_netgate_text" width="100" />
-					<Edit name="ipconfig_i_netgate_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_netgate_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_dns_text" width="100" />
-					<Edit name="ipconfig_i_dns_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" />
+					<Edit name="ipconfig_i_dns_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
