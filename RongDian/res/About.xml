@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_about" inset="4,4,4,4" >
+		<Control height="100" />
+		<Label name="about_name" text="" font="2" textcolor="0xFF14100E" align="center" />
+		<Label name="about_ver" text="" font="2" textcolor="0xFF14100E" align="center" />
+		<Button name="about_mail" text="" font="2" textcolor="0xFF14100E" align="center" />
+		<Button name="about_url" text="" font="2" textcolor="0xFF14100E" align="center" />
+		<Label name="about_copyright" text="" font="2" textcolor="0xFF14100E" align="center" />
+		<Control />
+	</VerticalLayout>
+</Window>

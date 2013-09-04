@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="240,160" sizebox="2,2,2,2" caption="0,0,0,30" roundcorner="4,4,6,6" alpha="250" >
+	<Font name="微软雅黑" size="10" bold="false" default="true"/>
+	<Font name="微软雅黑" size="12" bold="false"/>
+	<!-- frame_container -->
+	<VerticalLayout name="frame_container" bordersize="1" borderround="2,2" inset="1,1,1,1" >
+		<!-- frame_title_contaner -->
+		<HorizontalLayout name="frame_title_contaner" mouse="ture" height="23">
+	   		<Control width="3"/> <!-- Left Blank -->
+			<Button name="frame_logo" width="20" height="20" padding="2" normalimage="file='default\rdtools.png'" tooltip="" />
+	   		<Control width="5"/> <!-- Right Blank -->
+			<!-- frame_title -->
+	   		<Label name="frame_title" font="1" text="" /> <!-- frame_title -->
+			<Control /> <!-- Blank -->
+			<!-- System's Button -->
+	   		<HorizontalLayout height="23" width="39" >
+				<Button name="closebtn" width="39" height="20" normalimage="file='default\btn_close_normal.png'" hotimage="file='default\btn_close_highlight.png'" pushedimage="file='default\btn_close_down.png'" />   
+	   		</HorizontalLayout><!-- System's Button -->
+	 	</HorizontalLayout><!-- frame_title_contaner -->
+		<!-- frame_contents -->
+		<HorizontalLayout name="frame_contents" inset="2,2,2,2" >
+			<Text name="frame_text" font="1" />
+	 	</HorizontalLayout><!-- frame_contents -->
+		<!-- frame_footer -->
+		<HorizontalLayout name="frame_footer" height="23" >
+			<Control />
+			<Button name="first_btn" width="60" text=""normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control name="second_blank" visible="false" />
+			<Button name="second_btn" visible="false" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control />
+		</HorizontalLayout> <!-- frame_footer -->
+	</VerticalLayout> <!-- frame_container -->
+</Window>

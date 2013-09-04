@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_coder" inset="4,4,4,4" >
+		<Label name="coder_list_text" height="20" text="" />
+		<HorizontalLayout >
+			<List name="coder_list" vscrollbar="true" hscrollbar="false" bkcolor="#FFE0E0E0" itemtextcolor="#FF000000" itemalign="left" itemaltbk="true" menu="true" >
+				<ListHeader height="24"  >
+					<ListHeaderItem name="coder_header_path" text="" minwidth="100" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem name="coder_header_encoding" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem name="coder_header_status" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+				</ListHeader>
+			</List>
+			<HorizontalLayout width="120" bordersize="1" bordercolor="FFE0E0E0" >
+				<Control width="10" />
+				<VerticalLayout >
+					<Control height="10" />
+					<Button name="coder_start" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_stop" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_newfile" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_newfolder" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_del" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_delall" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control />
+				</VerticalLayout>
+				<Control width="10" />
+			</HorizontalLayout>
+		</HorizontalLayout>
+		<HorizontalLayout height="28" inset="2,2,2,2" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control width="5" />
+			<Label name="coder_from" text="" width="60" />
+			<Combo name="coder_combo_from" width="80" height="24" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="1,1,1,1" >
+				<ListLabelElement text="UTF-8" selected="true" />
+				<ListLabelElement text="GB2312" />
+			</Combo>
+			<Control width="10" />
+			<Label name="coder_to" text="" width="60" />
+			<Combo name="coder_combo_to" width="80" height="24" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="1,1,1,1" >
+				<ListLabelElement text="GB2312" selected="true" />
+				<ListLabelElement text="UTF-8" />
+			</Combo>
+			<Control width="3" />
+			<Button name="coder_bom" text="" width="60" bkcolor="0xFFE0E0E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="FALSE" />
+			<Control width="20" />
+			<Button name="coder_backup" text="" width="64" bkcolor="0xFF5E50E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="TRUE" />
+			<Control />
+		</HorizontalLayout>
+		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+			<Control width="5" />
+			<Label name="coder_path_text" text="" width="80" />
+			<Edit name="coder_path_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true"  text="" />
+			<Control width="3" />
+			<Button name="coder_path_open" text="" width="60" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>

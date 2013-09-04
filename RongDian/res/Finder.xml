@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_finder" inset="4,4,4,4" >
+		<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control width="5" />
+			<Label name="finder_name_text" text="" width="80" />
+			<Edit name="finder_name_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" />
+			<Control width="5" />
+		</HorizontalLayout>
+		<Control height="2" />
+		<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control width="5" />
+			<Label name="finder_content_text" text="" width="80" />
+			<Edit name="finder_content_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" />
+			<Control width="5" />
+		</HorizontalLayout>
+		<Control height="2" />
+		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+			<Control width="5" />
+			<Label name="finder_path_text" text="" width="80" />
+			<Edit name="finder_path_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true"  text="" />
+			<Control width="3" />
+			<Button name="finder_path_select" text="" width="60" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
+		</HorizontalLayout>
+		<Control height="2" />
+		<VerticalLayout bordersize="1" bordercolor="#FFE0E0E0" >
+			<Control height="5" />
+			<List name="finder_list" vscrollbar="true" hscrollbar="false" bkcolor="#FFE0E0E0" itemtextcolor="#FF000000" itemalign="left" itemaltbk="true" menu="true" >
+				<ListHeader height="24"  >
+					<ListHeaderItem name="finder_header_file" text="" minwidth="100" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem name="finder_header_content" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem name="finder_header_size" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
+				</ListHeader>
+			</List>
+		</VerticalLayout>
+		<Control height="2" />
+		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+			<Control />
+			<Button name="finder_reset" text="" width="60" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
+			<Button name="finder_search" text="" width="60" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>

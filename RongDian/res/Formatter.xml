@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_formatter" inset="4,4,4,4" >
+		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+			<CheckBox name="formatter_xml" text="" width="60" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5"selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="formatter_type" selected="true" />
+			<Control width="5" />
+			<CheckBox name="formatter_json" text="" width="60" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5"selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="formatter_type" />
+			<Control />
+		</HorizontalLayout>
+		<HorizontalLayout height="320" bordersize="1" bordercolor="#FFE0E0E0" >
+			<RichEdit name="formatter_content" vscrollbar="true" autovscroll="true" nativebkcolor="#FFE0E0E0" inset="8,2,2,2"/>
+		</HorizontalLayout>	
+		<Control height="2" />
+		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+			<Control />
+			<Button name="formatter_format" text="" width="60" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2"/>
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-16" ?>
+<Root>
+	<Plugin>
+		<layout>layout_picker</layout>
+		<xml>Picker.xml</xml>
+		<tab>tab_picker</tab>
+		<panel>panel_picker</panel>
+		<name>Color Picker</name>
+		<desc>Color Picker Panel</desc>
+	</Plugin>
+	<Plugin>
+		<layout>layout_coder</layout>
+		<xml>Coder.xml</xml>
+		<tab>tab_coder</tab>
+		<panel>panel_coder</panel>
+		<name>Coder</name>
+		<desc>Coder Panel</desc>
+	</Plugin>
+	<Plugin>
+		<layout>layout_finder</layout>
+		<xml>Finder.xml</xml>
+		<tab>tab_finder</tab>
+		<panel>panel_finder</panel>
+		<name>File Finder</name>
+		<desc>File Finder Panel</desc>
+	</Plugin>
+	<Plugin>
+		<layout>layout_formatter</layout>
+		<xml>Formatter.xml</xml>
+		<tab>tab_formatter</tab>
+		<panel>panel_formatter</panel>
+		<name>Formatter</name>
+		<desc>Formatter Panel</desc>
+	</Plugin>
+	<Plugin>
+		<layout>layout_ipconfig</layout>
+		<xml>IpConfig.xml</xml>
+		<tab>tab_ipconfig</tab>
+		<panel>panel_ipconfig</panel>
+		<name>IPConfig</name>
+		<desc>IP Config Panel</desc>
+	</Plugin>
+</Root>

@@ -1,0 +1,10 @@
+/*************************************************************************
+ * Method:    		$SymbolName$
+ * Description:		$name$
+ * ParameterList:	$ParameterList$
+ * Parameter:       $MethodArgName$
+ * Return Value:	$SymbolType$
+ * Date:        	$YEAR_02$:$MONTH_02$:$DAY_02$ $HOUR_02$:$MINUTE$:$SECOND$
+ * Author:			MoSights
+ * CopyRight:		
+ ************************************************************************/

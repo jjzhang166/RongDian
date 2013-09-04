@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<HorizontalLayout name="panel_picker" inset="4,4,4,4" >
+		<Control width="10" />
+		<!-- first column -->
+		<VerticalLayout name="first_column" width="200" inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
+			<Label name="picker_topic1" height="20" text="" align="center" />
+			<Label name="picker_preview" height="160" bkcolor="" padding="3,3,3,3" bordersize="1" bordercolor="FFE0E0E0" />
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="picker_color_text" width="60" text="" /><Edit name="picker_color"  bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="picker_pos_text" width="60" text="" /><Edit name="picker_pos" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="picker_class_text" width="60" text="" /><Edit name="picker_class" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="picker_text_text" width="60" text="" /><Edit name="picker_text" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="36" >
+				<Control />
+				<Button name="picker_arrow" width="36" bkimage="file='default\ZoomIn.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+				<Control width="5" />
+				<Button name="picker_snapshot" width="36" bkimage="file='default\SnapShot.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+				<Control />
+			</HorizontalLayout>
+			<Control height="10" />
+			<HorizontalLayout height="24" >
+				<Control />
+				<Button name="picker_palette" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" tooltip="" />
+				<Control />
+			</HorizontalLayout>
+		</VerticalLayout><!-- first column -->
+		<Control width="10" /><!-- padding blank -->
+		<!-- mid column -->
+		<VerticalLayout width="200" inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
+			<Label name="picker_topic2" height="20" text="" align="center" />
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_html_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_html" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_rgb_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_rgb" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_hex_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_hex" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_hsl_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_hsl" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_delphi_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_delphi" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+			<Control height="5" />
+			<HorizontalLayout height="24" >
+				<Label name="color_hsv_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_hsv" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
+			</HorizontalLayout>
+		</VerticalLayout><!-- mid column -->
+		<Control width="10" /><!-- padding blank -->
+		<!-- last column -->
+		<VerticalLayout inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
+			<Label name="color_history" height="20" text="" align="center" />
+			<List name="color_list" header="hidden" vscrollbar="true" bkcolor="#FFE0E0E0" itemtextcolor="#FFFF0000" itemalign="center" menu="true" >
+			</List>
+		</VerticalLayout><!-- last column -->
+		<Control width="10" /><!-- padding blank -->
+	</HorizontalLayout>
+</Window>
