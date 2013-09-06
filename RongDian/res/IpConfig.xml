@@ -82,60 +82,85 @@
 			</HorizontalLayout>
 		</VerticalLayout>
 		<Control width="2" />
-		<VerticalLayout name="ipconfig_info" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" >
+		<VerticalLayout name="ipconfig_info" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true">
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
-				<Control />
-				<Label name="ipconfig_current_info" width="100" />
-				<Control />
+				<Control width="15"/>
+				<Label name="ipconfig_network_adapter_text" width="100" />
+				<Combo name="ipconfig_network_adapter" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
+				</Combo>
+				<Control width="2" />
 			</HorizontalLayout>
 			<Control height="5" />
-			<VerticalLayout height="160" bordersize="1" bordercolor="#FFE0E0E0" >
+			<VerticalLayout height="260" bordersize="1" bordercolor="#FFE0E0E0" >
+				<!--网卡描述-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_idesc_text" width="100" />
-					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" hscrollbar="true"/>
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
+				<!--适配器类型-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
-					<Label name="ipconfig_i_mac_text" width="100" />
-					<Edit name="ipconfig_i_mac_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Label name="ipconfig_iftype_text" width="100" />
+					<Edit name="ipconfig_iftype_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
+				<!--DHCP-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_dhcp_text" width="100" />
-					<Edit name="ipconfig_i_dhcp_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Edit name="ipconfig_i_dhcp_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
-				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+				<!--IP(可能有多个)-->
+				<HorizontalLayout bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_ip_text" width="100" />
-					<Edit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<RichEdit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" multiline="true"/>
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
+				<!--子网掩码-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_mask_text" width="100" />
-					<Edit name="ipconfig_i_mask_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Edit name="ipconfig_i_mask_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
+				<!--网关-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_netgate_text" width="100" />
-					<Edit name="ipconfig_i_netgate_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Edit name="ipconfig_i_netgate_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
+				<!--DNS-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_dns_text" width="100" />
-					<Edit name="ipconfig_i_dns_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" enabled="false" readonly="true" />
+					<Edit name="ipconfig_i_dns_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
+					<Control width="2" />
+				</HorizontalLayout>
+				<Control height="3" />
+				<!--DNS2-->
+				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+					<Control width="15" />
+					<Label name="ipconfig_i_dns2_text" width="100" />
+					<Edit name="ipconfig_i_dns2_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
+					<Control width="2" />
+				</HorizontalLayout>
+				<Control height="3" />
+				<!--MAC-->
+				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+					<Control width="15" />
+					<Label name="ipconfig_i_mac_text" width="100" />
+					<Edit name="ipconfig_i_mac_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
