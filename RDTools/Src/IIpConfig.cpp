@@ -98,6 +98,7 @@ IIPConfig::IIPConfig()
 	m_pIpManualCheckBox = NULL;
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
+	m_lpszLang = NULL;
 	m_pNetworkAdapterUtil = new CNetWorkAdapterUtil();
 }
 
@@ -142,10 +143,12 @@ BOOL IIPConfig::InitIPConfig()
 	//初始值
 	RefreshConnectNames();
 	SetSettingInfo(0);
+	m_pAdapterList->SelectItem(0);
 	return TRUE;
 }
 BOOL IIPConfig::SetIPConfigLang(LPCWSTR lpszLang)
 {
+	m_lpszLang = lpszLang;
 	if(!m_pIPConfigManager)
 		return FALSE;
 	memset(m_szHandleText, 0, sizeof(m_szHandleText));
@@ -217,15 +220,18 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if(sCtrlName == kIPConfigAddBtn)	//增加
 	{
-		//新增配置文件中ip section
-		time_t curTime = time(NULL);
-		wchar_t newSectionName[100]={0};
-		wsprintf(newSectionName,L"%s%ld",kIpConfigSectionPrefix,curTime);
-		SetIPConfigIni(newSectionName);
-		RefreshSettingList();
-		//选择当前的item
-		const int count = m_pSetttingList->GetCount();
-		m_pSetttingList->SelectItem(count-1);
+		if (CheckFormValid()==TRUE)
+		{
+			//新增配置文件中ip section
+			time_t curTime = time(NULL);
+			wchar_t newSectionName[100]={0};
+			wsprintf(newSectionName,L"%s%ld",kIpConfigSectionPrefix,curTime);
+			SetIPConfigIni(newSectionName);
+			RefreshSettingList();
+			//选择当前的item
+			const int count = m_pSetttingList->GetCount();
+			m_pSetttingList->SelectItem(count-1);
+		}
 		bHandled = TRUE;
 	}
 	else if(sCtrlName == kIPConfigModifyBtn)	//修改
@@ -392,7 +398,6 @@ BOOL IIPConfig::RefreshConnectNames()
 		item->SetText(conectName);
 		m_pAdapterList->Add(item);
 	}
-	m_pAdapterList->SelectItem(0);
 	return TRUE;
 }
 
@@ -444,6 +449,10 @@ BOOL IIPConfig::SetSettingInfo(const int itemIndex)
 	m_pNetworkAdapterUtil->GetDns(pAdapterInfo,dnsList);
 	m_pCurrentDns1Edit->SetText(dnsList[0]);
 	m_pCurrentDns2Edit->SetText(dnsList[1]);
+	//mac
+	wchar_t lpszMAC[100] = {0};
+	m_pNetworkAdapterUtil->GetPhysicalAddress(pAdapterInfo,lpszMAC,_countof(lpszMAC));
+	m_pMacEdit->SetText(lpszMAC);
 	return TRUE;
 }
 
@@ -477,4 +486,25 @@ void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
 		const int curSel = combo->GetCurSel();
 		SetSettingInfo(curSel);
 	}
+}
+BOOL IIPConfig::CheckFormValid()
+{
+	//判断ip
+	LPCTSTR ip = m_pIPEdit->GetText().GetData();
+	int len = wcslen(ip)+1;
+	wchar_t* wip = new wchar_t[len];
+	wcscpy_s(wip,len,ip);
+	BOOL isIp = ValidateUtil::IsIPv4(wip);
+	delete[] wip;
+	if(isIp==FALSE)
+	{
+		wchar_t msgTitle[100];
+		Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
+		wchar_t text[100];
+		Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
+		MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+		return FALSE;
+	}
+	
+	return TRUE;
 }

@@ -118,6 +118,7 @@ BOOL IsImageFile(LPCWSTR lpszFileName);
 #include <StrUtil.h>
 #include <Util.h>
 #include <ColorUtil.h>
+#include <ValidateUtil.h>
 #include <SHHelper.h>
 #include <ILangUI.h>
 #include <ISkinUI.h>

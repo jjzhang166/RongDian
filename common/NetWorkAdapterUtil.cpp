@@ -29,35 +29,7 @@ CNetWorkAdapterUtil::~CNetWorkAdapterUtil()
 	}
 }
 
-BOOL CNetWorkAdapterUtil::GetDns(PIP_ADAPTER_INFO pAdapterInfo,LPWSTR lpszDns[])
-{
-	DWORD adapterIndex = pAdapterInfo->Index;
-	//DNS,pIpAdapterInfo为网卡适配器信息结构PIP_ADAPTER_INFO
-	IP_PER_ADAPTER_INFO* pPerAdapt	= NULL;
-	ULONG ulLen = 0;
-	int err = GetPerAdapterInfo(adapterIndex, pPerAdapt, &ulLen);
-	if( err == ERROR_BUFFER_OVERFLOW ) {
-		pPerAdapt = ( IP_PER_ADAPTER_INFO* ) HeapAlloc(GetProcessHeap(), 
-			HEAP_ZERO_MEMORY, ulLen);
-		err = GetPerAdapterInfo(adapterIndex, pPerAdapt, &ulLen );
-		if( err == ERROR_SUCCESS ) {
-			IP_ADDR_STRING* pNext = &( pPerAdapt->DnsServerList );
-			if (pNext && strcmp(pNext->IpAddress.String, "") != 0)
-			{
-				LPWSTR dns = StrUtil::a2w(pNext->IpAddress.String);//主dns
-				lpszDns[0] = dns;
-				if (pNext = pNext->Next)
-				{
-					LPWSTR dns = StrUtil::a2w(pNext->IpAddress.String);
-					lpszDns[1]=dns;
-				}
-					
-			}
-		}
-		HeapFree(GetProcessHeap(), HEAP_ZERO_MEMORY, pPerAdapt);
-	}	
-	return TRUE;
-}
+
 
 void CNetWorkAdapterUtil::CountAdapters()
 {
@@ -224,4 +196,53 @@ BOOL CNetWorkAdapterUtil::GetGateway(PIP_ADAPTER_INFO pAdapterInfo,LPWSTR lpszGa
 BOOL CNetWorkAdapterUtil::IsDHCPEnabled(PIP_ADAPTER_INFO pAdapterInfo)
 {
 	return pAdapterInfo->DhcpEnabled;
+}
+BOOL CNetWorkAdapterUtil::GetDns(PIP_ADAPTER_INFO pAdapterInfo,LPWSTR lpszDns[])
+{
+	DWORD adapterIndex = pAdapterInfo->Index;
+	//DNS,pIpAdapterInfo为网卡适配器信息结构PIP_ADAPTER_INFO
+	IP_PER_ADAPTER_INFO* pPerAdapt	= NULL;
+	ULONG ulLen = 0;
+	int err = GetPerAdapterInfo(adapterIndex, pPerAdapt, &ulLen);
+	if( err == ERROR_BUFFER_OVERFLOW ) {
+		pPerAdapt = ( IP_PER_ADAPTER_INFO* ) HeapAlloc(GetProcessHeap(), 
+			HEAP_ZERO_MEMORY, ulLen);
+		err = GetPerAdapterInfo(adapterIndex, pPerAdapt, &ulLen );
+		if( err == ERROR_SUCCESS ) {
+			IP_ADDR_STRING* pNext = &( pPerAdapt->DnsServerList );
+			if (pNext && strcmp(pNext->IpAddress.String, "") != 0)
+			{
+				LPWSTR dns = StrUtil::a2w(pNext->IpAddress.String);//主dns
+				lpszDns[0] = dns;
+				if (pNext = pNext->Next)
+				{
+					LPWSTR dns = StrUtil::a2w(pNext->IpAddress.String);
+					lpszDns[1]=dns;
+				}
+
+			}
+		}
+		HeapFree(GetProcessHeap(), HEAP_ZERO_MEMORY, pPerAdapt);
+	}	
+	return TRUE;
+}
+
+BOOL  CNetWorkAdapterUtil::GetPhysicalAddress(PIP_ADAPTER_INFO pAdapterInf,LPWSTR lpszMac,int len)
+{
+	for(unsigned int i = 0; i < pAdapterInf->AddressLength; ++i){
+		if(i == (pAdapterInf->AddressLength -1 ) ){ // 最后一次输入换行
+			//printf("%.2X\n", (int)pAdapterInf->Address[i]);
+			wchar_t mac[3] = {0};
+			swprintf(mac,3,L"%.2X",(int)pAdapterInf->Address[i]);
+			wcscat_s(lpszMac,len,mac);
+		}
+		else
+		{
+			//printf("%.2X-", (int)pAdapterInf->Address[i]);
+			wchar_t mac[4] = {0};
+			swprintf(mac,4,L"%.2X-",(int)pAdapterInf->Address[i]);
+			wcscat_s(lpszMac,len,mac);
+		}
+	}
+	return TRUE;
 }

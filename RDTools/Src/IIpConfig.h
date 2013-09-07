@@ -20,6 +20,7 @@ public:
 	BOOL			SetSettingInfo(const int adapterIndex);	//刷新当前选择网卡的ip信息
 	
 	//事件
+	BOOL			CheckFormValid();
 	void			OnIPConfigItemSelect(TNotifyUI& msg);
 public:
 	HWND m_hIPConfigOwner;
@@ -52,5 +53,6 @@ public:
 	wchar_t m_szHandleText[1024];
 	wchar_t m_szNoHandleText[1024];
 
+	LPCWSTR m_lpszLang;
 	CNetWorkAdapterUtil *m_pNetworkAdapterUtil;
 };
