@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "IIpConfig.h"
+#include <vector>
 #include <time.h>
 #include <WinSock2.h>
 #include <Iphlpapi.h>
 #pragma comment(lib,"Iphlpapi.lib")
 
+using namespace std;
 const wchar_t* const kIpConfigSectionPrefix = L"ipconfig_";
 //第一列
 const wchar_t* const kIPConfigSettingListText = L"setting_list_text";
@@ -31,7 +33,8 @@ const wchar_t* const kIPConfigDelBtn = L"ipconfig_delete";
 const wchar_t* const kIPConfigUseBtn = L"ipconfig_active";
 //第二列
 const wchar_t* const kIPConfigCurrentInfoText = L"ipconfig_current_info";
-const wchar_t* const kIPConfigCurrentNetworkAdapterText = L"ipconfig_network_adapter_text";
+const wchar_t* const kIPConfigCurrentAdapterListText = L"ipconfig_network_adapters_text";
+const wchar_t* const kIPConfigCurrentAdapterList = L"ipconfig_network_adapters";
 const wchar_t* const kIPConfigCurrentAdapterTypeText = L"ipconfig_iftype_text";
 const wchar_t* const kIPConfigCurrentDescText = L"ipconfig_idesc_text";
 const wchar_t* const kIPConfigCurrentDhcpText = L"ipconfig_i_dhcp_text";
@@ -57,6 +60,7 @@ const wchar_t* const kIPConfigMsgDelSuc = L"ipconfig_del_success";
 
 #define ROW_HEIGHT 24
 #define IP_LENGTH 129
+#define IP_MAX 5
 #define SECTION_LENGTH 100
 #define INI_KEY_NAME L"name"
 #define INI_KEY_IP_AUTO L"ip_auto"
@@ -94,11 +98,15 @@ IIPConfig::IIPConfig()
 	m_pIpManualCheckBox = NULL;
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
-	
+	m_pNetworkAdapterUtil = new CNetWorkAdapterUtil();
 }
 
 IIPConfig::~IIPConfig()
 {
+	if (m_pNetworkAdapterUtil)
+	{
+		delete m_pNetworkAdapterUtil;
+	}
 }
 BOOL IIPConfig::InitIPConfig()
 {
@@ -116,7 +124,7 @@ BOOL IIPConfig::InitIPConfig()
 	FIND_CONTROL_BY_ID(m_pModifyBtn, CButtonUI, m_pIPConfigManager, kIPConfigModifyBtn)
 	FIND_CONTROL_BY_ID(m_pDelBtn, CButtonUI, m_pIPConfigManager, kIPConfigDelBtn)
 	FIND_CONTROL_BY_ID(m_pUseBtn, CButtonUI, m_pIPConfigManager, kIPConfigUseBtn)
-	FIND_CONTROL_BY_ID(m_pAdapterList, CComboUI, m_pIPConfigManager, kIPConfigCurrentNetworkAdapterText)
+	FIND_CONTROL_BY_ID(m_pAdapterList, CComboUI, m_pIPConfigManager, kIPConfigCurrentAdapterList)
 	FIND_CONTROL_BY_ID(m_pCurrentAdapterTypeEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentAdapterTypeEdit)
 	FIND_CONTROL_BY_ID(m_pCurrentDescEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDescEdit)
 	FIND_CONTROL_BY_ID(m_pCurrentDhcpEnabledEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDhcpEdit)
@@ -132,8 +140,8 @@ BOOL IIPConfig::InitIPConfig()
 	FIND_CONTROL_BY_ID(m_pDnsManualCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigManualSetDnsCheckBox)
 
 	//初始值
-	RefreshSettingInfo();
-
+	RefreshConnectNames();
+	SetSettingInfo(0);
 	return TRUE;
 }
 BOOL IIPConfig::SetIPConfigLang(LPCWSTR lpszLang)
@@ -161,7 +169,7 @@ SET_CONTROL_BEGIN(m_pIPConfigManager, lpszLang, LS_IPCHANGERPANEL)
 	SET_CONTROL_TEXT2(kIPConfigModifyBtn)
 	SET_CONTROL_TEXT2(kIPConfigDelBtn)
 	SET_CONTROL_TEXT2(kIPConfigUseBtn)
-	SET_CONTROL_TEXT2(kIPConfigCurrentNetworkAdapterText)
+	SET_CONTROL_TEXT2(kIPConfigCurrentAdapterListText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentAdapterTypeText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentInfoText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentDescText)
@@ -373,182 +381,100 @@ BOOL IIPConfig::RefreshSettingEdits(const int itemIndex)
 	return TRUE;
 }
 
-BOOL IIPConfig::RefreshSettingInfo()
+BOOL IIPConfig::RefreshConnectNames()
 {
-	PIP_ADAPTER_INFO pIpAdapterInfo = new IP_ADAPTER_INFO();
-	unsigned long stSize = sizeof(IP_ADAPTER_INFO);
-	int nRel = GetAdaptersInfo(pIpAdapterInfo,&stSize);
-	int netCardNum = 0;
-	int IPnumPerNetCard = 0;
-	BOOL isNewIPInfo = FALSE;
-	if (ERROR_BUFFER_OVERFLOW == nRel)
+	m_pAdapterList->RemoveAll();
+	vector<LPWSTR> connectNames =  m_pNetworkAdapterUtil->m_connectNames;
+	for (vector<LPWSTR>::size_type i=0;i<connectNames.size();i++)
 	{
-		//如果函数返回的是ERROR_BUFFER_OVERFLOW
-		//则说明GetAdaptersInfo参数传递的内存空间不够,同时其传出stSize,表示需要的空间大小
-		//这也是说明为什么stSize既是一个输入量也是一个输出量
-		delete pIpAdapterInfo;
-		pIpAdapterInfo = (PIP_ADAPTER_INFO)new BYTE[stSize];
-		nRel=GetAdaptersInfo(pIpAdapterInfo,&stSize); 
-		isNewIPInfo=TRUE;
+		LPWSTR conectName = connectNames.at(i);
+		CListLabelElementUI *item = new CListLabelElementUI;
+		item->SetText(conectName);
+		m_pAdapterList->Add(item);
 	}
-	if (ERROR_SUCCESS == nRel)
-	{
-		//可能有多网卡,因此通过循环去判断
-		while (pIpAdapterInfo)
-		{
-			netCardNum++;
-			/*cout<<"网卡数量："<<++netCardNum<<endl;
-			cout<<"网卡名称："<<pIpAdapterInfo->AdapterName<<endl;*/
-			//描述
-			char* adesc = pIpAdapterInfo->Description;
-			wchar_t *wdesc = StrUtil::a2w(adesc);
-			m_pCurrentDescEdit->SetText(wdesc);
-			m_pCurrentDescEdit->SetToolTip(wdesc);
-			delete wdesc;
-			//适配器类型
-			switch(pIpAdapterInfo->Type)
-			{
-				case MIB_IF_TYPE_OTHER:
-					m_pCurrentAdapterTypeEdit->SetText(L"Other");
-					break;
-				case MIB_IF_TYPE_ETHERNET:
-					m_pCurrentAdapterTypeEdit->SetText(L"Ethernet");
-					break;
-				case MIB_IF_TYPE_TOKENRING:
-					m_pCurrentAdapterTypeEdit->SetText(L"Token Ring");
-					break;
-				case MIB_IF_TYPE_FDDI:
-					m_pCurrentAdapterTypeEdit->SetText(L"FDDI");
-					break;
-				case MIB_IF_TYPE_PPP:
-					m_pCurrentAdapterTypeEdit->SetText(L"PPP");
-					break;
-				case MIB_IF_TYPE_LOOPBACK:
-					m_pCurrentAdapterTypeEdit->SetText(L"Loopback");
-					break;
-				case MIB_IF_TYPE_SLIP:
-					m_pCurrentAdapterTypeEdit->SetText(L"SLIP");
-					break;
-				default:
-				break;
-			}
-			//mac--pIpAdapterInfo的bug-http://ppcool.iteye.com/blog/1727763
-			wchar_t mac[64]={0};
-			wchar_t macByte[4]={0};
-			UINT macLen = pIpAdapterInfo->AddressLength;
-			for (UINT i = 0; i < macLen; i++)
-			{	
-				//wmemset(macByte,0,sizeof(macByte));
-				//BYTE curMacByte = pIpAdapterInfo->Address[i];
-				//if (i < macLen-1)
-				//{
-				//	//printf("%02X-", pIpAdapterInfo->Address[i]);
-				//	wsprintf(macByte,L"%.2X-",curMacByte);
-				//	wcscat_s(mac,sizeof(mac),macByte);
-				//}
-				//else
-				//{
-				//	//printf("%02X\n", pIpAdapterInfo->Address[i]);
-				//	wsprintf(macByte,L"%02X",curMacByte);
-				//	wcscat_s(mac,sizeof(mac),macByte);
-				//}
-			}
-			//m_pMacEdit->SetText(mac);
-			LPCWSTR langName = g_pLangManager->GetLangName();
-			wchar_t langCofig[MAX_PATH] = {0};
-			wsprintf(langCofig,L"%s%s",g_szLangPath,langName);
-			wchar_t yes[4]={0};
-			Utility::GetINIStr(langName,L"DuiMsg",L"msg_yes",yes);
-			wchar_t no[3]={0};
-			Utility::GetINIStr(langName,L"DuiMsg",L"msg_no",no);
-			//dhcp是否开启
-			UINT dhcpEnabled = pIpAdapterInfo->DhcpEnabled;
-			m_pCurrentDhcpEnabledEdit->SetText(dhcpEnabled==1?yes:no);
-
-			//可能网卡有多IP,因此通过循环去判断
-			m_pCurrentIPEdit->SetText(L"");
-			wchar_t ip[IP_LENGTH] = {0};
-			int ipCountPerNetCard = 0;
-			IP_ADDR_STRING *pIpAddrString =&(pIpAdapterInfo->IpAddressList);
-			do 
-			{
-				//ip
-				ipCountPerNetCard++;
-				LPCTSTR lpszOldIp = m_pCurrentIPEdit->GetText().GetData();
-				wcscat_s(ip,IP_LENGTH,lpszOldIp);
-				wchar_t *wip = StrUtil::a2w(pIpAddrString->IpAddress.String);
-				wcscat_s(ip,IP_LENGTH,wip);
-				wcscat_s(ip,IP_LENGTH,L"\n");
-				m_pCurrentIPEdit->SetText(ip);
-				
-				//子网掩码
-				wchar_t mask[20]={0};
-				wchar_t *wmask = StrUtil::a2w(pIpAddrString->IpMask.String);
-				wcscpy_s(mask,20,wmask);
-				m_pCurrentMaskEdit->SetText(mask);
-				
-				//网关
-				wchar_t gateway[IP_LENGTH] = {0};
-				wchar_t *wgateway = StrUtil::a2w(pIpAdapterInfo->GatewayList.IpAddress.String);
-				wcscpy_s(gateway,IP_LENGTH,wgateway);
-				m_pCurrentGatewayEdit->SetText(gateway);
-				
-				delete[] wip;
-				delete[] wmask;
-				delete[] wgateway;
-
-				pIpAddrString=pIpAddrString->Next;
-			} while (pIpAddrString);
-			if (ipCountPerNetCard>1)
-			{
-				m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT*ipCountPerNetCard);
-			}
-			else
-			{
-				m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT);
-			}
-			//dns
-			LPWSTR lpszAdapterName = StrUtil::a2w(pIpAdapterInfo->AdapterName);
-			LPWSTR dnsList[2]={L"",L""};
-			NetWorkAdapterUtil::GetDns(pIpAdapterInfo->Index,dnsList);
-			m_pCurrentDns1Edit->SetText(dnsList[0]);
-			m_pCurrentDns2Edit->SetText(dnsList[1]);
-			delete lpszAdapterName;
-
-			pIpAdapterInfo = pIpAdapterInfo->Next;
-		}
-
-	}
-	//释放内存空间
-	if (pIpAdapterInfo&&isNewIPInfo)
-	{
-		delete[] pIpAdapterInfo;
-	}
-	else if(pIpAdapterInfo)
-	{
-		delete pIpAdapterInfo;
-	}
+	m_pAdapterList->SelectItem(0);
 	return TRUE;
 }
 
-LPCWSTR IIPConfig::GetIPConfigComboName()
+BOOL IIPConfig::SetSettingInfo(const int itemIndex)
+{
+	PIP_ADAPTER_INFO pAdapterInfo = m_pNetworkAdapterUtil->m_allAdapters.at(itemIndex);
+	//desc
+	wchar_t desc[100] = {0};
+	m_pNetworkAdapterUtil->GetDesc(pAdapterInfo,desc,_countof(desc));
+	m_pCurrentDescEdit->SetText(desc);
+	m_pCurrentDescEdit->SetToolTip(desc);
+	//类型
+	wchar_t type[100] = {0};
+	m_pNetworkAdapterUtil->GetAdapterType(pAdapterInfo,type,_countof(type));
+	m_pCurrentAdapterTypeEdit->SetText(type);
+	m_pCurrentAdapterTypeEdit->SetToolTip(type);
+	//dhcp是否开启
+	LPCWSTR langName = g_pLangManager->GetLangName();
+	wchar_t langCofig[MAX_PATH] = {0};
+	wsprintf(langCofig,L"%s%s",g_szLangPath,langName);
+	wchar_t yes[4]={0};
+	Utility::GetINIStr(langName,L"DuiMsg",L"msg_yes",yes);
+	wchar_t no[3]={0};
+	Utility::GetINIStr(langName,L"DuiMsg",L"msg_no",no);
+	UINT dhcpEnabled = m_pNetworkAdapterUtil->IsDHCPEnabled(pAdapterInfo);
+	m_pCurrentDhcpEnabledEdit->SetText(dhcpEnabled==1?yes:no);
+	//ip
+	LPWSTR ips[IP_MAX];
+	int ipCount = m_pNetworkAdapterUtil->GetIPs(pAdapterInfo,ips);
+	m_pCurrentIPEdit->SetText(ips[0]);
+	if (ipCount>1)
+	{
+		m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT*ipCount);
+	}
+	else
+	{
+		m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT);
+	}
+	//子网掩码
+	wchar_t mask[100] = {0};
+	m_pNetworkAdapterUtil->GetMask(pAdapterInfo,mask,_countof(mask));
+	m_pCurrentMaskEdit->SetText(mask);
+	//网关
+	wchar_t gateway[100] = {0};
+	m_pNetworkAdapterUtil->GetGateway(pAdapterInfo,gateway,_countof(gateway));
+	m_pCurrentGatewayEdit->SetText(gateway);
+	//dns
+	LPWSTR dnsList[2] = {L"",L""};
+	m_pNetworkAdapterUtil->GetDns(pAdapterInfo,dnsList);
+	m_pCurrentDns1Edit->SetText(dnsList[0]);
+	m_pCurrentDns2Edit->SetText(dnsList[1]);
+	return TRUE;
+}
+
+LPCWSTR IIPConfig::GetIPConfigSettingListName()
 {
 	return kIPConfigSettingList;
+}
+
+LPCWSTR IIPConfig::GetIPConfigConnectListName()
+{
+	return kIPConfigCurrentAdapterList;
 }
 
 void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
 {
 	CComboUI* combo = (CComboUI*)msg.pSender;
-	if(combo)
+	LPCTSTR lpszComboName = combo->GetName().GetData();
+	if(wcscmp(lpszComboName,kIPConfigSettingList)==0)
 	{
 		const int curSel = combo->GetCurSel();
 		CListLabelElementUI* selectItem = (CListLabelElementUI*)combo->GetItemAt(curSel);
 		assert(selectItem!=NULL);
-		
 		LPCTSTR lpszSectionName = selectItem->GetUserData().GetData();
 		if (lpszSectionName[0]!=NULL)
-		{
+		{		
 			RefreshSettingEdits(curSel);
 		}
+	}
+	else if (wcscmp(lpszComboName,kIPConfigCurrentAdapterList)==0)
+	{
+		const int curSel = combo->GetCurSel();
+		SetSettingInfo(curSel);
 	}
 }

@@ -85,8 +85,8 @@
 		<VerticalLayout name="ipconfig_info" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true">
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="15"/>
-				<Label name="ipconfig_network_adapter_text" width="100" />
-				<Combo name="ipconfig_network_adapter" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
+				<Label name="ipconfig_network_adapters_text" width="100" />
+				<Combo name="ipconfig_network_adapters" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
 				</Combo>
 				<Control width="2" />
 			</HorizontalLayout>

@@ -1,4 +1,5 @@
 #pragma once
+#include <NetWorkAdapterUtil.h>
 
 class IIPConfig
 {
@@ -9,13 +10,15 @@ public:
 	void			SetIPConfigOwner(HWND hWnd, CPaintManagerUI *pManager) { m_hIPConfigOwner = hWnd; m_pIPConfigManager = pManager; };
 	void			OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled);
 	BOOL			InitIPConfig();
-	LPCWSTR			GetIPConfigComboName();
+	LPCWSTR			GetIPConfigSettingListName();
+	LPCWSTR			GetIPConfigConnectListName();
 	BOOL			SetIPConfigLang(LPCWSTR lpszLang);
 	BOOL			SetIPConfigIni(LPCWSTR lpszSectionName);
-	BOOL			RefreshSettingList();
+	BOOL			RefreshConnectNames();						//刷新链接列表
+	BOOL			RefreshSettingList();						//刷新方案列表
 	BOOL			RefreshSettingEdits(const int itemIndex);	//刷新可编辑的ip信息
-	BOOL			RefreshSettingInfo();	//刷新当前激活的ip信息
-
+	BOOL			SetSettingInfo(const int adapterIndex);	//刷新当前选择网卡的ip信息
+	
 	//事件
 	void			OnIPConfigItemSelect(TNotifyUI& msg);
 public:
@@ -48,4 +51,6 @@ public:
 	CEditUI *m_pMacEdit;
 	wchar_t m_szHandleText[1024];
 	wchar_t m_szNoHandleText[1024];
+
+	CNetWorkAdapterUtil *m_pNetworkAdapterUtil;
 };

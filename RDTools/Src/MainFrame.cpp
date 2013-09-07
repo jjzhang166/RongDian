@@ -298,7 +298,7 @@ void CMainFrame::OnItemClick(TNotifyUI& msg)
 void CMainFrame::OnItemSelect(TNotifyUI& msg)
 {
 	CDuiString controlName = msg.pSender->GetName();
-	if(controlName==GetIPConfigComboName())
+	if(controlName==GetIPConfigSettingListName()||controlName==GetIPConfigConnectListName())
 	{
 		OnIPConfigItemSelect(msg);
 	}
