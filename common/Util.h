@@ -4,6 +4,17 @@
 #include <tchar.h>
 #include <time.h>
 
+#include <stdio.h>
+#include <IPHlpApi.h>
+#pragma comment(lib, "IphlpApi.lib")
+
+typedef struct _tagADDR_INFO
+{
+	int port;
+	char ip[256];
+	char mac[256];
+} ADDR_INFO, *PADDR_INFO, *LPADDR_INFO;
+
 namespace Utility  
 {
 // Generates unique identifier (GUID)
@@ -48,4 +59,6 @@ BOOL IsAdminPrivilege();
 BOOL IsAdminUser();
 
 BOOL GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize);
+
+BOOL GetMacAddr(LPADDR_INFO lpAddrInfo);
 };

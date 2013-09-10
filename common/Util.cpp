@@ -444,4 +444,53 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 
 	return bRet;
 }
+
+BOOL Utility::GetMacAddr(LPADDR_INFO lpAddrInfo)
+{
+	BOOL bRet = FALSE;
+	if(!lpAddrInfo)
+		return bRet;
+
+	ULONG ulSize = sizeof(IP_ADAPTER_INFO);
+	IP_ADAPTER_INFO *pAdapterInfo = (IP_ADAPTER_INFO*)malloc(ulSize);
+	if(!pAdapterInfo)
+		return bRet;
+	memset(pAdapterInfo, 0, sizeof(pAdapterInfo));
+	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_BUFFER_OVERFLOW)
+	{
+		delete pAdapterInfo;
+		pAdapterInfo = (IP_ADAPTER_INFO *)malloc(ulSize);
+		if(!pAdapterInfo)
+			return bRet;
+	}
+	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_SUCCESS)
+	{
+		while(pAdapterInfo)
+		{
+			if(strstr(pAdapterInfo->Description, "VMware") ||
+				strstr(pAdapterInfo->Description, "vpn")	||
+				strstr(pAdapterInfo->Description, "Virtual") ||
+				strstr(pAdapterInfo->Description, "VirtualBox") ||
+				strstr(pAdapterInfo->Description, "Bluetooth"))
+			{
+				pAdapterInfo = pAdapterInfo->Next;
+				continue;
+			}
+			if(pAdapterInfo->Type==MIB_IF_TYPE_ETHERNET || pAdapterInfo->Type==IF_TYPE_IEEE80211)
+			{
+				strcpy(lpAddrInfo->ip, pAdapterInfo->IpAddressList.IpAddress.String);
+				sprintf(lpAddrInfo->mac, "%02x-%02x-%02x-%02x-%02x",
+					pAdapterInfo->Address[0], pAdapterInfo->Address[1], pAdapterInfo->Address[2], 
+					pAdapterInfo->Address[3], pAdapterInfo->Address[4]);
+				bRet = TRUE;
+				break;
+			}
+			pAdapterInfo = pAdapterInfo->Next;
+		}
+	}
+	free(pAdapterInfo);
+
+
+	return bRet;
+}
 #pragma warning(pop)
