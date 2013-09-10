@@ -2,25 +2,12 @@
 
 BOOL ValidateUtil::IsIPv4(LPCWSTR lpszIP)
 {
-	return IsMatch("^[1-9]{1,3}.\\d{1,3}.\\d{1,3}.[1-9]{1,3}$",lpszIP);
+	return IsMatch("^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?).){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$",lpszIP);
 }
 
 BOOL ValidateUtil::IsMask(LPCWSTR lpszMask)
 {
-	
-	return TRUE;
-}
-
-BOOL ValidateUtil::IsDns(LPCWSTR lpszDns)
-{
-
-	return TRUE;
-}
-
-BOOL ValidateUtil::IsGateway(LPCWSTR lpszGateway)
-{
-
-	return TRUE;
+	return IsMatch("^(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])(.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])){3}$",lpszMask);
 }
 
 BOOL ValidateUtil::IsMatch(LPCSTR lpszPattern, LPCWSTR lpszText)

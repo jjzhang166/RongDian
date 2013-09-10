@@ -4,6 +4,7 @@
 #include <time.h>
 #include <WinSock2.h>
 #include <Iphlpapi.h>
+#include <process.h>
 #pragma comment(lib,"Iphlpapi.lib")
 
 using namespace std;
@@ -70,6 +71,7 @@ const wchar_t* const kIPConfigMsgDelSuc = L"ipconfig_del_success";
 #define INI_KEY_DNS_AUTO L"dns_auto"
 #define INI_KEY_DNS1 L"dns1"
 #define INI_KEY_DNS2 L"dns2"
+
 IIPConfig::IIPConfig()
 {
 	m_hIPConfigOwner = NULL;
@@ -269,12 +271,121 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if (sCtrlName == kIPConfigUseBtn)		//应用方案
 	{
+		if (CheckFormValid()==FALSE)
+		{
+			return;
+		}
+		BOOL optFlag = FALSE;
+		int curSel = m_pAdapterList->GetCurSel();
+		CListLabelElementUI *pItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(curSel);
+		LPCTSTR lpszConnectName = pItem->GetText().GetData();
+		if(m_pIpAutoCheckBox->IsSelected())
+		{
+			//m_pNetworkAdapterUtil->SetIPAddressDHCP(lpszConnectName);
+		}
+		else
+		{
+			/*LPCTSTR ip = m_pIPEdit->GetText().GetData();
+			LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+			LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+			m_pNetworkAdapterUtil->SetIPAddressStatic(lpszConnectName,ip,mask,gateway);*/
+		}
+		//dns
+		if (m_pDnsAutoCheckBox->IsSelected())
+		{
+			//m_pNetworkAdapterUtil->SetDNSDHCP(lpszConnectName);
+		}
+		else
+		{
+			LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+
+			
+			PShellParams shellParams = (PShellParams)malloc(sizeof(ShellParams)) ;
+			shellParams->hwnd = m_hIPConfigOwner;
+			shellParams->lpszConnectName = lpszConnectName;
+			shellParams->lpszParam = dns1;
+
+			UINT threadID;
+			HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,CNetWorkAdapterUtil::SetDNSStatic,shellParams,0,&threadID);
+
+			//m_pNetworkAdapterUtil->SetDNSStatic(lpszConnectName,dns1);
+			//m_pNetworkAdapterUtil->AddDNSStatic(lpszConnectName,dns2);
+		}
 		bHandled = TRUE;
 	}
 }
 
+BOOL IIPConfig::CheckFormValid()
+{
+	wchar_t msgTitle[100];
+	Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
+
+	if(!m_pIpAutoCheckBox->IsSelected())
+	{
+		//判断ip
+		LPCTSTR ip = m_pIPEdit->GetText().GetData();
+		BOOL isIp = ValidateUtil::IsIPv4(ip);
+		if(isIp==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断子网掩码
+		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+		BOOL isMask = ValidateUtil::IsMask(mask);
+		if(isMask==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_subnet_mask_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断网关
+		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
+		if(isGateway==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_gateway_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+	}
+	//dns
+	if (!m_pDnsAutoCheckBox->IsSelected())
+	{
+		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+		BOOL isDns1 = ValidateUtil::IsIPv4(dns1);
+		if(isDns1==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+		BOOL isDns2 = ValidateUtil::IsIPv4(dns2);
+		if(isDns2==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
 BOOL IIPConfig::SetIPConfigIni(LPCWSTR lpszSectionName)
 {
+	if (CheckFormValid()==FALSE)
+	{
+		return FALSE;
+	}
 	LPCTSTR lpszSettingName = m_pNameEdit->GetText().GetData();
 	WritePrivateProfileStringW(lpszSectionName,INI_KEY_NAME,lpszSettingName,g_szAppConfig);
 	//ip
@@ -487,24 +598,7 @@ void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
 		SetSettingInfo(curSel);
 	}
 }
-BOOL IIPConfig::CheckFormValid()
+void IIPConfig::ExecuteShellResult()
 {
-	//判断ip
-	LPCTSTR ip = m_pIPEdit->GetText().GetData();
-	int len = wcslen(ip)+1;
-	wchar_t* wip = new wchar_t[len];
-	wcscpy_s(wip,len,ip);
-	BOOL isIp = ValidateUtil::IsIPv4(wip);
-	delete[] wip;
-	if(isIp==FALSE)
-	{
-		wchar_t msgTitle[100];
-		Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
-		wchar_t text[100];
-		Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
-		MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-		return FALSE;
-	}
-	
-	return TRUE;
+	MessageBoxW(NULL,L"fdf",L"fdfdf",MB_OK);
 }

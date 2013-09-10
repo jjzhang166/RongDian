@@ -1,4 +1,5 @@
 #include "NetWorkAdapterUtil.h"
+#include "RongDian.h"
 
 #define IP_LENGTH 129
 CNetWorkAdapterUtil::CNetWorkAdapterUtil():m_adaptersCount(0),m_isNewAdapterInfo(FALSE)
@@ -244,5 +245,73 @@ BOOL  CNetWorkAdapterUtil::GetPhysicalAddress(PIP_ADAPTER_INFO pAdapterInf,LPWST
 			wcscat_s(lpszMac,len,mac);
 		}
 	}
+	return TRUE;
+}
+/************************************************************************/
+/* 设置                                                                     */
+/************************************************************************/
+BOOL CNetWorkAdapterUtil::SetIPAddressDHCP(LPCWSTR lpszConnectName)
+{
+	wchar_t commandParam[MAX_PATH] = {0};
+	wsprintf(commandParam,L"netsh interface ip set address %s dhcp",lpszConnectName);
+	ExcuteCommand(commandParam);
+	return TRUE;
+}
+BOOL CNetWorkAdapterUtil::SetIPAddressStatic(LPCWSTR lpszConnectName,LPCWSTR lpszIP,LPCWSTR lpszMask,LPCWSTR lpszGateway)
+{
+	wchar_t commandParam[MAX_PATH] = {0};
+	wsprintf(commandParam,L"netsh interface ip set address %s static %s %s %s",lpszConnectName,lpszIP,lpszMask,lpszGateway);
+	ExcuteCommand(commandParam);
+	return TRUE;
+}
+BOOL CNetWorkAdapterUtil::SetDNSDHCP(LPCWSTR lpszConnectName)
+{
+	wchar_t commandParam[MAX_PATH] = {0};
+	wsprintf(commandParam,L"netsh interface ip set dnsservers %s dhcp",lpszConnectName);
+	ExcuteCommand(commandParam);
+	return TRUE;
+}
+unsigned CNetWorkAdapterUtil::SetDNSStatic(void* pm)
+{
+	PShellParams params = (PShellParams)pm;
+	wchar_t commandParam[MAX_PATH] = {0};
+	wsprintf(commandParam,L"netsh interface ip set dnsservers \"%s\" static %s",params->lpszConnectName,params->lpszParam);
+	ExcuteCommand(commandParam);
+	::PostMessage(params->hwnd,WM_DNS_SET_COMPLETE,NULL,NULL);
+	free(params);
+	return 0;
+}
+unsigned CNetWorkAdapterUtil::AddDNSStatic(void *pm)
+{
+	PShellParams params = (PShellParams)pm;
+	wchar_t commandParam[MAX_PATH] = {0};
+	wsprintf(commandParam,L"netsh interface ip add dnsservers %s %s",params->lpszConnectName,params->lpszParam);
+	ExcuteCommand(commandParam);
+	
+	::PostMessage(params->hwnd,WM_DNS_SET_COMPLETE,NULL,NULL);
+	free(params);
+	return 0;
+}
+BOOL CNetWorkAdapterUtil::ExcuteCommand(LPWSTR pCommandParam)
+{
+		//初始化shellexe信息
+		SHELLEXECUTEINFO   ExeInfo; 
+		ZeroMemory(&ExeInfo, sizeof(SHELLEXECUTEINFO)); 
+		ExeInfo.cbSize = sizeof(SHELLEXECUTEINFO); 
+		ExeInfo.lpFile = L"c:\\windows\\system32\\cmd.exe"; 
+		ExeInfo.lpParameters = pCommandParam;
+		ExeInfo.fMask = SEE_MASK_NOCLOSEPROCESS; 
+		ExeInfo.nShow = SW_HIDE; 
+		ExeInfo.hwnd = NULL;
+		ExeInfo.lpVerb = NULL;
+		ExeInfo.lpDirectory = NULL;
+		ExeInfo.hInstApp = NULL;
+
+		//执行命令
+		ShellExecuteEx(&ExeInfo);
+
+		//等待进程结束
+		WaitForSingleObject(ExeInfo.hProcess, INFINITE);//INFINITE
+	
 	return TRUE;
 }

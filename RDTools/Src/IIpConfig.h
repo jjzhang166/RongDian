@@ -19,6 +19,7 @@ public:
 	BOOL			RefreshSettingEdits(const int itemIndex);	//刷新可编辑的ip信息
 	BOOL			SetSettingInfo(const int adapterIndex);	//刷新当前选择网卡的ip信息
 	
+	void			ExecuteShellResult();						//shell执行结束
 	//事件
 	BOOL			CheckFormValid();
 	void			OnIPConfigItemSelect(TNotifyUI& msg);

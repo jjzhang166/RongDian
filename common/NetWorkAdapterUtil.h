@@ -8,6 +8,12 @@
 #pragma comment(lib,"Mprapi.lib")
 
 using namespace std;
+
+typedef struct _tagShell_Params{
+	HWND hwnd;
+	LPCWSTR lpszConnectName;
+	LPCWSTR lpszParam;
+} *PShellParams,ShellParams;
 class CNetWorkAdapterUtil
 {
 public:
@@ -23,9 +29,16 @@ public:
 	BOOL	GetDns(PIP_ADAPTER_INFO pAdapterInfo,LPWSTR lpszDns[]);				 //根据适配器index获取对应的dns	
 	BOOL	GetPhysicalAddress(PIP_ADAPTER_INFO pAdapterInf,LPWSTR lpszMac,int len);	//获取物理地址
 
+	//设置
+	BOOL	SetIPAddressDHCP(LPCWSTR lpszConnectName);
+	BOOL	SetIPAddressStatic(LPCWSTR lpszConnectName,LPCWSTR lpszIP,LPCWSTR lpszMask,LPCWSTR lpszGateway);
+	BOOL	SetDNSDHCP(LPCWSTR lpszConnectName);
+	static unsigned __stdcall SetDNSStatic(void* params);
+	static unsigned __stdcall AddDNSStatic(void* params);
 private:
+	static BOOL ExcuteCommand(LPWSTR pCommandParam);
 	void	CountAdapters();														//适配器数量
-	BOOL	GetConnectNames();													//获取本机所有的网络连接名称
+	BOOL	GetConnectNames();												//获取本机所有的网络连接名称
 
 public:
 	int m_adaptersCount;					//适配器数量

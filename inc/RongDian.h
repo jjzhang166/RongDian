@@ -25,6 +25,9 @@ typedef BOOL (WINAPI *PFNChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
 #define WM_ZOOMIN_MOVE_DOWN			WM_USER + 109 // 放大镜下移1个像素
 #define WM_ZOOMIN_MOVE_LEFT			WM_USER + 110 // 放大镜左移1个像素
 #define WM_ZOOMIN_MOVE_RIGHT		WM_USER + 111 // 放大镜右移1个像素
+#define WM_IP_SET_COMPLETE			WM_USER + 112 // ip修改结束
+#define WM_DNS_SET_COMPLETE			WM_USER + 113
+#define WM_DNS_ADD_COMPLETE			WM_USER + 114
 
 typedef struct _tagSNAPSHOT_INFO
 {
