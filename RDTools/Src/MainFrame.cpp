@@ -298,7 +298,7 @@ void CMainFrame::OnItemClick(TNotifyUI& msg)
 void CMainFrame::OnItemSelect(TNotifyUI& msg)
 {
 	CDuiString controlName = msg.pSender->GetName();
-	if(controlName==GetIPConfigComboName())
+	if(controlName==GetIPConfigSettingListName()||controlName==GetIPConfigConnectListName())
 	{
 		OnIPConfigItemSelect(msg);
 	}
@@ -417,6 +417,10 @@ LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam)
 			OnZoomInUpdate(lpInfo->dwColor, lpInfo->ptCursor, bRecord);
 		}
 		return TRUE;
+	}
+	else if (lpData->dwData==WM_IP_SET_COMPLETE||lpData->dwData==WM_DNS_ADD_COMPLETE||lpData->dwData==WM_DNS_SET_COMPLETE)
+	{
+		ExecuteShellResult();
 	}
 	return 0;
 }

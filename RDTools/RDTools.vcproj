@@ -372,6 +372,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\common\NetWorkAdapterUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\NetWorkAdapterUtil.h"
+				>
+			</File>
+			<File
 				RelativePath="..\common\SHHelper.cpp"
 				>
 				<FileConfiguration
@@ -449,6 +457,14 @@
 			</File>
 			<File
 				RelativePath="..\common\Util.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\ValidateUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\ValidateUtil.h"
 				>
 			</File>
 			<File

@@ -1,7 +1,13 @@
 #include "stdafx.h"
 #include "IIpConfig.h"
+#include <vector>
 #include <time.h>
+#include <WinSock2.h>
+#include <Iphlpapi.h>
+#include <process.h>
+#pragma comment(lib,"Iphlpapi.lib")
 
+using namespace std;
 const wchar_t* const kIpConfigSectionPrefix = L"ipconfig_";
 //第一列
 const wchar_t* const kIPConfigSettingListText = L"setting_list_text";
@@ -28,19 +34,34 @@ const wchar_t* const kIPConfigDelBtn = L"ipconfig_delete";
 const wchar_t* const kIPConfigUseBtn = L"ipconfig_active";
 //第二列
 const wchar_t* const kIPConfigCurrentInfoText = L"ipconfig_current_info";
+const wchar_t* const kIPConfigCurrentAdapterListText = L"ipconfig_network_adapters_text";
+const wchar_t* const kIPConfigCurrentAdapterList = L"ipconfig_network_adapters";
+const wchar_t* const kIPConfigCurrentAdapterTypeText = L"ipconfig_iftype_text";
 const wchar_t* const kIPConfigCurrentDescText = L"ipconfig_idesc_text";
 const wchar_t* const kIPConfigCurrentDhcpText = L"ipconfig_i_dhcp_text";
 const wchar_t* const kIPConfigCurrentIPText = L"ipconfig_i_ip_text";
 const wchar_t* const kIPConfigCurrentMaskText = L"ipconfig_i_mask_text";
 const wchar_t* const kIPConfigCurrentGatewayText = L"ipconfig_i_netgate_text";
-const wchar_t* const kIPConfigCurrentDnsText = L"ipconfig_i_dns_text";
-const wchar_t* const kIPConfigCurrentDns2Text = L"current_alternative_dns_text";
+const wchar_t* const kIPConfigCurrentDns1Text = L"ipconfig_i_dns_text";
+const wchar_t* const kIPConfigCurrentDns2Text = L"ipconfig_i_dns2_text";
 const wchar_t* const kIPConfigMacText = L"ipconfig_i_mac_text";
+const wchar_t* const kIPConfigCurrentAdapterTypeEdit = L"ipconfig_iftype_edit";
+const wchar_t* const kIPConfigCurrentDescEdit = L"ipconfig_idesc_edit";
+const wchar_t* const kIPConfigCurrentDhcpEdit = L"ipconfig_i_dhcp_edit";
+const wchar_t* const kIPConfigCurrentIPEdit = L"ipconfig_i_ip_edit";
+const wchar_t* const kIPConfigCurrentMaskEdit = L"ipconfig_i_mask_edit";
+const wchar_t* const kIPConfigCurrentGatewayEdit = L"ipconfig_i_netgate_edit";
+const wchar_t* const kIPConfigCurrentDns1Edit = L"ipconfig_i_dns_edit";
+const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
+const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
 //msg
 const wchar_t* const kIPConfigMsgCanntDel = L"ipconfig_cannt_del";
 const wchar_t* const kIPConfigMsgNotNull = L"ipconfig_not_null";
 const wchar_t* const kIPConfigMsgDelSuc = L"ipconfig_del_success";
 
+#define ROW_HEIGHT 24
+#define IP_LENGTH 129
+#define IP_MAX 5
 #define SECTION_LENGTH 100
 #define INI_KEY_NAME L"name"
 #define INI_KEY_IP_AUTO L"ip_auto"
@@ -50,6 +71,7 @@ const wchar_t* const kIPConfigMsgDelSuc = L"ipconfig_del_success";
 #define INI_KEY_DNS_AUTO L"dns_auto"
 #define INI_KEY_DNS1 L"dns1"
 #define INI_KEY_DNS2 L"dns2"
+
 IIPConfig::IIPConfig()
 {
 	m_hIPConfigOwner = NULL;
@@ -65,20 +87,29 @@ IIPConfig::IIPConfig()
 	m_pModifyBtn = NULL;
 	m_pDelBtn = NULL;
 	m_pUseBtn = NULL;
-	m_pCurrentIPLabel = NULL;
-	m_pCurrentMaskLabel = NULL;
-	m_pCurrentGatewayLabel = NULL;
-	m_pCurrentDns1Label = NULL;
-	m_pCurrentDns2Label = NULL;
-	m_pMacLabel = NULL;
+	m_pAdapterList = NULL;
+	m_pCurrentAdapterTypeEdit = NULL;
+	m_pCurrentDescEdit = NULL;
+	m_pCurrentDhcpEnabledEdit = NULL;
+	m_pCurrentIPEdit = NULL;
+	m_pCurrentMaskEdit = NULL;
+	m_pCurrentGatewayEdit = NULL;
+	m_pCurrentDns1Edit = NULL;
+	m_pCurrentDns2Edit = NULL;
 	m_pIpAutoCheckBox = NULL;
 	m_pIpManualCheckBox = NULL;
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
+	m_lpszLang = NULL;
+	m_pNetworkAdapterUtil = new CNetWorkAdapterUtil();
 }
 
 IIPConfig::~IIPConfig()
 {
+	if (m_pNetworkAdapterUtil)
+	{
+		delete m_pNetworkAdapterUtil;
+	}
 }
 BOOL IIPConfig::InitIPConfig()
 {
@@ -96,20 +127,30 @@ BOOL IIPConfig::InitIPConfig()
 	FIND_CONTROL_BY_ID(m_pModifyBtn, CButtonUI, m_pIPConfigManager, kIPConfigModifyBtn)
 	FIND_CONTROL_BY_ID(m_pDelBtn, CButtonUI, m_pIPConfigManager, kIPConfigDelBtn)
 	FIND_CONTROL_BY_ID(m_pUseBtn, CButtonUI, m_pIPConfigManager, kIPConfigUseBtn)
-	FIND_CONTROL_BY_ID(m_pCurrentIPLabel, CLabelUI, m_pIPConfigManager, kIPConfigCurrentIPText)
-	FIND_CONTROL_BY_ID(m_pCurrentMaskLabel, CLabelUI, m_pIPConfigManager, kIPConfigCurrentMaskText)
-	FIND_CONTROL_BY_ID(m_pCurrentGatewayLabel, CLabelUI, m_pIPConfigManager, kIPConfigCurrentGatewayText)
-	FIND_CONTROL_BY_ID(m_pCurrentDns1Label, CLabelUI, m_pIPConfigManager, kIPConfigCurrentDnsText)
-	FIND_CONTROL_BY_ID(m_pCurrentDns2Label, CLabelUI, m_pIPConfigManager, kIPConfigCurrentDns2Text)
-	FIND_CONTROL_BY_ID(m_pMacLabel, CLabelUI, m_pIPConfigManager, kIPConfigMacText)
+	FIND_CONTROL_BY_ID(m_pAdapterList, CComboUI, m_pIPConfigManager, kIPConfigCurrentAdapterList)
+	FIND_CONTROL_BY_ID(m_pCurrentAdapterTypeEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentAdapterTypeEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDescEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDescEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDhcpEnabledEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDhcpEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentIPEdit, CRichEditUI, m_pIPConfigManager, kIPConfigCurrentIPEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentMaskEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentMaskEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentGatewayEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentGatewayEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDns1Edit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDns1Edit)
+	FIND_CONTROL_BY_ID(m_pCurrentDns2Edit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDns2Edit)
+	FIND_CONTROL_BY_ID(m_pMacEdit, CEditUI, m_pIPConfigManager, kIPConfigMacEdit)
 	FIND_CONTROL_BY_ID(m_pIpAutoCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigAutoSetIPCheckBox)
 	FIND_CONTROL_BY_ID(m_pIpManualCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigManualSetIPCheckBox)
 	FIND_CONTROL_BY_ID(m_pDnsAutoCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigAutoSetDnsCheckBox)
 	FIND_CONTROL_BY_ID(m_pDnsManualCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigManualSetDnsCheckBox)
+
+	//初始值
+	RefreshConnectNames();
+	SetSettingInfo(0);
+	m_pAdapterList->SelectItem(0);
 	return TRUE;
 }
 BOOL IIPConfig::SetIPConfigLang(LPCWSTR lpszLang)
 {
+	m_lpszLang = lpszLang;
 	if(!m_pIPConfigManager)
 		return FALSE;
 	memset(m_szHandleText, 0, sizeof(m_szHandleText));
@@ -133,13 +174,15 @@ SET_CONTROL_BEGIN(m_pIPConfigManager, lpszLang, LS_IPCHANGERPANEL)
 	SET_CONTROL_TEXT2(kIPConfigModifyBtn)
 	SET_CONTROL_TEXT2(kIPConfigDelBtn)
 	SET_CONTROL_TEXT2(kIPConfigUseBtn)
+	SET_CONTROL_TEXT2(kIPConfigCurrentAdapterListText)
+	SET_CONTROL_TEXT2(kIPConfigCurrentAdapterTypeText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentInfoText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentDescText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentDhcpText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentIPText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentMaskText)
 	SET_CONTROL_TEXT2(kIPConfigCurrentGatewayText)
-	SET_CONTROL_TEXT2(kIPConfigCurrentDnsText)
+	SET_CONTROL_TEXT2(kIPConfigCurrentDns1Text)
 	SET_CONTROL_TEXT2(kIPConfigCurrentDns2Text)
 	SET_CONTROL_TEXT2(kIPConfigMacText)
 SET_CONTROL_END()
@@ -179,15 +222,18 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if(sCtrlName == kIPConfigAddBtn)	//增加
 	{
-		//新增配置文件中ip section
-		time_t curTime = time(NULL);
-		wchar_t newSectionName[100]={0};
-		wsprintf(newSectionName,L"%s%ld",kIpConfigSectionPrefix,curTime);
-		SetIPConfigIni(newSectionName);
-		RefreshSettingList();
-		//选择当前的item
-		const int count = m_pSetttingList->GetCount();
-		m_pSetttingList->SelectItem(count-1);
+		if (CheckFormValid()==TRUE)
+		{
+			//新增配置文件中ip section
+			time_t curTime = time(NULL);
+			wchar_t newSectionName[100]={0};
+			wsprintf(newSectionName,L"%s%ld",kIpConfigSectionPrefix,curTime);
+			SetIPConfigIni(newSectionName);
+			RefreshSettingList();
+			//选择当前的item
+			const int count = m_pSetttingList->GetCount();
+			m_pSetttingList->SelectItem(count-1);
+		}
 		bHandled = TRUE;
 	}
 	else if(sCtrlName == kIPConfigModifyBtn)	//修改
@@ -225,12 +271,121 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if (sCtrlName == kIPConfigUseBtn)		//应用方案
 	{
+		if (CheckFormValid()==FALSE)
+		{
+			return;
+		}
+		BOOL optFlag = FALSE;
+		int curSel = m_pAdapterList->GetCurSel();
+		CListLabelElementUI *pItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(curSel);
+		LPCTSTR lpszConnectName = pItem->GetText().GetData();
+		if(m_pIpAutoCheckBox->IsSelected())
+		{
+			//m_pNetworkAdapterUtil->SetIPAddressDHCP(lpszConnectName);
+		}
+		else
+		{
+			/*LPCTSTR ip = m_pIPEdit->GetText().GetData();
+			LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+			LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+			m_pNetworkAdapterUtil->SetIPAddressStatic(lpszConnectName,ip,mask,gateway);*/
+		}
+		//dns
+		if (m_pDnsAutoCheckBox->IsSelected())
+		{
+			//m_pNetworkAdapterUtil->SetDNSDHCP(lpszConnectName);
+		}
+		else
+		{
+			LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+
+			
+			PShellParams shellParams = (PShellParams)malloc(sizeof(ShellParams)) ;
+			shellParams->hwnd = m_hIPConfigOwner;
+			shellParams->lpszConnectName = lpszConnectName;
+			shellParams->lpszParam = dns1;
+
+			UINT threadID;
+			HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,CNetWorkAdapterUtil::SetDNSStatic,shellParams,0,&threadID);
+
+			//m_pNetworkAdapterUtil->SetDNSStatic(lpszConnectName,dns1);
+			//m_pNetworkAdapterUtil->AddDNSStatic(lpszConnectName,dns2);
+		}
 		bHandled = TRUE;
 	}
 }
 
+BOOL IIPConfig::CheckFormValid()
+{
+	wchar_t msgTitle[100];
+	Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
+
+	if(!m_pIpAutoCheckBox->IsSelected())
+	{
+		//判断ip
+		LPCTSTR ip = m_pIPEdit->GetText().GetData();
+		BOOL isIp = ValidateUtil::IsIPv4(ip);
+		if(isIp==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断子网掩码
+		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+		BOOL isMask = ValidateUtil::IsMask(mask);
+		if(isMask==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_subnet_mask_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断网关
+		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
+		if(isGateway==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_gateway_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+	}
+	//dns
+	if (!m_pDnsAutoCheckBox->IsSelected())
+	{
+		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+		BOOL isDns1 = ValidateUtil::IsIPv4(dns1);
+		if(isDns1==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+		BOOL isDns2 = ValidateUtil::IsIPv4(dns2);
+		if(isDns2==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
 BOOL IIPConfig::SetIPConfigIni(LPCWSTR lpszSectionName)
 {
+	if (CheckFormValid()==FALSE)
+	{
+		return FALSE;
+	}
 	LPCTSTR lpszSettingName = m_pNameEdit->GetText().GetData();
 	WritePrivateProfileStringW(lpszSectionName,INI_KEY_NAME,lpszSettingName,g_szAppConfig);
 	//ip
@@ -342,28 +497,108 @@ BOOL IIPConfig::RefreshSettingEdits(const int itemIndex)
 	}
 	return TRUE;
 }
-BOOL IIPConfig::RefreshSettingInfo()
+
+BOOL IIPConfig::RefreshConnectNames()
 {
+	m_pAdapterList->RemoveAll();
+	vector<LPWSTR> connectNames =  m_pNetworkAdapterUtil->m_connectNames;
+	for (vector<LPWSTR>::size_type i=0;i<connectNames.size();i++)
+	{
+		LPWSTR conectName = connectNames.at(i);
+		CListLabelElementUI *item = new CListLabelElementUI;
+		item->SetText(conectName);
+		m_pAdapterList->Add(item);
+	}
 	return TRUE;
 }
-LPCWSTR IIPConfig::GetIPConfigComboName()
+
+BOOL IIPConfig::SetSettingInfo(const int itemIndex)
+{
+	PIP_ADAPTER_INFO pAdapterInfo = m_pNetworkAdapterUtil->m_allAdapters.at(itemIndex);
+	//desc
+	wchar_t desc[100] = {0};
+	m_pNetworkAdapterUtil->GetDesc(pAdapterInfo,desc,_countof(desc));
+	m_pCurrentDescEdit->SetText(desc);
+	m_pCurrentDescEdit->SetToolTip(desc);
+	//类型
+	wchar_t type[100] = {0};
+	m_pNetworkAdapterUtil->GetAdapterType(pAdapterInfo,type,_countof(type));
+	m_pCurrentAdapterTypeEdit->SetText(type);
+	m_pCurrentAdapterTypeEdit->SetToolTip(type);
+	//dhcp是否开启
+	LPCWSTR langName = g_pLangManager->GetLangName();
+	wchar_t langCofig[MAX_PATH] = {0};
+	wsprintf(langCofig,L"%s%s",g_szLangPath,langName);
+	wchar_t yes[4]={0};
+	Utility::GetINIStr(langName,L"DuiMsg",L"msg_yes",yes);
+	wchar_t no[3]={0};
+	Utility::GetINIStr(langName,L"DuiMsg",L"msg_no",no);
+	UINT dhcpEnabled = m_pNetworkAdapterUtil->IsDHCPEnabled(pAdapterInfo);
+	m_pCurrentDhcpEnabledEdit->SetText(dhcpEnabled==1?yes:no);
+	//ip
+	LPWSTR ips[IP_MAX];
+	int ipCount = m_pNetworkAdapterUtil->GetIPs(pAdapterInfo,ips);
+	m_pCurrentIPEdit->SetText(ips[0]);
+	if (ipCount>1)
+	{
+		m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT*ipCount);
+	}
+	else
+	{
+		m_pCurrentIPEdit->GetParent()->SetMaxHeight(ROW_HEIGHT);
+	}
+	//子网掩码
+	wchar_t mask[100] = {0};
+	m_pNetworkAdapterUtil->GetMask(pAdapterInfo,mask,_countof(mask));
+	m_pCurrentMaskEdit->SetText(mask);
+	//网关
+	wchar_t gateway[100] = {0};
+	m_pNetworkAdapterUtil->GetGateway(pAdapterInfo,gateway,_countof(gateway));
+	m_pCurrentGatewayEdit->SetText(gateway);
+	//dns
+	LPWSTR dnsList[2] = {L"",L""};
+	m_pNetworkAdapterUtil->GetDns(pAdapterInfo,dnsList);
+	m_pCurrentDns1Edit->SetText(dnsList[0]);
+	m_pCurrentDns2Edit->SetText(dnsList[1]);
+	//mac
+	wchar_t lpszMAC[100] = {0};
+	m_pNetworkAdapterUtil->GetPhysicalAddress(pAdapterInfo,lpszMAC,_countof(lpszMAC));
+	m_pMacEdit->SetText(lpszMAC);
+	return TRUE;
+}
+
+LPCWSTR IIPConfig::GetIPConfigSettingListName()
 {
 	return kIPConfigSettingList;
+}
+
+LPCWSTR IIPConfig::GetIPConfigConnectListName()
+{
+	return kIPConfigCurrentAdapterList;
 }
 
 void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
 {
 	CComboUI* combo = (CComboUI*)msg.pSender;
-	if(combo)
+	LPCTSTR lpszComboName = combo->GetName().GetData();
+	if(wcscmp(lpszComboName,kIPConfigSettingList)==0)
 	{
 		const int curSel = combo->GetCurSel();
 		CListLabelElementUI* selectItem = (CListLabelElementUI*)combo->GetItemAt(curSel);
 		assert(selectItem!=NULL);
-		
 		LPCTSTR lpszSectionName = selectItem->GetUserData().GetData();
 		if (lpszSectionName[0]!=NULL)
-		{
+		{		
 			RefreshSettingEdits(curSel);
 		}
 	}
+	else if (wcscmp(lpszComboName,kIPConfigCurrentAdapterList)==0)
+	{
+		const int curSel = combo->GetCurSel();
+		SetSettingInfo(curSel);
+	}
+}
+void IIPConfig::ExecuteShellResult()
+{
+	MessageBoxW(NULL,L"fdf",L"fdfdf",MB_OK);
 }

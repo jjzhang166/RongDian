@@ -112,7 +112,3 @@ typedef struct _tagCODER_INFO
 	BOOL bHandle;
 	BOOL bValid;
 } CODER_INFO, *LCODER_INFO, *LPCODER_INFO;
-
-//∫Í∂®“Â
-#define FORMATTER_FILE_LENGTH 1024
-
