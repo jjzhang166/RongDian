@@ -285,6 +285,7 @@ BOOL IColorPicker::OpenZoomIn()
 		return bRet;
 	}
 	swprintf(szArgs, _T("-h %ld -m m"), hPickerOwner);
+	//swprintf(szArgs, _T("-h %ld -m m -d"), hPickerOwner);
 
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;

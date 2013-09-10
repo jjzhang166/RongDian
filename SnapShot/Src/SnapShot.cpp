@@ -1174,6 +1174,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*l
 	wchar_t szMoudle[1024] = {0}, szPath[1024] = {0};
 	GetModuleFileName(NULL, szMoudle, _countof(szMoudle));
 	PathRemoveFileSpec(szMoudle);
+	PathRemoveFileSpec(szMoudle);
 	wcscpy(szPath, szMoudle);
 	PathAppend(szPath, L"img");
 	if(g_OptOptions.isSet(ARGS_PATH))

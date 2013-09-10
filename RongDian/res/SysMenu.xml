@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="100,48" sizebox="0,0,0,0" caption="0,0,0,0" alpha="250" >
+<Window size="100,92" sizebox="0,0,0,0" caption="0,0,0,0" alpha="250" >
 	<Font name="微软雅黑" size="12" bold="false" default="true" />
 	<!-- frame_container -->
 	<VerticalLayout bkimage="file='default\menu_bk_white.png'" bordersize="1" bordercolor="0xFFE0E0E0" colorhsl="true" inset="2,2,2,2" >
 		<List header="hidden" itemhotimage="file='default\menu_hot_bk.png' corner='2,2,2,2'" mouse="true" itemdisabledbkcolor="#20000000">
-			<!-- 菜单-在线 -->
-			<ListContainerElement name="online_item" height="22">
+			<!-- 菜单-关于 -->
+			<ListContainerElement name="about_item" height="22" >
 				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="file='default\menu_mini.png' dest='4,4,18,18' corner='1,1,1,1'" mouse="false" />
-					<Label name="item_text" text="我在线上" mouse="false" />
+					<Label name="item_image" width="28" bkimage="file='default\menu_about.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" text="关于" mouse="false" />
 				</HorizontalLayout>
-			</ListContainerElement> <!-- 菜单-在线 -->
-			<!-- 菜单-离开 -->
-			<ListContainerElement name="leave_item" height="22" >
+			</ListContainerElement> <!-- 菜单-关于 -->
+			<!-- 菜单-帮助 -->
+			<ListContainerElement name="help_item" height="22" >
 				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="file='default\menu_about.png' dest='4,4,18,18' corner='1,1,1,1'" mouse="false" />
-					<Label name="item_text" text="离开" mouse="false" />
+					<Label name="item_image" width="28" bkimage="file='default\menu_help.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" text="帮助" mouse="false" />
 				</HorizontalLayout>
-			</ListContainerElement> <!-- 菜单-离开 -->
+			</ListContainerElement> <!-- 菜单-帮助 -->
+			<!-- 菜单-错误 -->
+			<ListContainerElement name="error_item" height="22">
+				<HorizontalLayout>
+					<Label name="item_image" width="28" bkimage="file='default\menu_error.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" text="错误" mouse="false" />
+				</HorizontalLayout>
+			</ListContainerElement> <!-- 菜单-错误 -->
+			<!-- 菜单-确认 -->
+			<ListContainerElement name="confirm_item" height="22">
+				<HorizontalLayout>
+					<Label name="item_image" width="28" bkimage="file='default\memu_confirm.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" text="确认" mouse="false" />
+				</HorizontalLayout>
+			</ListContainerElement> <!-- 菜单-确认 -->
 		</List>
 	</VerticalLayout> <!-- frame_container -->
 </Window>

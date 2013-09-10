@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<HorizontalLayout name="panel_picker" inset="4,4,4,4" >
-		<Control width="10" />
 		<!-- first column -->
 		<VerticalLayout name="first_column" width="200" inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
 			<Label name="picker_topic1" height="20" text="" align="center" />
@@ -37,7 +36,7 @@
 				<Control />
 			</HorizontalLayout>
 		</VerticalLayout><!-- first column -->
-		<Control width="10" /><!-- padding blank -->
+		<Control width="5" /><!-- padding blank -->
 		<!-- mid column -->
 		<VerticalLayout width="200" inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
 			<Label name="picker_topic2" height="20" text="" align="center" />
@@ -66,13 +65,12 @@
 				<Label name="color_hsv_text" width="60" text="" padding="3,0,0,0" /><Edit name="color_hsv" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
 			</HorizontalLayout>
 		</VerticalLayout><!-- mid column -->
-		<Control width="10" /><!-- padding blank -->
+		<Control width="5" /><!-- padding blank -->
 		<!-- last column -->
 		<VerticalLayout inset="1,1,1,1" bordersize="1" bordercolor="FFA8A8A8" >
 			<Label name="color_history" height="20" text="" align="center" />
 			<List name="color_list" header="hidden" vscrollbar="true" bkcolor="#FFE0E0E0" itemtextcolor="#FFFF0000" itemalign="center" menu="true" >
 			</List>
 		</VerticalLayout><!-- last column -->
-		<Control width="10" /><!-- padding blank -->
 	</HorizontalLayout>
 </Window>
