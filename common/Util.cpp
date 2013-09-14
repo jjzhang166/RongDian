@@ -232,6 +232,16 @@ BOOL Utility::SetINIInt(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszN
 	return SetINIStr(lpszFileName, lpszSection, lpszName, szValue);
 }
 
+BOOL Utility::DelINISection(LPCWSTR lpszFileName, LPCWSTR lpszSection)
+{
+	return WritePrivateProfileSection(lpszSection, NULL, lpszFileName);
+}
+
+BOOL Utility::DelINIKey(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszKey)
+{
+	return WritePrivateProfileString(lpszSection, lpszKey, NULL, lpszFileName);
+}
+
 BOOL Utility::TimeToTm(const time_t &t, tm * tt)
 {
 	if (localtime_s(tt, &t) == 0)
@@ -445,52 +455,44 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	return bRet;
 }
 
-BOOL Utility::GetMacAddr(LPADDR_INFO lpAddrInfo)
+/*
+ /   ->    //
+ '   ->    ''
+ [   ->    /[
+ ]   ->    /]
+ %   ->    /%
+ &   ->    /&
+ _   ->    /_
+ (   ->    /(
+ )   ->    /)
+ */
+/*************************************************************************
+ * Method:    		EscapeSQLite
+ * Description:		sqlite转义符处理 
+ * ParameterList:	LPSTR lpszValue
+ * Parameter:       lpszValue为sqlite语句
+ * Return Value:	int为返回字符串长度
+ * Date:        	13:08:29 12:37:04
+ * Author:			
+ * CopyRight:		
+ ************************************************************************/
+int Utility::EscapeSQLiteA(LPSTR lpszValue)
 {
-	BOOL bRet = FALSE;
-	if(!lpAddrInfo)
-		return bRet;
+	return 0;
+}
 
-	ULONG ulSize = sizeof(IP_ADAPTER_INFO);
-	IP_ADAPTER_INFO *pAdapterInfo = (IP_ADAPTER_INFO*)malloc(ulSize);
-	if(!pAdapterInfo)
-		return bRet;
-	memset(pAdapterInfo, 0, sizeof(pAdapterInfo));
-	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_BUFFER_OVERFLOW)
-	{
-		delete pAdapterInfo;
-		pAdapterInfo = (IP_ADAPTER_INFO *)malloc(ulSize);
-		if(!pAdapterInfo)
-			return bRet;
-	}
-	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_SUCCESS)
-	{
-		while(pAdapterInfo)
-		{
-			if(strstr(pAdapterInfo->Description, "VMware") ||
-				strstr(pAdapterInfo->Description, "vpn")	||
-				strstr(pAdapterInfo->Description, "Virtual") ||
-				strstr(pAdapterInfo->Description, "VirtualBox") ||
-				strstr(pAdapterInfo->Description, "Bluetooth"))
-			{
-				pAdapterInfo = pAdapterInfo->Next;
-				continue;
-			}
-			if(pAdapterInfo->Type==MIB_IF_TYPE_ETHERNET || pAdapterInfo->Type==IF_TYPE_IEEE80211)
-			{
-				strcpy(lpAddrInfo->ip, pAdapterInfo->IpAddressList.IpAddress.String);
-				sprintf(lpAddrInfo->mac, "%02x-%02x-%02x-%02x-%02x",
-					pAdapterInfo->Address[0], pAdapterInfo->Address[1], pAdapterInfo->Address[2], 
-					pAdapterInfo->Address[3], pAdapterInfo->Address[4]);
-				bRet = TRUE;
-				break;
-			}
-			pAdapterInfo = pAdapterInfo->Next;
-		}
-	}
-	free(pAdapterInfo);
-
-
-	return bRet;
+/*************************************************************************
+ * Method:    		EscapeSQLite
+ * Description:		sqlite转义符处理 
+ * ParameterList:	LPSTR lpszValue
+ * Parameter:       lpszValue为sqlite语句
+ * Return Value:	int为返回字符串长度
+ * Date:        	13:08:29 12:37:04
+ * Author:			
+ * CopyRight:		
+ ************************************************************************/
+int Utility::EscapeSQLiteW(LPWSTR lpszValue)
+{
+	return 0;
 }
 #pragma warning(pop)

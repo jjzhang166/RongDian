@@ -9,6 +9,7 @@ wchar_t				g_szModule[1024] = {0};
 wchar_t				g_szAppName[1024] = {0};
 wchar_t				g_szAppVer[1024] = {0};
 wchar_t				g_szAppConfig[1024] = {0};
+wchar_t				g_szAppConfigDB[1024] = {0};
 wchar_t				g_szPanelsXml[1024] = {0};
 wchar_t				g_szResPath[1024] = {0};
 wchar_t				g_szLogPath[1024] = {0};
@@ -24,6 +25,7 @@ CSkinManager		*g_pSkinManager = NULL;
 CSystemTray			*g_pSystemTray = NULL;
 CMainFrame			*g_pMainFrame = NULL;
 list<LPPANEL_INFO>	g_lstPanelInfo;
+CSQLite				g_SQLite;
 
 
 BOOL CheckInstance()
@@ -78,6 +80,7 @@ BOOL InitPath()
 	PathRemoveExtension(g_szAppName);
 	PathRemoveFileSpec(szModule);
 	swprintf(g_szAppConfig, L"%s\\%s", szModule, kConfigIni);
+	swprintf(g_szAppConfigDB, L"%s\\%s", szModule, kConfigDB);
 	wcscpy(g_szModule, szModule);
 	PathRemoveFileSpec(g_szModule);
 	swprintf(g_szLogPath, L"%s\\log", g_szModule);
@@ -164,6 +167,19 @@ BOOL InitLang()
 	return TRUE;
 }
 
+BOOL InitSQLite()
+{
+	char szConDB_a[1024] = {0};
+	StrUtil::u2u8(g_szAppConfigDB, szConDB_a);
+	if(!g_SQLite.Open(szConDB_a))
+		return FALSE;
+	if(!g_SQLite.TableExists("config"))
+		g_SQLite.ExecQuery("create table config(id_ integer primary key, name_ varchar(100) unique, value_ varchar(255));");
+	if(!g_SQLite.TableExists("IPSets"))
+		g_SQLite.ExecQuery("create table ipsets(id_ integer primary key, name_ varchar(100) unique, value_ varchar(255));");
+	return TRUE;
+}
+
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /*lpCmdLine*/, int /*nCmdShow*/)
 {
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
@@ -207,6 +223,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 		return 0;
 	}
 
+	InitSQLite();
+
 	CPaintManagerUI::SetInstance(hInstance);
 	//CPaintManagerUI::SetResourcePath(g_szResPath);
 	wchar_t szMsgIconPath[1024] = {0};
@@ -237,6 +255,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	::CoUninitialize();
 
 	::FreeLibrary(hInstRich);
+
+	if(g_SQLite.IsValid())
+		g_SQLite.Close();
 
 	CLangManager::Release();
 	CSkinManager::Release();

@@ -253,27 +253,38 @@ int CComboUI::GetCurSel() const
 
 bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
 {
-    if( m_pWindow != NULL ) m_pWindow->Close();
-    if( iIndex == m_iCurSel ) return true;
+    if( m_pWindow != NULL )
+		m_pWindow->Close();
+    if( iIndex == m_iCurSel )
+		return true;
     int iOldSel = m_iCurSel;
     if( m_iCurSel >= 0 ) {
         CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
-        if( !pControl ) return false;
+        if( !pControl )
+			return false;
         IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
-        if( pListItem != NULL ) pListItem->Select(false);
+        if( pListItem != NULL )
+			pListItem->Select(false);
         m_iCurSel = -1;
     }
-    if( iIndex < 0 ) return false;
-    if( m_items.GetSize() == 0 ) return false;
-    if( iIndex >= m_items.GetSize() ) iIndex = m_items.GetSize() - 1;
+    if( iIndex < 0 )
+		return false;
+    if( m_items.GetSize() == 0 )
+		return false;
+    if( iIndex >= m_items.GetSize() )
+		iIndex = m_items.GetSize() - 1;
     CControlUI* pControl = static_cast<CControlUI*>(m_items[iIndex]);
-    if( !pControl || !pControl->IsVisible() || !pControl->IsEnabled() ) return false;
+    if( !pControl /*|| !pControl->IsVisible()*/ || !pControl->IsEnabled() )
+		return false;
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
-    if( pListItem == NULL ) return false;
+    if( pListItem == NULL )
+		return false;
     m_iCurSel = iIndex;
-    if( m_pWindow != NULL || bTakeFocus ) pControl->SetFocus();
+    if( m_pWindow != NULL || bTakeFocus )
+		pControl->SetFocus();
     pListItem->Select(true);
-    if( m_pManager != NULL ) m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
+    if( m_pManager != NULL )
+		m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
     Invalidate();
 
     return true;

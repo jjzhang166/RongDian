@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./Src/include;"
+				AdditionalIncludeDirectories=".\Src\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBICONV_EXPORTS;BUILDING_LIBCHARSET"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../RongDian/bin/$(ProjectName)d.dll"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="./Src/include;"
+				AdditionalIncludeDirectories=".\Src\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBICONV_EXPORTS;BUILDING_LIBCHARSET"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../RongDian/bin/$(ProjectName).dll"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"

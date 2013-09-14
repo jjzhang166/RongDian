@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../RongDian/bin/$(ProjectName)d.lib"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../RongDian/bin/$(ProjectName).lib"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

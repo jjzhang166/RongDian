@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(OutDir)/zlib.tlb"
+				TypeLibraryName="$(OutDir)\zlib.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -115,7 +115,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(OutDir)/zlib.tlb"
+				TypeLibraryName="$(OutDir)\zlib.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -129,6 +129,7 @@
 				EnableFunctionLevelLinking="true"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 				DisableSpecificWarnings="4127;4131;4244"
 			/>
 			<Tool

@@ -43,7 +43,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/DuiLib.tlb"
+				TypeLibraryName=".\Debug\DuiLib.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -58,7 +58,7 @@
 				PrecompiledHeaderThrough="stdafx.h"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="4"
 				DisableSpecificWarnings="4100;4127;4189;4244;4245;4706"
 			/>
 			<Tool
@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../RongDian/bin/$(ProjectName)d.dll"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
@@ -82,7 +82,7 @@
 				DelayLoadDLLs=""
 				GenerateDebugInformation="true"
 				BaseAddress="0x11000000"
-				ImportLibrary="../../RongDian/bin/$(ProjectName)d.lib"
+				ImportLibrary="..\..\RongDian\bin\$(ProjectName)d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -137,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/DuiLib.tlb"
+				TypeLibraryName=".\Release\DuiLib.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -152,6 +152,7 @@
 				UsePrecompiledHeader="2"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 				DisableSpecificWarnings="4100;4127;4189;4244;4245;4706"
 			/>
 			<Tool
@@ -167,14 +168,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../RongDian/bin/$(ProjectName).dll"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
 				GenerateManifest="false"
 				DelayLoadDLLs=""
 				BaseAddress="0x11000000"
-				ImportLibrary="../../RongDian/bin/$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -377,19 +378,19 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIGif.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Control\UIIconImage.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Control\UIFade.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Control\UIFadeButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIGif.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIIconImage.cpp"
 					>
 				</File>
 				<File

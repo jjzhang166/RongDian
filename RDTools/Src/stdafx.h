@@ -95,6 +95,9 @@ using namespace slim;
 #pragma comment(lib, "../RongDian/bin/libiconv.lib")
 #endif
 
+#include <SQLite/sqlite3.h>
+#pragma comment(lib, "../RongDian/bin/SQLite.lib")
+
 #include <DuiMsg.h>
 #ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/DuiMsgd.lib")
@@ -122,6 +125,8 @@ BOOL IsImageFile(LPCWSTR lpszFileName);
 #include <SHHelper.h>
 #include <ILangUI.h>
 #include <ISkinUI.h>
+#include <AdapterUtil.h>
+#include <SQLiteUtil.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是自定义文件的引用
@@ -144,6 +149,7 @@ extern wchar_t					g_szModule[1024];
 extern wchar_t					g_szAppName[1024];
 extern wchar_t					g_szAppVer[1024];
 extern wchar_t					g_szAppConfig[1024];
+extern wchar_t					g_szAppConfigDB[1024];
 extern wchar_t					g_szPanelsXml[1024];
 extern wchar_t					g_szResPath[1024];
 extern wchar_t					g_szLangPath[1024];
@@ -158,4 +164,5 @@ extern CSkinManager				*g_pSkinManager;
 extern CSystemTray				*g_pSystemTray;
 extern CMainFrame				*g_pMainFrame;
 extern list<LPPANEL_INFO>		g_lstPanelInfo;
+extern CSQLite					g_SQLite;
 

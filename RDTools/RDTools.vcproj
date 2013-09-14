@@ -312,6 +312,14 @@
 			Name="Common"
 			>
 			<File
+				RelativePath="..\common\AdapterUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\AdapterUtil.h"
+				>
+			</File>
+			<File
 				RelativePath="..\common\ColorUtil.cpp"
 				>
 				<FileConfiguration
@@ -372,14 +380,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\common\NetWorkAdapterUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\common\NetWorkAdapterUtil.h"
-				>
-			</File>
-			<File
 				RelativePath="..\common\SHHelper.cpp"
 				>
 				<FileConfiguration
@@ -401,6 +401,14 @@
 			</File>
 			<File
 				RelativePath="..\common\SHHelper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\SQLiteUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\SQLiteUtil.h"
 				>
 			</File>
 			<File
