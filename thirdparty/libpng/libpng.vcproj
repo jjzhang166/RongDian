@@ -49,6 +49,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="pngpriv.h"
 				WarningLevel="4"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4127;4131;4244;4996"
 			/>

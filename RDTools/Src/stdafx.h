@@ -95,6 +95,9 @@ using namespace slim;
 #pragma comment(lib, "../RongDian/bin/libiconv.lib")
 #endif
 
+#include <SQLite/sqlite3.h>
+#pragma comment(lib, "../RongDian/bin/SQLite.lib")
+
 #include <DuiMsg.h>
 #ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/DuiMsgd.lib")
@@ -110,6 +113,8 @@ using namespace slim;
 #endif
 
 BOOL IsImageFile(LPCWSTR lpszFileName);
+int EscapeSQLite(CDuiString strKeyWord);
+int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lpszCaptionSection, LPCWSTR lpszCaptionId, UINT uType);
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是工具类文件的引用
@@ -122,6 +127,10 @@ BOOL IsImageFile(LPCWSTR lpszFileName);
 #include <SHHelper.h>
 #include <ILangUI.h>
 #include <ISkinUI.h>
+#include <AdapterUtil.h>
+#include <SQLiteUtil.h>
+#include <ConfigTable.h>
+#include <AddrTable.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是自定义文件的引用
@@ -143,7 +152,8 @@ extern HINSTANCE				g_hInstance;
 extern wchar_t					g_szModule[1024];
 extern wchar_t					g_szAppName[1024];
 extern wchar_t					g_szAppVer[1024];
-extern wchar_t					g_szAppConfig[1024];
+//extern wchar_t					g_szAppConfig[1024];
+extern wchar_t					g_szAppConfigDB[1024];
 extern wchar_t					g_szPanelsXml[1024];
 extern wchar_t					g_szResPath[1024];
 extern wchar_t					g_szLangPath[1024];
@@ -151,6 +161,9 @@ extern wchar_t					g_szLogPath[1024];
 extern wchar_t					g_szSnapShot[1024];
 extern wchar_t					g_szCoderPath[1024];
 extern wchar_t					g_szCoderBackupPath[1024];
+extern wchar_t					g_szBackground[1024];
+extern wchar_t					g_szLangFile[1024];
+extern wchar_t					g_szAddrSolution[1024];
 extern Logger					g_Logger;
 extern Options					g_OptOptions;
 extern CLangManager				*g_pLangManager;
@@ -158,4 +171,5 @@ extern CSkinManager				*g_pSkinManager;
 extern CSystemTray				*g_pSystemTray;
 extern CMainFrame				*g_pMainFrame;
 extern list<LPPANEL_INFO>		g_lstPanelInfo;
+extern CSQLite					g_SQLite;
 

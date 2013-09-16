@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-	<HorizontalLayout name="panel_ipconfig" inset="8,8,8,8" >
-		<VerticalLayout name="ipconfig_setting" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" >
+	<HorizontalLayout name="panel_ipconfig" inset="4,4,4,4" >
+		<VerticalLayout name="ipconfig_setting" width="320" minwidth="280" bordersize="1" bordercolor="FFE0E0E0" >
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="5" />
 				<Label name="setting_list_text" width="80" />
 				<Control width="3" />
-				<Combo name="ipconfig_solution" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
-					<ListLabelElement text="方案一" selected="true" />
-					<ListLabelElement text="方案二" />
+				<Combo name="ipconfig_solution" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
 				</Combo>
 			</HorizontalLayout>
-			<Control height="25" />
+			<Control height="10" />
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="15" />
 				<Label name="ipconfig_s_name_text" width="100" />
@@ -71,22 +69,22 @@
 			<Control />
 			<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
 				<Control />
-				<Button name="ipconfig_save" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Button name="ipconfig_new" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 				<Control />
-				<Button name="ipconfig_saveas" width="90" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Button name="ipconfig_save" width="90" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 				<Control />
 				<Button name="ipconfig_delete" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 				<Control />
-				<Button name="ipconfig_active" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Button name="ipconfig_apply" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 				<Control />
 			</HorizontalLayout>
 		</VerticalLayout>
 		<Control width="2" />
-		<VerticalLayout name="ipconfig_info" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true">
+		<VerticalLayout name="ipconfig_info" minwidth="360" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true">
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="15"/>
 				<Label name="ipconfig_network_adapters_text" width="100" />
-				<Combo name="ipconfig_network_adapters" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" textpadding="3,3,3,3" notifies="itemselect">
+				<Combo name="ipconfig_network_adapters" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
 				</Combo>
 				<Control width="10" />
 			</HorizontalLayout>
@@ -97,7 +95,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_idesc_text" width="100" />
 					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" hscrollbar="true"/>
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--适配器类型-->
@@ -105,7 +103,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_iftype_text" width="100" />
 					<Edit name="ipconfig_iftype_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--DHCP-->
@@ -113,15 +111,15 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_dhcp_text" width="100" />
 					<Edit name="ipconfig_i_dhcp_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--IP(可能有多个)-->
-				<HorizontalLayout bordersize="1" bordercolor="FFE0E0E0" >
+				<HorizontalLayout height="24" minheight="24" maxheight="48" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
 					<Label name="ipconfig_i_ip_text" width="100" />
-					<RichEdit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" multiline="true"/>
-					<Control width="6" />
+					<Edit name="ipconfig_i_ip_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" multiline="true"/>
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--子网掩码-->
@@ -129,7 +127,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_mask_text" width="100" />
 					<Edit name="ipconfig_i_mask_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--网关-->
@@ -137,7 +135,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_netgate_text" width="100" />
 					<Edit name="ipconfig_i_netgate_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--DNS-->
@@ -145,7 +143,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_dns_text" width="100" />
 					<Edit name="ipconfig_i_dns_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--DNS2-->
@@ -153,7 +151,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_dns2_text" width="100" />
 					<Edit name="ipconfig_i_dns2_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--MAC-->
@@ -161,7 +159,7 @@
 					<Control width="15" />
 					<Label name="ipconfig_i_mac_text" width="100" />
 					<Edit name="ipconfig_i_mac_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
-					<Control width="6" />
+					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 			</VerticalLayout>

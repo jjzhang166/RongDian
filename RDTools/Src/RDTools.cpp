@@ -2,13 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "RDTools.h"
 
 HINSTANCE			g_hInstance;
 wchar_t				g_szModule[1024] = {0};
 wchar_t				g_szAppName[1024] = {0};
 wchar_t				g_szAppVer[1024] = {0};
-wchar_t				g_szAppConfig[1024] = {0};
+//wchar_t				g_szAppConfig[1024] = {0};
+wchar_t				g_szAppConfigDB[1024] = {0};
 wchar_t				g_szPanelsXml[1024] = {0};
 wchar_t				g_szResPath[1024] = {0};
 wchar_t				g_szLogPath[1024] = {0};
@@ -16,6 +16,9 @@ wchar_t				g_szLangPath[1024] = {0};
 wchar_t				g_szSnapShot[1024] = {0};
 wchar_t				g_szCoderPath[1024] = {0};
 wchar_t				g_szCoderBackupPath[1024] = {0};
+wchar_t				g_szBackground[1024] = L"FF32506E";
+wchar_t				g_szLangFile[1024] = L"lang_en.ini";
+wchar_t				g_szAddrSolution[1024] = {0};
 Logger				g_Logger;
 Options				g_OptOptions;
 Parser				g_OptParser;
@@ -24,6 +27,7 @@ CSkinManager		*g_pSkinManager = NULL;
 CSystemTray			*g_pSystemTray = NULL;
 CMainFrame			*g_pMainFrame = NULL;
 list<LPPANEL_INFO>	g_lstPanelInfo;
+CSQLite				g_SQLite;
 
 
 BOOL CheckInstance()
@@ -68,6 +72,51 @@ BOOL IsImageFile(LPCWSTR lpszFileName)
 	return FALSE;
 }
 
+/*
+ /   ->    //
+ '   ->    ''
+ [   ->    /[
+ ]   ->    /]
+ %   ->    /%
+ &   ->    /&
+ _   ->    /_
+ (   ->    /(
+ )   ->    /)
+ */
+/*************************************************************************
+ * Method:    		EscapeSQLite
+ * Description:		sqlite转义符处理 
+ * ParameterList:	LPSTR lpszValue
+ * Parameter:       lpszValue为sqlite语句
+ * Return Value:	int为返回字符串长度
+ * Date:        	13:08:29 12:37:04
+ * Author:			
+ * CopyRight:		
+ ************************************************************************/
+int EscapeSQLite(CDuiString strKeyWord)
+{
+	strKeyWord.Replace(L"/", L"//");
+	strKeyWord.Replace(L"'", L"''");
+	strKeyWord.Replace(L"[", L"/[");
+	strKeyWord.Replace(L"]", L"/]");
+	strKeyWord.Replace(L"%", L"/%");
+	strKeyWord.Replace(L"&",L"/&");
+	strKeyWord.Replace(L"_", L"/_");
+	strKeyWord.Replace(L"(", L"/(");
+	strKeyWord.Replace(L")", L"/)");
+	return 0;
+}
+
+int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lpszCaptionSection, LPCWSTR lpszCaptionId, UINT uType)
+{
+	int nRet = MB_OK;
+	wchar_t szErr[1024], szTitle[1024];
+	Utility::GetINIStr(g_pLangManager->GetLangName(), lpszCaptionSection, lpszCaptionId, szTitle);
+	Utility::GetINIStr(g_pLangManager->GetLangName(), lpszTextSection, lpszTextId, szErr);
+	nRet = DuiMsgBox(hWnd, szErr, szTitle, uType);
+	return nRet;
+}
+
 BOOL InitPath()
 {
 	wchar_t szModule[1024];
@@ -77,7 +126,8 @@ BOOL InitPath()
 	wcscpy(g_szAppName, lpszAppName);
 	PathRemoveExtension(g_szAppName);
 	PathRemoveFileSpec(szModule);
-	swprintf(g_szAppConfig, L"%s\\%s", szModule, kConfigIni);
+	//swprintf(g_szAppConfig, L"%s\\%s", szModule, kConfigIni);
+	swprintf(g_szAppConfigDB, L"%s\\%s", szModule, kConfigDB);
 	wcscpy(g_szModule, szModule);
 	PathRemoveFileSpec(g_szModule);
 	swprintf(g_szLogPath, L"%s\\log", g_szModule);
@@ -120,46 +170,59 @@ BOOL InitArgs()
 
 BOOL InitSkin()
 {
-	wchar_t szSkinName[1024];
-	if(!PathFileExists(g_szAppConfig))
-		return FALSE;
 	g_pSkinManager = CSkinManager::Instance();
 	if(!g_pSkinManager)
 		return 0;
-	int nColorBk = -1;
-	if(Utility::GetINIInt(g_szAppConfig, LS_SKIN, kIsColor, &nColorBk) && Utility::GetINIStr(g_szAppConfig, LS_SKIN, kColor, szSkinName))
+	wchar_t szBkImage[1024];
+	swprintf(szBkImage, L"%s\\%s", g_szResPath, g_szBackground);
+	if(PathFileExists(szBkImage) && IsImageFile(szBkImage))
 	{
-		if(nColorBk)
-		{
-			wchar_t *pszStopStr = NULL;
-			int nBase = 16;
-			DWORD dwColor = wcstoul(szSkinName, &pszStopStr, nBase);
-			g_pSkinManager->SetBkColor(dwColor);
-		}
-		else
-		{
-			wchar_t szBkImage[1024];
-			swprintf(szBkImage, L"%s\\%s", g_szResPath, szSkinName);
-			if(PathFileExists(szBkImage) && IsImageFile(szBkImage))
-				g_pSkinManager->SetBkImage(szBkImage);
-		}
+		g_pSkinManager->SetBkImage(szBkImage);
+		return TRUE;
 	}
+	wchar_t *pszStopStr = NULL;
+	int nBase = 16;
+	DWORD dwColor = wcstoul(g_szBackground, &pszStopStr, nBase);
+	g_pSkinManager->SetBkColor(dwColor);
 	
 	return TRUE;
 }
 
 BOOL InitLang()
 {
-	wchar_t szLangName[1024];
-	if(!PathFileExists(g_szAppConfig))
-		return FALSE;
-	Utility::GetINIStr(g_szAppConfig, LS_LANG, L"lang", szLangName);
 	wchar_t szLang[1024];
-	swprintf(szLang, L"%s\\%s", g_szLangPath, szLangName);
+	swprintf(szLang, L"%s\\%s", g_szLangPath, g_szLangFile);
+	if(!PathFileExists(szLang))
+		return FALSE;
 	g_pLangManager = CLangManager::Instance();
 	if(!g_pLangManager)
 		return 0;
 	g_pLangManager->SetLangName(szLang);
+
+	return TRUE;
+}
+
+BOOL InitSQLite()
+{
+	char szConDB[1024] = {0};
+	StrUtil::u2u8(g_szAppConfigDB, szConDB);
+	if(!g_SQLite.Open(szConDB))
+		return FALSE;
+	CConfigTableDB config(&g_SQLite);
+	if(!config.Init())
+		return FALSE;
+	if(!config.Query(NULL))
+		return FALSE;
+	LPCONFIG_TABLE lpTable = config.GetResults();
+	for(int i=0; i<config.GetRows(); i++)
+	{
+		if(wcsicmp(lpTable[i].szName, kBackGround)==0)
+			wcscpy(g_szBackground, lpTable[i].szValue);
+		else if(wcsicmp(lpTable[i].szName, kLang)==0)
+			wcscpy(g_szLangFile, lpTable[i].szValue);
+		else if(wcsicmp(lpTable[i].szName, kSolution)==0)
+			wcscpy(g_szAddrSolution, lpTable[i].szValue);
+	}
 
 	return TRUE;
 }
@@ -169,7 +232,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// 内存跟踪调试
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(431);
+	//_CrtSetBreakAlloc(2612);
 #endif
 
 	g_hInstance = hInstance;
@@ -193,6 +256,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	InitLog();
 	
 	InitArgs();
+
+	InitSQLite();
 
 	InitSkin();
 
@@ -237,6 +302,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	::CoUninitialize();
 
 	::FreeLibrary(hInstRich);
+
+	if(g_SQLite.IsValid())
+		g_SQLite.Close();
 
 	CLangManager::Release();
 	CSkinManager::Release();

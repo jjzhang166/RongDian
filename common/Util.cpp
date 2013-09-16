@@ -232,6 +232,16 @@ BOOL Utility::SetINIInt(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszN
 	return SetINIStr(lpszFileName, lpszSection, lpszName, szValue);
 }
 
+BOOL Utility::DelINISection(LPCWSTR lpszFileName, LPCWSTR lpszSection)
+{
+	return WritePrivateProfileSection(lpszSection, NULL, lpszFileName);
+}
+
+BOOL Utility::DelINIKey(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszKey)
+{
+	return WritePrivateProfileString(lpszSection, lpszKey, NULL, lpszFileName);
+}
+
 BOOL Utility::TimeToTm(const time_t &t, tm * tt)
 {
 	if (localtime_s(tt, &t) == 0)
@@ -409,7 +419,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	DWORD dwFileSize = 0;
 	wchar_t temp[1024] = {0};
 	wcscpy_s(temp, lpszFolderPath);
-	wcscat_s(temp, _T("\\*.*"));
+	wcscat_s(temp, L"\\*.*");
 	WIN32_FIND_DATA FindFileData = {0};
 	HANDLE hFind = ::FindFirstFile(temp, &FindFileData);
 	if(INVALID_HANDLE_VALUE == hFind)
@@ -418,7 +428,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	{
 		if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if(_wcsicmp(FindFileData.cFileName, _T("."))!=0 && _wcsicmp(FindFileData.cFileName, _T(".."))!=0)
+			if(_wcsicmp(FindFileData.cFileName, L".")!=0 && _wcsicmp(FindFileData.cFileName, L"..")!=0)
 			{
 				BOOL bSubRet = TRUE;
 				DWORD dwSubSize = 0;
@@ -441,55 +451,6 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 			break;
 	}
 	dwSize += dwFolderSize;
-
-	return bRet;
-}
-
-BOOL Utility::GetMacAddr(LPADDR_INFO lpAddrInfo)
-{
-	BOOL bRet = FALSE;
-	if(!lpAddrInfo)
-		return bRet;
-
-	ULONG ulSize = sizeof(IP_ADAPTER_INFO);
-	IP_ADAPTER_INFO *pAdapterInfo = (IP_ADAPTER_INFO*)malloc(ulSize);
-	if(!pAdapterInfo)
-		return bRet;
-	memset(pAdapterInfo, 0, sizeof(pAdapterInfo));
-	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_BUFFER_OVERFLOW)
-	{
-		delete pAdapterInfo;
-		pAdapterInfo = (IP_ADAPTER_INFO *)malloc(ulSize);
-		if(!pAdapterInfo)
-			return bRet;
-	}
-	if(GetAdaptersInfo(pAdapterInfo, &ulSize)==ERROR_SUCCESS)
-	{
-		while(pAdapterInfo)
-		{
-			if(strstr(pAdapterInfo->Description, "VMware") ||
-				strstr(pAdapterInfo->Description, "vpn")	||
-				strstr(pAdapterInfo->Description, "Virtual") ||
-				strstr(pAdapterInfo->Description, "VirtualBox") ||
-				strstr(pAdapterInfo->Description, "Bluetooth"))
-			{
-				pAdapterInfo = pAdapterInfo->Next;
-				continue;
-			}
-			if(pAdapterInfo->Type==MIB_IF_TYPE_ETHERNET || pAdapterInfo->Type==IF_TYPE_IEEE80211)
-			{
-				strcpy(lpAddrInfo->ip, pAdapterInfo->IpAddressList.IpAddress.String);
-				sprintf(lpAddrInfo->mac, "%02x-%02x-%02x-%02x-%02x",
-					pAdapterInfo->Address[0], pAdapterInfo->Address[1], pAdapterInfo->Address[2], 
-					pAdapterInfo->Address[3], pAdapterInfo->Address[4]);
-				bRet = TRUE;
-				break;
-			}
-			pAdapterInfo = pAdapterInfo->Next;
-		}
-	}
-	free(pAdapterInfo);
-
 
 	return bRet;
 }

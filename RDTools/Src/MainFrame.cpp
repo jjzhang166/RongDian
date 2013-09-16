@@ -298,7 +298,7 @@ void CMainFrame::OnItemClick(TNotifyUI& msg)
 void CMainFrame::OnItemSelect(TNotifyUI& msg)
 {
 	CDuiString controlName = msg.pSender->GetName();
-	if(controlName==GetIPConfigSettingListName()||controlName==GetIPConfigConnectListName())
+	if(controlName==GetIPConfigSolutionListName()||controlName==GetIPConfigAdaptersListName())
 	{
 		OnIPConfigItemSelect(msg);
 	}
@@ -418,10 +418,6 @@ LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam)
 		}
 		return TRUE;
 	}
-	else if (lpData->dwData==WM_IP_SET_COMPLETE||lpData->dwData==WM_DNS_ADD_COMPLETE||lpData->dwData==WM_DNS_SET_COMPLETE)
-	{
-		ExecuteShellResult();
-	}
 	return 0;
 }
 
@@ -479,8 +475,12 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 				continue;
 			g_pSkinManager->UpdateBkImage(szDstImage);
 			swprintf(szNewImage, L"custom\\%s", szCoder_w);
-			Utility::SetINIStr(g_szAppConfig, LS_SKIN, kColor, szNewImage);
-			Utility::SetINIStr(g_szAppConfig, LS_SKIN, kIsColor, L"0");
+			//Utility::SetINIStr(g_szAppConfig, LS_SKIN, kBackGround, szNewImage);
+			CConfigTableDB table(&g_SQLite);
+			CONFIG_TABLE config;
+			wcscpy(config.szName, kBackGround);
+			wcscpy(config.szValue, szNewImage);
+			table.Update(&config);
 			break;
 		}
 	}
@@ -533,9 +533,9 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 	CControlUI *pTab = NULL;
 	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
 	sCurTab = pPanelContents->GetUserData();
-	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab)
+	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab.GetData())
 	sCurLayout = pCurTab->GetUserData();
-	FIND_CONTROL_BY_ID(pCurLayout, CContainerUI, (&m_PaintManager), sCurLayout)
+	FIND_CONTROL_BY_ID(pCurLayout, CContainerUI, (&m_PaintManager), sCurLayout.GetData())
 	if(!pCurTab || !pCurLayout)
 		return FALSE;
 	if(sCurTab==sCtrlName)
@@ -663,14 +663,12 @@ BOOL CMainFrame::CreatePanels()
 			pTab = new CButtonUI();
 			if(!pTab)
 				return bRet;
-			//pTab->SetMinWidth(30);
+			//pTab->SetFixedWidth(150);
+			//pTab->SetFixedHeight(35);
+			//pTab->SetMinWidth(36);
 			//pTab->SetMaxWidth(100);
-			pTab->SetFixedWidth(150);
-			pTab->SetFixedHeight(35);
-			pTab->SetTextStyle(/*pTab->GetTextStyle() | */DT_END_ELLIPSIS);
 			pTab->SetTextColor(kTextColor);
 			pTab->SetBorderSize(1);
-			pTab->SetTextPadding(CDuiRect(30,8,20,5));
 			pTab->SetUserData(lpPanelInfo->szLayout);
 			pTab->SetName(lpPanelInfo->szTab);
 			pTab->SetText(lpPanelInfo->szName);

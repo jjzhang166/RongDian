@@ -5,15 +5,6 @@
 #include <time.h>
 
 #include <stdio.h>
-#include <IPHlpApi.h>
-#pragma comment(lib, "IphlpApi.lib")
-
-typedef struct _tagADDR_INFO
-{
-	int port;
-	char ip[256];
-	char mac[256];
-} ADDR_INFO, *PADDR_INFO, *LPADDR_INFO;
 
 namespace Utility  
 {
@@ -46,6 +37,10 @@ BOOL GetINIInt(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszName, int 
 
 BOOL SetINIInt(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszName, int nValue);
 
+BOOL DelINISection(LPCWSTR lpszFileName, LPCWSTR lpszSection);
+
+BOOL DelINIKey(LPCWSTR lpszFileName, LPCWSTR lpszSection, LPCWSTR lpszKey);
+
 BOOL TimeToTm(const time_t &t, tm * tt);
 
 BOOL GetScreenColor(int x, int y, DWORD &dwColor);
@@ -59,6 +54,4 @@ BOOL IsAdminPrivilege();
 BOOL IsAdminUser();
 
 BOOL GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize);
-
-BOOL GetMacAddr(LPADDR_INFO lpAddrInfo);
 };
