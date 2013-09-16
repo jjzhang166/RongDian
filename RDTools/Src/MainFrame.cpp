@@ -663,9 +663,10 @@ BOOL CMainFrame::CreatePanels()
 			pTab = new CButtonUI();
 			if(!pTab)
 				return bRet;
-			pTab->SetMinWidth(36);
-			pTab->SetMaxWidth(100);
-			pTab->SetTextStyle(pTab->GetTextStyle() | DT_END_ELLIPSIS);
+			//pTab->SetFixedWidth(150);
+			//pTab->SetFixedHeight(35);
+			//pTab->SetMinWidth(36);
+			//pTab->SetMaxWidth(100);
 			pTab->SetTextColor(kTextColor);
 			pTab->SetBorderSize(1);
 			pTab->SetUserData(lpPanelInfo->szLayout);
