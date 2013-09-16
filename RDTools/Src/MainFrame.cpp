@@ -475,8 +475,12 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 				continue;
 			g_pSkinManager->UpdateBkImage(szDstImage);
 			swprintf(szNewImage, L"custom\\%s", szCoder_w);
-			Utility::SetINIStr(g_szAppConfig, LS_SKIN, kColor, szNewImage);
-			Utility::SetINIStr(g_szAppConfig, LS_SKIN, kIsColor, L"0");
+			//Utility::SetINIStr(g_szAppConfig, LS_SKIN, kBackGround, szNewImage);
+			CConfigTableDB table(&g_SQLite);
+			CONFIG_TABLE config;
+			wcscpy(config.szName, kBackGround);
+			wcscpy(config.szValue, szNewImage);
+			table.Update(&config);
 			break;
 		}
 	}
@@ -529,9 +533,9 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 	CControlUI *pTab = NULL;
 	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
 	sCurTab = pPanelContents->GetUserData();
-	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab)
+	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab.GetData())
 	sCurLayout = pCurTab->GetUserData();
-	FIND_CONTROL_BY_ID(pCurLayout, CContainerUI, (&m_PaintManager), sCurLayout)
+	FIND_CONTROL_BY_ID(pCurLayout, CContainerUI, (&m_PaintManager), sCurLayout.GetData())
 	if(!pCurTab || !pCurLayout)
 		return FALSE;
 	if(sCurTab==sCtrlName)

@@ -267,7 +267,12 @@ bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
 			pListItem->Select(false);
         m_iCurSel = -1;
     }
-    if( iIndex < 0 )
+    if( iIndex == -1 )
+	{
+		Invalidate();
+		return true;
+	}
+	if(iIndex < 0 )
 		return false;
     if( m_items.GetSize() == 0 )
 		return false;

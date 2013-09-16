@@ -26,7 +26,7 @@ const wchar_t* const kConfigDB						= L"Config.db";
 
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
-const wchar_t* const kDefaultLangIni				= L"lang_ZH-CN.ini"; // 语言文件
+const wchar_t* const kDefaultLangIni				= L"lang_en.ini"; // 语言文件
 
 // XML文件
 const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // 主窗体
@@ -71,6 +71,7 @@ const wchar_t* const kDescAbout						= L"desc_about";
 // MSG
 const wchar_t* const kMsgIconName					= L"RongDian.png";
 const wchar_t* const kMsgErr						= L"msg_err";
+const wchar_t* const kMsgWarning					= L"msg_warning";
 const wchar_t* const kPluginErr						= L"plugin_err";
 const wchar_t* const kNoFoundErr					= L"nofound_err";
 const wchar_t* const kFolderTitle					= L"folder_title";
@@ -80,13 +81,19 @@ const wchar_t* const kNoHandleText					= L"nohandle_text";
 const wchar_t* const kInvalidPathErr				= L"invalid_path_err";
 const wchar_t* const kInvalidFinderErr				= L"invalid_finder_err";
 const wchar_t* const kInvalidFormatterErr			= L"invalid_foramtter_err";
+const wchar_t* const kInvalidIPErr					= L"invalid_ipv4_err";
+const wchar_t* const kInvalidMaskErr				= L"invalid_subnet_mask_err";
+const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
+const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
+const wchar_t* const kDeleteSolution				= L"delete_solution";
 
 // 
-const wchar_t* const kIsColor						= L"IsColor";
-const wchar_t* const kColor							= L"Color";
+const wchar_t* const kBackGround					= L"Background";
+const wchar_t* const kLang							= L"Lang";
+const wchar_t* const kSolution						= L"Solution";
 const wchar_t* const kSelected						= L"Selected";
 const wchar_t* const kValid							= L"Valid";
-const wchar_t* const kSolution						= L"Solution";
+const wchar_t* const kName							= L"Name";
 const wchar_t* const kAddrType						= L"AddrType";
 const wchar_t* const kAddr							= L"Addr";
 const wchar_t* const kMask							= L"Mask";
@@ -101,7 +108,9 @@ const wchar_t* const kJPGExt						= L".jpg";
 const wchar_t* const kPNGExt						= L".png";
 const wchar_t* const kBMPExt						= L".bmp";
 
-const int			 STRING_LENGTH					= 260;
+#ifndef STRING_LENGTH
+#define 			 STRING_LENGTH					260
+#endif
 
 typedef struct _tagPANEL_INFO
 {

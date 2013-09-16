@@ -54,8 +54,4 @@ BOOL IsAdminPrivilege();
 BOOL IsAdminUser();
 
 BOOL GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize);
-
-int EscapeSQLiteA(LPSTR lpszValue);
-
-int EscapeSQLiteW(LPWSTR lpszValue);
 };

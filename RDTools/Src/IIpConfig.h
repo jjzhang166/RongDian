@@ -28,6 +28,7 @@ public:
 	BOOL			OnSaveSolution();
 	BOOL			OnDelSolution();
 	BOOL			OnApplySolution();
+	BOOL			ResetSolution();
 
 	static LONG		AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
 	static LONG		AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);

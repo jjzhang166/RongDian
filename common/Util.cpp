@@ -419,7 +419,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	DWORD dwFileSize = 0;
 	wchar_t temp[1024] = {0};
 	wcscpy_s(temp, lpszFolderPath);
-	wcscat_s(temp, _T("\\*.*"));
+	wcscat_s(temp, L"\\*.*");
 	WIN32_FIND_DATA FindFileData = {0};
 	HANDLE hFind = ::FindFirstFile(temp, &FindFileData);
 	if(INVALID_HANDLE_VALUE == hFind)
@@ -428,7 +428,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	{
 		if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if(_wcsicmp(FindFileData.cFileName, _T("."))!=0 && _wcsicmp(FindFileData.cFileName, _T(".."))!=0)
+			if(_wcsicmp(FindFileData.cFileName, L".")!=0 && _wcsicmp(FindFileData.cFileName, L"..")!=0)
 			{
 				BOOL bSubRet = TRUE;
 				DWORD dwSubSize = 0;
@@ -453,46 +453,5 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	dwSize += dwFolderSize;
 
 	return bRet;
-}
-
-/*
- /   ->    //
- '   ->    ''
- [   ->    /[
- ]   ->    /]
- %   ->    /%
- &   ->    /&
- _   ->    /_
- (   ->    /(
- )   ->    /)
- */
-/*************************************************************************
- * Method:    		EscapeSQLite
- * Description:		sqlite转义符处理 
- * ParameterList:	LPSTR lpszValue
- * Parameter:       lpszValue为sqlite语句
- * Return Value:	int为返回字符串长度
- * Date:        	13:08:29 12:37:04
- * Author:			
- * CopyRight:		
- ************************************************************************/
-int Utility::EscapeSQLiteA(LPSTR lpszValue)
-{
-	return 0;
-}
-
-/*************************************************************************
- * Method:    		EscapeSQLite
- * Description:		sqlite转义符处理 
- * ParameterList:	LPSTR lpszValue
- * Parameter:       lpszValue为sqlite语句
- * Return Value:	int为返回字符串长度
- * Date:        	13:08:29 12:37:04
- * Author:			
- * CopyRight:		
- ************************************************************************/
-int Utility::EscapeSQLiteW(LPWSTR lpszValue)
-{
-	return 0;
 }
 #pragma warning(pop)

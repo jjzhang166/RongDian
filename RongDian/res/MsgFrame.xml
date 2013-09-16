@@ -10,10 +10,10 @@
 			<Button name="frame_logo" width="20" height="20" padding="2" normalimage="file='default\rdtools.png'" tooltip="" />
 	   		<Control width="5"/> <!-- Right Blank -->
 			<!-- frame_title -->
-	   		<Label name="frame_title" font="1" text="" /> <!-- frame_title -->
-			<Control /> <!-- Blank -->
+	   		<Label name="frame_title" font="1" text="" minwidth="160" /> <!-- frame_title -->
 			<!-- System's Button -->
-	   		<HorizontalLayout height="23" width="39" >
+	   		<HorizontalLayout height="23" >
+				<Control /> <!-- Blank -->
 				<Button name="closebtn" width="39" height="20" normalimage="file='default\btn_close_normal.png'" hotimage="file='default\btn_close_highlight.png'" pushedimage="file='default\btn_close_down.png'" />   
 	   		</HorizontalLayout><!-- System's Button -->
 	 	</HorizontalLayout><!-- frame_title_contaner -->

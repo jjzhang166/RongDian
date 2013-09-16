@@ -282,7 +282,7 @@ void CSQLiteBinary::Clear()
 CSQLiteQuery::CSQLiteQuery()
 	: m_pSQLite3(NULL)
 	, m_pStmt(NULL)
-	, m_bEof(false)
+	, m_bEof(true)
 	, m_nCols(0)
 	, m_bOwnVM(false)
 {
@@ -328,8 +328,7 @@ CSQLiteQuery& CSQLiteQuery::operator=(const CSQLiteQuery& stQuery)
 
 int CSQLiteQuery::FieldIndex(const char* szField)
 {
-	if(!CheckStmt())
-		return -1;
+	assert(m_pStmt!=NULL);
 	if (!szField)
 		return -1;
 	for (int nField = 0; nField < m_nCols; nField++)
@@ -343,9 +342,7 @@ int CSQLiteQuery::FieldIndex(const char* szField)
 
 const char* CSQLiteQuery::FieldName(int nCol)
 {
-	if(!CheckStmt())
-		return NULL;
-
+	assert(m_pStmt!=NULL);
 	if (nCol < 0 || nCol > m_nCols-1)
 		return NULL;
 
@@ -354,9 +351,7 @@ const char* CSQLiteQuery::FieldName(int nCol)
 
 const char* CSQLiteQuery::FieldDeclType(int nCol)
 {
-	if(!CheckStmt())
-		return NULL;
-
+	assert(m_pStmt!=NULL);
 	if (nCol < 0 || nCol > m_nCols-1)
 		return NULL;
 
@@ -365,9 +360,7 @@ const char* CSQLiteQuery::FieldDeclType(int nCol)
 
 int CSQLiteQuery::FieldDataType(int nCol)
 {
-	if(!CheckStmt())
-		return SQLITE_NULL;
-
+	assert(m_pStmt!=NULL);
 	if (nCol < 0 || nCol > m_nCols-1)
 		return SQLITE_NULL;
 
@@ -376,9 +369,7 @@ int CSQLiteQuery::FieldDataType(int nCol)
 
 const char* CSQLiteQuery::FieldValue(int nField)
 {
-	if(!CheckStmt())
-		return NULL;
-
+	assert(m_pStmt!=NULL);
 	if (nField < 0 || nField > m_nCols-1)
 		return NULL;
 
@@ -456,8 +447,7 @@ const char* CSQLiteQuery::GetStringField(const char* szField, const char* szNull
 
 const unsigned char* CSQLiteQuery::GetBlobField(int nField, int& nLen)
 {
-	if(!CheckStmt())
-		return NULL;
+	assert(m_pStmt!=NULL);
 	if (nField < 0 || nField > m_nCols-1)
 		return NULL;
 	nLen = sqlite3_column_bytes(m_pStmt, nField);
@@ -492,23 +482,19 @@ bool CSQLiteQuery::CheckStmt()
 
 int CSQLiteQuery::NumFields()
 {
-	if(CheckStmt())
-		return m_nCols;
-	return -1;
+	assert(m_pStmt!=NULL);
+	return m_nCols;
 }
 
 bool CSQLiteQuery::Eof()
 {
-	if(CheckStmt())
-		return false;
+	assert(m_pStmt!=NULL);
 	return m_bEof;
 }
 
 bool CSQLiteQuery::NextRow()
 {
-	if(CheckStmt())
-		return false;
-
+	assert(m_pStmt!=NULL);
 	int nRet = sqlite3_step(m_pStmt);
 	if (nRet == SQLITE_DONE)
 	{
@@ -593,25 +579,21 @@ CSQLiteTable& CSQLiteTable::operator=(const CSQLiteTable& stTable)
 	return *this;
 }
 
-
 int CSQLiteTable::NumFields()
 {
-	if(!IsValid())
-		return -1;
+	assert(m_paszResults!=NULL);
 	return m_nCols;
 }
 
 int CSQLiteTable::NmRows()
 {
-	if(!IsValid())
-		return -1;
+	assert(m_paszResults!=NULL);
 	return m_nRows;
 }
 
 const char* CSQLiteTable::FieldName(int nCol)
 {
-	if(!IsValid())
-		return NULL;
+	assert(m_paszResults!=NULL);
 	if (nCol < 0 || nCol > m_nCols-1)
 		return NULL;
 
@@ -620,8 +602,7 @@ const char* CSQLiteTable::FieldName(int nCol)
 
 const char* CSQLiteTable::FieldValue(int nField)
 {
-	if(!IsValid())
-		return NULL;
+	assert(m_paszResults!=NULL);
 	if (nField < 0 || nField > m_nCols-1)
 		return NULL;
 
@@ -631,8 +612,7 @@ const char* CSQLiteTable::FieldValue(int nField)
 
 const char* CSQLiteTable::FieldValue(const char* szField)
 {
-	if(!IsValid())
-		return NULL;
+	assert(m_paszResults!=NULL);
 	if (!szField)
 		return NULL;
 	for (int nField = 0; nField < m_nCols; nField++)
@@ -709,22 +689,19 @@ bool CSQLiteTable::IsValid()
 
 bool CSQLiteTable::FieldIsNull(int nField)
 {
-	if(!IsValid())
-		return false;
+	assert(m_paszResults!=NULL);
 	return (FieldValue(nField) == 0);
 }
 
 bool CSQLiteTable::FieldIsNull(const char* szField)
 {
-	if(!IsValid())
-		return false;
+	assert(m_paszResults!=NULL);
 	return (FieldValue(szField) == 0);
 }
 
 bool CSQLiteTable::SetRow(int nRow)
 {
-	if(!IsValid())
-		return false;
+	assert(m_paszResults!=NULL);
 	if (nRow < 0 || nRow > m_nRows-1)
 		return false;
 
@@ -783,10 +760,8 @@ CSQLiteStmt& CSQLiteStmt::operator=(const CSQLiteStmt& stStmt)
 
 int CSQLiteStmt::ExecDML()
 {
-	if(!CheckSQLite())
-		return -1;
-	if(!CheckStmt())
-		return -1;
+	assert(m_pSQLite3!=NULL);
+	assert(m_pStmt!=NULL);
 	int nRowsChanged = -1;
 	const char* szError = 0;
 	int nRet = sqlite3_step(m_pStmt);
@@ -808,10 +783,8 @@ int CSQLiteStmt::ExecDML()
 CSQLiteQuery CSQLiteStmt::ExecQuery()
 {
 	CSQLiteQuery stQuery;
-	if(!CheckSQLite())
-		return stQuery;
-	if(!CheckStmt())
-		return stQuery;
+	assert(m_pSQLite3!=NULL);
+	assert(m_pStmt!=NULL);
 	int nRet = sqlite3_step(m_pStmt);
 	if (nRet == SQLITE_DONE)
 		return CSQLiteQuery(m_pSQLite3, m_pStmt, true/*eof*/, false); // no rows
@@ -824,48 +797,42 @@ CSQLiteQuery CSQLiteStmt::ExecQuery()
 
 void CSQLiteStmt::Bind(int nParam, const char* szValue)
 {
-	if(!CheckStmt())
-		return ;
+	assert(m_pStmt!=NULL);
 	int nRes = sqlite3_bind_text(m_pStmt, nParam, szValue, -1, SQLITE_TRANSIENT);
 	assert(nRes!=SQLITE_OK);
 }
 
 void CSQLiteStmt::Bind(int nParam, const int nValue)
 {
-	if(!CheckStmt())
-		return ;
+	assert(m_pStmt!=NULL);
 	int nRes = sqlite3_bind_int(m_pStmt, nParam, nValue);
 	assert(nRes!=SQLITE_OK);
 }
 
 void CSQLiteStmt::Bind(int nParam, const double fValue)
 {
-	if(!CheckStmt())
-		return ;
+	assert(m_pStmt!=NULL);
 	int nRes = sqlite3_bind_double(m_pStmt, nParam, fValue);
 	assert(nRes!=SQLITE_OK);
 }
 
 void CSQLiteStmt::Bind(int nParam, const unsigned char* blobValue, int nLen)
 {
-	if(!CheckStmt())
-		return ;
+	assert(m_pStmt!=NULL);
 	int nRes = sqlite3_bind_blob(m_pStmt, nParam, (const void*)blobValue, nLen, SQLITE_TRANSIENT);
 	assert(nRes!=SQLITE_OK);
 }
 
 void CSQLiteStmt::BindNull(int nParam)
 {
-	if(!CheckStmt())
-		return ;
+	assert(m_pStmt!=NULL);
 	int nRes = sqlite3_bind_null(m_pStmt, nParam);
 	assert(nRes!=SQLITE_OK);
 }
 
 int CSQLiteStmt::BindParamIndex(const char* szParam)
 {
-	if(!CheckStmt())
-		return -1;
+	assert(m_pStmt!=NULL);
 	int nParam = sqlite3_bind_parameter_index(m_pStmt, szParam);
 	/*int nn = */sqlite3_bind_parameter_count(m_pStmt);
 	/*const char* sz1 = */sqlite3_bind_parameter_name(m_pStmt, 1);
@@ -983,7 +950,7 @@ bool CSQLite::Open(const char* szFile)
 	int nRet = sqlite3_open(szFile, &m_pSQLite3);
 	if (nRet != SQLITE_OK)
 	{
-		const char* szError = sqlite3_errmsg(m_pSQLite3);
+		//const char* szError = sqlite3_errmsg(m_pSQLite3);
 		return false;
 	}
 
@@ -1009,8 +976,7 @@ bool CSQLite::TableExists(const char* szTable)
 
 int CSQLite::ExecDML(const char* szSQL)
 {
-	if(!IsValid())
-		return -1;
+	assert(m_pSQLite3!=NULL);
 	char* szError = 0;
 	int nRet = sqlite3_exec(m_pSQLite3, szSQL, 0, 0, &szError);
 	if (nRet == SQLITE_OK)
@@ -1020,9 +986,8 @@ int CSQLite::ExecDML(const char* szSQL)
 
 CSQLiteQuery CSQLite::ExecQuery(const char* szSQL)
 {
+	assert(m_pSQLite3!=NULL);
 	CSQLiteQuery stQuery;
-	if(!IsValid())
-		return stQuery;
 	sqlite3_stmt* pStmt = Compile(szSQL);
 	int nRet = sqlite3_step(pStmt);
 	if (nRet == SQLITE_DONE)
@@ -1041,7 +1006,6 @@ CSQLiteQuery CSQLite::ExecQuery(const char* szSQL)
 		//const char* szError= sqlite3_errmsg(m_pSQLite3);
 		return stQuery;
 	}
-	return stQuery;
 }
 
 int CSQLite::ExecScalar(const char* szSQL, int nNullValue /*= 0*/)
@@ -1056,9 +1020,7 @@ int CSQLite::ExecScalar(const char* szSQL, int nNullValue /*= 0*/)
 CSQLiteTable CSQLite::GetTable(const char* szSQL)
 {
 	CSQLiteTable stTable;
-	if(!IsValid())
-		return stTable;
-
+	assert(m_pSQLite3!=NULL);
 	char* szError = 0;
 	char** paszResults = 0;
 	int nRet;
@@ -1073,10 +1035,7 @@ CSQLiteTable CSQLite::GetTable(const char* szSQL)
 
 CSQLiteStmt CSQLite::CompileStmt(const char* szSQL)
 {
-	CSQLiteStmt stStmt;
-	if(!IsValid())
-		return stStmt;
-
+	assert(m_pSQLite3!=NULL);
 	sqlite3_stmt* pStmt = Compile(szSQL);
 	return CSQLiteStmt(m_pSQLite3, pStmt);
 }
@@ -1101,22 +1060,20 @@ bool CSQLite::IsValid()
 
 bool CSQLite::IsAutoCommitOn()
 {
-	if(!IsValid())
-		return false;
+	assert(m_pSQLite3!=NULL);
 	return sqlite3_get_autocommit(m_pSQLite3) ? true : false;
 }
 
 sqlite3_stmt* CSQLite::Compile(const char* szSQL)
 {
-	if(!IsValid())
-		return NULL;
+	assert(m_pSQLite3!=NULL);
 	const char* szTail = 0;
 	sqlite3_stmt* pStmt = NULL;
 	int nRet = sqlite3_prepare_v2(m_pSQLite3, szSQL, -1, &pStmt, &szTail);
 
 	if (nRet != SQLITE_OK)
 	{
-		const char* szError = sqlite3_errmsg(m_pSQLite3);
+		//const char* szError = sqlite3_errmsg(m_pSQLite3);
 		return NULL;
 	}
 	return pStmt;

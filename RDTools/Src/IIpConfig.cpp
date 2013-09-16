@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "IIpConfig.h"
-#include <WinSock2.h>
-#include <Iphlpapi.h>
-#include <process.h>
-#pragma comment(lib,"Iphlpapi.lib")
 
-const wchar_t* const kIpConfigSectionPrefix = L"ipconfig_";
 // 第一列
 const wchar_t* const kIPConfigSettingListText = L"setting_list_text";
 const wchar_t* const kIPConfigSolutionList = L"ipconfig_solution";		
@@ -51,23 +46,8 @@ const wchar_t* const kIPConfigCurrentGatewayEdit = L"ipconfig_i_netgate_edit";
 const wchar_t* const kIPConfigCurrentDns1Edit = L"ipconfig_i_dns_edit";
 const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
 const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
-//msg
-const wchar_t* const kIPConfigMsgCanntDel = L"ipconfig_cannt_del";
-const wchar_t* const kIPConfigMsgNotNull = L"ipconfig_not_null";
-const wchar_t* const kIPConfigMsgDelSuc = L"ipconfig_del_success";
-
-#define ROW_HEIGHT 24
-#define IP_LENGTH 129
-#define IP_MAX 5
-#define SECTION_LENGTH 100
-#define INI_KEY_NAME L"name"
-#define INI_KEY_IP_AUTO L"ip_auto"
-#define INI_KEY_IP L"ip"
-#define INI_KEY_MASK L"mask"
-#define INI_KEY_GATEWAY L"gateway"
-#define INI_KEY_DNS_AUTO L"dns_auto"
-#define INI_KEY_DNS1 L"dns1"
-#define INI_KEY_DNS2 L"dns2"
+const wchar_t* const kIPConfigNewSolution = L"ipconfig_newsolution";
+const wchar_t* const kIPConfigInvalidName = L"ipconfig_invalidname";
 
 IIPConfig::IIPConfig()
 {
@@ -98,6 +78,25 @@ IIPConfig::IIPConfig()
 
 IIPConfig::~IIPConfig()
 {
+	list<LPIPCONFIG_INFO>::iterator addr_iter;
+	LPIPCONFIG_INFO lpAddrInfo = NULL;
+	for(addr_iter=lstIpConfigInfo.begin(); addr_iter!=lstIpConfigInfo.end(); )
+	{
+		lpAddrInfo = (*addr_iter);
+		addr_iter++;
+		delete lpAddrInfo;
+	}
+	lstIpConfigInfo.clear();
+
+	list<LPADAPTER_INFO>::iterator adapter_iter;
+	LPADAPTER_INFO lpAdapterInfo = NULL;
+	for(adapter_iter=lstAdaptersInfo.begin(); adapter_iter!=lstAdaptersInfo.end(); )
+	{
+		lpAdapterInfo = (*adapter_iter);
+		adapter_iter++;
+		delete lpAdapterInfo;
+	}
+	lstAdaptersInfo.clear();
 }
 
 BOOL IIPConfig::InitIPConfig()
@@ -197,6 +196,8 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 		m_pMaskEdit->SetEnabled(true);
 		m_pDnsAutoCheckBox->SetEnabled(false);
 		m_pDnsManualCheckBox->SetCheck(true);
+		m_pDns1Edit->SetEnabled(true);
+		m_pDns2Edit->SetEnabled(true);
 	}
 	else if (sCtrlName == kIPConfigAutoSetDnsCheckBox)	//自动获取dns
 	{
@@ -253,61 +254,54 @@ LPCWSTR IIPConfig::GetIPConfigAdaptersListName()
 BOOL IIPConfig::LoadSolutions()
 {
 	BOOL bRet = FALSE;
-	wchar_t szSection[MAX_PATH] = {0};
-	IPCONFIG_INFO stIPConfigInfo = {0};
+	CAddrTableDB addr(&g_SQLite);
+	if(!addr.Init())
+		return FALSE;
+	addr.Query(NULL);
+	LPADDR_TABLE lpAddrTable = addr.GetResults();
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
-	int nIndex = 0;
-	while(TRUE)
+	for(int i=0; i<addr.GetRows(); i++)
 	{
-		swprintf(szSection, L"Solution%d", nIndex);
-		Utility::GetINIInt(g_szAppConfig, szSection, kValid, &stIPConfigInfo.nValid);
-		if(stIPConfigInfo.nValid==-1)
-			break;
-		Utility::GetINIInt(g_szAppConfig, szSection, kAddrType, &stIPConfigInfo.nAddrType);
-		Utility::GetINIStr(g_szAppConfig, szSection, kSolution, stIPConfigInfo.szSolution);
-		Utility::GetINIStr(g_szAppConfig, szSection, kAddr, stIPConfigInfo.szAddr);
-		Utility::GetINIStr(g_szAppConfig, szSection, kMask, stIPConfigInfo.szMask);
-		Utility::GetINIStr(g_szAppConfig, szSection, kGateway, stIPConfigInfo.szGateway);
-		Utility::GetINIInt(g_szAppConfig, szSection, kDnsType, &stIPConfigInfo.nDnsType);
-		Utility::GetINIStr(g_szAppConfig, szSection, kDns1, stIPConfigInfo.szDns1);
-		Utility::GetINIStr(g_szAppConfig, szSection, kDns2, stIPConfigInfo.szDns2);
-
 		lpIPConfigInfo = new IPCONFIG_INFO();
 		if(!lpIPConfigInfo)
 			return bRet;
-		memcpy(lpIPConfigInfo, &stIPConfigInfo, sizeof(stIPConfigInfo));
+		lpIPConfigInfo->nAddrType = lpAddrTable[i].nAddrType;
+		wcscpy(lpIPConfigInfo->szSolution, lpAddrTable[i].szSolution);
+		wcscpy(lpIPConfigInfo->szAddr, lpAddrTable[i].szAddr);
+		wcscpy(lpIPConfigInfo->szMask, lpAddrTable[i].szMask);
+		wcscpy(lpIPConfigInfo->szGateway, lpAddrTable[i].szGateway);
+		lpIPConfigInfo->nDnsType = lpAddrTable[i].nDnsType;
+		wcscpy(lpIPConfigInfo->szDns1, lpAddrTable[i].szDns1);
+		wcscpy(lpIPConfigInfo->szDns2, lpAddrTable[i].szDns2);
 		lstIpConfigInfo.push_back(lpIPConfigInfo);
-
-		memset(&stIPConfigInfo, 0, sizeof(stIPConfigInfo));
-		nIndex++;
 	}
-	bRet = TRUE;
 
+	bRet = TRUE;
 	return bRet;
 }
 
 BOOL IIPConfig::InitSolutionsList()
 {
-	int nSelected = 0, nIndex = 0;
-	Utility::GetINIInt(g_szAppConfig, LS_IPSETS, kSelected, &nSelected);
-	wchar_t szName[MAX_PATH] = {0};
-	wchar_t szKey[MAX_PATH] = {0};
+	int nSelected = 0;
+	CConfigTableDB table(&g_SQLite);
+	CONFIG_TABLE config;
+	wcscpy(config.szName, kSolution);
+	if(table.Query(&config) && table.GetRows())
+	{
+		LPCONFIG_TABLE lpSolution = table.GetResults();
+		if(lpSolution)
+			nSelected = _wtoi(lpSolution->szValue);
+	}
 	CListLabelElementUI *pItem = NULL;
 	m_pSolutionList->RemoveAll();
-	while(TRUE)
+	list<LPIPCONFIG_INFO>::iterator iter;
+	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
+	for(iter=lstIpConfigInfo.begin(); iter!=lstIpConfigInfo.end(); iter++)
 	{
-		swprintf(szKey, L"Name%d", nIndex);
-		Utility::GetINIStr(g_szAppConfig, LS_IPSETS, szKey, szName);
-		if(wcslen(szName)==0)
-			break;
+		lpIPConfigInfo = (*iter);
 		pItem = new CListLabelElementUI();
-		pItem->SetText(szName);
+		pItem->SetText(lpIPConfigInfo->szSolution);
 		m_pSolutionList->AddAt(pItem, m_pSolutionList->GetCount());
-		if(nSelected==nIndex)
-			pItem->Select();
-		nIndex ++;
-		memset(szKey, 0, sizeof(szKey));
-		memset(szName, 0, sizeof(szName));
 	}
 	m_pSolutionList->SelectItem(nSelected);
 
@@ -318,14 +312,11 @@ BOOL IIPConfig::LoadAdapters()
 {
 	BOOL bRet = FALSE;
 	ULONG uAdapterSize = sizeof(IP_ADAPTER_INFO);
+	PIP_ADAPTER_INFO pAdapterHeader = NULL;
 	PIP_ADAPTER_INFO pAdapterInfo = NULL;
 	LPADAPTER_INFO pAdapter = NULL;
-	pAdapterInfo = (PIP_ADAPTER_INFO)malloc(uAdapterSize);
-	if(!pAdapterInfo)
-		return bRet;
 	if(GetAdaptersInfo(pAdapterInfo, &uAdapterSize)==ERROR_BUFFER_OVERFLOW)
 	{
-		free(pAdapterInfo);
 		pAdapterInfo = (PIP_ADAPTER_INFO)malloc(uAdapterSize);
 		if(!pAdapterInfo)
 			return bRet;
@@ -343,6 +334,7 @@ BOOL IIPConfig::LoadAdapters()
 	char szGateway[STRING_LENGTH] = {0};
 	char szDns[2][STRING_LENGTH] = {{0}, {0}};
 	char szMac[STRING_LENGTH] = {0};
+	pAdapterHeader = pAdapterInfo;
 	while(pAdapterInfo)
 	{
 		pAdapter = new ADAPTER_INFO();
@@ -372,7 +364,7 @@ BOOL IIPConfig::LoadAdapters()
 			bRet = TRUE;
 	}
 	AdapterUtil::GetName(AdaptersNameCallBack, (LPVOID)&lstAdaptersInfo);
-	free(pAdapterInfo);
+	free(pAdapterHeader);
 	return bRet;
 }
 
@@ -559,21 +551,141 @@ void IIPConfig::OnSelectAdapter()
 BOOL IIPConfig::OnNewSolution()
 {
 	m_pSolutionList->SelectItem(-1);
+	//m_pSolutionList->SetText(L"");
+	ResetSolution();
 	return TRUE;
 }
 
 BOOL IIPConfig::OnSaveSolution()
 {
+	CAddrTableDB table(&g_SQLite);
+	ADDR_TABLE addr;
+	addr.nAddrType = ADDR_AUTO_SET;
+	if(m_pIpManualCheckBox && m_pIpManualCheckBox->IsSelected())
+		addr.nAddrType = ADDR_MANUAL_SET;
+	addr.nDnsType = DNS_AUTO_SET;
+	if(m_pDnsAutoCheckBox && m_pDnsAutoCheckBox->IsSelected())
+		addr.nDnsType = DNS_MANUAL_SET;
+	if(m_pNameEdit)
+		wcscpy(addr.szSolution, m_pNameEdit->GetText());
+	if(m_pIPEdit)
+		wcscpy(addr.szAddr, m_pIPEdit->GetText());
+	if(m_pMaskEdit)
+		wcscpy(addr.szMask, m_pMaskEdit->GetText());
+	if(m_pGatewayEdit)
+		wcscpy(addr.szGateway, m_pGatewayEdit->GetText());
+	if(m_pDns1Edit)
+		wcscpy(addr.szDns1, m_pDns1Edit->GetText());
+	if(m_pDns2Edit)
+		wcscpy(addr.szDns2, m_pDns2Edit->GetText());
+	if(!table.Insert(&addr))
+	{
+		RDMsgBox(m_hIPConfigOwner, LS_IPCHANGERPANEL, kIPConfigInvalidName, LS_MSG, kMsgErr, MB_OK);
+		return FALSE;
+	}
+	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
+	lpIPConfigInfo = new IPCONFIG_INFO();
+	if(!lpIPConfigInfo)
+		return FALSE;
+	lpIPConfigInfo->nAddrType = addr.nAddrType;
+	wcscpy(lpIPConfigInfo->szSolution, addr.szSolution);
+	wcscpy(lpIPConfigInfo->szAddr, addr.szAddr);
+	wcscpy(lpIPConfigInfo->szMask, addr.szMask);
+	wcscpy(lpIPConfigInfo->szGateway, addr.szGateway);
+	lpIPConfigInfo->nDnsType = addr.nDnsType;
+	wcscpy(lpIPConfigInfo->szDns1, addr.szDns1);
+	wcscpy(lpIPConfigInfo->szDns2, addr.szDns2);
+	lstIpConfigInfo.push_back(lpIPConfigInfo);
+
+	CListLabelElementUI *pItem = NULL;
+	pItem = new CListLabelElementUI();
+	pItem->SetText(lpIPConfigInfo->szSolution);
+	m_pSolutionList->AddAt(pItem, m_pSolutionList->GetCount());
+
+	m_pSolutionList->SelectItem(m_pSolutionList->GetCount());
+
 	return TRUE;
 }
 
 BOOL IIPConfig::OnDelSolution()
 {
+	if(!m_pSolutionList)
+		return FALSE;
+
+	if(RDMsgBox(m_hIPConfigOwner, LS_MSG, kDeleteSolution, LS_MSG, kMsgWarning, MB_YESNO)!=IDYES)
+		return FALSE;
+	LPCWSTR lpszSolution = m_pSolutionList->GetText();
+	int nSelected = m_pSolutionList->GetCurSel();
+	ADDR_TABLE table;
+	wcscpy(table.szSolution, lpszSolution);
+	CAddrTableDB addr(&g_SQLite);
+	if(addr.Delete(&table))
+	{
+		list<LPIPCONFIG_INFO>::iterator iter;
+		LPIPCONFIG_INFO lpIPConfigInfo = NULL;
+		int nIndex = 0;
+		for(iter=lstIpConfigInfo.begin(); iter!=lstIpConfigInfo.end(); iter++)
+		{
+			lpIPConfigInfo = (*iter);
+			if(nIndex==nSelected)
+			{
+				lstIpConfigInfo.erase(iter);
+				delete lpIPConfigInfo;
+				break;
+			}
+			lpIPConfigInfo = NULL;
+			nIndex++;
+		}
+		m_pSolutionList->RemoveAt(nSelected);
+	}
+	if(m_pSolutionList->GetCount()==0)
+		ResetSolution();
 	return TRUE;
 }
 
 BOOL IIPConfig::OnApplySolution()
 {
+	return TRUE;
+}
+
+BOOL IIPConfig::ResetSolution()
+{
+	wchar_t szNewSolution[1024] = {0};
+	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_IPCHANGERPANEL, kIPConfigNewSolution, szNewSolution);
+	if(m_pNameEdit)
+		m_pNameEdit->SetText(szNewSolution);
+	if(m_pIpAutoCheckBox)
+		m_pIpAutoCheckBox->SetCheck(true);
+	if(m_pIPEdit)
+	{
+		m_pIPEdit->SetText(L"");
+		m_pIPEdit->SetEnabled(false);
+	}
+	if(m_pMaskEdit)
+	{
+		m_pMaskEdit->SetText(L"");
+		m_pMaskEdit->SetEnabled(false);
+	}
+	if(m_pGatewayEdit)
+	{
+		m_pGatewayEdit->SetText(L"");
+		m_pGatewayEdit->SetEnabled(false);
+	}
+	if(m_pDnsAutoCheckBox)
+	{
+		m_pDnsAutoCheckBox->SetEnabled(true);
+		m_pDnsAutoCheckBox->SetCheck(true);
+	}
+	if(m_pDns1Edit)
+	{
+		m_pDns1Edit->SetEnabled(false);
+		m_pDns1Edit->SetText(L"");
+	}
+	if(m_pDns2Edit)
+	{
+		m_pDns2Edit->SetEnabled(false);
+		m_pDns2Edit->SetText(L"");
+	}
 	return TRUE;
 }
 
