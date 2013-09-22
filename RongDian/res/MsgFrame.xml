@@ -18,9 +18,23 @@
 	   		</HorizontalLayout><!-- System's Button -->
 	 	</HorizontalLayout><!-- frame_title_contaner -->
 		<!-- frame_contents -->
-		<HorizontalLayout name="frame_contents" inset="2,2,2,2" >
+		<HorizontalLayout name="frame_text_container" inset="2,2,2,2" >
 			<Text name="frame_text" font="1" />
 	 	</HorizontalLayout><!-- frame_contents -->
+		<VerticalLayout name="frame_gif_container" visible="false" >
+			<Control />
+			<HorizontalLayout height="48" >
+				<Control />
+				<Gif name="frame_loading" gif="default\loading.gif" height="48" width="48" />
+				<Control />
+			</HorizontalLayout>
+			<HorizontalLayout >
+				<Control />
+				<Text name="frame_loading_text" font="1" />
+				<Control />
+			</HorizontalLayout>
+			<Control />
+		</VerticalLayout>
 		<!-- frame_footer -->
 		<HorizontalLayout name="frame_footer" height="23" >
 			<Control />

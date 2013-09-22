@@ -39,6 +39,10 @@ const wchar_t* const kFrameContainer = L"frame_container";
 const wchar_t* const kFrameTitleBar = L"frame_title_contaner";
 const wchar_t* const kFrameIcon = L"frame_logo";
 const wchar_t* const kFrameTitle = L"frame_title";
+const wchar_t* const kFrameTextContainer = L"frame_text_container";
+const wchar_t* const kFrameGifContainer = L"frame_gif_container";
+const wchar_t* const kFrameLoading = L"frame_loading";
+const wchar_t* const kFrameLoadingText = L"frame_loading_text";
 const wchar_t* const kFrameText = L"frame_text";
 const wchar_t* const kFrameFooter = L"frame_footer";
 const wchar_t* const kFirstBtn = L"first_btn";
@@ -55,6 +59,7 @@ const wchar_t* const kMsgNo = L"msg_no";
 const wchar_t* const kMsgOK = L"msg_ok";
 const wchar_t* const kMsgRetry = L"msg_retry";
 const wchar_t* const kMsgCancel = L"msg_cancel";
+const wchar_t* const kMsgLoading = L"msg_loading";
 
 const int MIN_WIDTH = 240;
 const int MIN_HEIGHT = 160;
@@ -144,7 +149,14 @@ public:
 		}
 		CControlUI *pText = NULL;
 		//pText = static_cast<CControlUI*>(m_PaintManager.FindControl(kFrameText));
-		FIND_CONTROL_BY_ID(pText, CControlUI, (&m_PaintManager), kFrameText);
+		if(nType!=MB_LOADING)
+		{
+			FIND_CONTROL_BY_ID(pText, CControlUI, (&m_PaintManager), kFrameText);
+		}
+		else
+		{
+			FIND_CONTROL_BY_ID(pText, CControlUI, (&m_PaintManager), kFrameLoadingText);
+		}
 		if(pText && lpszContent)
 			pText->SetText(lpszContent);
 
@@ -224,16 +236,6 @@ SET_CONTROL_END()
 			CLabelUI *pText = NULL;
 			//pText = static_cast<CLabelUI*>(m_PaintManager.FindControl(kFrameText));
 			FIND_CONTROL_BY_ID(pText, CLabelUI, (&m_PaintManager), kFrameText);
-			if(hDC && lpszContent && pText)
-			{
-				int iFont = 0;
-				HFONT hOldFont = NULL;
-				iFont = pText->GetFont();
-				hOldFont = (HFONT)::SelectObject(hDC, m_PaintManager.GetFont(iFont));
-				::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // 计算文本矩形大小，动态调整消息框大小
-				if(hOldFont)
-					::SelectObject(hDC, hOldFont);
-			}
 
 			int nTitle = 0, nFooter = 0;
 			CControlUI *pTitle = NULL;
@@ -246,6 +248,40 @@ SET_CONTROL_END()
 				nTitle = pTitle->GetFixedHeight();
 			if(pFooter)
 				nFooter = pFooter->GetFixedHeight();
+			if(nType==MB_LOADING)
+			{
+				if(pTitle)
+					pTitle->SetVisible(false);
+				if(pFooter)
+					pFooter->SetVisible(false);
+				nTitle = 0;
+				nFooter = 0;
+				CHorizontalLayoutUI *pTextContainer = NULL;
+				CHorizontalLayoutUI *pGifContainer = NULL;
+				CGifUI *pLoading = NULL;
+				FIND_CONTROL_BY_ID(pTextContainer, CHorizontalLayoutUI, (&m_PaintManager), kFrameTextContainer);
+				FIND_CONTROL_BY_ID(pGifContainer, CHorizontalLayoutUI, (&m_PaintManager), kFrameGifContainer);
+				FIND_CONTROL_BY_ID(pLoading, CGifUI, (&m_PaintManager), kFrameLoading);
+				if(pTextContainer)
+					pTextContainer->SetVisible(false);
+				if(pGifContainer)
+					pGifContainer->SetVisible();
+				if(pLoading && wcslen(szIcon))
+					pLoading->SetGifImage(szIcon);
+			}
+			else
+			{
+				if(hDC && lpszContent && pText)
+				{
+					int iFont = 0;
+					HFONT hOldFont = NULL;
+					iFont = pText->GetFont();
+					hOldFont = (HFONT)::SelectObject(hDC, m_PaintManager.GetFont(iFont));
+					::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // 计算文本矩形大小，动态调整消息框大小
+					if(hOldFont)
+						::SelectObject(hDC, hOldFont);
+				}
+			}
 			int nWidth = MIN_WIDTH, nHeight = MIN_HEIGHT;
 			if(nWidth<(rcContent.right - rcContent.left))
 				nWidth = rcContent.right - rcContent.left + 10;
@@ -314,6 +350,11 @@ SET_CONTROL_END()
 					pSecondBtn->SetVisible();
 				if(pSecondBlank)
 					pSecondBlank->SetVisible();
+			}
+			else if(nType==MB_LOADING)
+			{
+				if(pFirstBtn)
+					pFirstBtn->SetVisible(false);
 			}
 		}
 	}
@@ -462,7 +503,18 @@ SET_CONTROL_END()
 	}
 	void SetIcon(LPCWSTR lpszIcon)
 	{
-		wcscpy(szIcon, lpszIcon);
+		if(lpszIcon)
+			wcscpy(szIcon, lpszIcon);
+	}
+	void SetLoading(LPCWSTR lpszLoadingImg)
+	{
+		if(lpszLoadingImg)
+			wcscpy(szIcon, lpszLoadingImg);
+	}
+	void SetCaption(LPCWSTR lpszCaption)
+	{
+		if(lpszCaption)
+			wcscpy(szCaption, lpszCaption);
 	}
 	BOOL SetText(LPCWSTR lpszText)
 	{
@@ -533,12 +585,12 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 		Utility::GetINIStr(g_pLangMan->GetLangName(), LS_MSG, kMsgErr, szText);
 	else
 		LoadString(g_hMsgInst, IDS_MSG_ERR, szText, _countof(szText));
-	wcscpy(msg.szCaption, szText);
+	msg.SetCaption(szText);
 	if(!msg.SetText(lpszText))
 		return -1;
 	
 	int nTemp = 0;
-	if(uType!=0xFFFFFFFFL)
+	if(uType!=MB_POPUP)
 	{
 		nTemp = uType & 0x0000000FL;
 		if(nTemp==MB_RETRYCANCEL)
@@ -557,7 +609,7 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 	}
 	if(!msg.bPopup)
 	{
-		msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, 0, 0, 0, 0, 0);
+		msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
 		msg.CenterWindow();
 		msg.ShowModal();
 	}
@@ -572,6 +624,34 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 
 int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption)
 {
-	return DuiMsgBox(hWnd, lpszText, lpszCaption, 0xFFFFFFFFL);
+	return DuiMsgBox(hWnd, lpszText, lpszCaption, MB_POPUP);
+}
+
+int __stdcall DuiLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg)
+{
+	if(!g_hMsgInst)
+		return -1;
+	CDuiMsg msg;
+	msg.hParent = hWnd;
+	msg.SetIcon(L"");
+	msg.SetCaption(L"");
+	int nRet = -1;
+	wchar_t szText[1024];
+	if(lpszText)
+		wcscpy(szText, lpszText);
+	else if(g_pLangMan)
+		Utility::GetINIStr(g_pLangMan->GetLangName(), LS_MSG, kMsgLoading, szText);
+	else
+		LoadString(g_hMsgInst, IDS_MSG_LOADING, szText, _countof(szText));
+	msg.SetText(szText);
+	if(lpszLoadImg)
+		msg.SetLoading(lpszLoadImg);
+	if(!nRet)
+		return -1;
+	msg.nType = MB_LOADING;
+	msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+	msg.CenterWindow();
+	msg.ShowModal();
+	return msg.nRet;
 }
 #pragma warning(pop)

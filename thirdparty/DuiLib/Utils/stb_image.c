@@ -4216,62 +4216,62 @@ static stbi_uc *stbi_gif_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 }
 
 
-	stbi_gif_data* stbi_gif_load_ex(stbi *s, int *n, int *comp, int req_comp)
+stbi_gif_data* stbi_gif_load_ex(stbi *s, int *n, int *comp, int req_comp)
+{
+	uint8 *u = 0;
+	uint8 *uBak = 0;
+	uint8 *pBuf = 0;
+	stbi_gif g={0};
+	stbi_gif_data* pInfos;
+	int i,len;
+
+	i = 0;
+	len = sizeof(stbi_gif_data);
+	pInfos = (stbi_gif_data*)malloc(len*(i+1));
+
+	u = stbi_gif_load_next(s, &g, comp, req_comp);
+	uBak = u;
+	pBuf = (uint8*)malloc(g.w * g.h * 4);
+	memcpy(pBuf, u, g.w * g.h*4);
+	pInfos[i].pData = pBuf;
+	pInfos[i].w = g.w;
+	pInfos[i].h = g.h;
+	pInfos[i].delay = g.delay;
+
+	if (u == (void *) 1) u = 0;  // end of animated gif marker
+	if (u)
 	{
-		uint8 *u = 0;
-		uint8 *uBak = 0;
-		uint8 *pBuf = 0;
-		stbi_gif g={0};
-		stbi_gif_data* pInfos;
-		int i,len;
-
-		i = 0;
-		len = sizeof(stbi_gif_data);
-		pInfos = (stbi_gif_data*)malloc(len*(i+1));
-
-		u = stbi_gif_load_next(s, &g, comp, req_comp);
-		uBak = u;
-		pBuf = (uint8*)malloc(g.w * g.h * 4);
-		memcpy(pBuf, u, g.w * g.h*4);
-		pInfos[i].pData = pBuf;
-		pInfos[i].w = g.w;
-		pInfos[i].h = g.h;
-		pInfos[i].delay = g.delay;
-
-		if (u == (void *) 1) u = 0;  // end of animated gif marker
-		if (u)
+		while(1)
 		{
-			while(1)
+			u = stbi_gif_load_next(s, &g, comp, req_comp);
+			if (u == (void *) 1) u = 0;  // end of animated gif marker
+			if (u) 
 			{
-				u = stbi_gif_load_next(s, &g, comp, req_comp);
-				if (u == (void *) 1) u = 0;  // end of animated gif marker
-				if (u) 
-				{
-					i++;
-					pBuf = (uint8*)malloc(g.w * g.h * 4);
-					memcpy(pBuf, u, g.w * g.h*4);
-					pInfos = (stbi_gif_data*)realloc(pInfos, sizeof(stbi_gif_data)*(i+1));
-					pInfos[i].pData = pBuf;
-					pInfos[i].w = g.w;
-					pInfos[i].h = g.h;
-					pInfos[i].delay = g.delay;
-				}
-				else
-				{
-					break;
-				}
-
+				i++;
+				pBuf = (uint8*)malloc(g.w * g.h * 4);
+				memcpy(pBuf, u, g.w * g.h*4);
+				pInfos = (stbi_gif_data*)realloc(pInfos, sizeof(stbi_gif_data)*(i+1));
+				pInfos[i].pData = pBuf;
+				pInfos[i].w = g.w;
+				pInfos[i].h = g.h;
+				pInfos[i].delay = g.delay;
 			}
-		}
-		*n = i + 1;
-		free(uBak);
-		return pInfos;
-	}
+			else
+			{
+				break;
+			}
 
-	static int stbi_gif_info(stbi *s, int *x, int *y, int *comp)
-	{
-		return stbi_gif_info_raw(s,x,y,comp);
+		}
 	}
+	*n = i + 1;
+	free(uBak);
+	return pInfos;
+}
+
+static int stbi_gif_info(stbi *s, int *x, int *y, int *comp)
+{
+	return stbi_gif_info_raw(s,x,y,comp);
+}
 
 
 // *************************************************************************************************

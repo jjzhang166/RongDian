@@ -9,6 +9,8 @@
 #include "Stdafx.h"
 #include "UIIconImage.h"
 
+#define ICON_DEFAULT_SIZE 32
+
 namespace DuiLib 
 {
 	CUIIconImage::CUIIconImage()
@@ -71,8 +73,8 @@ namespace DuiLib
 		if (m_hdefaultico == NULL)
 		{ 
 			m_hdefaultico = (HICON)LoadImage(NULL, pstrIcoPath, IMAGE_ICON, 
-				16,
-				16,
+				ICON_DEFAULT_SIZE,
+				ICON_DEFAULT_SIZE,
 				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 		}
 	}
@@ -94,8 +96,8 @@ namespace DuiLib
 				::DestroyIcon(m_hico);
 			}
 			m_hico = (HICON)LoadImage(NULL, pstrIcoPath, IMAGE_ICON, 
-									16,
-									16,
+									ICON_DEFAULT_SIZE,
+									ICON_DEFAULT_SIZE,
 									LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 		}
 
@@ -124,13 +126,15 @@ namespace DuiLib
 			CDuiString tmpPath(m_pManager->GetResourcePath());
 	//		tmpPath += _T("\\");
 			tmpPath += pstrValue;
-			m_hdefaultico = (HICON)LoadImage(NULL, tmpPath, IMAGE_ICON, 
-				16,
-				16,
+			m_hico = (HICON)LoadImage(NULL, tmpPath, IMAGE_ICON, 
+				ICON_DEFAULT_SIZE,
+				ICON_DEFAULT_SIZE,
 				LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 		}
 		else
-		CControlUI::SetAttribute(pstrName, pstrValue);
+		{
+			CControlUI::SetAttribute(pstrName, pstrValue);
+		}
 	}
 
 } //namespace DuiLib

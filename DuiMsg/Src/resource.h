@@ -13,6 +13,7 @@
 #define IDS_MSG_NEXT					1007
 #define IDS_MSG_COMPLETE				1008
 #define IDS_MSG_WARNING					1009
+#define IDS_MSG_LOADING					1010
 
 // Next default values for new objects
 // 
