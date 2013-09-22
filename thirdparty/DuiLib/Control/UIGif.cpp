@@ -153,7 +153,9 @@ namespace DuiLib
 			SetGifImage(pstrValue);
 		}
 		else
+		{
 			CControlUI::SetAttribute(pstrName, pstrValue);
+		}
 	}
 
 	void CGifUI::DoInit()

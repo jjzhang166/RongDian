@@ -328,8 +328,12 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
         else {
             SIZE_T cchLen = _tcslen(pstrClass);
             switch( cchLen ) {
+			case 3:
+				if( _tcscmp(pstrClass, DUI_CTR_GIF) == 0 )                   pControl = new CGifUI;
+				break;
             case 4:
-                if( _tcscmp(pstrClass, DUI_CTR_EDIT) == 0 )                   pControl = new CEditUI;
+				if( _tcscmp(pstrClass, DUI_CTR_EDIT) == 0 )                   pControl = new CEditUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_ICON) == 0 )              pControl = new CUIIconImage;
                 else if( _tcscmp(pstrClass, DUI_CTR_LIST) == 0 )              pControl = new CListUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )              pControl = new CTextUI;
                 break;

@@ -37,7 +37,8 @@ namespace DuiLib
 
 	LPVOID CUIIconImage::GetInterface(LPCTSTR pstrName)
 	{
-		if( _tcscmp(pstrName, _T("IconImage")) == 0 ) return static_cast<CUIIconImage*>(this);
+		if( _tcscmp(pstrName, _T("Icon")) == 0 ) 
+			return static_cast<CUIIconImage*>(this);
 		return CControlUI::GetInterface(pstrName);
 	}
 
@@ -118,7 +119,7 @@ namespace DuiLib
 
 	void CUIIconImage::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if(_tcscmp(pstrName, _T("defaultIco")) == 0)
+		if(_tcscmp(pstrName, _T("icon")) == 0)
 		{
 			CDuiString tmpPath(m_pManager->GetResourcePath());
 	//		tmpPath += _T("\\");

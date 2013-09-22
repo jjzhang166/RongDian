@@ -219,7 +219,10 @@ protected:                                                                \
 //////////////BEGIN控件名称宏定义//////////////////////////////////////////////////
 ///
 
+#define	 DUI_CTR_GIF                            (_T("Gif"))
+
 #define  DUI_CTR_EDIT                            (_T("Edit"))
+#define	 DUI_CTR_ICON                            (_T("Icon"))
 #define  DUI_CTR_LIST                            (_T("List"))
 #define  DUI_CTR_TEXT                            (_T("Text"))
 
