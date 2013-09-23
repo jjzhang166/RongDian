@@ -61,24 +61,26 @@ const wchar_t* const kMsgRetry = L"msg_retry";
 const wchar_t* const kMsgCancel = L"msg_cancel";
 const wchar_t* const kMsgLoading = L"msg_loading";
 
-const int MIN_WIDTH = 240;
-const int MIN_HEIGHT = 160;
-const int POPUP_WIDTH = 360;
-const int POPUP_HEIGHT = 240;
+const int MIN_WIDTH				= 240;
+const int MIN_HEIGHT			= 160;
+const int POPUP_WIDTH			= 360;
+const int POPUP_HEIGHT			= 240;
 
-const int MAX_TRANSPRANT = 250;
-const int SOLID_TIMER = 5000;
-const int TRANSPRANT_TIMER = 5001;
-const int POPUP_TIMEOUT = 5002;
+const int MAX_TRANSPRANT		= 250;
+const int SOLID_TIMER			= 5000;
+const int TRANSPRANT_TIMER		= 5001;
+const int POPUP_TIMEOUT			= 5002;
+const int LOADING_QUIT			= 5003;
 
-HINSTANCE g_hMsgInst = NULL;
-BOOL g_bInitResPath = FALSE;
-wchar_t g_szIconName[1024] = {0};
-CLangManager *g_pLangMan = NULL;
-CSkinManager *g_pSkinMan = NULL;
-PFNSetLayeredWindowAttributes g_pfnSetLayeredWindowAttributes = NULL;
-HMODULE g_hUser32 = NULL;
-BYTE g_uAlpha = 0;
+static HINSTANCE g_hMsgInst = NULL;
+static BOOL g_bInitResPath = FALSE;
+static wchar_t g_szIconName[1024] = {0};
+static CLangManager *g_pLangMan = NULL;
+static CSkinManager *g_pSkinMan = NULL;
+static PFNSetLayeredWindowAttributes g_pfnSetLayeredWindowAttributes = NULL;
+static HMODULE g_hUser32 = NULL;
+static BYTE g_uAlpha = 0;
+static HANDLE g_hLoadEvent = NULL;
 
 class CDuiMsg : public WindowImplBase,
 	public ILangUI, public ISkinUI
@@ -268,6 +270,8 @@ SET_CONTROL_END()
 					pGifContainer->SetVisible();
 				if(pLoading && wcslen(szIcon))
 					pLoading->SetGifImage(szIcon);
+				RECT rcCaption = { 0, 0, 0, 0};
+				m_PaintManager.SetCaptionRect(rcCaption);
 			}
 			else
 			{
@@ -429,6 +433,10 @@ SET_CONTROL_END()
 		}
 		return nRet;
 	}
+	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, bool& /*bHandled*/)
+	{
+		return FALSE;
+	}
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
 		if(bPopup)
@@ -497,6 +505,17 @@ SET_CONTROL_END()
 				SetTimer(m_hWnd, TRANSPRANT_TIMER, 200, 0);
 			}
 			break;
+		case LOADING_QUIT:
+			{
+				PostMessage(WM_CLOSE, 0L, 0L);
+				HWND hWndParent = GetWindowOwner(m_hWnd);
+				if(hWndParent)
+				{
+					::EnableWindow(hWndParent, TRUE);
+					::SetFocus(hWndParent);
+				}
+			}
+			break;
 		}
 		bHandled = FALSE;
 		return 0;
@@ -532,6 +551,10 @@ SET_CONTROL_END()
 			wcscpy(lpszContent, lpszText);
 		return TRUE;
 	}
+	void GetLoader(LPVOID *ppParam)
+	{
+		*ppParam = (LPVOID)this;
+	}
 
 public:
 	CDuiString builder_xml_;
@@ -550,7 +573,17 @@ public:
 	BOOL bTransparent;
 };
 
-void __stdcall InitDuiMsg(HINSTANCE hInst, LPVOID pLangMan, LPVOID pSkinMan, LPCWSTR lpszIconName)
+DWORD WINAPI StartLoading(LPVOID lpParam)
+{
+	CDuiMsg *pMsg = (CDuiMsg *)lpParam;
+	if(pMsg)
+	{
+		pMsg->ShowModal();
+	}
+	return 0;
+}
+
+int __stdcall InitDuiMsg(HINSTANCE hInst, LPVOID pLangMan, LPVOID pSkinMan, LPCWSTR lpszIconName)
 {
 	if(!g_bInitResPath)
 	{
@@ -569,6 +602,7 @@ void __stdcall InitDuiMsg(HINSTANCE hInst, LPVOID pLangMan, LPVOID pSkinMan, LPC
 		//CPaintManagerUI::SetResourcePath(szRes);
 		g_bInitResPath = TRUE;
 	}
+	return 0;
 }
 
 int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT uType)
@@ -627,14 +661,17 @@ int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption)
 	return DuiMsgBox(hWnd, lpszText, lpszCaption, MB_POPUP);
 }
 
-int __stdcall DuiLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg)
+int __stdcall DuiShowLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg, LPVOID *ppParam)
 {
 	if(!g_hMsgInst)
 		return -1;
-	CDuiMsg msg;
-	msg.hParent = hWnd;
-	msg.SetIcon(L"");
-	msg.SetCaption(L"");
+	CDuiMsg *pMsg = new CDuiMsg();
+	if(!pMsg)
+		return -1;
+	pMsg->hParent = hWnd;
+	pMsg->SetIcon(L"");
+	pMsg->SetCaption(L"");
+	pMsg->GetLoader(ppParam);
 	int nRet = -1;
 	wchar_t szText[1024];
 	if(lpszText)
@@ -643,15 +680,27 @@ int __stdcall DuiLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg)
 		Utility::GetINIStr(g_pLangMan->GetLangName(), LS_MSG, kMsgLoading, szText);
 	else
 		LoadString(g_hMsgInst, IDS_MSG_LOADING, szText, _countof(szText));
-	msg.SetText(szText);
+	pMsg->SetText(szText);
 	if(lpszLoadImg)
-		msg.SetLoading(lpszLoadImg);
+		pMsg->SetLoading(lpszLoadImg);
 	if(!nRet)
 		return -1;
-	msg.nType = MB_LOADING;
-	msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
-	msg.CenterWindow();
-	msg.ShowModal();
-	return msg.nRet;
+	pMsg->nType = MB_LOADING;
+	pMsg->Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+	pMsg->CenterWindow();
+	DWORD dwThread = 0;
+	HANDLE hThread = CreateThread(NULL, 0, StartLoading, (LPVOID)pMsg, 0, &dwThread);
+	CloseHandle(hThread);
+	return 0;
+}
+
+int __stdcall DuiCancelLoading(LPVOID lpParam)
+{
+	CDuiMsg *pMsg = (CDuiMsg *)lpParam;
+	if(pMsg)
+	{
+		SetTimer(pMsg->GetHWND(), LOADING_QUIT, 500, NULL);
+	}
+	return 0;
 }
 #pragma warning(pop)
