@@ -46,6 +46,20 @@ void CMenuUI::OnFinalMessage(HWND hWnd)
 	delete this;
 }
 
+//
+void CMenuUI::Notify(TNotifyUI& msg)
+{
+	if(msg.sType == DUI_MSGTYPE_ITEMSELECT)
+	{
+		Close();
+	}
+	else if(msg.sType == DUI_MSGTYPE_ITEMCLICK)//内部触发的
+	{
+		if(owner_control_)
+			owner_control_->GetManager()->SendNotify(msg.pSender, DUI_MSGTYPE_MENUSELECT, 0, 0, true);//外部的
+	}
+}
+
 LRESULT CMenuUI::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
