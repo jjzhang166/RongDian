@@ -1,13 +1,14 @@
-#include "CssFormatter.h"
+#include "formatter.h"
 #include "csspp_globals.hpp"
 #include "prepare.hpp"
 
-CssFormatterTidy::CssFormatter::CssFormatter( void )
+namespace CssTidyLib {
+CssTidy::CssTidy()
 {
 
 }
 
-CssFormatterTidy::CssFormatter::~CssFormatter( void )
+CssTidy::~CssTidy()
 {
 
 }
@@ -15,7 +16,7 @@ CssFormatterTidy::CssFormatter::~CssFormatter( void )
 map< string, vector<string> > predefined_templates;
 bool bFirstTidy = true;
 
-bool CssFormatterTidy::CssFormatter::CssTidyMain( const char* pSourceIn, const char *pOptions, string &strOut, string &strErr )
+bool CssTidy::Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
 {
 	if (bFirstTidy)
 	{
@@ -139,4 +140,5 @@ bool CssFormatterTidy::CssFormatter::CssTidyMain( const char* pSourceIn, const c
 	}
 	strErr = oss.str();	
 	return true;
+}
 }

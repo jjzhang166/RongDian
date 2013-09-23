@@ -1,7 +1,7 @@
 #include "JsTidy.h"
-#include "jsformatString.h"
+#include "formatter.h"
 
-namespace JsFormatter{
+namespace JsTidyLib{
 JsTidy::JsTidy(void)
 {
 }
@@ -10,7 +10,7 @@ JsTidy::~JsTidy(void)
 {
 }
 
-bool JsFormatter::JsTidy::JsTidyMain( const char* pSourceIn, const char *pOptions, string &strOut/*, string &strErr*/ )
+bool JsTidyLib::JsTidy::Format( const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
 {
 	string strOptions = pOptions;
 	char chIndent = ' ';
@@ -40,7 +40,7 @@ bool JsFormatter::JsTidy::JsTidyMain( const char* pSourceIn, const char *pOption
 	}
 	try
 	{
-		JSFormatString jsformat(pSourceIn, &strOut, chIndent, nChPerInd, true, bNLBracket);
+		JSFormatter jsformat(pSourceIn, &strOut, chIndent, nChPerInd, true, bNLBracket);
 		jsformat.Go();
 	}
 	catch (std::exception ex)

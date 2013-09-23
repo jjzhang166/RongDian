@@ -2,12 +2,12 @@
 #include <string>
 using namespace std;
 
-namespace JsonFormatter{
+namespace JsonTibLib{
 class JsonTidy
 {
 public:
-	JsonTidy(void);
-	~JsonTidy(void);
-	bool JsonTidyMain(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr);
+	JsonTidy();
+	~JsonTidy();
+	bool Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr);
 };
 }

@@ -167,7 +167,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\JsonTidy.cpp"
+				RelativePath=".\jsontidy.cpp"
 				>
 			</File>
 		</Filter>
@@ -209,7 +209,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\JsonTidy.h"
+				RelativePath=".\jsontidy.h"
 				>
 			</File>
 			<File

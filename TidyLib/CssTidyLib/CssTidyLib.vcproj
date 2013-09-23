@@ -163,10 +163,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CssFormatter.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\cssopt.cpp"
 				>
 			</File>
@@ -176,6 +172,10 @@
 			</File>
 			<File
 				RelativePath=".\csstidy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\formatter.cpp"
 				>
 			</File>
 			<File
@@ -217,10 +217,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CssFormatter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cssopt.hpp"
 				>
 			</File>
@@ -238,6 +234,10 @@
 			</File>
 			<File
 				RelativePath=".\datastruct.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\formatter.h"
 				>
 			</File>
 			<File

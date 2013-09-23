@@ -32,7 +32,7 @@
 #include <iostream>
 
 
-namespace astyle
+namespace AsTibLib
 {
 /**
  * Constructor of ASFormatter
@@ -4981,4 +4981,4 @@ bool ASFormatter::isArrayOperator() const
 	return false;
 }
 
-}   // end namespace astyle
+}   // end namespace AsTibLib

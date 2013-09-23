@@ -31,7 +31,7 @@
 #include <iostream>
 
 
-namespace astyle
+namespace AsTibLib
 {
 
 /**
@@ -2727,4 +2727,4 @@ void ASBeautifier::parseCurrentLine(const string& line)
 }
 
 
-}   // end namespace astyle
+}   // end namespace AsTibLib

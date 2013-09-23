@@ -1,4 +1,4 @@
-/* realjsformatter.h
+/* formatter.h
    2010-12-16
 
 Copyright (c) 2010-2012 SUN Junwen
@@ -53,7 +53,7 @@ using namespace std;
 #define JS_SQUARE '['
 #define JS_HELPER '\\'
 
-class RealJSFormatter: public JSParser
+class JsFormatterBase: public JSParser
 {
 public:
 	template<class T>
@@ -67,12 +67,12 @@ public:
 	typedef map<string, char> StrCharMap;
 	typedef set<string> StrSet;
 
-	RealJSFormatter();
-	RealJSFormatter(char chIndent, int nChPerInd);
-	RealJSFormatter(bool bSkipCR, bool bPutCR);
-	RealJSFormatter(char chIndent, int nChPerInd, bool bSkipCR, bool bPutCR, bool bNLBracket);
+	JsFormatterBase();
+	JsFormatterBase(char chIndent, int nChPerInd);
+	JsFormatterBase(bool bSkipCR, bool bPutCR);
+	JsFormatterBase(char chIndent, int nChPerInd, bool bSkipCR, bool bPutCR, bool bNLBracket);
 
-	virtual ~RealJSFormatter()
+	virtual ~JsFormatterBase()
 	{}
 
 	inline void SetInitIndent(const string& initIndent)
@@ -135,8 +135,29 @@ private:
 
 private:
 	// ×èÖ¹¿½±´
-	RealJSFormatter(const RealJSFormatter&);
-	RealJSFormatter& operator=(const RealJSFormatter&);
+	JsFormatterBase(const JsFormatterBase&);
+	JsFormatterBase& operator=(const JsFormatterBase&);
+};
+
+class JSFormatter: public JsFormatterBase
+{
+public:
+	JSFormatter(const char* input, 
+		string* output,
+		char chIndent,
+		int nChPerInd,
+		bool bPutCR,
+		bool bNLBracket);
+
+private:
+	string in;
+	string* out;
+
+	size_t getPos;
+	size_t putPos;
+
+	virtual int GetChar();
+	virtual void PutChar(int ch);
 };
 
 #endif

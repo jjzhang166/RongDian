@@ -65,7 +65,7 @@
 
 using namespace std;
 
-namespace astyle
+namespace AsTibLib
 {
 
 enum FileType      { C_TYPE=0, JAVA_TYPE=1, SHARP_TYPE=2 };
@@ -839,15 +839,15 @@ class ASFormatter : public ASBeautifier
 
 
 //-----------------------------------------------------------------------------
-// astyle namespace global declarations
+// AsTibLib namespace global declarations
 //-----------------------------------------------------------------------------
 // sort comparison functions for ASResource
 bool sortOnLength(const string* a, const string* b);
 bool sortOnName(const string* a, const string* b);
 
-}   // end of astyle namespace
+}   // end of AsTibLib namespace
 
-// end of astyle namespace  --------------------------------------------------
+// end of AsTibLib namespace  --------------------------------------------------
 
 
 //-----------------------------------------------------------------------------

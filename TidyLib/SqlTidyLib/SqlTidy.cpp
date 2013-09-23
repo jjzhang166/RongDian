@@ -1,17 +1,18 @@
 #include "SqlTidy.h"
 #include "Formatter.h"
 
-SqlTidyLib::SqlTidy::SqlTidy()
+namespace SqlTidyLib{
+SqlTidy::SqlTidy()
 {
 
 }
 
-SqlTidyLib::SqlTidy::~SqlTidy()
+SqlTidy::~SqlTidy()
 {
 
 }
 
-bool SqlTidyLib::SqlTidy::Format(const char* pSourceIn, const char *pOptions, string &strOut/*, string &strErr*/)
+bool SqlTidy::Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
 {
 	string strOptions = pOptions;
 	char chIndent = ' ';
@@ -83,4 +84,5 @@ bool SqlTidyLib::SqlTidy::Format(const char* pSourceIn, const char *pOptions, st
 		delete sqlformatter;
 	}	
 	return true;
+}
 }

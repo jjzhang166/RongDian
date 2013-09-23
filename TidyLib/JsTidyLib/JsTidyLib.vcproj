@@ -157,7 +157,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\jsformatString.cpp"
+				RelativePath=".\formatter.cpp"
 				>
 			</File>
 			<File
@@ -165,11 +165,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\JsTidy.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\realjsformatter.cpp"
+				RelativePath=".\jstidy.cpp"
 				>
 			</File>
 		</Filter>
@@ -179,7 +175,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\jsformatString.h"
+				RelativePath=".\formatter.h"
 				>
 			</File>
 			<File
@@ -187,11 +183,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\JsTidy.h"
-				>
-			</File>
-			<File
-				RelativePath=".\realjsformatter.h"
+				RelativePath=".\jstidy.h"
 				>
 			</File>
 		</Filter>

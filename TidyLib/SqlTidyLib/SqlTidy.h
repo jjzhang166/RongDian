@@ -8,6 +8,6 @@ class SqlTidy
 public:
 	SqlTidy();
 	~SqlTidy();
-	bool Format(const char* pSourceIn, const char *pOptions, string &strOut/*, string &strErr*/);
+	bool Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr);
 };
 }

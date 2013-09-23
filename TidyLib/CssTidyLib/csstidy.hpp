@@ -20,6 +20,7 @@
 #ifndef HEADER_CSSTIDY
 #define HEADER_CSSTIDY 
 
+
 class csstidy 
 { 
 	public: 

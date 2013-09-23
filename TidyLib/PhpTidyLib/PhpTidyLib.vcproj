@@ -177,7 +177,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PhpTidy.cpp"
+				RelativePath=".\phptidy.cpp"
 				>
 			</File>
 			<File
@@ -223,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PhpTidy.h"
+				RelativePath=".\phptidy.h"
 				>
 			</File>
 			<File

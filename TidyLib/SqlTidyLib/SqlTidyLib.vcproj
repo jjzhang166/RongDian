@@ -156,11 +156,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Formatter.cpp"
+				RelativePath=".\formatter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SqlTidy.cpp"
+				RelativePath=".\sqltidy.cpp"
 				>
 			</File>
 		</Filter>
@@ -170,11 +170,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Formatter.h"
+				RelativePath=".\formatter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SqlTidy.h"
+				RelativePath=".\sqltidy.h"
 				>
 			</File>
 		</Filter>

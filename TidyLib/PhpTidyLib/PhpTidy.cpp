@@ -7,21 +7,22 @@
 #include "scanner.h"
 #include "parser.h"
 
+namespace PhpTidyLib{
 /* globals */
 CSettings  *settings  = NULL;
 PhpFormatter *formatter = NULL;
 CScanner   *scanner   = NULL;
 CParser    *parser    = NULL;
 
-PhpTidyLib::PhpTidy::PhpTidy()
+PhpTidy::PhpTidy()
 {
 }
 
-PhpTidyLib::PhpTidy::~PhpTidy()
+PhpTidy::~PhpTidy()
 {
 }
 
-bool PhpTidyLib::PhpTidy::Format( const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
+bool PhpTidy::Format( const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
 {
 	try
 	{
@@ -90,4 +91,5 @@ bool PhpTidyLib::PhpTidy::Format( const char* pSourceIn, const char *pOptions, s
 		delete parser;
 
 	return true;
+}
 }

@@ -159,17 +159,17 @@ string htmlspecialchars(string istring, int quotes)
 	return istring;
 }
 
-int max(const int i1, const int i2)
-{
-	if(i1 > i2)
-	{
-		return i1;
-	}
-	else
-	{
-		return i2;
-	}
-}
+//int max(const int i1, const int i2)
+//{
+//	if(i1 > i2)
+//	{
+//		return i1;
+//	}
+//	else
+//	{
+//		return i2;
+//	}
+//}
 
 bool ctype_space(const char c)
 {

@@ -61,7 +61,7 @@
 int _CRT_glob = 0;
 #endif
 
-namespace astyle
+namespace AsTibLib
 {
 
 #ifdef _WIN32
@@ -2997,11 +2997,11 @@ bool ASOptions::isParamOption(const string& arg, const char* option1, const char
 
 // *******************   end of ASOptions functions   *********************************************
 
-}   // end of namespace astyle
+}   // end of namespace AsTibLib
 
-// *******************   end of astyle namespace    ***********************************************
+// *******************   end of AsTibLib namespace    ***********************************************
 
-using namespace astyle;
+using namespace AsTibLib;
 
 #ifdef ASTYLE_JNI
 // *************************   JNI functions   ****************************************************

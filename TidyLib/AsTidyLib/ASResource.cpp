@@ -29,7 +29,7 @@
 #include <algorithm>
 
 
-namespace astyle
+namespace AsTibLib
 {
 const string ASResource::AS_IF = string("if");
 const string ASResource::AS_ELSE = string("else");
@@ -560,4 +560,4 @@ string ASBase::getCurrentWord(const string& line, size_t index) const
 	return line.substr(index, i - index);
 }
 
-}   // end namespace astyle
+}   // end namespace AsTibLib

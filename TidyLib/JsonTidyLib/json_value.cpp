@@ -25,7 +25,7 @@
 #define JSON_FAIL_MESSAGE( message ) throw std::runtime_error( message );
 #define JSON_ASSERT_MESSAGE( condition, message ) if (!( condition )) JSON_FAIL_MESSAGE( message )
 
-namespace Json {
+namespace JsonTibLib {
 
 const Value Value::null;
 const Int Value::minInt = Int( ~(UInt(-1)/2) );
@@ -73,7 +73,7 @@ releaseStringValue( char *value )
       free( value );
 }
 
-} // namespace Json
+} // namespace JsonTibLib
 
 
 // //////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ releaseStringValue( char *value )
 # include "json_valueiterator.inl"
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace Json {
+namespace JsonTibLib {
 
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
@@ -601,7 +601,7 @@ Value::operator ==( const Value &other ) const
 {
    //if ( type_ != other.type_ )
    // GCC 2.95.3 says:
-   // attempt to take address of bit-field structure member `Json::Value::type_'
+   // attempt to take address of bit-field structure member `JsonTibLib::Value::type_'
    // Beats me, but a temp solves the problem.
    int temp = other.type_;
    if ( type_ != temp )
@@ -1836,4 +1836,4 @@ Path::make( Value &root ) const
 }
 
 
-} // namespace Json
+} // namespace JsonTibLib

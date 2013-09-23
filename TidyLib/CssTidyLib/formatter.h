@@ -2,23 +2,23 @@
 #include <string>
 using namespace std;
 
-namespace CssFormatterTidy{
-	class CssFormatter
-	{
-	public:
-		CssFormatter(void);
-		~CssFormatter(void);
-		
-		/**
-		 * 格式化css
-		 * @param const char * pSourceIn 
-		 * @param const char * pOptions 
-		 * @param string & strOut 
-		 * @param string & strErr 
-		 * @return bool 
-		 */
-		bool CssTidyMain(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr);
-	};
+namespace CssTidyLib{
+class CssTidy
+{
+public:
+	CssTidy();
+	~CssTidy();
+	
+	/**
+	 * 格式化css
+	 * @param const char * pSourceIn 
+	 * @param const char * pOptions 
+	 * @param string & strOut 
+	 * @param string & strErr 
+	 * @return bool 
+	 */
+	bool Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr);
+};
 }
 /*
 settings["remove_bslash"] = 1;

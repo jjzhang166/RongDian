@@ -50,7 +50,7 @@ string htmlspecialchars(string istring, int quotes = 0);
 float round(const float &number, const int num_digits);
 
 // Replacement for max (so that I don't have to include unnecessary things)
-int max(const int i1, const int i2);
+//int max(const int i1, const int i2);
 
 /* isspace() and isdigit() do not work correctly with UTF-8 strings */
 bool ctype_space(const char c);

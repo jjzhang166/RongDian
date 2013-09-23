@@ -75,7 +75,7 @@
 #endif
 
 
-namespace astyle
+namespace AsTibLib
 {
 
 //----------------------------------------------------------------------------
@@ -310,7 +310,7 @@ class ASConsole
 };
 #endif	// ASTYLE_LIB
 
-}   // end of namespace astyle
+}   // end of namespace AsTibLib
 
 //----------------------------------------------------------------------------
 // declarations for java native interface (JNI) build

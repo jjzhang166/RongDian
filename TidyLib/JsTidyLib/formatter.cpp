@@ -1,4 +1,4 @@
-/* realjsformatter.cpp
+/* formatter.cpp
    2010-12-16
 
 Copyright (c) 2010-2012 SUN Junwen
@@ -23,12 +23,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <iostream>
 #include <ctime>
 
-#include "realjsformatter.h"
+#include "formatter.h"
 
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////////
+// JsFormatterBase
 template<class T>
-bool RealJSFormatter::GetStackTop(stack<T> stk, T& ret)
+bool JsFormatterBase::GetStackTop(stack<T> stk, T& ret)
 {
 	if(stk.size() == 0)
 		return false;
@@ -37,14 +39,14 @@ bool RealJSFormatter::GetStackTop(stack<T> stk, T& ret)
 }
 
 template<class T>
-bool RealJSFormatter::StackTopEq(stack<T> stk, T eq)
+bool JsFormatterBase::StackTopEq(stack<T> stk, T eq)
 {
 	if(stk.size() == 0)
 		return false;
 	return (eq == stk.top());
 }
 
-RealJSFormatter::RealJSFormatter():
+JsFormatterBase::JsFormatterBase():
 	m_chIndent('\t'),
 	m_nChPerInd(1),
 	m_bSkipCR(false),
@@ -54,7 +56,7 @@ RealJSFormatter::RealJSFormatter():
 	Init();
 }
 
-RealJSFormatter::RealJSFormatter(char chIndent, int nChPerInd):
+JsFormatterBase::JsFormatterBase(char chIndent, int nChPerInd):
 	m_chIndent(chIndent),
 	m_nChPerInd(nChPerInd),
 	m_bSkipCR(false),
@@ -64,7 +66,7 @@ RealJSFormatter::RealJSFormatter(char chIndent, int nChPerInd):
 	Init();
 }
 
-RealJSFormatter::RealJSFormatter(bool bSkipCR, bool bPutCR):
+JsFormatterBase::JsFormatterBase(bool bSkipCR, bool bPutCR):
 	m_chIndent('\t'),
 	m_nChPerInd(1),
 	m_bSkipCR(bSkipCR),
@@ -74,7 +76,7 @@ RealJSFormatter::RealJSFormatter(bool bSkipCR, bool bPutCR):
 	Init();
 }
 
-RealJSFormatter::RealJSFormatter(char chIndent, int nChPerInd, bool bSkipCR, bool bPutCR, bool bNLBracket):
+JsFormatterBase::JsFormatterBase(char chIndent, int nChPerInd, bool bSkipCR, bool bPutCR, bool bNLBracket):
 	m_chIndent(chIndent),
 	m_nChPerInd(nChPerInd),
 	m_bSkipCR(bSkipCR),
@@ -84,27 +86,27 @@ RealJSFormatter::RealJSFormatter(char chIndent, int nChPerInd, bool bSkipCR, boo
 	Init();
 }
 
-string RealJSFormatter::Trim(const string& str)
+string JsFormatterBase::Trim(const string& str)
 {
 	std::string ret(str);
 	ret = ret.erase(ret.find_last_not_of(" \r\n\t") + 1);
 	return ret.erase(0, ret.find_first_not_of(" \r\n\t"));
 }
 
-string RealJSFormatter::TrimSpace(const string& str)
+string JsFormatterBase::TrimSpace(const string& str)
 {
 	std::string ret(str);
 	ret = ret.erase(ret.find_last_not_of(" \t") + 1);
 	return ret.erase(0, ret.find_first_not_of(" \t"));
 }
 
-string RealJSFormatter::TrimRightSpace(const string& str)
+string JsFormatterBase::TrimRightSpace(const string& str)
 {
 	std::string ret(str);
 	return ret.erase(ret.find_last_not_of(" \t") + 1);
 }
 
-void RealJSFormatter::StringReplace(string& strBase, const string& strSrc, const string& strDes)
+void JsFormatterBase::StringReplace(string& strBase, const string& strSrc, const string& strDes)
 {
 	string::size_type pos = 0;
 	string::size_type srcLen = strSrc.size();
@@ -117,7 +119,7 @@ void RealJSFormatter::StringReplace(string& strBase, const string& strSrc, const
 	}
 }
 
-void RealJSFormatter::Init()
+void JsFormatterBase::Init()
 {
 	m_initIndent = "";
 
@@ -160,7 +162,7 @@ void RealJSFormatter::Init()
 	m_specKeywordSet.insert("return");
 }
 
-void RealJSFormatter::PutToken(const string& token,
+void JsFormatterBase::PutToken(const string& token,
 		const string& leftStyle,
 		const string& rightStyle)
 {
@@ -176,7 +178,7 @@ void RealJSFormatter::PutToken(const string& token,
 	m_bCommentPut = false; // 这个一定会发生在注释之后的任何输出后面
 }
 
-void RealJSFormatter::PutString(const string& str)
+void JsFormatterBase::PutString(const string& str)
 {
 	size_t length = str.size();
 	//char topStack = m_blockStack.top();
@@ -207,7 +209,7 @@ void RealJSFormatter::PutString(const string& str)
 	}
 }
 
-void RealJSFormatter::PutLineBuffer()
+void JsFormatterBase::PutLineBuffer()
 {
 	for(size_t i = 0; i < m_initIndent.length(); ++i)
 		PutChar(m_initIndent[i]); // 先输出预缩进
@@ -226,7 +228,7 @@ void RealJSFormatter::PutLineBuffer()
 		PutChar(line[i]);
 }
 
-void RealJSFormatter::PopMultiBlock(char previousStackTop)
+void JsFormatterBase::PopMultiBlock(char previousStackTop)
 {
 	if(m_tokenB == ";") // 如果 m_tokenB 是 ;，弹出多个块的任务留给它
 		return;
@@ -265,7 +267,7 @@ void RealJSFormatter::PopMultiBlock(char previousStackTop)
 	}
 }
 
-void RealJSFormatter::Go()
+void JsFormatterBase::Go()
 {
 	m_blockStack.push(' ');
 	m_brcNeedStack.push(true);
@@ -342,7 +344,7 @@ void RealJSFormatter::Go()
 	}
 }
 
-void RealJSFormatter::ProcessOper(bool bHaveNewLine, char tokenAFirst, char tokenBFirst)
+void JsFormatterBase::ProcessOper(bool bHaveNewLine, char tokenAFirst, char tokenBFirst)
 {
 	tokenAFirst;
 	char topStack;// = m_blockStack.top();
@@ -710,7 +712,7 @@ void RealJSFormatter::ProcessOper(bool bHaveNewLine, char tokenAFirst, char toke
 	PutToken(m_tokenA, string(" "), string(" ")); // 剩余的操作符都是 空格oper空格
 }
 
-void RealJSFormatter::ProcessString(bool bHaveNewLine, char tokenAFirst, char tokenBFirst)
+void JsFormatterBase::ProcessString(bool bHaveNewLine, char tokenAFirst, char tokenBFirst)
 {
 	tokenBFirst;
 	tokenAFirst;
@@ -790,4 +792,34 @@ void RealJSFormatter::ProcessString(bool bHaveNewLine, char tokenAFirst, char to
 		m_blockStack.push(m_blockMap[m_tokenA]);
 	}
 }
+// JsFormatterBase
+//////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////
+// JSFormatter
+JSFormatter::JSFormatter(const char* input, 
+							   string* output,
+							   char chIndent,
+							   int nChPerInd,
+							   bool bPutCR,
+							   bool bNLBracket)
+							   :JsFormatterBase(chIndent, nChPerInd, true, bPutCR, bNLBracket), 
+							   in(), out(output), getPos(0), putPos(0)
+{
+	in.append(input);
+}
+
+int JSFormatter::GetChar()
+{
+	if(getPos <= in.length())
+		return in[getPos++];
+	else
+		return 0;
+}
+
+void JSFormatter::PutChar(int ch)
+{ 
+	out->append(1, ch);
+}
+// JSFormatter
+//////////////////////////////////////////////////////////////////////////

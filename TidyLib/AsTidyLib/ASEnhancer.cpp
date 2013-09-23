@@ -28,7 +28,7 @@
 #include "astyle.h"
 #include <iostream>		// for cout
 
-namespace astyle
+namespace AsTibLib
 {
 
 /**
@@ -676,4 +676,4 @@ int ASEnhancer::unindentLine(string&  line, int unindent) const
 }
 
 
-}   // end namespace astyle
+}   // end namespace AsTibLib

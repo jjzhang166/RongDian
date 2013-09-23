@@ -1,18 +1,18 @@
-#include "JsonTidy.h"
+#include "jsontidy.h"
 #include "json.h"
-using namespace Json;
 
-JsonFormatter::JsonTidy::JsonTidy( void )
+namespace JsonTibLib{
+JsonTidy::JsonTidy()
 {
 
 }
 
-JsonFormatter::JsonTidy::~JsonTidy( void )
+JsonTidy::~JsonTidy()
 {
 
 }
 
-bool JsonFormatter::JsonTidy::JsonTidyMain( const char* pSourceIn, const char *pOptions, string &strOut, string &strErr )
+bool JsonTidy::Format(const char* pSourceIn, const char *pOptions, string &strOut, string &strErr)
 {
 	string strOptions = pOptions;
 	int nChPerInd = 3;
@@ -33,7 +33,6 @@ bool JsonFormatter::JsonTidy::JsonTidyMain( const char* pSourceIn, const char *p
 
 	Reader jReader;
 	Value jValue;
-
 	bool parsingSuccessful = jReader.parse(pSourceIn, jValue);
 	if (!parsingSuccessful)
 	{
@@ -43,4 +42,5 @@ bool JsonFormatter::JsonTidy::JsonTidyMain( const char* pSourceIn, const char *p
 
 	strOut = jValue.toMyStyledString(nChPerInd);
 	return true;
+}
 }
