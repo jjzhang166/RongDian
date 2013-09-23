@@ -5,7 +5,8 @@ class CMainFrame : public WindowImplBase,
 	public IPanelXml, public IAbout,
 	public IColorPicker, public ICoder,
 	public IListCallbackUI, public IFileFinder,
-	public IFormatter, public IIPConfig
+	public IFormatter, public IIPConfig,
+	public ITidy
 {
 public:
 	CMainFrame();
@@ -30,8 +31,8 @@ public:
 	void			OnItemActive(TNotifyUI& msg);
 	void			OnItemClick(TNotifyUI& msg);
 	void			OnItemSelect(TNotifyUI& msg);
+	void			OnMenuSelect(TNotifyUI& msg);
 	void			OnTextChanged(TNotifyUI& msg);
-	void			OnShowSysMenu(TNotifyUI& msg);
 	void			OnFinalMessage(HWND hWnd);
 
 	LRESULT			HandleMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
@@ -51,6 +52,7 @@ public:
 	BOOL			AddPanel(LPPANEL_INFO lpPanelInfo);
 	BOOL			CreatePanels();
 	BOOL			ReleasePanels();
+	BOOL			OnAppQuit();
 
 public:
 	CDuiString builder_xml_;
@@ -59,4 +61,5 @@ public:
 	CContainerUI *pPanelTabs;
 	CContainerUI *pPanelContents;
 	CControlUI *pStatusCtrl;
+	LPVOID lpLoader;
 };

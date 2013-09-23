@@ -40,4 +40,12 @@
 		<name>IPConfig</name>
 		<desc>IP Config Panel</desc>
 	</Plugin>
+	<Plugin>
+		<layout>layout_tidy</layout>
+		<xml>Tidy.xml</xml>
+		<tab>tab_tidy</tab>
+		<panel>panel_tidy</panel>
+		<name>Tidy</name>
+		<desc>Code Tidy Panel</desc>
+	</Plugin>
 </Root>

@@ -15,6 +15,11 @@ const wchar_t* const kFrameContainer = L"frame_container";
 const wchar_t* const kFrameTitle = L"frame_title";
 const wchar_t* const kFrameStatus = L"frame_status";
 const wchar_t* const kTrayTip = L"tray_tip";
+// System Menu
+const wchar_t* const kMenuAbout = L"menu_about";
+const wchar_t* const kMenuHelp = L"menu_help";
+const wchar_t* const kMenuShow = L"menu_show";
+const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
 const wchar_t* const kPanelTabs = L"panel_tabs";
@@ -23,10 +28,10 @@ const wchar_t* const kPanelContents = L"panel_contents";
 DUI_BEGIN_MESSAGE_MAP(CMainFrame, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick) // 这是单击
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive) // 这是List节点双击
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK,OnItemClick) //list中的item点击
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnItemSelect)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK, OnItemClick) //list中的item点击
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT, OnItemSelect)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENUSELECT, OnMenuSelect)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged) // 这是文本框内容改变
-	DUI_ON_MENU_CTRNAME(kMenuBtn, OnShowSysMenu)
 DUI_END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
@@ -43,6 +48,7 @@ CMainFrame::CMainFrame()
 	pPanelContents = NULL;
 	pStatusCtrl = NULL;
 	Open(g_szPanelsXml);
+	lpLoader = NULL;
 }
 
 CMainFrame::~CMainFrame()
@@ -105,6 +111,8 @@ SET_CONTROL_END()
 	SetFormatterLang(lpszLang);
 
 	SetIPConfigLang(lpszLang);
+
+	SetTidyLang(lpszLang);
 	return 0;
 }
 
@@ -148,6 +156,7 @@ void CMainFrame::InitWindow()
 	SetFinderOwner(m_hWnd, &m_PaintManager);
 	SetFormatterOwner(m_hWnd,&m_PaintManager);
 	SetIPConfigOwner(m_hWnd,&m_PaintManager);
+	SetTidyOwner(m_hWnd,&m_PaintManager);
 
 	HICON hIcon = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, TRUE, (LPARAM)hIcon);
@@ -261,6 +270,8 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	if(!bHandle)
 		OnIPConfigClick(msg, bHandle);
 	if(!bHandle)
+		OnTidyClick(msg, bHandle);
+	if(!bHandle)
 		SelectPanel(sCtrlName);
 	WindowImplBase::OnClick(msg);
 }
@@ -279,6 +290,8 @@ void CMainFrame::OnItemActive(TNotifyUI& msg)
 			OnCoderItemActive(msg);
 		else if(pList->GetName()==GetFinderListName())
 			OnFinderItemActive(msg);
+		else if(pList->GetName()==GetTidyListName())
+			OnTidyItemActive(msg);
 	}
 }
 
@@ -304,15 +317,36 @@ void CMainFrame::OnItemSelect(TNotifyUI& msg)
 	}
 }
 
+void CMainFrame::OnMenuSelect(TNotifyUI& msg)
+{
+	CDuiString sCtrlName = msg.pSender->GetName();
+	if(sCtrlName == kMenuAbout)
+	{
+		SelectPanel(kTabAbout);
+	}
+	else if(sCtrlName == kMenuHelp)
+	{
+		if(!lpLoader)
+			DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
+	}
+	else if(sCtrlName == kMenuShow)
+	{
+		if(lpLoader)
+		{
+			DuiCancelLoading(lpLoader);
+			lpLoader = NULL;
+		}
+	}
+	else if(sCtrlName == kMenuQuit)
+	{
+		OnAppQuit();
+	}
+}
+
 void CMainFrame::OnTextChanged(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
 	OnPickerTextChanged(msg, bHandle);
-}
-
-void CMainFrame::OnShowSysMenu(TNotifyUI& /*msg*/)
-{
-
 }
 
 void CMainFrame::OnFinalMessage(HWND hWnd)
@@ -616,6 +650,7 @@ BOOL CMainFrame::InitPanels()
 	InitFinder((IListCallbackUI*)this);
 	InitFormatter();
 	InitIPConfig();
+	InitTidy(NULL);
 	return bRet;
 }
 
@@ -702,5 +737,16 @@ BOOL CMainFrame::ReleasePanels()
 			break;
 	}
 
+	return TRUE;
+}
+
+BOOL CMainFrame::OnAppQuit()
+{
+	if(lpLoader)
+	{
+		DuiCancelLoading(lpLoader);
+		lpLoader = NULL;
+	}
+	PostMessage(WM_CLOSE, 0, 0);
 	return TRUE;
 }

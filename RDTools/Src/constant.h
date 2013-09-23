@@ -102,12 +102,6 @@ const wchar_t* const kDnsType						= L"DnsType";
 const wchar_t* const kDns1							= L"Dns1";
 const wchar_t* const kDns2							= L"Dns2";
 
-// Image's Extension
-const wchar_t* const kJPEGExt						= L".jpeg";
-const wchar_t* const kJPGExt						= L".jpg";
-const wchar_t* const kPNGExt						= L".png";
-const wchar_t* const kBMPExt						= L".bmp";
-
 #ifndef STRING_LENGTH
 #define 			 STRING_LENGTH					260
 #endif
@@ -177,3 +171,70 @@ typedef struct _tagADAPTER_INFO
 	wchar_t szDns[2][STRING_LENGTH];
 	wchar_t szMac[STRING_LENGTH];
 } ADAPTER_INFO, *PADAPTER_INFO, *LPADAPTER_INFO;
+
+typedef enum _tagIMG_TYPE
+{
+	IMG_JPEG = 0,
+	IMG_JPG,
+	IMG_PNG,
+	IMG_BMP,
+	IMG_GIF,
+	IMG_PSD,
+	IMG_UNDEFINE
+} IMG_TYPE;
+
+const UINT MAX_IMG_TYPE = IMG_UNDEFINE + 1;
+
+typedef struct _tagIMG_INFO
+{
+	wchar_t szName[STRING_LENGTH];
+	int nType;
+	int bSupport;
+} IMG_INFO, *PIMG_INFO, *LPIMG_INFO;
+
+typedef enum _tagTIDY_TYPE {
+	TIDY_ACTIONSCRIPT = 0,
+	TIDY_ADA,	
+	TIDY_ASM,	
+	TIDY_ASP,
+	TIDY_AUTOHOTKEY,
+	TIDY_AUTOIT,
+	TIDY_BATCH,
+	TIDY_COBOL,
+	TIDY_CPP,
+	TIDY_CS,
+	TIDY_CSS,
+	TIDY_D,
+	TIDY_FORTRAN,
+	TIDY_HASKELL,
+	TIDY_HTML,
+	TIDY_INI,
+	TIDY_JAVA,
+	TIDY_JAVASCRIPT,
+	TIDY_JSON,
+	TIDY_JSP,
+	TIDY_LISP,
+	TIDY_LUA,
+	TIDY_NORMALTEXT,
+	TIDY_OBJECTIVEC,
+	TIDY_PASCAL,
+	TIDY_PERL,
+	TIDY_PHP,
+	TIDY_PYTHON,
+	TIDY_RUBY,
+	TIDY_SQL,
+	TIDY_VB,
+	TIDY_VERILOG,
+	TIDY_VHDL,
+	TIDY_XML,
+	TIDY_END
+} TIDY_TYPE;
+
+const UINT MAX_TIDY_LANG = TIDY_END + 1;
+
+typedef struct _tagTIDY_INFO
+{
+	wchar_t szLang[STRING_LENGTH];
+	wchar_t szDesc[STRING_LENGTH];
+	UINT uID;
+} TIDY_INFO, *PTIDY_INFO, *LPTIDY_INFO;

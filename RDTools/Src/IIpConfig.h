@@ -6,6 +6,7 @@ class IIPConfig
 public:
 	IIPConfig();
 	virtual ~IIPConfig();
+
 public:
 	void			SetIPConfigOwner(HWND hWnd, CPaintManagerUI *pManager) { m_hIPConfigOwner = hWnd; m_pIPConfigManager = pManager; };
 	BOOL			InitIPConfig();
@@ -30,8 +31,8 @@ public:
 	BOOL			OnApplySolution();
 	BOOL			ResetSolution();
 
-	static LONG		AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
-	static LONG		AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
+	static LONG	CALLBACK	AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
+	static LONG CALLBACK	AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
 
 public:
 	HWND m_hIPConfigOwner;

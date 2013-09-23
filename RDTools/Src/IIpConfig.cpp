@@ -689,7 +689,7 @@ BOOL IIPConfig::ResetSolution()
 	return TRUE;
 }
 
-LONG IIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LONG CALLBACK IIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	//list<LPADAPTER_INFO> *plstAdapters = (list<LPADAPTER_INFO> *)lParam;
 	//if(!plstAdapters)
@@ -697,7 +697,7 @@ LONG IIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return 0;
 }
 
-LONG IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex)
+LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex)
 {
 	list<LPADAPTER_INFO> *plstAdapters = (list<LPADAPTER_INFO> *)lParam;
 	if(!plstAdapters)

@@ -32,87 +32,81 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 // 以下是第三方库类文件的引用
 //////////////////////////////////////////////////////////////////////////
+
+#define PCRE_STATIC // 静态库编译选项
+
+#include <OptParse/optparse.h>
+#include <md5/md5.h>
+
 #include <log4cplus/logger.h>
 #include <log4cplus/fileappender.h>
 #include <log4cplus/consoleappender.h>
 #include <log4cplus/layout.h>
 #include <log4cplus/loggingmacros.h>
 
+#include <pcre/pcre.h>
+#include <UCD/ucdetector.h>
+#include <libiconv/Src/include/iconv.h>
+#include <SQLite/sqlite3.h>
+#include <SlimXml/Src/SlimXml.h>
+#include <Tidy/include/tidy.h>
+#include <AsTidyLib/astyle.h>
+#include <CssTidyLib/csspp_globals.hpp>
+#include <JsonTidyLib/jsontidy.h>
+#include <JsTidyLib/jstidy.h>
+#include <PhpTidyLib/phptidy.h>
+#include <SqlTidyLib/sqltidy.h>
+#include <DuiLib/UIlib.h>
+
+#include <Duilib\Control\UIMenu.h>
+#include <DuiMsg.h>
+#include <FileFinder.h>
+
 using namespace log4cplus;
 using namespace log4cplus::helpers;
+using namespace slim;
+using namespace DuiLib;
 
 // Link Lib
 #ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/log4cplusd.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/log4cplus.lib")
-#endif 
-
-#define PCRE_STATIC // 静态库编译选项
-
-#include <pcre/pcre.h>
-#ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/pcred.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/pcre.lib")
-#endif
-
-#include <DuiLib/UIlib.h>
-using namespace DuiLib;
-
-#ifdef _DEBUG
-#pragma comment(lib, "../RongDian/bin/DuiLibd.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/DuiLib.lib")
-#endif
-#include <Duilib\Control\UIMenu.h>
-
-#include <OptParse/optparse.h>
-#include <md5/md5.h>
-
-#include <SlimXml/Src/SlimXml.h>
-
-using namespace slim;
-
-#ifdef _DEBUG
-#pragma comment(lib, "../RongDian/bin/SlimXmld.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/SlimXml.lib")
-#endif
-
-#include <UCD/ucdetector.h>
-
-#ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/UCDd.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/UCD.lib")
-#endif
-
-#include <libiconv/Src/include/iconv.h>
-#ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/libiconvd.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/libiconv.lib")
-#endif
-
-#include <SQLite/sqlite3.h>
 #pragma comment(lib, "../RongDian/bin/SQLite.lib")
-
-#include <DuiMsg.h>
-#ifdef _DEBUG
+#pragma comment(lib, "../RongDian/bin/SlimXmld.lib")
+#pragma comment(lib, "../RongDian/bin/Tidy.lib")
+#pragma comment(lib, "../RongDian/bin/AsTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/CssTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/JsonTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/JsTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/PhpTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/SqlTidyLibd.lib")
+#pragma comment(lib, "../RongDian/bin/DuiLibd.lib")
 #pragma comment(lib, "../RongDian/bin/DuiMsgd.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/DuiMsg.lib")
-#endif
-
-#include <FileFinder.h>
-#ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/RDFinderd.lib")
 #else
+#pragma comment(lib, "../RongDian/bin/log4cplus.lib")
+#pragma comment(lib, "../RongDian/bin/pcre.lib")
+#pragma comment(lib, "../RongDian/bin/UCD.lib")
+#pragma comment(lib, "../RongDian/bin/libiconv.lib")
+#pragma comment(lib, "../RongDian/bin/SQLite.lib")
+#pragma comment(lib, "../RongDian/bin/SlimXml.lib")
+#pragma comment(lib, "../RongDian/bin/Tidy.lib")
+#pragma comment(lib, "../RongDian/bin/AsTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/CssTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/JsonTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/JsTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/PhpTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/SqlTidyLib.lib")
+#pragma comment(lib, "../RongDian/bin/DuiLib.lib")
+#pragma comment(lib, "../RongDian/bin/DuiMsg.lib")
 #pragma comment(lib, "../RongDian/bin/RDFinder.lib")
-#endif
+#endif 
+
 
 BOOL IsImageFile(LPCWSTR lpszFileName);
+BOOL IsCanTidy(LPCWSTR lpszLang);
 int EscapeSQLite(CDuiString strKeyWord);
 int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lpszCaptionSection, LPCWSTR lpszCaptionId, UINT uType);
 
@@ -146,6 +140,7 @@ int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lps
 #include "IFileFinder.h"
 #include "IFormatter.h"
 #include "IIpConfig.h"
+#include "ITidy.h"
 #include "MainFrame.h"
 
 extern HINSTANCE				g_hInstance;
@@ -172,4 +167,6 @@ extern CSystemTray				*g_pSystemTray;
 extern CMainFrame				*g_pMainFrame;
 extern list<LPPANEL_INFO>		g_lstPanelInfo;
 extern CSQLite					g_SQLite;
+extern IMG_INFO					g_ImgInfo[MAX_IMG_TYPE];
+extern TIDY_INFO				g_TidyInfo[MAX_TIDY_LANG];
 

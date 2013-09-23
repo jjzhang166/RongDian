@@ -55,7 +55,6 @@ void IAbout::OnAboutClick(TNotifyUI& msg, BOOL& bHandled)
 	else if(sCtrlName == kAboutUrl)
 	{
 		bHandled = TRUE;
-		//Utility::OpenUrl(hAboutOwner, kAuthorUrl);
-		DuiLoading(hAboutOwner, L"Test...", NULL);
+		Utility::OpenUrl(hAboutOwner, kAuthorUrl);
 	}
 }

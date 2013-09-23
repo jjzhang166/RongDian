@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;..\thirdparty\tidy;..\TidyLib;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copy ..\lib\config.ini ..\RongDian\bin\config.ini"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
@@ -120,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;..\thirdparty\tidy;..\TidyLib;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine="copy ..\lib\config.ini ..\RongDian\bin\config.ini"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCLinkerTool"
@@ -221,6 +221,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ITidy.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\MainFrame.cpp"
 					>
 				</File>
@@ -300,6 +304,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\IPanelXml.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ITidy.h"
 					>
 				</File>
 				<File

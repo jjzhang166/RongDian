@@ -27,7 +27,7 @@
 			<HorizontalLayout name="panel_tabs" height="30" bktrans="true" >
 				<Button name="tab_about" minwidth="36" maxwidth="100" text="" endellipsis="true" bordersize="1" userdata="layout_about" textcolor="0xFFE0E0E0" />
 			</HorizontalLayout>
-			<HorizontalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_ipconfig" >
+			<HorizontalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_about" >
 				<ChildLayout name="layout_about" xmlfile="About.xml" visible="false" />
 			</HorizontalLayout>
 	 	</VerticalLayout><!-- frame_contents -->
