@@ -369,64 +369,6 @@ void CWbemObject::Clean()
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-//
-
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-// CAdapterCfgObj
-CAdapterCfgObj::CAdapterCfgObj(IWbemServices *pServices /*= NULL*/)
-{
-	m_pServices = pServices;
-	m_pClassObject = NULL;
-}
-
-CAdapterCfgObj::CAdapterCfgObj(IWbemClassObject *pWbemObject, IWbemServices *pServices)
-{
-	m_pServices = pServices;
-	m_pClassObject = pWbemObject;
-}
-
-CAdapterCfgObj::~CAdapterCfgObj()
-{
-
-}
-
-HRESULT CAdapterCfgObj::SetAddrType(BOOL bAuto /*= TRUE*/)
-{
-	return S_FALSE;
-}
-
-HRESULT SetAddr(LPCWSTR lpszAddr, LPCWSTR *lpszMask, int &nMaskCount, LONG *plRet /*= NULL*/)
-{
-	HRESULT hRes = S_FALSE;
-	
-	return S_FALSE;
-}
-
-HRESULT CAdapterCfgObj::SetGateway(LPCWSTR lpszGateway, LPBYTE lpMetric, int &nMetricCount, LONG *plRet /*= NULL*/)
-{
-	return S_FALSE;
-}
-
-HRESULT CAdapterCfgObj::EnableDHCP(LONG *plRet /*= NULL*/)
-{
-	return S_FALSE;
-}
-
-HRESULT CAdapterCfgObj::SetDnsType(BOOL bAuto /*= TRUE*/)
-{
-	return S_FALSE;
-}
-HRESULT CAdapterCfgObj::SetDns(LPCWSTR *lpszDns, int &nDnsCount, LONG *plRet /*= NULL*/)
-{
-	return S_FALSE;
-}
-// CAdapterCfgObj
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
 // CAdapterUtil
 CAdapterUtil::CAdapterUtil()
 {
@@ -461,39 +403,39 @@ HRESULT CAdapterUtil::ConnectLocal(LPCWSTR lpszRes)
 	assert(m_pServices!=NULL);
 	// Set General COM Security Levels
 	hRes = CoInitializeSecurity(
-			NULL,							
-			-1, // COM Authentication
-			NULL, // Authentication Services
-			NULL, // Reserved
-			RPC_C_AUTHN_LEVEL_DEFAULT, // Default Authentication
-			RPC_C_IMP_LEVEL_IMPERSONATE, // Default Impersonation
-			NULL, // Authentication Info
-			EOAC_NONE, // Additional Capabilities
-			NULL); // Reserved
+		NULL,							
+		-1, // COM Authentication
+		NULL, // Authentication Services
+		NULL, // Reserved
+		RPC_C_AUTHN_LEVEL_DEFAULT, // Default Authentication
+		RPC_C_IMP_LEVEL_IMPERSONATE, // Default Impersonation
+		NULL, // Authentication Info
+		EOAC_NONE, // Additional Capabilities
+		NULL); // Reserved
 	if(FAILED(hRes) && hRes!=RPC_E_TOO_LATE) 
 		return hRes;
 	// Obtain the Initial Localtor to WMI
 	IWbemLocator *pLocator = NULL;
 	hRes = CoCreateInstance(
-			CLSID_WbemLocator,
-			0,
-			CLSCTX_INPROC_SERVER,
-			IID_IWbemLocator,
-			(LPVOID *)&pLocator);
+		CLSID_WbemLocator,
+		0,
+		CLSCTX_INPROC_SERVER,
+		IID_IWbemLocator,
+		(LPVOID *)&pLocator);
 	if(FAILED(hRes))
 		return hRes;
 	// Connect to WMI through the IWbemLocator::ConnectServer method
 	wchar_t szRes[1024] = {0};
 	wcscpy(szRes, lpszRes);
 	hRes = pLocator->ConnectServer(
-			szRes, // Object Path of WMI namespace
-			NULL, // User name, NULL = Current User
-			NULL, // User Password, NULL = Current User
-			0, // Locale, NULL indicates Current User
-			NULL, // Security flags.
-			0, // Authority
-			0, // Context Object
-			&m_pServices); // Pointer to IWbemServices Proxy
+		szRes, // Object Path of WMI namespace
+		NULL, // User name, NULL = Current User
+		NULL, // User Password, NULL = Current User
+		0, // Locale, NULL indicates Current User
+		NULL, // Security flags.
+		0, // Authority
+		0, // Context Object
+		&m_pServices); // Pointer to IWbemServices Proxy
 	pLocator->Release();
 	pLocator = NULL;
 	if(FAILED(hRes))
@@ -510,18 +452,18 @@ HRESULT CAdapterUtil::ConnectLocal(LPCWSTR lpszRes)
 		EOAC_NONE); // Proxy Capabilities
 	if(FAILED(hRes))
 		m_pServices->Release();
-		
+
 	return hRes;
 }
 
 HRESULT CAdapterUtil::ConnectRemote(
-					  LPCWSTR lpszHost, 
-					  LPCWSTR lpszRes, 
-					  LPCWSTR lpszUser, 
-					  LPCWSTR lpszPwd,
-					  LPCWSTR lpszLocale /*= L"MS_409"*/, 
-					  LPCWSTR lpszAuthority /*= L"ntlmdomain:domain"*/, 
-					  BOOL bShowDlg /*= FALSE*/)
+									LPCWSTR lpszHost, 
+									LPCWSTR lpszRes, 
+									LPCWSTR lpszUser, 
+									LPCWSTR lpszPwd,
+									LPCWSTR lpszLocale /*= L"MS_409"*/, 
+									LPCWSTR lpszAuthority /*= L"ntlmdomain:domain"*/, 
+									BOOL bShowDlg /*= FALSE*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(m_pServices!=NULL);
@@ -566,16 +508,16 @@ HRESULT CAdapterUtil::ConnectRemote(
 	if(bShowDlg)
 	{
 		dwErr = CredUIPromptForCredentials(
-					&cui,
-					L"",
-					NULL,
-					0,
-					szName,
-					_countof(szName),
-					szPwd,
-					_countof(szPwd),
-					&bSave,
-					CREDUI_FLAGS_GENERIC_CREDENTIALS | CREDUI_FLAGS_ALWAYS_SHOW_UI | CREDUI_FLAGS_DO_NOT_PERSIST);
+			&cui,
+			L"",
+			NULL,
+			0,
+			szName,
+			_countof(szName),
+			szPwd,
+			_countof(szPwd),
+			&bSave,
+			CREDUI_FLAGS_GENERIC_CREDENTIALS | CREDUI_FLAGS_ALWAYS_SHOW_UI | CREDUI_FLAGS_DO_NOT_PERSIST);
 		if(dwErr)
 		{
 			pLocator->Release();
@@ -587,28 +529,28 @@ HRESULT CAdapterUtil::ConnectRemote(
 	wcscpy(szLocale, lpszLocale);
 	wcscpy(szAuthority, lpszAuthority);
 	hRes = pLocator->ConnectServer(
-			szRes,
-			szName,
-			szPwd,
-			szLocale,
-			NULL,
-			szAuthority,
-			NULL,
-			&m_pServices);
+		szRes,
+		szName,
+		szPwd,
+		szLocale,
+		NULL,
+		szAuthority,
+		NULL,
+		&m_pServices);
 	pLocator->Release();
 	SecureZeroMemory(szName, sizeof(szName));
 	SecureZeroMemory(szPwd, sizeof(szPwd));
 	if(FAILED(hRes))
 		return hRes;
 	hRes = CoSetProxyBlanket(
-			m_pServices,
-			RPC_C_AUTHN_WINNT,
-			RPC_C_AUTHZ_NONE,
-			NULL,
-			RPC_C_AUTHN_LEVEL_CALL,
-			RPC_C_IMP_LEVEL_IMPERSONATE,
-			NULL,
-			EOAC_NONE);
+		m_pServices,
+		RPC_C_AUTHN_WINNT,
+		RPC_C_AUTHZ_NONE,
+		NULL,
+		RPC_C_AUTHN_LEVEL_CALL,
+		RPC_C_IMP_LEVEL_IMPERSONATE,
+		NULL,
+		EOAC_NONE);
 	if(FAILED(hRes))
 		pLocator->Release();
 	return hRes;
@@ -622,9 +564,9 @@ void CAdapterUtil::Disconnect()
 }
 
 HRESULT CAdapterUtil::EnumExecQuery(
-					  LPCWSTR lpszQuery, 
-					  const LONG& lFlags /*= WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY*/, 
-					  IWbemContext* pContext /*= NULL*/)
+									LPCWSTR lpszQuery, 
+									const LONG& lFlags /*= WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY*/, 
+									IWbemContext* pContext /*= NULL*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(lpszQuery!=NULL);
@@ -637,11 +579,11 @@ HRESULT CAdapterUtil::EnumExecQuery(
 }
 
 HRESULT CAdapterUtil::GetClassObject(
-					   CWbemObject& wbemObj, 
-					   LPCWSTR lpszPath, 
-					   const LONG& lFlags /*= 0*/, 
-					   IWbemContext* pContext /*= NULL*/, 
-					   IWbemCallResult** lppResult /*= NULL*/)
+									 CWbemObject& wbemObj, 
+									 LPCWSTR lpszPath, 
+									 const LONG& lFlags /*= 0*/, 
+									 IWbemContext* pContext /*= NULL*/, 
+									 IWbemCallResult** lppResult /*= NULL*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(lpszPath!=NULL);
@@ -655,9 +597,9 @@ HRESULT CAdapterUtil::GetClassObject(
 }
 
 HRESULT CAdapterUtil::NexClassObject(
-					   CWbemObject& wbemObj, 
-					   const LONG& lTimeOut /*= WBEM_INFINITE*/, 
-					   const ULONG& uCount /*= 1*/)
+									 CWbemObject& wbemObj, 
+									 const LONG& lTimeOut /*= WBEM_INFINITE*/, 
+									 const ULONG& uCount /*= 1*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(m_pEnumObject!=NULL);
@@ -695,22 +637,28 @@ void CAdapterUtil::ClearEnum()
 }
 
 HRESULT CAdapterUtil::ExecMethod(
-				   LPCWSTR LpszPath, 
-				   LPCWSTR lpszMethod, 
-				   IWbemContext* pContext /*= NULL*/, 
-				   IWbemClassObject* pWbemIn /*= NULL*/, 
-				   IWbemClassObject** ppWbemOut /*= NULL*/, 
-				   IWbemCallResult** ppCallResult /*= NULL*/)
+								 LPCWSTR lpszPath, 
+								 LPCWSTR lpszMethod, 
+								 IWbemContext* pContext /*= NULL*/, 
+								 IWbemClassObject* pWbemIn /*= NULL*/, 
+								 IWbemClassObject** ppWbemOut /*= NULL*/, 
+								 IWbemCallResult** ppCallResult /*= NULL*/)
 {
-	return S_FALSE;
+	assert(lpszPath!=NULL);
+	assert(lpszMethod!=NULL);
+	assert(m_pServices!=NULL);
+	wchar_t szPath[1024] = {0}, szMethod[1024] = {0};
+	wcscpy(szPath, lpszPath);
+	wcscpy(szMethod, lpszMethod);
+	return m_pServices->ExecMethod(szPath, szMethod, 0, pContext, pWbemIn, ppWbemOut, ppCallResult);
 }
 
 HRESULT CAdapterUtil::GetClassHandle(
-					   IWbemClassObject** ppWbemObject, 
-					   LPCWSTR lpszPath, 
-					   const LONG& lFalgs /*= 0*/,
-					   IWbemContext* pContext /*= NULL*/,
-					   IWbemCallResult** ppCallResult /*= NULL*/)
+									 IWbemClassObject** ppWbemObject, 
+									 LPCWSTR lpszPath, 
+									 const LONG& lFalgs /*= 0*/,
+									 IWbemContext* pContext /*= NULL*/,
+									 IWbemCallResult** ppCallResult /*= NULL*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(m_pEnumObject!=NULL);
@@ -725,9 +673,9 @@ HRESULT CAdapterUtil::GetClassHandle(
 }
 
 HRESULT CAdapterUtil::NextClassHandle(
-						IWbemClassObject* ppWbemObject, 
-						const LONG& lTimeOut /*= WBEM_INFINITE*/,
-						const ULONG& uCount /*= 1*/)
+									  IWbemClassObject* ppWbemObject, 
+									  const LONG& lTimeOut /*= WBEM_INFINITE*/,
+									  const ULONG& uCount /*= 1*/)
 {
 	HRESULT hRes = S_FALSE;
 	assert(m_pEnumObject!=NULL);
@@ -742,4 +690,71 @@ HRESULT CAdapterUtil::NextClassHandle(
 	return hRes;
 }
 // CAdapterUtil
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+// CAdapterObj
+
+// CAdapterObj
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+// CAdapterCfgObj
+CAdapterCfgObj::CAdapterCfgObj(IWbemServices *pServices /*= NULL*/)
+{
+	m_pServices = pServices;
+	m_pClassObject = NULL;
+}
+
+CAdapterCfgObj::CAdapterCfgObj(IWbemClassObject *pWbemObject, IWbemServices *pServices)
+{
+	m_pServices = pServices;
+	m_pClassObject = pWbemObject;
+}
+
+CAdapterCfgObj::~CAdapterCfgObj()
+{
+
+}
+
+HRESULT CAdapterCfgObj::SetAddrType(BOOL bAuto /*= TRUE*/)
+{
+	return S_FALSE;
+}
+
+HRESULT CAdapterCfgObj::SetAddr(LPCWSTR lpszAddr, LPCWSTR *lpszMask, int &nMaskCount, LONG *plRet /*= NULL*/)
+{
+	HRESULT hRes = S_FALSE;
+	CAdapterCfgObj adaMethod;
+	CAdapterCfgObj adaParam;
+	wchar_t szMethod[] = L"EnableStatic";
+	hRes = GetInMethod(adaMethod, m_pServices, szMethod);
+	if(FAILED(hRes))
+		return hRes;
+	hRes = adaMethod.SpwanInstanceObject(adaParam);
+	if(FAILED(hRes))
+		return hRes;
+	
+	return S_FALSE;
+}
+
+HRESULT CAdapterCfgObj::SetGateway(LPCWSTR lpszGateway, LPBYTE lpMetric, int &nMetricCount, LONG *plRet /*= NULL*/)
+{
+	return S_FALSE;
+}
+
+HRESULT CAdapterCfgObj::EnableDHCP(LONG *plRet /*= NULL*/)
+{
+	return S_FALSE;
+}
+
+HRESULT CAdapterCfgObj::SetDnsType(BOOL bAuto /*= TRUE*/)
+{
+	return S_FALSE;
+}
+HRESULT CAdapterCfgObj::SetDns(LPCWSTR *lpszDns, int &nDnsCount, LONG *plRet /*= NULL*/)
+{
+	return S_FALSE;
+}
+// CAdapterCfgObj
 //////////////////////////////////////////////////////////////////////////

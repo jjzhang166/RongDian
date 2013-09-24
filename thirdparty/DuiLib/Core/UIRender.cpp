@@ -2170,10 +2170,10 @@ TImageInfo* CGifHandler::GetNextFrameInfo()
 {
 	if(isDeleting == false)
 	{	
-		int n = nCurrentFrame++;
-		if (nCurrentFrame >= ImageInfos.GetSize())
+		int n = nCurrentFrame + 1;
+		if (n >= ImageInfos.GetSize())
 		{
-			nCurrentFrame = 0;
+			n = 0;
 		}
 
 		return (TImageInfo *)ImageInfos.GetAt(n);

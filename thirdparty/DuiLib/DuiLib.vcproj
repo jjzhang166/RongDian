@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
 				GenerateManifest="false"
@@ -169,7 +169,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
 				GenerateManifest="false"

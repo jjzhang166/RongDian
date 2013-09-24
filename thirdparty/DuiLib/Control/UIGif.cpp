@@ -7,167 +7,165 @@
 
 namespace DuiLib 
 {
-	CGifUI::CGifUI()
-		:m_pGifHandler(NULL)
-	{
-	}
+CGifUI::CGifUI()
+	: m_pGifHandler(NULL)
+	, m_hGifEvent(NULL)
+{
+}
 
-	CGifUI::~CGifUI()
-	{
-		if(m_pGifHandler)
-			delete m_pGifHandler;
-	}
+CGifUI::~CGifUI()
+{
+	if(m_pGifHandler)
+		delete m_pGifHandler;
+	if(m_hGifEvent)
+		CloseHandle(m_hGifEvent);
+}
 
-	LPCTSTR CGifUI::GetClass() const
-	{
-		return _T("GifUI");
-	}
+LPCTSTR CGifUI::GetClass() const
+{
+	return _T("GifUI");
+}
 
-	LPVOID CGifUI::GetInterface(LPCTSTR pstrName)
-	{
-		if( _tcscmp(pstrName, _T("Gif")) == 0 ) return static_cast<CGifUI*>(this);
-		return CControlUI::GetInterface(pstrName);
-	}
+LPVOID CGifUI::GetInterface(LPCTSTR pstrName)
+{
+	if( _tcscmp(pstrName, _T("Gif")) == 0 ) 
+		return static_cast<CGifUI*>(this);
+	return CControlUI::GetInterface(pstrName);
+}
 
-	void CGifUI::DoEvent(TEventUI& event)
+void CGifUI::DoEvent(TEventUI& event)
+{
+	if( event.Type == UIEVENT_SETFOCUS ) 
 	{
-		if( event.Type == UIEVENT_SETFOCUS ) 
-		{
-			m_bFocused = true;
-			Invalidate();
-			return;
-		}
-		if(event.Type == UIEVENT_TIMER)
-		{
-		/*	if(m_pGifHandler)
-			{
-				m_pManager->KillTimer(this);
-				TImageInfo* pNextImage = m_pGifHandler->GetNextFrameInfo();
-				if(pNextImage)
-				{
-					m_pManager->SetTimer(this, GIF_TIMER_ID, pNextImage->delay);
-				}
-			}*/
-			Invalidate();
-			return;
-		}
-		if( event.Type == UIEVENT_KILLFOCUS ) 
-		{
-			m_bFocused = false;
-			Invalidate();
-			return;
-		}
-		if( event.Type == UIEVENT_MOUSEENTER )
-		{
-			return;
-		}
-		if( event.Type == UIEVENT_MOUSELEAVE )
-		{
-			return;
-		}
-		CControlUI::DoEvent(event);
-	}
-
-	void CGifUI::SetVisible(bool bVisible)
-	{
-		if(m_pManager)
-		{
-			if(bVisible)
-			{
-				if(m_pGifHandler)
-				{
-					TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
-					if(pImageInfo)
-					{
-						m_pManager->SetTimer(this, GIF_TIMER_ID, pImageInfo->delay);
-					}
-				}
-			}
-			else
-			{
-				m_pManager->KillTimer(this);
-			}
-		}
-		CControlUI::SetVisible(bVisible);
-	}
-
-	void CGifUI::SetGifImage(LPCTSTR pstrIcoPath)
-	{
-		if (pstrIcoPath)
-		{
-			if (m_pGifHandler)
-			{
-				delete m_pGifHandler;
-				m_pGifHandler = NULL;
-			}
-			m_pGifHandler = CRenderEngine::LoadGif(pstrIcoPath);
-			if(m_pManager)
-			{
-				if(m_pGifHandler)
-				{
-					TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
-					if(pImageInfo)
-					{
-						m_pManager->SetTimer(this, GIF_TIMER_ID, pImageInfo->delay);
-					}
-				}
-			}
-		}
-
+		m_bFocused = true;
 		Invalidate();
+		return;
 	}
-
-	void CGifUI::PaintStatusImage(HDC hDC)
+	if( event.Type == UIEVENT_KILLFOCUS ) 
 	{
-		if(m_pGifHandler)
-		{
-			const TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
-			if(pImageInfo)
-			{
-				int iWidth = pImageInfo->nX;
-				int iHeight = pImageInfo->nY;
-				CDuiRect rcBmpPart(0,0,iWidth,iHeight);
-				CDuiRect rcCorner(0, 0, 0, 0);
-				CRenderEngine::DrawImage(hDC, pImageInfo->hBitmap, m_rcItem, m_rcItem, rcBmpPart, rcCorner, \
-					pImageInfo->alphaChannel, 255);
-				m_pGifHandler->AddCurrentIndex();
-			}
-		}
-	/*	if (m_pGifHandler)
-		{
-			:
-			::DrawIconEx(hDC,m_rcItem.left,m_rcItem.top,m_hico,16,16,0,NULL,DI_NORMAL);
-		}
-		else
-		{
-		
-				::DrawIconEx(hDC,m_rcItem.left,m_rcItem.top,m_hdefaultico,16,16,0,NULL,DI_NORMAL);
-			}
-		}*/
+		m_bFocused = false;
+		Invalidate();
+		return;
 	}
-
-	void CGifUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
+	if( event.Type == UIEVENT_MOUSEENTER )
 	{
-		if(_tcscmp(pstrName, _T("gif")) == 0)
-		{
-			SetGifImage(pstrValue);
-		}
-		else
-		{
-			CControlUI::SetAttribute(pstrName, pstrValue);
-		}
+		return;
 	}
-
-	void CGifUI::DoInit()
+	if( event.Type == UIEVENT_MOUSELEAVE )
 	{
-		if(m_pGifHandler)
+		return;
+	}
+	CControlUI::DoEvent(event);
+}
+
+void CGifUI::SetVisible(bool bVisible)
+{
+	if(m_pManager)
+		goto default_pro;
+	if(!bVisible)
+		goto default_pro;
+	if(m_pGifHandler && m_hGifEvent)
+	{
+		SetEvent(m_hGifEvent);
+	}
+default_pro:
+	CControlUI::SetVisible(bVisible);
+}
+
+void CGifUI::SetGifImage(LPCTSTR pstrIcoPath)
+{
+	if(!m_pManager)
+		return;
+	if (!pstrIcoPath)
+		return;
+	if (m_pGifHandler)
+	{
+		delete m_pGifHandler;
+		m_pGifHandler = NULL;
+	}
+	m_pGifHandler = CRenderEngine::LoadGif(pstrIcoPath);
+	if(!m_pGifHandler)
+		return;
+	TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
+	if(pImageInfo)
+	{
+		m_hGifEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+		if(!m_hGifEvent)
+			return;
+		DWORD dwThread = 0;
+		HANDLE hThread = CreateThread(NULL, 0, GifThread, (LPVOID)this, 0, &dwThread);
+		if(!hThread)
+			return;
+		CloseHandle(hThread);
+		SetEvent(m_hGifEvent);
+	}
+}
+
+void CGifUI::PaintStatusImage(HDC hDC)
+{
+	if(m_pGifHandler)
+	{
+		const TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
+		if(pImageInfo)
 		{
-			TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
-			if(pImageInfo)
-			{
-				m_pManager->SetTimer(this, GIF_TIMER_ID, pImageInfo->delay);
-			}
+			int iWidth = pImageInfo->nX;
+			int iHeight = pImageInfo->nY;
+			CDuiRect rcBmpPart(0,0,iWidth,iHeight);
+			CDuiRect rcCorner(0, 0, 0, 0);
+			/*
+			HDC hScrDC = GetDC(NULL);
+			HDC hMemDC = CreateCompatibleDC(hScrDC);
+			HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, pImageInfo->hBitmap);
+			BitBlt(hScrDC, 500, 40, m_rcItem.right-m_rcItem.left, m_rcItem.bottom-m_rcItem.top,
+				hMemDC, 0, 0, SRCCOPY);
+			SelectObject(hMemDC, hOldBitmap);
+			DeleteObject(hMemDC);
+			ReleaseDC(NULL, hScrDC);
+			*/
+			CRenderEngine::DrawImage(hDC, pImageInfo->hBitmap, m_rcItem, m_rcItem, rcBmpPart, rcCorner, \
+				pImageInfo->alphaChannel, pImageInfo->dwMask);
+			m_pGifHandler->AddCurrentIndex();
 		}
 	}
+}
 
+void CGifUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
+{
+	if(_tcscmp(pstrName, _T("gif")) == 0)
+	{
+		SetGifImage(pstrValue);
+	}
+	else
+	{
+		CControlUI::SetAttribute(pstrName, pstrValue);
+	}
+}
+
+void CGifUI::DoInit()
+{
+	if(m_pGifHandler && m_pManager && m_hGifEvent)
+		SetEvent(m_hGifEvent);
+}
+
+DWORD WINAPI CGifUI::GifThread(LPVOID lpParam)
+{
+	CGifUI *pThis = (CGifUI *)lpParam;
+	if(!pThis)
+		return 0;
+	TImageInfo* pImageInfo = NULL;
+	while(pThis->m_pGifHandler)
+	{
+		pImageInfo = pThis->m_pGifHandler->GetCurrentFrameInfo();
+		if(pImageInfo)
+		{
+			pThis->Invalidate();
+			WaitForSingleObject(pThis->m_hGifEvent, pImageInfo->delay);
+			pThis->m_pGifHandler->GetNextFrameInfo();
+			if(!pThis->m_hGifEvent)
+				return 0;
+			ResetEvent(pThis->m_hGifEvent);
+		}
+	}
+	return 0;
+}
 } //namespace DuiLib

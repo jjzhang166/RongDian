@@ -5,8 +5,8 @@
 #include <Wbemidl.h>
 #include <WinCred.h>
 
-typedef LONG (*LPFNAdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
-typedef LONG (*LPFNAdapterNameCallBack)(LPVOID lParam, LPCWSTR lpszName, int nIndex);
+typedef LONG (CALLBACK *LPFNAdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
+typedef LONG (CALLBACK *LPFNAdapterNameCallBack)(LPVOID lParam, LPCWSTR lpszName, int nIndex);
 
 namespace AdapterUtil
 {
@@ -120,7 +120,7 @@ public:
 	HRESULT ResetEnum();
 	void	ClearEnum();
 	HRESULT ExecMethod(
-				LPCWSTR LpszPath, 
+				LPCWSTR lpszPath, 
 				LPCWSTR lpszMethod, 
 				IWbemContext* pContext = NULL, 
 				IWbemClassObject* pWbemIn = NULL, 
