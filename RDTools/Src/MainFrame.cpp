@@ -379,6 +379,9 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	case WM_ICON_NOTIFY:
 		lRes = OnTrayNotification(uMsg, wParam, lParam);
 		break;
+	case WM_CMD_COMPLETE:
+		ExeCMDComplete(lParam);
+		break;
 	}
 	return 0;
 }

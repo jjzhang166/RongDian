@@ -454,4 +454,25 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 
 	return bRet;
 }
+
+BOOL Utility::ExcuteCommand(LPWSTR pCommandParam)
+{
+	//初始化shellexe信息
+	SHELLEXECUTEINFO   ExeInfo; 
+	ZeroMemory(&ExeInfo, sizeof(SHELLEXECUTEINFO)); 
+	ExeInfo.cbSize = sizeof(SHELLEXECUTEINFO); 
+	ExeInfo.lpFile = L"cmd.exe"; 
+	ExeInfo.lpParameters = pCommandParam;
+	ExeInfo.fMask = SEE_MASK_NOCLOSEPROCESS; 
+	ExeInfo.nShow = SW_HIDE; 
+	ExeInfo.hwnd = NULL;
+	ExeInfo.lpVerb = L"runas";
+	ExeInfo.lpDirectory = NULL;
+	ExeInfo.hInstApp = NULL;
+	//执行命令
+	ShellExecuteEx(&ExeInfo);
+	//等待进程结束
+	WaitForSingleObject(ExeInfo.hProcess, INFINITE);//INFINITE	
+	return TRUE;
+}
 #pragma warning(pop)

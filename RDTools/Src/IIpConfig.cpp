@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "IIpConfig.h"
+#include <process.h>
 
 // 第一列
 const wchar_t* const kIPConfigSettingListText = L"setting_list_text";
@@ -645,6 +646,59 @@ BOOL IIPConfig::OnDelSolution()
 
 BOOL IIPConfig::OnApplySolution()
 {
+	if (CheckFormValid()==FALSE)
+	{
+		return FALSE;
+	}
+	//连接名字
+	int curSel = m_pAdapterList->GetCurSel();
+	CListLabelElementUI *pItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(curSel);
+	LPCTSTR lpszConnectName = pItem->GetText().GetData();
+
+	wchar_t* lpszCMD = new wchar_t[1024];
+	wmemset(lpszCMD,0,1024);
+	if(m_pIpAutoCheckBox->IsSelected())
+	{
+		wchar_t szIpCommand[200] = {0};
+		wsprintf(szIpCommand,L"/c netsh interface ip set address %s dhcp",lpszConnectName);
+		wcscpy_s(lpszCMD,1024,szIpCommand);
+	}
+	else
+	{		
+		LPCTSTR ip = m_pIPEdit->GetText().GetData();
+		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+		wchar_t szIpCommand[200] = {0};
+		wsprintf(szIpCommand,L"/c netsh interface ip set address %s static %s %s %s",lpszConnectName,ip,mask,gateway);
+		wcscpy_s(lpszCMD,1024,szIpCommand);	
+	}
+	//dns
+	if (m_pDnsAutoCheckBox->IsSelected())
+	{
+		wchar_t szDnsCommand[200] = {0};
+		wsprintf(szDnsCommand,L"&netsh interface ip set dnsservers %s dhcp",lpszConnectName);
+		wcscat_s(lpszCMD,1024,szDnsCommand);
+	}
+	else
+	{
+		wchar_t szDnsCommand[200] = {0};
+		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+		wsprintf(szDnsCommand,L"&netsh interface ip set dnsservers %s static %s",lpszConnectName,dns1);
+		wcscat_s(lpszCMD,1024,szDnsCommand);
+
+		if (!m_pDns2Edit->GetText().IsEmpty())
+		{
+			wmemset(szDnsCommand,0,200);
+			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+			wsprintf(szDnsCommand,L"&netsh interface ip add dnsservers %s %s",lpszConnectName,dns2);
+			wcscat_s(lpszCMD,1024,szDnsCommand);
+		}
+	}
+	PCMD_EXE_INFO info = (PCMD_EXE_INFO)malloc(sizeof(PCMD_EXE_INFO));
+	info->hwnd = m_hIPConfigOwner;
+	info->lpszCommand = lpszCMD;
+	UINT threadID;
+	HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,ExeCMDThreadFunc,(void*)info,0,&threadID);
 	return TRUE;
 }
 
@@ -716,4 +770,92 @@ LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, i
 	if(bFound)
 		wcscpy((*lstHeader)->szName, lpszName);
 	return 0;
+}
+
+BOOL IIPConfig::CheckFormValid()
+{
+	wchar_t msgTitle[100];
+	Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
+
+	if(!m_pIpAutoCheckBox->IsSelected())
+	{
+		//判断ip
+		LPCTSTR ip = m_pIPEdit->GetText().GetData();
+		BOOL isIp = ValidateUtil::IsIPv4(ip);
+		if(isIp==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断子网掩码
+		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
+		BOOL isMask = ValidateUtil::IsMask(mask);
+		if(isMask==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_subnet_mask_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		//判断网关
+		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
+		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
+		if(isGateway==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_gateway_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+	}
+	//dns
+	if (!m_pDnsAutoCheckBox->IsSelected())
+	{
+		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
+		BOOL isDns1 = ValidateUtil::IsIPv4(dns1);
+		if(isDns1==FALSE)
+		{
+			wchar_t text[100];
+			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			return FALSE;
+		}
+		if(!m_pDns2Edit->GetText().IsEmpty())
+		{
+			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
+			BOOL isDns2 = ValidateUtil::IsIPv4(dns2);
+			if(isDns2==FALSE)
+			{
+				wchar_t text[100];
+				Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+				MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+				return FALSE;
+			}
+			
+		}
+	}
+	return TRUE;
+}
+unsigned IIPConfig::ExeCMDThreadFunc(void * pParams)
+{
+	
+	PCMD_EXE_INFO info = (PCMD_EXE_INFO)pParams;
+	HWND hwnd = info->hwnd;
+	LPWSTR lpszCommand = info->lpszCommand;
+	DuiShowLoading(hwnd,L"Loading...",L"",&info->lpLoader);
+	Utility::ExcuteCommand(lpszCommand);
+	SendMessage(hwnd,WM_CMD_COMPLETE,NULL,(LPARAM)info);
+	return 0;
+}
+
+BOOL IIPConfig::ExeCMDComplete(LPARAM lpParams)
+{
+	PCMD_EXE_INFO info = (PCMD_EXE_INFO)lpParams;
+	DuiCancelLoading(info->lpLoader);
+	info->lpLoader = NULL;
+	delete[] info->lpszCommand;
+	//free((PCMD_EXE_INFO)lpParams);
+	return TRUE;
 }

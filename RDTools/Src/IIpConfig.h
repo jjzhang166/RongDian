@@ -30,6 +30,9 @@ public:
 	BOOL			OnDelSolution();
 	BOOL			OnApplySolution();
 	BOOL			ResetSolution();
+	BOOL			CheckFormValid();
+	BOOL			ExeCMDComplete(LPARAM lParam);
+	static unsigned __stdcall	ExeCMDThreadFunc(void * pParams);
 
 	static LONG	CALLBACK	AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
 	static LONG CALLBACK	AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
