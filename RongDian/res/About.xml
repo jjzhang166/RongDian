@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<VerticalLayout name="panel_about" inset="4,4,4,4" >
-		<Control height="100" />
+		<Control height="80" />
+		<HorizontalLayout height="48" >
+			<Control />
+			<Gif gif="default\ehsteve.gif" height="48" width="48" />
+			<Control />
+		</HorizontalLayout>
+		<Control height="10" />
 		<HorizontalLayout height="22" >
 			<Control />
 			<Label name="about_name" text="" font="2" textcolor="0xFF14100E" align="center" />
@@ -25,16 +31,6 @@
 		<HorizontalLayout height="22" >
 			<Control />
 			<Label name="about_copyright" text="" textcolor="0xFF14100E" align="center" />
-			<Control />
-		</HorizontalLayout>
-		<HorizontalLayout height="32" >
-			<Control />
-			<Icon icon="default\ZoomIn.ico" height="32" width="32" />
-			<Control />
-		</HorizontalLayout>
-		<HorizontalLayout height="48" >
-			<Control />
-			<Gif gif="default\ehsteve.gif" height="48" width="48" />
 			<Control />
 		</HorizontalLayout>
 		<Control />

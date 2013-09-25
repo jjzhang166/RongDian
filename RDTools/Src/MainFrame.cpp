@@ -22,6 +22,9 @@ const wchar_t* const kMenuShow = L"menu_show";
 const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
+
+const wchar_t* const kTabsHide = L"tab_hide";
+const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
 const wchar_t* const kPanelContents = L"panel_contents";
 
@@ -173,10 +176,8 @@ void CMainFrame::InitWindow()
 		g_pSystemTray->Create(g_hInstance, m_hWnd, WM_ICON_NOTIFY, szText, hIcon, NULL);
 	}
 
-	if(!pPanelTabs)
-		FIND_CONTROL_BY_ID(pPanelTabs, CContainerUI, (&m_PaintManager), kPanelTabs)
-	if(!pPanelContents)
-		FIND_CONTROL_BY_ID(pPanelContents, CContainerUI, (&m_PaintManager), kPanelContents)
+	FIND_CONTROL_BY_ID(pPanelTabs, CContainerUI, (&m_PaintManager), kPanelTabs)
+	FIND_CONTROL_BY_ID(pPanelContents, CContainerUI, (&m_PaintManager), kPanelContents)
 
 	// Init Panel
 	InitPanels();
@@ -248,6 +249,16 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 			msg.pSender->SetVisible(false);
 			pMax->SetVisible();
 		}
+	}
+	else if(sCtrlName == kTabsHide)
+	{
+		bHandle = TRUE;
+		ShowTabs(FALSE);
+	}
+	else if(sCtrlName == kTabsShow)
+	{
+		bHandle = TRUE;
+		ShowTabs(TRUE);
 	}
 	else if(sCtrlName==kMenuBtn)
 	{
@@ -756,6 +767,32 @@ BOOL CMainFrame::ReleasePanels()
 			break;
 	}
 
+	return TRUE;
+}
+
+BOOL CMainFrame::ShowTabs(BOOL bShow)
+{
+	CButtonUI *pTabsShow = NULL, *pTabsHide = NULL;
+	FIND_CONTROL_BY_ID(pTabsShow, CButtonUI, (&m_PaintManager), kTabsShow)
+	FIND_CONTROL_BY_ID(pTabsHide, CButtonUI, (&m_PaintManager), kTabsHide)
+	if(bShow)
+	{
+		if(pPanelTabs)
+			pPanelTabs->SetVisible();
+		if(pTabsHide)
+			pTabsHide->SetVisible();
+		if(pTabsShow)
+			pTabsShow->SetVisible(false);
+	}
+	else
+	{
+		if(pPanelTabs)
+			pPanelTabs->SetVisible(false);
+		if(pTabsHide)
+			pTabsHide->SetVisible(false);
+		if(pTabsShow)
+			pTabsShow->SetVisible();
+	}
 	return TRUE;
 }
 
