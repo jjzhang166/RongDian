@@ -147,7 +147,7 @@ void CMenuUI::Init(CControlUI* pOwner, LPCTSTR xml, LPCTSTR /*pSkinType*/, POINT
 		base_size.cx = st.cx;
 	if(st.cy!=-1&&st.cy>0)
 		base_size.cy = st.cy;
-	Create(parent_hwnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, 0, 0, 0, 0, 0);
+	Create(parent_hwnd, L"", WS_POPUP | WS_VISIBLE, WS_EX_TOPMOST, 0, 0, 0, 0);
 	AdjustPostion();
 }
 

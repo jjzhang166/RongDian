@@ -52,6 +52,7 @@ public:
 	BOOL			AddPanel(LPPANEL_INFO lpPanelInfo);
 	BOOL			CreatePanels();
 	BOOL			ReleasePanels();
+	BOOL			OnActiveApp();
 	BOOL			OnAppQuit();
 
 public:

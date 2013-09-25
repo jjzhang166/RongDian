@@ -336,6 +336,7 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 			DuiCancelLoading(lpLoader);
 			lpLoader = NULL;
 		}
+		OnActiveApp();
 	}
 	else if(sCtrlName == kMenuQuit)
 	{
@@ -737,6 +738,20 @@ BOOL CMainFrame::ReleasePanels()
 			break;
 	}
 
+	return TRUE;
+}
+
+BOOL CMainFrame::OnActiveApp()
+{
+	if(!IsWindowVisible(m_hWnd))
+	{
+		::SetWindowLong(GetHWND(), GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TOOLWINDOW);
+		g_pSystemTray->MaximiseFromTray(m_hWnd);
+	}
+	else
+	{
+		::SetForegroundWindow(m_hWnd); 
+	}
 	return TRUE;
 }
 

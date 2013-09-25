@@ -598,21 +598,21 @@ unsigned char *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int
 {
    stbi s;
    start_mem(&s,buffer,len);
-   return stbi_load_main(&s,x,y,comp,req_comp);
+   return stbi_load_main(&s, x, y, comp, req_comp);
 }
 
 stbi_gif_data* gif_load_from_memory(stbi_uc const *buffer, int len, int *n, int *comp, int req_comp)
 {
    stbi s;
    start_mem(&s,buffer,len);
-   return stbi_load_gif(&s, n,comp,req_comp);
+   return stbi_load_gif(&s, n, comp, req_comp);
 }
 
 unsigned char *stbi_load_from_callbacks(stbi_io_callbacks const *clbk, void *user, int *x, int *y, int *comp, int req_comp)
 {
    stbi s;
    start_callbacks(&s, (stbi_io_callbacks *) clbk, user);
-   return stbi_load_main(&s,x,y,comp,req_comp);
+   return stbi_load_main(&s, x, y, comp, req_comp);
 }
 
 #ifndef STBI_NO_HDR
