@@ -30,6 +30,9 @@ public:
 	BOOL			OnDelSolution();
 	BOOL			OnApplySolution();
 	BOOL			ResetSolution();
+	BOOL			CheckFormValid();
+	BOOL			ExeCMDComplete();
+	static unsigned __stdcall	ExeCMDThreadFunc(void * pParams);
 
 	static LONG	CALLBACK	AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
 	static LONG CALLBACK	AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
@@ -64,4 +67,5 @@ public:
 	LPCWSTR m_lpszLang;
 	list<LPIPCONFIG_INFO> lstIpConfigInfo;
 	list<LPADAPTER_INFO> lstAdaptersInfo;
+	PCMD_EXE_INFO m_pCmdInfo;
 };

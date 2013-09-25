@@ -238,3 +238,10 @@ typedef struct _tagTIDY_INFO
 	wchar_t szDesc[STRING_LENGTH];
 	UINT uID;
 } TIDY_INFO, *PTIDY_INFO, *LPTIDY_INFO;
+
+typedef struct _tagCMD_EXE_INFO
+{
+	HWND hwnd;
+	LPWSTR lpszCommand;
+	LPVOID lpLoader;
+}CMD_EXE_INFO,*PCMD_EXE_INFO;
