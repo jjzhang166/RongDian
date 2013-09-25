@@ -68,4 +68,5 @@ public:
 	list<LPIPCONFIG_INFO> lstIpConfigInfo;
 	list<LPADAPTER_INFO> lstAdaptersInfo;
 	PCMD_EXE_INFO m_pCmdInfo;
+	LPVOID m_lpLoader;
 };

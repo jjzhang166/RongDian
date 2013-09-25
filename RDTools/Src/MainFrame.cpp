@@ -701,8 +701,12 @@ BOOL CMainFrame::CreatePanels()
 			pTab = new CButtonUI();
 			if(!pTab)
 				return bRet;
-			//pTab->SetFixedWidth(150);
-			//pTab->SetFixedHeight(35);
+			//竖版菜单参数
+			pTab->SetFixedWidth(150);
+			pTab->SetFixedHeight(35);	
+			pTab->SetTextStyle(/*pTab->GetTextStyle() | */DT_END_ELLIPSIS);
+			pTab->SetTextPadding(CDuiRect(30,8,20,5));
+			//横版菜单参数
 			//pTab->SetMinWidth(36);
 			//pTab->SetMaxWidth(100);
 			pTab->SetTextColor(kTextColor);

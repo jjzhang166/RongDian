@@ -75,7 +75,8 @@ IIPConfig::IIPConfig()
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
 	m_lpszLang = NULL;
-	m_pCmdInfo = NULL;
+	m_lpLoader = NULL;
+	m_pCmdInfo = (PCMD_EXE_INFO)malloc(sizeof(PCMD_EXE_INFO));;
 }
 
 IIPConfig::~IIPConfig()
@@ -699,9 +700,9 @@ BOOL IIPConfig::OnApplySolution()
 			wcscat_s(lpszCMD,1024,szDnsCommand);
 		}
 	}
-	m_pCmdInfo = (PCMD_EXE_INFO)malloc(sizeof(PCMD_EXE_INFO));
 	m_pCmdInfo->hwnd = m_hIPConfigOwner;
 	m_pCmdInfo->lpszCommand = lpszCMD;
+	DuiShowLoading(m_hIPConfigOwner,L"Loading...",L"",&m_lpLoader);
 	UINT threadID;
 	HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,ExeCMDThreadFunc,(void*)m_pCmdInfo,0,&threadID);
 	CloseHandle(hThread);
@@ -850,7 +851,6 @@ unsigned IIPConfig::ExeCMDThreadFunc(void * pParams)
 	PCMD_EXE_INFO info = (PCMD_EXE_INFO)pParams;
 	HWND hwnd = info->hwnd;
 	LPWSTR lpszCommand = info->lpszCommand;
-	DuiShowLoading(hwnd,L"Loading...",L"",&info->lpLoader);
 	Utility::ExcuteCommand(lpszCommand);
 	SendMessage(hwnd,WM_CMD_COMPLETE,NULL,NULL);
 	return 0;
@@ -860,8 +860,8 @@ BOOL IIPConfig::ExeCMDComplete()
 {
 	if (m_pCmdInfo)
 	{
-		DuiCancelLoading(m_pCmdInfo->lpLoader);
-		m_pCmdInfo->lpLoader = NULL;
+		DuiCancelLoading(m_lpLoader);
+		m_lpLoader = NULL;
 		delete[] m_pCmdInfo->lpszCommand;
 	}
 	return TRUE;
