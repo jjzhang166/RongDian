@@ -225,6 +225,12 @@ SET_CONTROL_END()
 		return MAKEINTRESOURCE(IDR_RESOURCE);
 	}
 #endif
+	void OnFinalMessage(HWND hWnd)
+	{
+		WindowImplBase::OnFinalMessage(hWnd);
+		if(nType==MB_LOADING)
+			delete this;
+	}
 	void InitWindow()
 	{
 		if(!bPopup)
@@ -433,10 +439,6 @@ SET_CONTROL_END()
 		}
 		return nRet;
 	}
-	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, bool& /*bHandled*/)
-	{
-		return FALSE;
-	}
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
 		if(bPopup)
@@ -507,6 +509,7 @@ SET_CONTROL_END()
 			break;
 		case LOADING_QUIT:
 			{
+				KillTimer(m_hWnd, LOADING_QUIT);
 				PostMessage(WM_CLOSE, 0L, 0L);
 				HWND hWndParent = GetWindowOwner(m_hWnd);
 				if(hWndParent)
@@ -578,6 +581,8 @@ DWORD WINAPI StartLoading(LPVOID lpParam)
 	CDuiMsg *pMsg = (CDuiMsg *)lpParam;
 	if(pMsg)
 	{
+		pMsg->Create(pMsg->hParent, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+		pMsg->CenterWindow();
 		pMsg->ShowModal();
 	}
 	return 0;
@@ -649,7 +654,7 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 	}
 	else
 	{
-		msg.Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+		msg.Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
 		msg.PopupWindow();
 	}
 
@@ -672,7 +677,6 @@ int __stdcall DuiShowLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg, L
 	pMsg->SetIcon(L"");
 	pMsg->SetCaption(L"");
 	pMsg->GetLoader(ppParam);
-	int nRet = -1;
 	wchar_t szText[1024];
 	if(lpszText)
 		wcscpy(szText, lpszText);
@@ -681,13 +685,9 @@ int __stdcall DuiShowLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg, L
 	else
 		LoadString(g_hMsgInst, IDS_MSG_LOADING, szText, _countof(szText));
 	pMsg->SetText(szText);
-	if(lpszLoadImg)
+	if(lpszLoadImg && wcslen(lpszLoadImg))
 		pMsg->SetLoading(lpszLoadImg);
-	if(!nRet)
-		return -1;
 	pMsg->nType = MB_LOADING;
-	pMsg->Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
-	pMsg->CenterWindow();
 	DWORD dwThread = 0;
 	HANDLE hThread = CreateThread(NULL, 0, StartLoading, (LPVOID)pMsg, 0, &dwThread);
 	CloseHandle(hThread);

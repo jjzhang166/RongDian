@@ -598,6 +598,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Inc"
+			>
+			<File
+				RelativePath="..\inc\RongDian.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

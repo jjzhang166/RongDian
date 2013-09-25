@@ -32,7 +32,8 @@ public:
 	BOOL			ResetSolution();
 	BOOL			CheckFormValid();
 	BOOL			ExeCMDComplete();
-	static unsigned __stdcall	ExeCMDThreadFunc(void * pParams);
+	//static unsigned __stdcall	ExeCMDThreadFunc(void * pParams);
+	static DWORD WINAPI ExeCMDThreadFunc(void * pParams);
 
 	static LONG	CALLBACK	AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
 	static LONG CALLBACK	AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
@@ -64,7 +65,6 @@ public:
 	wchar_t m_szHandleText[1024];
 	wchar_t m_szNoHandleText[1024];
 
-	LPCWSTR m_lpszLang;
 	list<LPIPCONFIG_INFO> lstIpConfigInfo;
 	list<LPADAPTER_INFO> lstAdaptersInfo;
 	PCMD_EXE_INFO m_pCmdInfo;

@@ -241,7 +241,7 @@ typedef struct _tagTIDY_INFO
 
 typedef struct _tagCMD_EXE_INFO
 {
-	HWND hwnd;
-	LPWSTR lpszCommand;
-	LPVOID lpLoader;
-}CMD_EXE_INFO,*PCMD_EXE_INFO;
+	HWND	hWnd;
+	LPWSTR	lpszCommand;
+	LPVOID	lpLoader;
+} CMD_EXE_INFO, *PCMD_EXE_INFO, *LPCMD_EXE_INFO;

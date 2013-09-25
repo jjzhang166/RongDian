@@ -74,7 +74,6 @@ IIPConfig::IIPConfig()
 	m_pIpManualCheckBox = NULL;
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
-	m_lpszLang = NULL;
 	m_pCmdInfo = NULL;
 }
 
@@ -143,7 +142,6 @@ BOOL IIPConfig::InitIPConfig()
 
 BOOL IIPConfig::SetIPConfigLang(LPCWSTR lpszLang)
 {
-	m_lpszLang = lpszLang;
 	if(!m_pIPConfigManager)
 		return FALSE;
 	memset(m_szHandleText, 0, sizeof(m_szHandleText));
@@ -659,51 +657,54 @@ BOOL IIPConfig::OnApplySolution()
 	int curSel = m_pAdapterList->GetCurSel();
 	CListLabelElementUI *pItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(curSel);
 	LPCTSTR lpszConnectName = pItem->GetText().GetData();
-
-	wchar_t* lpszCMD = new wchar_t[1024];
-	wmemset(lpszCMD,0,1024);
+	
+	wchar_t *lpszCommand = NULL;
+	wchar_t szIpCommand[MAX_PATH] = {0};
+	wchar_t szDnsCommand[MAX_PATH] = {0};
+	lpszCommand = (wchar_t *)malloc((MAX_PATH*4)*sizeof(wchar_t));
+	if(!lpszCommand)
+		return FALSE;
+	memset(lpszCommand, 0, (MAX_PATH*4)*sizeof(wchar_t));
 	if(m_pIpAutoCheckBox->IsSelected())
 	{
-		wchar_t szIpCommand[200] = {0};
-		wsprintf(szIpCommand,L"/c netsh interface ip set address %s dhcp",lpszConnectName);
-		wcscpy_s(lpszCMD,1024,szIpCommand);
+		wsprintf(szIpCommand, L"/c netsh interface ip set address %s dhcp", lpszConnectName);
+		wcscpy_s(lpszCommand, 1024, szIpCommand);
 	}
 	else
 	{		
 		LPCTSTR ip = m_pIPEdit->GetText().GetData();
 		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
 		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
-		wchar_t szIpCommand[200] = {0};
-		wsprintf(szIpCommand,L"/c netsh interface ip set address %s static %s %s %s",lpszConnectName,ip,mask,gateway);
-		wcscpy_s(lpszCMD,1024,szIpCommand);	
+		wsprintf(szIpCommand, L"/c netsh interface ip set address %s static %s %s %s", lpszConnectName,ip,mask,gateway);
+		wcscpy_s(lpszCommand, 1024, szIpCommand);	
 	}
 	//dns
 	if (m_pDnsAutoCheckBox->IsSelected())
 	{
-		wchar_t szDnsCommand[200] = {0};
-		wsprintf(szDnsCommand,L"&netsh interface ip set dnsservers %s dhcp",lpszConnectName);
-		wcscat_s(lpszCMD,1024,szDnsCommand);
+		wsprintf(szDnsCommand, L"&netsh interface ip set dnsservers %s dhcp", lpszConnectName);
+		wcscat_s(lpszCommand, 1024, szDnsCommand);
 	}
 	else
 	{
-		wchar_t szDnsCommand[200] = {0};
 		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
-		wsprintf(szDnsCommand,L"&netsh interface ip set dnsservers %s static %s",lpszConnectName,dns1);
-		wcscat_s(lpszCMD,1024,szDnsCommand);
-
+		wsprintf(szDnsCommand, L"&netsh interface ip set dnsservers %s static %s", lpszConnectName, dns1);
+		wcscat_s(lpszCommand, 1024, szDnsCommand);
 		if (!m_pDns2Edit->GetText().IsEmpty())
 		{
-			wmemset(szDnsCommand,0,200);
+			wmemset(szDnsCommand, 0, 200);
 			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
-			wsprintf(szDnsCommand,L"&netsh interface ip add dnsservers %s %s",lpszConnectName,dns2);
-			wcscat_s(lpszCMD,1024,szDnsCommand);
+			wsprintf(szDnsCommand, L"&netsh interface ip add dnsservers %s %s", lpszConnectName, dns2);
+			wcscat_s(lpszCommand, 1024, szDnsCommand);
 		}
 	}
-	m_pCmdInfo = (PCMD_EXE_INFO)malloc(sizeof(PCMD_EXE_INFO));
-	m_pCmdInfo->hwnd = m_hIPConfigOwner;
-	m_pCmdInfo->lpszCommand = lpszCMD;
-	UINT threadID;
-	HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,ExeCMDThreadFunc,(void*)m_pCmdInfo,0,&threadID);
+	m_pCmdInfo = (PCMD_EXE_INFO)malloc(sizeof(CMD_EXE_INFO));
+	memset(m_pCmdInfo, 0, sizeof(CMD_EXE_INFO));
+	m_pCmdInfo->hWnd = m_hIPConfigOwner;
+	m_pCmdInfo->lpszCommand = lpszCommand;
+	//UINT uThreadId;
+	//HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,ExeCMDThreadFunc, (void*)m_pCmdInfo, 0, &uThreadId);
+	DWORD dwThreadId = 0;
+	HANDLE hThread = (HANDLE)CreateThread(NULL, 0, ExeCMDThreadFunc, (LPVOID)m_pCmdInfo, 0, &dwThreadId);
 	CloseHandle(hThread);
 	return TRUE;
 }
@@ -781,7 +782,7 @@ LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, i
 BOOL IIPConfig::CheckFormValid()
 {
 	wchar_t msgTitle[100];
-	Utility::GetINIStr(m_lpszLang,LS_MSG,L"msg_warn",msgTitle);
+	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"msg_warn", msgTitle);
 
 	if(!m_pIpAutoCheckBox->IsSelected())
 	{
@@ -791,7 +792,7 @@ BOOL IIPConfig::CheckFormValid()
 		if(isIp==FALSE)
 		{
 			wchar_t text[100];
-			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_ipv4_err",text);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_ipv4_err", text);
 			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			return FALSE;
 		}
@@ -801,7 +802,7 @@ BOOL IIPConfig::CheckFormValid()
 		if(isMask==FALSE)
 		{
 			wchar_t text[100];
-			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_subnet_mask_err",text);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_subnet_mask_err", text);
 			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			return FALSE;
 		}
@@ -811,7 +812,7 @@ BOOL IIPConfig::CheckFormValid()
 		if(isGateway==FALSE)
 		{
 			wchar_t text[100];
-			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_gateway_err",text);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_gateway_err", text);
 			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			return FALSE;
 		}
@@ -824,7 +825,7 @@ BOOL IIPConfig::CheckFormValid()
 		if(isDns1==FALSE)
 		{
 			wchar_t text[100];
-			Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			return FALSE;
 		}
@@ -835,7 +836,7 @@ BOOL IIPConfig::CheckFormValid()
 			if(isDns2==FALSE)
 			{
 				wchar_t text[100];
-				Utility::GetINIStr(m_lpszLang,LS_MSG,L"invalid_dns_err",text);
+				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 				MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 				return FALSE;
 			}
@@ -844,15 +845,17 @@ BOOL IIPConfig::CheckFormValid()
 	}
 	return TRUE;
 }
-unsigned IIPConfig::ExeCMDThreadFunc(void * pParams)
-{
-	
+//unsigned IIPConfig::ExeCMDThreadFunc(void * pParams)
+DWORD IIPConfig::ExeCMDThreadFunc(void * pParams)
+{	
 	PCMD_EXE_INFO info = (PCMD_EXE_INFO)pParams;
-	HWND hwnd = info->hwnd;
-	LPWSTR lpszCommand = info->lpszCommand;
-	DuiShowLoading(hwnd,L"Loading...",L"",&info->lpLoader);
-	Utility::ExcuteCommand(lpszCommand);
-	SendMessage(hwnd,WM_CMD_COMPLETE,NULL,NULL);
+	HWND hWnd = info->hWnd;
+
+	DuiShowLoading(hWnd, L"Loading...", L"", &info->lpLoader);
+	//Utility::ExcuteCommand(info->szCommand);
+	Sleep(3000);
+	SendMessage(hWnd, WM_CMD_COMPLETE, NULL, NULL);
+
 	return 0;
 }
 
@@ -862,7 +865,10 @@ BOOL IIPConfig::ExeCMDComplete()
 	{
 		DuiCancelLoading(m_pCmdInfo->lpLoader);
 		m_pCmdInfo->lpLoader = NULL;
-		delete[] m_pCmdInfo->lpszCommand;
+		if(m_pCmdInfo->lpszCommand);
+			free(m_pCmdInfo->lpszCommand);
+		free(m_pCmdInfo);
+		m_pCmdInfo = NULL;
 	}
 	return TRUE;
 }

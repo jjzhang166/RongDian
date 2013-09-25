@@ -10,6 +10,7 @@ namespace DuiLib
 CGifUI::CGifUI()
 	: m_pGifHandler(NULL)
 	, m_hGifEvent(NULL)
+	, m_hGifThread(NULL)
 {
 }
 
@@ -18,7 +19,12 @@ CGifUI::~CGifUI()
 	if(m_pGifHandler)
 		delete m_pGifHandler;
 	if(m_hGifEvent)
+	{
 		CloseHandle(m_hGifEvent);
+		m_hGifEvent = NULL;
+	}
+	WaitForSingleObject(m_hGifThread, INFINITE);
+	CloseHandle(m_hGifThread);
 }
 
 LPCTSTR CGifUI::GetClass() const
@@ -93,10 +99,9 @@ void CGifUI::SetGifImage(LPCTSTR pstrIcoPath)
 		if(!m_hGifEvent)
 			return;
 		DWORD dwThread = 0;
-		HANDLE hThread = CreateThread(NULL, 0, GifThread, (LPVOID)this, 0, &dwThread);
-		if(!hThread)
+		m_hGifThread = CreateThread(NULL, 0, GifThread, (LPVOID)this, 0, &dwThread);
+		if(!m_hGifThread)
 			return;
-		CloseHandle(hThread);
 		SetEvent(m_hGifEvent);
 	}
 }

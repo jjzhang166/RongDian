@@ -37,6 +37,7 @@ public:
 protected:
 	CGifHandler* m_pGifHandler;
 	HANDLE m_hGifEvent;
+	HANDLE m_hGifThread;
 };
 } //namespace DuiLib
 
