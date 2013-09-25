@@ -865,7 +865,7 @@ BOOL IIPConfig::ExeCMDComplete()
 	{
 		DuiCancelLoading(m_pCmdInfo->lpLoader);
 		m_pCmdInfo->lpLoader = NULL;
-		if(m_pCmdInfo->lpszCommand);
+		if(m_pCmdInfo->lpszCommand)
 			free(m_pCmdInfo->lpszCommand);
 		free(m_pCmdInfo);
 		m_pCmdInfo = NULL;

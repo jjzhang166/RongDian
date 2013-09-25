@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="720,476" mininfo="480,320" sizebox="4,4,4,4" caption="0,0,0,30" roundcorner="4,4,6,6" alpha="250" >
+<Window size="800,530" mininfo="480,320" sizebox="4,4,4,4" caption="0,0,0,30" roundcorner="4,4,6,6" alpha="250" >
 	<Font name="微软雅黑" size="12" bold="false" default="true"/>
 	<Font name="微软雅黑" size="14" bold="false"/>
+	<Default name="TabButton" value="height=&quot;35&quot; text=&quot;&quot; align=&quot;center&quot; endellipsis=&quot;true&quot; bordersize=&quot;1&quot; textcolor=&quot;0xFFE0E0E0&quot;" />
 	<Default name="VScrollBar" value="button1normalimage=&quot;file='default\scroll.png' source='0,0,16,16'&quot; button1hotimage=&quot;file='default\scroll.png' source='0,0,16,16' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='default\scroll.png' source='0,16,16,32' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='default\scroll.png' source='0,0,16,16' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='default\scroll.png' source='0,32,16,48' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='default\scroll.png' source='0,32,16,48' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='default\scroll.png' source='0,48,16,64' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='default\scroll.png' source='0,32,16,48' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='default\scroll.png' source='0,64,16,80' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='default\scroll.png' source='0,64,16,80' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;ffile='default\scroll.png' source='0,64,16,80' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='default\scroll.png' source='0,64,16,80' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='default\scroll.png' source='0,80,16,96' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='default\scroll.png' source='0,80,16,96' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='default\scroll.png' source='0,96,16,112' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='default\scroll.png' source='0,80,16,96' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='default\scroll.png' source='0,128,16,146' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='default\scroll.png' source='0,128,16,146' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='default\scroll.png' source='0,128,16,146' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='default\scroll.png' source='0,128,16,146' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
 	<!-- frame_container -->
 	<VerticalLayout name="frame_container" bordersize="1" borderround="2,2" colorhsl="true" inset="1,1,1,1" >
 		<!-- frame_title_contaner -->
-		<HorizontalLayout name="frame_title_contaner" mouse="ture" height="23">
+		<HorizontalLayout name="frame_title_contaner" mouse="ture" height="40">
 	   		<Control width="5"/> <!-- Left Blank -->
-			<Button name="frame_logo" width="20" height="20" padding="1" normalimage="file='default\RongDian.png'" tooltip="" />
+			<Button name="frame_logo" width="20" height="20" padding="8,10,5,0" normalimage="file='default\RongDian.png'" tooltip="" />
 	   		<Control width="5"/> <!-- Right Blank -->
 			<!-- frame_title -->
 	   		<Label name="frame_title" font="1" text="" minwidth="160" maxwidth="500" /> <!-- frame_title -->
 			<!-- System's Button -->
-	   		<HorizontalLayout height="23" >
+	   		<HorizontalLayout height="23"  padding="8,10,0,0">
 				<Control minwidth="1" /> <!-- Blank -->
 				<Button name="menubtn" width="20" height="20" normalimage="file='default\sysmenu.png'" hotimage="file='default\sysmenu_highlight.png'" pushedimage="file='default\sysmenu_down.png'" />
 				<Button name="minbtn" width="28" height="20" normalimage="file='default\btn_mini_normal.png'" hotimage="file='default\btn_mini_highlight.png'" pushedimage="file='default\btn_mini_down.png'" />
@@ -22,15 +23,16 @@
 				<Button name="closebtn" width="39" height="20" normalimage="file='default\btn_close_normal.png'" hotimage="file='default\btn_close_highlight.png'" pushedimage="file='default\btn_close_down.png'" />  
 	   		</HorizontalLayout><!-- System's Button -->
 	 	</HorizontalLayout><!-- frame_title_contaner -->
+	 	<Control height="5"/>
 		<!-- frame_contents -->
-		<VerticalLayout name="frame_contents" >
-			<HorizontalLayout name="panel_tabs" height="30" bktrans="true" >
-				<Button name="tab_about" minwidth="36" maxwidth="100" text="" endellipsis="true" bordersize="1" userdata="layout_about" textcolor="0xFFE0E0E0" />
-			</HorizontalLayout>
-			<HorizontalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_ipconfig" >
+		<HorizontalLayout name="frame_contents" >
+			<VerticalLayout name="panel_tabs" width="150" bktrans="true" VMenu="true">
+				<TabButton name="tab_about" userdata="layout_about" />
+			</VerticalLayout>
+			<VerticalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_about" >
 				<ChildLayout name="layout_about" xmlfile="About.xml" visible="false" />
-			</HorizontalLayout>
-	 	</VerticalLayout><!-- frame_contents -->
+			</VerticalLayout>
+	 	</HorizontalLayout><!-- frame_contents -->
 		<!-- frame_footer -->
 		<HorizontalLayout name="frame_footer" height="23" >
 			<Label name="frame_status" padding="4,0,0,0" text="" />

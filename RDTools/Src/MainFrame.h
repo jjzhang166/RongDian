@@ -34,6 +34,7 @@ public:
 	void			OnMenuSelect(TNotifyUI& msg);
 	void			OnTextChanged(TNotifyUI& msg);
 	void			OnFinalMessage(HWND hWnd);
+	CControlUI*		CreateControl(LPCTSTR pstrClass);
 
 	LRESULT			HandleMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);

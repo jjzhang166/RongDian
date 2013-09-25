@@ -356,6 +356,20 @@ void CMainFrame::OnFinalMessage(HWND hWnd)
 	delete this;
 }
 
+CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass)
+{
+	CControlUI* pControl = NULL;
+	if(wcsicmp(pstrClass, L"TabButton")==0)
+	{
+		pControl = new CButtonUI();
+		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
+		if(pDefaultAttributes && pControl)
+			pControl->ApplyAttributeList(pDefaultAttributes);
+	}
+
+	return pControl;
+}
+
 LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = 0;
@@ -690,6 +704,7 @@ BOOL CMainFrame::CreatePanels()
 	list<LPPANEL_INFO>::iterator iter;
 	CButtonUI *pTab = NULL;
 	CChildLayoutUI *pPanel = NULL;
+	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
 	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
 	{
 		lpPanelInfo = (LPPANEL_INFO)(*iter);
@@ -702,12 +717,12 @@ BOOL CMainFrame::CreatePanels()
 			pTab = new CButtonUI();
 			if(!pTab)
 				return bRet;
-			//pTab->SetFixedWidth(150);
-			//pTab->SetFixedHeight(35);
-			//pTab->SetMinWidth(36);
-			//pTab->SetMaxWidth(100);
-			pTab->SetTextColor(kTextColor);
-			pTab->SetBorderSize(1);
+			//Êú°æ²Ëµ¥²ÎÊý
+			//pTab->SetAttribute(L"height", L"35");
+			//pTab->SetAttribute(L"align", L"center");
+			//pTab->SetAttribute(L"endellipsis", L"true");
+			if(pDefaultAttributes)
+				pTab->ApplyAttributeList(pDefaultAttributes);
 			pTab->SetUserData(lpPanelInfo->szLayout);
 			pTab->SetName(lpPanelInfo->szTab);
 			pTab->SetText(lpPanelInfo->szName);
