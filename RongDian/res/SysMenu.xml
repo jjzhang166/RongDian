@@ -3,33 +3,33 @@
 	<Font name="微软雅黑" size="12" bold="false" default="true" />
 	<!-- frame_container -->
 	<VerticalLayout bkimage="file='default\menu_bk_white.png'" bordersize="1" bordercolor="0xFFE0E0E0" colorhsl="true" inset="2,2,2,2" >
-		<List header="hidden" itemhotimage="file='default\menu_hot_bk.png' corner='2,2,2,2'" mouse="true" itemdisabledbkcolor="#20000000">
+		<List header="hidden" bkimage="file='default\menuex_bk.png' corner='2,2,2,2'" itemhotimage="file='default\menu_hot_bk.png' corner='2,2,2,2'" mouse="true" itemdisabledbkcolor="#20000000">
 			<!-- 菜单-关于 -->
 			<ListContainerElement name="menu_about" height="22" >
 				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="file='default\menu_about.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
-					<Label name="item_text" text="关于" mouse="false" />
+					<Label name="item_image" width="24" bkimage="file='default\menu_about.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" textpadding="5,0,0,0" text="关于" mouse="false" />
 				</HorizontalLayout>
 			</ListContainerElement> <!-- 菜单-关于 -->
 			<!-- 菜单-帮助 -->
 			<ListContainerElement name="menu_help" height="22" >
 				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="file='default\menu_help.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
-					<Label name="item_text" text="帮助" mouse="false" />
+					<Label name="item_image" width="24" bkimage="file='default\menu_help.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" textpadding="5,0,0,0" text="帮助" mouse="false" />
 				</HorizontalLayout>
 			</ListContainerElement> <!-- 菜单-帮助 -->
 			<!-- 菜单-显示主窗口 -->
 			<ListContainerElement name="menu_show" height="22">
 				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="" mouse="false" />
-					<Label name="item_text" text="显示主窗口" mouse="false" />
+					<Label name="item_image" width="24" bkimage="" mouse="false" />
+					<Label name="item_text" textpadding="5,0,0,0" text="显示主窗口" mouse="false" />
 				</HorizontalLayout>
 			</ListContainerElement> <!-- 菜单-显示主窗口 -->
 			<!-- 菜单-退出 -->
 			<ListContainerElement name="menu_quit" height="22">
-				<HorizontalLayout>
-					<Label name="item_image" width="28" bkimage="file='default\menu_quit.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
-					<Label name="item_text" text="退出" mouse="false" />
+				<HorizontalLayout >
+					<Label name="item_image" width="24" bkimage="file='default\menu_quit.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
+					<Label name="item_text" textpadding="5,0,0,0" text="退出" mouse="false" />
 				</HorizontalLayout>
 			</ListContainerElement> <!-- 菜单-退出 -->
 		</List>
