@@ -178,6 +178,8 @@ public:
     void SetSizeBox(RECT& rcSizeBox);
     RECT& GetCaptionRect();
     void SetCaptionRect(RECT& rcCaption);
+	RECT& GetBottomRect();
+	void SetBottomRect(RECT& rcBottom);
     SIZE GetRoundCorner() const;
     void SetRoundCorner(int cx, int cy);
     SIZE GetMinInfo() const;
@@ -353,6 +355,7 @@ private:
     RECT m_rcSizeBox;
     SIZE m_szRoundCorner;
     RECT m_rcCaption;
+	RECT m_rcBottom;
     UINT m_uTimerID;
     bool m_bFirstLayout;
     bool m_bUpdateNeeded;

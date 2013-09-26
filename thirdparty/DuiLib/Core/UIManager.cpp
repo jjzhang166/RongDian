@@ -127,7 +127,8 @@ m_pParentResourcePM(NULL)
     m_szInitWindowSize.cy = 0;
     m_szRoundCorner.cx = m_szRoundCorner.cy = 0;
     ::ZeroMemory(&m_rcSizeBox, sizeof(m_rcSizeBox));
-    ::ZeroMemory(&m_rcCaption, sizeof(m_rcCaption));
+	::ZeroMemory(&m_rcCaption, sizeof(m_rcCaption));
+	::ZeroMemory(&m_rcBottom, sizeof(m_rcBottom));
     m_ptLastMousePos.x = m_ptLastMousePos.y = -1;
 }
 
@@ -376,6 +377,16 @@ RECT& CPaintManagerUI::GetCaptionRect()
 void CPaintManagerUI::SetCaptionRect(RECT& rcCaption)
 {
     m_rcCaption = rcCaption;
+}
+
+RECT& CPaintManagerUI::GetBottomRect()
+{
+	return m_rcBottom;
+}
+
+void CPaintManagerUI::SetBottomRect(RECT& rcBottom)
+{
+	m_rcBottom = rcBottom;
 }
 
 SIZE CPaintManagerUI::GetRoundCorner() const

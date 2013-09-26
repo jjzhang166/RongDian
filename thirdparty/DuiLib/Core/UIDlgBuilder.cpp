@@ -159,7 +159,16 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                         rcCaption.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
                         rcCaption.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
                         pManager->SetCaptionRect(rcCaption);
-                    }
+					}
+					else if( _tcscmp(pstrName, _T("bottom")) == 0 ) {
+						RECT rcBottom = { 0 };
+						LPTSTR pstr = NULL;
+						rcBottom.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+						rcBottom.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+						rcBottom.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+						rcBottom.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+						pManager->SetBottomRect(rcBottom);
+					}
                     else if( _tcscmp(pstrName, _T("roundcorner")) == 0 ) {
                         LPTSTR pstr = NULL;
                         int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
