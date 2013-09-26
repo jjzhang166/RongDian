@@ -41,6 +41,14 @@
 		<desc>IP Config Panel</desc>
 	</Plugin>
 	<Plugin>
+		<layout>layout_hostadmin</layout>
+		<xml>HostAdmin.xml</xml>
+		<tab>tab_hostadmin</tab>
+		<panel>panel_hostadmin</panel>
+		<name>HostAdmin</name>
+		<desc>Host Admin Panel</desc>
+	</Plugin>
+	<Plugin>
 		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>
 		<tab>tab_tidy</tab>

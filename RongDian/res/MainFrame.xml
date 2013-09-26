@@ -26,10 +26,10 @@
 	 	<Control height="5"/>
 		<!-- frame_contents -->
 		<HorizontalLayout name="frame_contents" >
-			<VerticalLayout name="panel_tabs" width="150" bktrans="true" VMenu="true">
+			<VerticalLayout name="panel_tabs" width="150" bktrans="true">
 				<TabButton name="tab_about" userdata="layout_about" />
 			</VerticalLayout>
-			<VerticalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_about" >
+			<VerticalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_hostadmin" >
 				<ChildLayout name="layout_about" xmlfile="About.xml" visible="false" />
 			</VerticalLayout>
 	 	</HorizontalLayout><!-- frame_contents -->

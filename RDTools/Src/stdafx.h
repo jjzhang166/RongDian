@@ -140,6 +140,7 @@ int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lps
 #include "IFileFinder.h"
 #include "IFormatter.h"
 #include "IIpConfig.h"
+#include "IHostAdmin.h"
 #include "ITidy.h"
 #include "MainFrame.h"
 

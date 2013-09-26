@@ -112,6 +112,8 @@ SET_CONTROL_END()
 
 	SetIPConfigLang(lpszLang);
 
+	SetHostAdminLang(lpszLang);
+
 	SetTidyLang(lpszLang);
 	return 0;
 }
@@ -156,6 +158,7 @@ void CMainFrame::InitWindow()
 	SetFinderOwner(m_hWnd, &m_PaintManager);
 	SetFormatterOwner(m_hWnd,&m_PaintManager);
 	SetIPConfigOwner(m_hWnd,&m_PaintManager);
+	SetHostAdminOwner(m_hWnd,&m_PaintManager);
 	SetTidyOwner(m_hWnd,&m_PaintManager);
 
 	HICON hIcon = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
@@ -269,6 +272,8 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		OnFormatterClick(msg, bHandle);
 	if(!bHandle)
 		OnIPConfigClick(msg, bHandle);
+	if (!bHandle)
+		OnHostAdminClick(msg, bHandle);
 	if(!bHandle)
 		OnTidyClick(msg, bHandle);
 	if(!bHandle)

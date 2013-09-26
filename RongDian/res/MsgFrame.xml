@@ -38,7 +38,7 @@
 		<!-- frame_footer -->
 		<HorizontalLayout name="frame_footer" height="23" >
 			<Control />
-			<Button name="first_btn" width="60" text=""normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Button name="first_btn" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control name="second_blank" visible="false" />
 			<Button name="second_btn" visible="false" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control />

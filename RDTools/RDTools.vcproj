@@ -179,6 +179,10 @@
 		<Filter
 			Name="Src"
 			>
+			<File
+				RelativePath=".\Src\IHostAdmin.h"
+				>
+			</File>
 			<Filter
 				Name="Source Files"
 				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
@@ -210,6 +214,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\IFormatter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\IHostAdmin.cpp"
 					>
 				</File>
 				<File

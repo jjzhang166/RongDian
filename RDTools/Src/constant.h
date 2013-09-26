@@ -46,6 +46,7 @@ const wchar_t* const LS_CODERPANEL					= L"CoderPanel";
 const wchar_t* const LS_FINDERPANEL					= L"FinderPanel";
 const wchar_t* const LS_FORMATTERPANEL				= L"FormatterPanel";
 const wchar_t* const LS_IPCHANGERPANEL				= L"IPChangerPanel";
+const wchar_t* const LS_HOSTADMINPANEL				= L"HostAdminPanel";
 const wchar_t* const LS_MSG							= L"Msg";
 const wchar_t* const LS_DUIMSG						= L"DuiMsg";
 

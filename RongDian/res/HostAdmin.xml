@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_hostadmin" inset="4,4,4,4" >
+		<!--host文件路径-->
+		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control width="5" />
+			<Label name="host_path_text" width="100" />
+			<Control width="3" />
+			<Edit name="host_path_edit" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
+			<Control width="3" />
+			<Button name="host_open" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="2" />
+			<Button name="host_backup" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="2" />
+			<Button name="host_new_group" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="2" />
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>
