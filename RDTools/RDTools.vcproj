@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;..\thirdparty\tidy;..\TidyLib;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\thirdparty;..\thirdparty\DuiLib;..\thirdparty\pcre;..\thirdparty\Log4cplus\include;..\thirdparty\OptParse;..\thirdparty\md5;..\thirdparty\SlimXml;..\thirdparty\UCD;..\thirdparty\libiconv;..\RDFinder\src;..\thirdparty\tidy;..\TidyLib;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -179,10 +179,6 @@
 		<Filter
 			Name="Src"
 			>
-			<File
-				RelativePath=".\Src\IHostAdmin.h"
-				>
-			</File>
 			<Filter
 				Name="Source Files"
 				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
@@ -229,7 +225,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ITidy.cpp"
+					RelativePath=".\Src\ITidy.cpp"
 					>
 				</File>
 				<File
@@ -307,6 +303,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\IHostAdmin.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\IIpConfig.h"
 					>
 				</File>
@@ -315,7 +315,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ITidy.h"
+					RelativePath=".\Src\ITidy.h"
 					>
 				</File>
 				<File
@@ -381,6 +381,10 @@
 			</File>
 			<File
 				RelativePath="..\common\Formatter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\GifHeader.h"
 				>
 			</File>
 			<File

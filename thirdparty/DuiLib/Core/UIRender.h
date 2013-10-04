@@ -33,6 +33,8 @@ public:
 
 	int GetFrameCount();
 
+	int GetCurrentFrame() { return nCurrentFrame; };
+
 	void AddFrameInfo(TImageInfo* pFrameInfo);
 
 	TImageInfo* GetNextFrameInfo();
@@ -58,6 +60,7 @@ class UILIB_API CRenderEngine
 public:
     static DWORD AdjustColor(DWORD dwColor, short H, short S, short L);
 	static CGifHandler* LoadGif( STRINGorID bitmap, LPCTSTR type = NULL, DWORD mask = 0 );
+	static CGifHandler* LoadGifEx( STRINGorID bitmap, LPCTSTR type = NULL);
     static TImageInfo* LoadImage(STRINGorID bitmap, LPCTSTR type = NULL, DWORD mask = 0);
     static void FreeImage(const TImageInfo* bitmap);
     static void DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint, \

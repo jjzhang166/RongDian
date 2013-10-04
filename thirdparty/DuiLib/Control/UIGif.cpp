@@ -89,7 +89,7 @@ void CGifUI::SetGifImage(LPCTSTR pstrIcoPath)
 		delete m_pGifHandler;
 		m_pGifHandler = NULL;
 	}
-	m_pGifHandler = CRenderEngine::LoadGif(pstrIcoPath);
+	m_pGifHandler = CRenderEngine::LoadGifEx(pstrIcoPath);
 	if(!m_pGifHandler)
 		return;
 	TImageInfo* pImageInfo = m_pGifHandler->GetCurrentFrameInfo();
@@ -117,16 +117,24 @@ void CGifUI::PaintStatusImage(HDC hDC)
 			int iHeight = pImageInfo->nY;
 			CDuiRect rcBmpPart(0,0,iWidth,iHeight);
 			CDuiRect rcCorner(0, 0, 0, 0);
+			
 			/*
 			HDC hScrDC = GetDC(NULL);
 			HDC hMemDC = CreateCompatibleDC(hScrDC);
 			HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, pImageInfo->hBitmap);
-			BitBlt(hScrDC, 500, 40, m_rcItem.right-m_rcItem.left, m_rcItem.bottom-m_rcItem.top,
-				hMemDC, 0, 0, SRCCOPY);
+			BLENDFUNCTION bf = { AC_SRC_OVER, 0, pImageInfo->dwMask, AC_SRC_ALPHA };
+			typedef BOOL (WINAPI *LPALPHABLEND)(HDC, int, int, int, int,HDC, int, int, int, int, BLENDFUNCTION);
+			static LPALPHABLEND lpAlphaBlend = (LPALPHABLEND) ::GetProcAddress(::GetModuleHandle(_T("msimg32.dll")), "AlphaBlend");
+			lpAlphaBlend(hDC, 500 + (m_pGifHandler->GetCurrentFrame() * iWidth), 40, iWidth, iHeight, hMemDC, \
+				0, 0, iWidth, iHeight, bf);
+
+			//BitBlt(hScrDC, 500 + (m_pGifHandler->GetCurrentFrame() * iWidth), 40, m_rcItem.right-m_rcItem.left, m_rcItem.bottom-m_rcItem.top,
+			//	hMemDC, 0, 0, SRCCOPY);
 			SelectObject(hMemDC, hOldBitmap);
 			DeleteObject(hMemDC);
 			ReleaseDC(NULL, hScrDC);
 			*/
+			
 			CRenderEngine::DrawImage(hDC, pImageInfo->hBitmap, m_rcItem, m_rcItem, rcBmpPart, rcCorner, \
 				pImageInfo->alphaChannel, pImageInfo->dwMask);
 			m_pGifHandler->AddCurrentIndex();

@@ -64,6 +64,7 @@
 				Name="VCLinkerTool"
 				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
 				LinkIncremental="2"
+				GenerateDebugInformation="true"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName)d.lib"
 			/>
 			<Tool
@@ -137,6 +138,7 @@
 				Name="VCLinkerTool"
 				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
 				LinkIncremental="2"
+				GenerateDebugInformation="true"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
 			/>
 			<Tool

@@ -1,7 +1,5 @@
 /*.pdsync
 /*.pdsyncu
-/RongDian.suo
-/RongDian.ncb
 /DuiMsg/DuiMsg.vcproj.MOYZ-PC.lenovo.user
 /DuiMsg/DuiMsg.vcproj.pdsync
 /DuiMsg/DuiMsg.vcproj.pdsyncu
@@ -11,6 +9,8 @@ Debug
 /PCRETest/PCRETest.vcproj.pdsyncu
 /PCRETest/PCRETest.vcproj.MOYZ-PC.lenovo.user
 /RDCoder/Debug
+*.suo
+*.ncb
 *.user
 *.pdsync
 *.pdsyncu

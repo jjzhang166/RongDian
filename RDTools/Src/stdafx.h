@@ -49,6 +49,7 @@ using namespace std;
 #include <libiconv/Src/include/iconv.h>
 #include <SQLite/sqlite3.h>
 #include <SlimXml/Src/SlimXml.h>
+#include <GifLib/lib/gif_lib_private.h>
 #include <Tidy/include/tidy.h>
 #include <AsTidyLib/astyle.h>
 #include <CssTidyLib/csspp_globals.hpp>

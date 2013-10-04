@@ -468,6 +468,53 @@ CGifHandler* CRenderEngine::LoadGif( STRINGorID bitmap, LPCTSTR type /*= NULL*/,
 	return pGifHandler;
 }
 
+CGifHandler* CRenderEngine::LoadGifEx( STRINGorID bitmap, LPCTSTR type /*= NULL*/)
+{
+	CGifHandler* pGifHandler = NULL;
+	GifFileType *pGifFile = NULL;
+	LPBYTE lpData = NULL;
+	if( type == NULL )
+	{
+		CDuiString sFile = CPaintManagerUI::GetResourcePath();
+		if( CPaintManagerUI::GetResourceZip().IsEmpty() )
+		{
+			sFile += bitmap.m_lpstr;
+			if(theGifLib.GetDecoder()->LoadGif(sFile.GetData(), &pGifFile, &lpData) && pGifFile && lpData)
+			{
+				pGifHandler = new CGifHandler();
+				BITMAP256 stBit256;
+				int nDelay = 0;
+				int nTrans = GIF_NOT_TRANSPARENT;
+				memset(&stBit256, 0, sizeof(BITMAP256));
+				HBITMAP hBitmap = NULL;
+				while(theGifLib.GetDecoder()->GetNext(pGifFile, lpData, &stBit256, &nDelay, &nTrans))
+				{
+					if(nDelay<=0)
+						break;
+					hBitmap = theGifLib.GetDecoder()->CreateMappedBitmap(lpData, &stBit256, NULL, pGifFile->SWidth, pGifFile->SHeight, 0, 1);
+					if(hBitmap)
+					{
+						TImageInfo* data = new TImageInfo;
+						data->hBitmap = hBitmap;
+						data->nX = pGifFile->SWidth;
+						data->nY = pGifFile->SHeight;
+						data->delay = nDelay;
+						data->alphaChannel = false;
+						data->dwMask = 255;
+						pGifHandler->AddFrameInfo(data);
+					}
+					memset(&stBit256, 0, sizeof(BITMAP256));
+					nDelay = 0;
+				}
+				theGifLib.DGifCloseFile(pGifFile);
+				if(lpData)
+					free(lpData);
+			}
+		} // end of 'if( CPaintManagerUI::GetResourceZip().IsEmpty() )'
+	} // end of 'if( type == NULL )'
+	return pGifHandler;
+}
+
 TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask)
 {
     LPBYTE pData = NULL;
@@ -2139,7 +2186,8 @@ SIZE CRenderEngine::GetTextSize( HDC hDC, CPaintManagerUI* pManager , LPCTSTR ps
 ///////////////////////CGifHandler///////////////////
 
 CGifHandler::CGifHandler()
-:nCurrentFrame(0)
+:nFrameCount(0)
+,nCurrentFrame(0)
 ,isDeleting(false)
 {
 }

@@ -163,6 +163,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="tidy.def"
+				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
