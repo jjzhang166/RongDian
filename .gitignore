@@ -1,5 +1,13 @@
 /*.pdsync
 /*.pdsyncu
+*.suo
+*.ncb
+*.user
+*.pdsync
+*.pdsyncu
+*.obj
+*.pdb
+*.aps
 /DuiMsg/DuiMsg.vcproj.MOYZ-PC.lenovo.user
 /DuiMsg/DuiMsg.vcproj.pdsync
 /DuiMsg/DuiMsg.vcproj.pdsyncu
@@ -9,11 +17,6 @@ Debug
 /PCRETest/PCRETest.vcproj.pdsyncu
 /PCRETest/PCRETest.vcproj.MOYZ-PC.lenovo.user
 /RDCoder/Debug
-*.suo
-*.ncb
-*.user
-*.pdsync
-*.pdsyncu
 Release
 bin
 log
