@@ -263,8 +263,14 @@ BOOL IColorPicker::OpenColorDlg()
 	cc.lpTemplateName = NULL;
 	if(ChooseColorW(&cc))
 	{
-		ColorUtil::AdjustColor(cc.rgbResult, colCurColor);
-		SetColorPicker(colCurColor, TRUE, FALSE);
+		//ColorUtil::AdjustColor(cc.rgbResult, colCurColor);
+		if(pPickerPreview)
+		{
+			DWORD dwBackColor = 0;
+			ColorUtil::AdjustColor(cc.rgbResult, dwBackColor);
+			pPickerPreview->SetBkColor(dwBackColor);
+		}
+		SetColorPicker(cc.rgbResult, TRUE);
 	}
 
 	return bRet;
@@ -398,8 +404,10 @@ void IColorPicker::OnPickerTextChanged(TNotifyUI& msg, BOOL& bHandled)
 		CDuiString strColor = msg.pSender->GetText();
 		if(ColorUtil::StrToRGB(strColor, dwColor))
 		{
-			colCurColor = dwColor;
+			ColorUtil::AdjustColor(dwColor, colCurColor);
 			SetColorPicker(colCurColor, TRUE, FALSE);
+			if(pPickerPreview)
+				pPickerPreview->SetBkColor(dwColor);
 		}
 	}
 }

@@ -47,6 +47,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4244;4996;"
@@ -65,6 +66,7 @@
 				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName)d.lib"
 			/>
 			<Tool
@@ -121,6 +123,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4244;4996;"
@@ -139,6 +142,7 @@
 				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
 			/>
 			<Tool

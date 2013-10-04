@@ -61,6 +61,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 				CompileAs="2"
@@ -87,6 +88,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName)d.lib"
 			/>
 			<Tool
@@ -155,6 +157,7 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 				CompileAs="2"
@@ -181,6 +184,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
 			/>
 			<Tool

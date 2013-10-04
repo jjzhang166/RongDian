@@ -32,12 +32,12 @@ using namespace std;
 #pragma comment(lib, "gdiplus.lib")
 using namespace Gdiplus;
 
-#include <md5.h>
+#include <md5/md5.h>
 #include <StrUtil.h>
 #include <DibUtil.h>
 #include <Util.h>
 
-#include <OptParse.h>
+#include <OptParse/OptParse.h>
 #include <KeyHook.h>
 
 typedef LONG (__cdecl *LPFNAttatchHook)(HWND hInvoker);
