@@ -272,7 +272,7 @@ public:
 		GET_PROC_ADDR(hModule, "DGifGetCode", LPFNDGifGetCode, lpfnDGifGetCode);
 		GET_PROC_ADDR(hModule, "DGifGetCodeNext", LPFNDGifGetCodeNext, lpfnDGifGetCodeNext);
 		GET_PROC_ADDR(hModule, "DGifGetLZCodes", LPFNDGifGetLZCodes, lpfnDGifGetLZCodes);
-		GET_PROC_ADDR(hModule, "DGifSlurp", LPFNDGifSlurp, lpfnDGifCloseFile);
+		GET_PROC_ADDR(hModule, "DGifCloseFile", LPFNDGifCloseFile, lpfnDGifCloseFile);
 		if(lpfnDGifOpenFileName && lpfnDGifOpenFileHandle && lpfnDGifSlurp 
 			&& lpfnDGifOpen && lpfnDGifGetScreenDesc && lpfnDGifGetRecordType 
 			&& lpfnDGifGetImageDesc && lpfnDGifGetLine && lpfnDGifGetPixel 
