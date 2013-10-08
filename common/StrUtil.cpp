@@ -518,4 +518,18 @@ int StrUtil::strtrim(char *str, int len)
 
 	return (int)strlen(str);
 }
+
+bool StrUtil::is_wsubstr(const wchar_t* wStr,const wchar_t* wSubStr)
+{
+	bool f = false;
+	char* str = w2a(wStr);
+	char* str2 = w2a(wSubStr);
+	if (strstr(str,str2)!=NULL)
+	{
+		f = true;
+	}
+	delete[] str;
+	delete[] str2;
+	return f;
+}
 #pragma warning(pop)

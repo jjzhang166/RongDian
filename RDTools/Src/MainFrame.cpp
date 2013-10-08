@@ -381,6 +381,14 @@ CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass)
 		if(pDefaultAttributes && pControl)
 			pControl->ApplyAttributeList(pDefaultAttributes);
 	}
+	else if (wcsicmp(pstrClass,L"HostRow")==0)
+	{
+		pControl = new CButtonUI();
+		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"HostRow");
+		if(pDefaultAttributes && pControl)
+			pControl->ApplyAttributeList(pDefaultAttributes);
+		m_PaintManager.FindSubControlByName(pControl,L"");
+	}
 
 	return pControl;
 }
@@ -683,6 +691,7 @@ BOOL CMainFrame::InitPanels()
 	InitFinder((IListCallbackUI*)this);
 	InitFormatter();
 	InitIPConfig();
+	InitHostAdmin();
 	InitTidy(NULL);
 	return bRet;
 }
