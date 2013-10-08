@@ -4,6 +4,9 @@
 
 #include <Wbemidl.h>
 #include <WinCred.h>
+#include <comutil.h>
+
+#include <assert.h>
 
 typedef LONG (CALLBACK *LPFNAdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
 typedef LONG (CALLBACK *LPFNAdapterNameCallBack)(LPVOID lParam, LPCWSTR lpszName, int nIndex);
@@ -60,24 +63,40 @@ protected:
 	IWbemClassObject* m_pClassObject;
 };
 
-class CAdapterObj :public CWbemObject
+class CWbemUtil : public CWbemObject
 {
+public:
+	CWbemUtil();
+	CWbemUtil(IWbemClassObject* pWbemObj);
+	virtual ~CWbemUtil();
 
+public:
+	BOOL GetBSTR(LPCWSTR lpszName, bstr_t &bstrValue);
+	BOOL GetLONG(LPCWSTR lpszName, LONG &lValue);
+	BOOL GetULONG(LPCWSTR lpszName, ULONG &ulValue);
+	BOOL GetUINT(LPCWSTR lpszName, UINT &uiValue);
+	BOOL GetUINT64(LPCWSTR lpszName, UINT64 &ullValue);
+	BOOL GetUSHORT(LPCWSTR lpszName, USHORT &ubValue);
+	BOOL GetSHORT(LPCWSTR lpszName, SHORT &bValue);
+	BOOL GetBOOL(LPCWSTR lpszName, BOOL &bValue);
+	BOOL GetDATE(LPCWSTR lpszName, DOUBLE& dValue);
 };
 
-class CAdapterCfgObj : public CWbemObject
+class CAdapterCfgObj : public CWbemUtil
 {
 public:
 	CAdapterCfgObj(IWbemServices *pServices = NULL);
 	CAdapterCfgObj(IWbemClassObject *pWbemObject, IWbemServices *pServices);
 	~CAdapterCfgObj();
 
-	HRESULT SetAddrType(BOOL bAuto = TRUE);
-	HRESULT SetAddr(LPCWSTR lpszAddr, LPCWSTR *lpszMask, int &nMaskCount, LONG *plRet = NULL);
-	HRESULT SetGateway(LPCWSTR lpszGateway, LPBYTE lpMetric, int &nMetricCount, LONG *plRet = NULL);
+	// 设置IP地址、子网掩码
+	HRESULT SetAddr(LPCWSTR lpszAddr, LPCWSTR lpszMask, LONG *plRet = NULL);
+	// 设置网关
+	HRESULT SetGateway(LPCWSTR lpszGateway, LONG *plRet = NULL);
+	// 设置DNS
+	HRESULT SetDns(LPBYTE lpszDns, int nCount, LONG *plRet = NULL);
+	// 自动获取IP、DNS模式
 	HRESULT EnableDHCP(LONG *plRet = NULL);
-	HRESULT SetDnsType(BOOL bAuto = TRUE);
-	HRESULT SetDns(LPCWSTR *lpszDns, int &nDnsCount, LONG *plRet = NULL);
 	
 private:
 	IWbemServices *m_pServices;

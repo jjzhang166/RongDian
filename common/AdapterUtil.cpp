@@ -7,6 +7,11 @@
 
 #pragma comment(lib, "Wbemuuid.lib")
 #pragma comment(lib, "Credui.lib")
+#ifdef _DEBUG
+#pragma comment(lib, "comsuppwd.lib")
+#else
+#pragma comment(lib, "comsuppw.lib")
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // AdapterUtil
@@ -369,6 +374,160 @@ void CWbemObject::Clean()
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
+// CWbemUtil
+CWbemUtil::CWbemUtil()
+{
+
+}
+
+CWbemUtil::CWbemUtil(IWbemClassObject* pWbemObj)
+	: CWbemObject(pWbemObj)
+{
+
+}
+
+CWbemUtil::~CWbemUtil()
+{
+
+}
+
+BOOL CWbemUtil::GetBSTR(LPCWSTR lpszName, bstr_t &bstrValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && vtValue.vt==VT_BSTR)
+	{
+		//bstrValue = SysAllocString(vtValue.bstrVal);
+		bstrValue = vtValue;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetLONG(LPCWSTR lpszName, LONG &lValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_I4 == vtValue.vt))
+	{
+		lValue = V_I4(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	lValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetULONG(LPCWSTR lpszName, ULONG &ulValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_UI4 == vtValue.vt))
+	{
+		ulValue = V_UI4(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	ulValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetUINT(LPCWSTR lpszName, UINT &uiValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_UINT == vtValue.vt))
+	{
+		uiValue = V_UINT(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	uiValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetUINT64(LPCWSTR lpszName, UINT64 &ullValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_UI8 == vtValue.vt))
+	{
+		ullValue = V_UI8(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	ullValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetUSHORT(LPCWSTR lpszName, USHORT &ubValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_UI2 == vtValue.vt))
+	{
+		ubValue = V_UI2(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	ubValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetSHORT(LPCWSTR lpszName, SHORT &bValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_I2 == vtValue.vt))
+	{
+		bValue = V_I2(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	bValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetBOOL(LPCWSTR lpszName, BOOL &bValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_BOOL == vtValue.vt))
+	{
+		bValue = V_BOOL(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	bValue = 0;
+	return FALSE;
+}
+
+BOOL CWbemUtil::GetDATE(LPCWSTR lpszName, DOUBLE& dValue)
+{
+	assert(lpszName!=NULL);
+	VARIANT vtValue;
+	HRESULT hRes = Get(lpszName, &vtValue);
+	if(SUCCEEDED(hRes) && (VT_DATE == vtValue.vt))
+	{
+		dValue = V_DATE(&vtValue);
+		return TRUE;
+	}
+	assert(vtValue.vt == VT_NULL);
+	dValue = 0;
+	return FALSE;
+}
+// CWbemUtil
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
 // CAdapterUtil
 CAdapterUtil::CAdapterUtil()
 {
@@ -389,18 +548,19 @@ IWbemServices* CAdapterUtil::GetServices()
 
 HRESULT CAdapterUtil::Init()
 {
-	return ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	//return ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	return S_OK;
 }
 
 void CAdapterUtil::UnInit()
 {
-	CoUninitialize();
+	//CoUninitialize();
 }
 
 HRESULT CAdapterUtil::ConnectLocal(LPCWSTR lpszRes)
 {
 	HRESULT hRes = S_FALSE;
-	assert(m_pServices!=NULL);
+	assert(m_pServices==NULL);
 	// Set General COM Security Levels
 	hRes = CoInitializeSecurity(
 		NULL,							
@@ -693,12 +853,6 @@ HRESULT CAdapterUtil::NextClassHandle(
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-// CAdapterObj
-
-// CAdapterObj
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
 // CAdapterCfgObj
 CAdapterCfgObj::CAdapterCfgObj(IWbemServices *pServices /*= NULL*/)
 {
@@ -717,12 +871,19 @@ CAdapterCfgObj::~CAdapterCfgObj()
 
 }
 
-HRESULT CAdapterCfgObj::SetAddrType(BOOL bAuto /*= TRUE*/)
-{
-	return S_FALSE;
-}
-
-HRESULT CAdapterCfgObj::SetAddr(LPCWSTR lpszAddr, LPCWSTR *lpszMask, int &nMaskCount, LONG *plRet /*= NULL*/)
+/*************************************************************************
+ * Method:    		SetAddr
+ * Description:		设置IP地址、子网掩码
+ * ParameterList:	LPCWSTR lpszAddr, LPCWSTR lpszMask, LONG *plRet
+ * Parameter:       lpszAddr:IP地址字符串
+ * Parameter:       lpszMask:子网掩码字符串
+ * Parameter:       plRet:返回值，成功返回0，失败返回相应错误值(WBEMSTATUS枚举类型，在WbemCli.h文件定义)
+ * Return Value:	HRESULT
+ * Date:        	2013:10:06 22:38:14
+ * Author:			LIng
+ * CopyRight:		Copyright (C) 2013
+ ************************************************************************/
+HRESULT CAdapterCfgObj::SetAddr(LPCWSTR lpszAddr, LPCWSTR lpszMask, LONG *plRet /*= NULL*/)
 {
 	HRESULT hRes = S_FALSE;
 	CAdapterCfgObj adaMethod;
@@ -734,27 +895,247 @@ HRESULT CAdapterCfgObj::SetAddr(LPCWSTR lpszAddr, LPCWSTR *lpszMask, int &nMaskC
 	hRes = adaMethod.SpwanInstanceObject(adaParam);
 	if(FAILED(hRes))
 		return hRes;
+	VARIANT vtAddr = {0}, vtMask = {0};
+	SAFEARRAYBOUND saBoundAddr = {0}, saBoundMask = {0};
+	SAFEARRAY *psaAddr = NULL, *psaMask = NULL;
+	saBoundAddr.cElements = 1;
+	saBoundAddr.lLbound = 0;
+	psaAddr = SafeArrayCreate(VT_BSTR, 1, &saBoundAddr);
+	if(!psaAddr)
+		goto cleanup;
+	((BSTR*)psaAddr->pvData)[0] = SysAllocString(lpszAddr);
+	vtAddr.vt = VT_BSTR | VT_ARRAY;
+	vtAddr.parray = psaAddr;
+	hRes = adaParam.Put(L"IPAddress", &vtAddr, 0);
+	if(FAILED(hRes))
+		goto cleanup;
+
+	saBoundMask.cElements = 1;
+	saBoundMask.lLbound = 0;
+	psaMask = SafeArrayCreate(VT_BSTR, 1, &saBoundMask);
+	if(!psaMask)
+		goto cleanup;
+	((BSTR*)psaMask->pvData)[0] = SysAllocString(lpszMask);
+	vtMask.vt = VT_BSTR | VT_ARRAY;
+	vtMask.parray = psaMask;
+	hRes = adaParam.Put(L"SubnetMask", &vtMask, 0);
+	if(FAILED(hRes))
+		goto cleanup;
+	if(plRet==NULL)
+	{
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam);
+	}
+	else
+	{
+		CAdapterCfgObj adaRet;
+		*plRet = 64;
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam, &adaRet);
+		adaRet.GetLONG(L"ReturnValue", *plRet);
+		if(*plRet!=S_OK)
+			hRes = *plRet;
+	}
 	
-	return S_FALSE;
+cleanup:
+	if(psaAddr)
+	{
+		SafeArrayUnaccessData(psaAddr);
+		SafeArrayDestroy(psaAddr);
+	}
+	if(psaMask)
+	{
+		SafeArrayUnaccessData(psaMask);
+		SafeArrayDestroy(psaMask);
+	}
+	return hRes;
 }
 
-HRESULT CAdapterCfgObj::SetGateway(LPCWSTR lpszGateway, LPBYTE lpMetric, int &nMetricCount, LONG *plRet /*= NULL*/)
+/*************************************************************************
+ * Method:    		SetGateway
+ * Description:		设置网关
+ * ParameterList:	LPCWSTR lpszGateway, LONG *plRet
+ * Parameter:       lpszGateway:网关字符串
+ * Parameter:       plRet:返回值，成功返回0，失败返回相应错误值(WBEMSTATUS枚举类型，在WbemCli.h文件定义)
+ * Return Value:	HRESULT
+ * Date:        	2013:10:06 22:37:03
+ * Author:			LIng
+ * CopyRight:		Copyright (C) 2013
+ ************************************************************************/
+HRESULT CAdapterCfgObj::SetGateway(LPCWSTR lpszGateway, LONG *plRet /*= NULL*/)
 {
-	return S_FALSE;
+	HRESULT hRes = S_FALSE;
+	CAdapterCfgObj adaMethod;
+	CAdapterCfgObj adaParam;
+	wchar_t szMethod[] = L"SetGateways";
+	hRes = GetInMethod(adaMethod, m_pServices, szMethod);
+	if(FAILED(hRes))
+		return hRes;
+	hRes = adaMethod.SpwanInstanceObject(adaParam);
+	if(FAILED(hRes))
+		return hRes;
+	VARIANT vtGateway = {0}, vtMetric = {0};
+	SAFEARRAYBOUND saGateway = {0}, saMetric = {0};
+	SAFEARRAY *psaGateway = NULL, *psaMetric = NULL;
+	saGateway.cElements = 1;
+	saGateway.lLbound = 0;
+	psaGateway = SafeArrayCreate(VT_BSTR, 1, &saGateway);
+	if(!psaGateway)
+		goto cleanup;
+	((BSTR*)psaGateway->pvData)[0] = SysAllocString(lpszGateway);
+	vtGateway.vt = VT_BSTR | VT_ARRAY;
+	vtGateway.parray = psaGateway;
+	hRes = adaParam.Put(L"DefaultIPGateway", &vtGateway, 0);
+	if(FAILED(hRes))
+		goto cleanup;
+
+	BYTE bMetric[1] = {1};
+	saMetric.cElements = 1;
+	saMetric.lLbound = 0;
+	psaMetric = SafeArrayCreate(VT_UI1, 1, &saMetric);
+	if(!psaMetric)
+		goto cleanup;
+	((BYTE*)psaMetric->pvData)[0] = bMetric[0];
+	vtMetric.vt = VT_UI1 | VT_ARRAY;
+	vtMetric.parray = psaMetric;
+	hRes = adaParam.Put(L"GatewayCostMetric", &vtMetric, 0);
+	if(FAILED(hRes))
+		goto cleanup;
+	if(plRet==NULL)
+	{
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam);
+	}
+	else
+	{
+		CAdapterCfgObj adaRet;
+		*plRet = 64;
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam, &adaRet);
+		adaRet.GetLONG(L"ReturnValue", *plRet);
+		if(*plRet!=S_OK)
+			hRes = *plRet;
+	}
+
+cleanup:
+	if(psaGateway)
+	{
+		SafeArrayUnaccessData(psaGateway);
+		SafeArrayDestroy(psaGateway);
+	}
+	if(psaMetric)
+	{
+		SafeArrayUnaccessData(psaMetric);
+		SafeArrayDestroy(psaMetric);
+	}
+	return hRes;
 }
 
+/*************************************************************************
+ * Method:    		SetDns
+ * Description:		设置DNS
+ * ParameterList:	LPBYTE lpszDns, int nCount, LONG *plRet
+ * Parameter:       lpszDns:dns字符串数组，字符串数组长度为260，使用前需转换为LPCWSTR，通过指针偏移(MAX_PATH*sizeof(wchar_t)*i)访问字符串数组元素
+ * Parameter:       nCount:DNS个数
+ * Parameter:       plRet:返回值，成功返回0，失败返回相应错误值(WBEMSTATUS枚举类型，在WbemCli.h文件定义)
+ * Return Value:	HRESULT
+ * Date:        	2013:10:06 22:32:16
+ * Author:			LIng
+ * CopyRight:		Copyright (C) 2013
+ ************************************************************************/
+HRESULT CAdapterCfgObj::SetDns(LPBYTE lpszDns, int nCount, LONG *plRet /*= NULL*/)
+{
+	HRESULT hRes = S_FALSE;
+	CAdapterCfgObj adaMethod;
+	CAdapterCfgObj adaParam;
+	wchar_t szMethod[] = L"SetDNSServerSearchOrder";
+	hRes = GetInMethod(adaMethod, m_pServices, szMethod);
+	if(FAILED(hRes))
+		return hRes;
+	hRes = adaMethod.SpwanInstanceObject(adaParam);
+	if(FAILED(hRes))
+		return hRes;
+	VARIANT vtDns = {0};
+	SAFEARRAYBOUND saBoundDns = {0};
+	SAFEARRAY *psaDns = NULL;
+	LPBYTE pDns = lpszDns;
+	if(pDns==NULL)
+	{
+		vtDns.vt = VT_NULL;
+	}
+	else
+	{
+		saBoundDns.cElements = nCount;
+		saBoundDns.lLbound = 0;
+		psaDns = SafeArrayCreate(VT_BSTR, 1, &saBoundDns);
+		if(!psaDns)
+			goto cleanup;
+		for(int i=0; i<nCount; i++)
+		{
+			((BSTR*)psaDns->pvData)[i] = SysAllocString((LPCWSTR)pDns);
+			pDns+=(MAX_PATH*sizeof(wchar_t));
+		}
+		vtDns.vt = VT_BSTR | VT_ARRAY;
+		vtDns.parray = psaDns;
+	}
+	hRes = adaParam.Put(L"DNSServerSearchOrder", &vtDns, 0);
+	if(FAILED(hRes))
+		goto cleanup;
+	if(plRet==NULL)
+	{
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam);
+	}
+	else
+	{
+		CAdapterCfgObj adaRet;
+		*plRet = 64;
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam, &adaRet);
+		adaRet.GetLONG(L"ReturnValue", *plRet);
+		if(*plRet!=S_OK)
+			hRes = *plRet;
+	}
+cleanup:
+	if(psaDns)
+	{
+		SafeArrayUnaccessData(psaDns);
+		SafeArrayDestroy(psaDns);
+	}
+	return hRes;
+}
+
+/*************************************************************************
+ * Method:    		EnableDHCP
+ * Description:		自动获取IP、DNS模式
+ * ParameterList:	LONG plRet
+ * Parameter:       plRet:返回值，成功返回0，失败返回相应错误值(WBEMSTATUS枚举类型，在WbemCli.h文件定义)
+ * Return Value:	HRESULT
+ * Date:        	2013:10:06 22:30:45
+ * Author:			LIng
+ * CopyRight:		Copyright (C) 2013
+ ************************************************************************/
 HRESULT CAdapterCfgObj::EnableDHCP(LONG *plRet /*= NULL*/)
 {
-	return S_FALSE;
-}
+	HRESULT hRes = S_FALSE;
+	CAdapterCfgObj adaMethod;
+	CAdapterCfgObj adaParam;
+	wchar_t szMethod[] = L"EnableDHCP";
+	hRes = SetDns(NULL, 0, plRet);
+	if(FAILED(hRes))
+		return hRes;
+	hRes = GetInMethod(adaMethod, m_pServices, szMethod);
+	if(FAILED(hRes))
+		return hRes;
+	if(plRet==NULL)
+	{
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam);
+	}
+	else
+	{
+		CAdapterCfgObj adaRet;
+		*plRet = 64;
+		hRes = ExecInMethod(m_pServices, szMethod, &adaParam, &adaRet);
+		adaRet.GetLONG(L"ReturnValue", *plRet);
+		if(*plRet!=S_OK)
+			hRes = *plRet;
+	}
 
-HRESULT CAdapterCfgObj::SetDnsType(BOOL bAuto /*= TRUE*/)
-{
-	return S_FALSE;
-}
-HRESULT CAdapterCfgObj::SetDns(LPCWSTR *lpszDns, int &nDnsCount, LONG *plRet /*= NULL*/)
-{
-	return S_FALSE;
+	return hRes;
 }
 // CAdapterCfgObj
 //////////////////////////////////////////////////////////////////////////
