@@ -4,7 +4,7 @@
 		<VerticalLayout name="ipconfig_setting" minwidth="320" bordersize="1" bordercolor="FFE0E0E0" >
 			<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="5" />
-				<Label name="setting_list_text" width="80" />
+				<Label name="ipconfig_setting_list_text" width="80" />
 				<Control width="3" />
 				<Combo name="ipconfig_solution" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
 				</Combo>
@@ -93,16 +93,16 @@
 				<!--网卡描述-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
-					<Label name="ipconfig_idesc_text" width="100" />
-					<Edit name="ipconfig_idesc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" hscrollbar="true"/>
+					<Label name="ipconfig_i_desc_text" width="100" />
+					<Edit name="ipconfig_i_desc_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" hscrollbar="true"/>
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />
 				<!--适配器类型-->
 				<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
 					<Control width="15" />
-					<Label name="ipconfig_iftype_text" width="100" />
-					<Edit name="ipconfig_iftype_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
+					<Label name="ipconfig_i_type_text" width="100" />
+					<Edit name="ipconfig_i_type_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true" />
 					<Control width="2" />
 				</HorizontalLayout>
 				<Control height="3" />

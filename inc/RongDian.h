@@ -5,6 +5,10 @@ const DWORD			 kDefBackground = 0xFF32506E;
 const DWORD			 kDefBkColor	= 0x00FFFFFF;
 const DWORD			 kTextColor		= 0xFFE0E0E0;
 
+// App Signature
+const wchar_t* const kAdminSignature			= L"RongDianTools_Admin";
+const wchar_t* const kUserSignature				= L"RongDianTools_User";
+
 // Frame Class
 const wchar_t* const kRDToolsClass				= L"RDTools_Class";
 const wchar_t* const kRDToolsTray_Class			= L"RDTrayIcon_Class";

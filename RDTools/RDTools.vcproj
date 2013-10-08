@@ -327,6 +327,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\RDGlobal.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\RDTools.h"
 					>
 				</File>

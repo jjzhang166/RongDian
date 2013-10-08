@@ -85,8 +85,8 @@ const int				PREVIEW_HEIGHT		= 100;
 
 typedef enum _tagSNAPSHOT_MODE
 {
-	SNAPSHOT_FULLSCREEN = 0,
-	SNAPSHOT_MAGNIFIER
+	SNAPSHOT_FULLSCREEN = 0, // 启动参数: SnapShot.exe -m f
+	SNAPSHOT_MAGNIFIER  // 启动参数: SnapShot.exe -m m(默认方式)
 } SNAPSHOT_MODE, *PSNAPSHOT_MODE, *LPSNAPSHOT_MODE;
 
 class WinInfo
@@ -196,7 +196,7 @@ int					g_nSnapShotScale = 4;
 int					g_nSnapShotOffset = 20;
 BOOL				g_bRecordColor = FALSE;
 
-int					g_nSnapShotMode = SNAPSHOT_MAGNIFIER;
+SNAPSHOT_MODE		g_nSnapShotMode = SNAPSHOT_MAGNIFIER;
 HWND				g_hInvoker = NULL;
 wchar_t				g_szSnapShotPath[1024] = { 0 };
 wchar_t				g_szSnapShotFile[1024] = { 0 };

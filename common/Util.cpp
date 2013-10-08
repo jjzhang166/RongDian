@@ -412,6 +412,14 @@ cleanup:
 	return bIsAdminUser;
 }
 
+BOOL Utility::RunAsAdmin()
+{
+	WCHAR szPath[MAX_PATH]; 
+	GetModuleFileName(NULL, szPath, _countof(szPath));
+
+	return TRUE;
+}
+
 BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 {
 	BOOL bRet = TRUE;

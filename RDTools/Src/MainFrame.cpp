@@ -14,7 +14,7 @@ const wchar_t* const kCloseBtn = L"closebtn";
 const wchar_t* const kFrameContainer = L"frame_container";
 const wchar_t* const kFrameTitle = L"frame_title";
 const wchar_t* const kFrameStatus = L"frame_status";
-const wchar_t* const kTrayTip = L"tray_tip";
+
 // System Menu
 const wchar_t* const kMenuAbout = L"menu_about";
 const wchar_t* const kMenuHelp = L"menu_help";
@@ -22,7 +22,6 @@ const wchar_t* const kMenuShow = L"menu_show";
 const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
-
 const wchar_t* const kTabsHide = L"tab_hide";
 const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
@@ -160,9 +159,9 @@ void CMainFrame::InitWindow()
 	SetCoderOwner(m_hWnd, &m_PaintManager);
 	SetFinderOwner(m_hWnd, &m_PaintManager);
 	SetFormatterOwner(m_hWnd,&m_PaintManager);
-	SetIPConfigOwner(m_hWnd,&m_PaintManager);
-	SetHostAdminOwner(m_hWnd,&m_PaintManager);
-	SetTidyOwner(m_hWnd,&m_PaintManager);
+	SetIPConfigOwner(m_hWnd, &m_PaintManager);
+	SetHostAdminOwner(m_hWnd, &m_PaintManager);
+	SetTidyOwner(m_hWnd, &m_PaintManager);
 
 	HICON hIcon = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, TRUE, (LPARAM)hIcon);

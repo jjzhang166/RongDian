@@ -37,10 +37,6 @@ BOOL IHostAdmin::SetHostAdminLang(LPCWSTR lpszLang)
 {
 	if(!m_pHostAdminManager)
 		return FALSE;
-	memset(m_szHandleText, 0, sizeof(m_szHandleText));
-	memset(m_szNoHandleText, 0, sizeof(m_szNoHandleText));
-	Utility::GetINIStr(lpszLang, LS_MSG, kHandleText, m_szHandleText);
-	Utility::GetINIStr(lpszLang, LS_MSG, kNoHandleText, m_szNoHandleText);
 
 SET_CONTROL_BEGIN(m_pHostAdminManager, lpszLang, LS_HOSTADMINPANEL)
 	SET_CONTROL_TEXT2(kHostPathText)

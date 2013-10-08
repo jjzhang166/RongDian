@@ -22,6 +22,4 @@ public:
 	CButtonUI* m_pHostOpenBtn;
 	CButtonUI* m_pHostBackupBtn;
 	CButtonUI* m_pHostNewGroupBtn;
-	wchar_t m_szHandleText[1024];
-	wchar_t m_szNoHandleText[1024];
 };

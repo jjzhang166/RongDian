@@ -11,6 +11,7 @@ public:
 	void			SetPickerOwner(HWND hWnd, CPaintManagerUI *pManager) { hPickerOwner = hWnd; pPickerManager = pManager; };
 	BOOL			InitPicker();
 	BOOL			SetPickerLang(LPCWSTR lpszLang);
+
 	BOOL			SetColorInfo(POINT ptCursor);
 	BOOL			SetColorPicker(DWORD dwColor, BOOL bRecord = TRUE, BOOL bAuto = TRUE);
 	BOOL			OpenColorDlg();

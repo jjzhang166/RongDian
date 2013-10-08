@@ -206,6 +206,7 @@
 #define SET_CONTROL_END() \
 	}
 
+//////////////////////////////////////////////////////////////////////////
 #define FIND_CONTROL_BY_ID(ctl, cls, man, id) \
 	assert(man!=NULL);\
 	ctl = static_cast<cls *>(man->FindControl(id));
@@ -213,3 +214,27 @@
 #define FIND_CONTROL_BY_PT(ctl, cls, man, pt) \
 	assert(man!=NULL);\
 	ctl = static_cast<cls *>(man->FindControl(pt));
+
+//////////////////////////////////////////////////////////////////////////
+#define ASSOC_BEGIN() \
+	{ \
+		LPMSG_INFO lpLangIDs = g_LangIDs; \
+		assert(lpLangIDs!=NULL); \
+		memset(lpLangIDs, 0, sizeof(MSG_INFO)*MAX_MSG_ID);
+
+#define ASSOC_LANG(rid, sid, section) \
+		if(rid<MAX_MSG_ID) \
+		{ \
+			lpLangIDs[rid].nId = rid; \
+			lpLangIDs[rid].pId = sid; \
+			lpLangIDs[rid].pSection = section; \
+		} 
+
+#define ASSOC_END() \
+	}
+
+#define GET_ASSOC_ID(ids, rid) \
+	(rid)<(MAX_MSG_ID) ? ids[rid].pId : L""
+
+#define GET_ASSOC_SECTION(ids, rid) \
+	(rid)<(MAX_MSG_ID) ? ids[rid].pSection : L""

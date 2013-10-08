@@ -1,0 +1,26 @@
+RDTools工程添加字符串映射方法：
+1、定义const字符串id：
+例：
+const wchar_t* const kMsgErr						= L"msg_err";
+2、在枚举类型_tagLANG_ID(在constant.h文件定义)相对应的段中添加LANG_ID
+例：
+上面的msg_err属于"Msg Section"段，找到”Msg Section“段，然后在此段最后添加定义：
+// Msg Section --> 新段需要添加Section名注释，此名对应"lang_en.ini"中的Section名
+LANG_ERR = 30，
+因为msg_err属于"Msg Section"段的第一个LANG_ID，所以需要为此段LANG_ID定义一个起始值，作为LANG_ID段的起始值，一般一个段预设50个ID，可根据实际需求增大
+3、关联const字符串id与LANG_ID
+打开RDTools.cpp文件，在AssocLangIDs()函数中添加宏绑定，在宏ASSOC_BEGIN()与宏ASSOC_END()之间添加关联宏ASSOC_LANG
+关联宏ASSOC_LANG参数分别是：
+rid为LANG_ID
+sid为const字符串id
+section为const字符串所在"lang_en.ini"文件的section字符串(也是一个const字符串)
+
+ASSOC_BEGIN()
+	ASSOC_LANG(LANG_NO, kMsgErr, LS_MSG) // 关联msg_err字符串id
+ASSOC_END()
+
+使用情景：
+消息框中使用
+int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
+
+若想用来设置控件的文本，可考虑使用SET_CONTROL_XXX宏
