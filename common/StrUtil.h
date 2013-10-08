@@ -48,5 +48,7 @@ int get_coder(const char *str);
 int wcstrim(wchar_t *str, int len);
 
 int strtrim(char *str, int len);
+
+bool is_wsubstr(const wchar_t* wStr,const wchar_t* wSubStr);
 }
 

@@ -18,8 +18,8 @@
 			</HorizontalLayout>
 			<Control height="5" />
 			<VerticalLayout height="136" bordersize="1" bordercolor="FFE0E0E0" >
-				<CheckBox name="ipconfig_ip_auto" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="ipconfig_ip_type" selected="true" />
-				<CheckBox name="ipconfig_ip_manual" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="ipconfig_ip_type" />
+				<CheckBox name="ipconfig_ip_auto" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\radio_sel.png' dest='6,6,19,19'" normalimage="file='default\radio_non.png' dest='6,6,19,19'" align="left" group="ipconfig_ip_type" selected="true" />
+				<CheckBox name="ipconfig_ip_manual" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\radio_sel.png' dest='6,6,19,19'" normalimage="file='default\radio_non.png' dest='6,6,19,19'" align="left" group="ipconfig_ip_type" />
 				<VerticalLayout name="ipconfig_ip_manual_setting" >
 					<Control height="3" />
 					<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
@@ -46,8 +46,8 @@
 			</VerticalLayout>
 			<Control height="15" />
 			<VerticalLayout height="120" bordersize="1" bordercolor="FFE0E0E0" >
-				<CheckBox name="ipconfig_dns_auto" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="ipconfig_dns_type" selected="true" />
-				<CheckBox name="ipconfig_dns_manual" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\checked_sel.png' dest='6,6,19,19'" normalimage="file='default\checked_non.png' dest='6,6,19,19'" align="left" group="ipconfig_dns_type" />
+				<CheckBox name="ipconfig_dns_auto" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\radio_sel.png' dest='6,6,19,19'" normalimage="file='default\radio_non.png' dest='6,6,19,19'" align="left" group="ipconfig_dns_type" selected="true" />
+				<CheckBox name="ipconfig_dns_manual" height="25" textpadding="25,5,0,0" textcolor="#FF324F6D" hottextcolor="#FF0000FF" selectedtextcolor="#FF324F6D" disabledtextcolor="#FFbac0c5" selectedimage="file='default\radio_sel.png' dest='6,6,19,19'" normalimage="file='default\radio_non.png' dest='6,6,19,19'" align="left" group="ipconfig_dns_type" />
 				<VerticalLayout name="ipconfig_dns_manual_setting" >
 					<Control height="3" />
 					<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >

@@ -13,15 +13,20 @@ public:
 
 	void			OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled);
 	void			OnHostAdminItemSelect(TNotifyUI& msg);
-
+	BOOL			CreateGroup(CContainerUI* pParentContainer);
+	BOOL			CreateGroupRow(CContainerUI* pParentContainer,int groupIndex);
 public:
 	HWND m_hHostAdminOwner;
 	CPaintManagerUI *m_pHostAdminManager;
-
+	wchar_t m_szHandleText[1024];
+	wchar_t m_szNoHandleText[1024];
+	
 	CEditUI*   m_pHostPathEdit;
 	CButtonUI* m_pHostOpenBtn;
 	CButtonUI* m_pHostBackupBtn;
 	CButtonUI* m_pHostNewGroupBtn;
-	wchar_t m_szHandleText[1024];
-	wchar_t m_szNoHandleText[1024];
+	CVerticalLayoutUI* m_pHostGroupContainerLayout;
+
+	int m_groupIndex;
+	int m_rowIndex;
 };
