@@ -2,7 +2,10 @@
 
 #include "constant.h"
 
-HINSTANCE			g_hInstance;
+HANDLE				g_hUserSignature = NULL;
+HANDLE				g_hAdminSignature = NULL;
+BOOL				g_bActiveRunAsAdminThread = FALSE;
+HINSTANCE			g_hInstance = NULL;
 wchar_t				g_szModule[1024] = {0};
 wchar_t				g_szAppName[1024] = {0};
 wchar_t				g_szAppVer[1024] = {0};

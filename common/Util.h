@@ -53,7 +53,7 @@ BOOL IsAdminPrivilege();
 
 BOOL IsAdminUser();
 
-BOOL RunAsAdmin();
+BOOL RunAsAdmin(LPCWSTR lpszPath, LPCWSTR lpszArgvs);
 
 BOOL GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize);
 

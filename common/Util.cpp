@@ -412,12 +412,29 @@ cleanup:
 	return bIsAdminUser;
 }
 
-BOOL Utility::RunAsAdmin()
+BOOL Utility::RunAsAdmin(LPCWSTR lpszPath, LPCWSTR lpszArgvs)
 {
-	WCHAR szPath[MAX_PATH]; 
-	GetModuleFileName(NULL, szPath, _countof(szPath));
+	if(!PathFileExists(lpszPath))
+		return FALSE;
+	wchar_t szPath[2048] = {0};
+	wchar_t szParams[2048] = {0};
+	wcscpy(szPath, lpszPath);
+	if(lpszArgvs)
+		wcscpy(szParams, lpszArgvs);
+	SHELLEXECUTEINFO ShellInfo; 
+	memset(&ShellInfo, 0, sizeof(ShellInfo)); 
+	ShellInfo.cbSize = sizeof(ShellInfo);
+	ShellInfo.hwnd = NULL; 
+	ShellInfo.lpVerb = _T("runas"); 
+	ShellInfo.lpFile = szPath; 
+	ShellInfo.lpParameters = szParams;
+	ShellInfo.nShow = SW_SHOWNORMAL; 
+	ShellInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+	BOOL bResult = ShellExecuteEx(&ShellInfo);
+	if(bResult)
+		CloseHandle(ShellInfo.hProcess);
 
-	return TRUE;
+	return bResult;
 }
 
 BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)

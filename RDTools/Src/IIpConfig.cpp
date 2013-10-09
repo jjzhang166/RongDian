@@ -49,6 +49,22 @@ const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
 const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
 const wchar_t* const kIPConfigNewSolution = L"ipconfig_new_solution";
 
+DWORD WINAPI RunAsAdminThread(LPVOID lpData)
+{
+	if(g_bActiveRunAsAdminThread)
+		return 0;
+	g_bActiveRunAsAdminThread = TRUE;
+	Sleep(1000);
+	wchar_t szFileName[2048] = {0};
+	GetModuleFileName(NULL, szFileName, _countof(szFileName));
+	if(Utility::RunAsAdmin(szFileName, L"-a"))
+	{
+		if(g_pMainFrame)
+			SendMessage(g_pMainFrame->GetHWND(), WM_CLOSE, 0, 0);
+	}
+	return 0;
+}
+
 IIPConfig::IIPConfig()
 {
 	m_hIPConfigOwner = NULL;
@@ -229,7 +245,16 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if (sCtrlName == kIPConfigApplyBtn) // 应用方案
 	{
-		OnApplySolution();
+		if(!Utility::IsAdminPrivilege())
+		{
+			DWORD dwThreadId = 0;
+			HANDLE hThread = CreateThread(NULL, 0, RunAsAdminThread, 0, 0, &dwThreadId);
+			CloseHandle(hThread);
+		}
+		else
+		{
+			OnApplySolution();
+		}
 		bHandled = TRUE;
 	}
 }

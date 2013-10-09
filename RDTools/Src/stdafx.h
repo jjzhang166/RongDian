@@ -145,6 +145,9 @@ int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
 #include "ITidy.h"
 #include "MainFrame.h"
 
+extern HANDLE					g_hUserSignature;
+extern HANDLE					g_hAdminSignature;
+extern BOOL						g_bActiveRunAsAdminThread;
 extern HINSTANCE				g_hInstance;
 extern wchar_t					g_szModule[1024];
 extern wchar_t					g_szAppName[1024];

@@ -14,6 +14,7 @@ const wchar_t* const kCloseBtn = L"closebtn";
 const wchar_t* const kFrameContainer = L"frame_container";
 const wchar_t* const kFrameTitle = L"frame_title";
 const wchar_t* const kFrameStatus = L"frame_status";
+const wchar_t* const kFrameAdminTip = L"frame_admin_tip";
 
 // System Menu
 const wchar_t* const kMenuAbout = L"menu_about";
@@ -92,7 +93,16 @@ SET_CONTROL_BEGIN((&m_PaintManager), lpszLang, LS_MAINFRAME)
 	SET_CONTROL_TIP2(kMenuBtn)
 	SET_CONTROL_TIP2(kMinBtn)
 	SET_CONTROL_TIP2(kCloseBtn)
-	SET_TITLE_TEXT2(m_hWnd, kFrameTitle)
+	if(Utility::IsAdminPrivilege())
+	{
+		wchar_t szAdminTip[1024] = {0};
+		Utility::GetINIStr(lpszLang, LS_MAINFRAME, kFrameAdminTip, szAdminTip);
+		SET_TITLE_TEXT3(m_hWnd, kFrameTitle, szAdminTip)
+	}
+	else
+	{
+		SET_TITLE_TEXT2(m_hWnd, kFrameTitle)
+	}
 	SET_CONTROL_TEXT2(kFrameStatus)
 SET_CONTROL_END()
 	// Status Bar
@@ -153,15 +163,6 @@ void CMainFrame::InitWindow()
 	}
 
 	DragAcceptFiles(m_hWnd, TRUE); // Ìí¼ÓÍÏ×§Ö§³Ö
-
-	SetAboutOwner(m_hWnd, &m_PaintManager);
-	SetPickerOwner(m_hWnd, &m_PaintManager);
-	SetCoderOwner(m_hWnd, &m_PaintManager);
-	SetFinderOwner(m_hWnd, &m_PaintManager);
-	SetFormatterOwner(m_hWnd,&m_PaintManager);
-	SetIPConfigOwner(m_hWnd, &m_PaintManager);
-	SetHostAdminOwner(m_hWnd, &m_PaintManager);
-	SetTidyOwner(m_hWnd, &m_PaintManager);
 
 	HICON hIcon = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, TRUE, (LPARAM)hIcon);
@@ -288,7 +289,8 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		OnTidyClick(msg, bHandle);
 	if(!bHandle)
 		SelectPanel(sCtrlName);
-	WindowImplBase::OnClick(msg);
+	if(!bHandle)
+		WindowImplBase::OnClick(msg);
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
@@ -609,6 +611,8 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
 	sCurTab = pPanelContents->GetUserData();
 	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab.GetData())
+	if(!pCurTab)
+		return FALSE;
 	sCurLayout = pCurTab->GetUserData();
 	FIND_CONTROL_BY_ID(pCurLayout, CContainerUI, (&m_PaintManager), sCurLayout.GetData())
 	if(!pCurTab || !pCurLayout)
@@ -685,6 +689,15 @@ BOOL CMainFrame::InitPanels()
 	wcscpy(panel.szDesc, szDesc);
 	AddPanel(&panel);
 
+	SetAboutOwner(m_hWnd, &m_PaintManager);
+	SetPickerOwner(m_hWnd, &m_PaintManager);
+	SetCoderOwner(m_hWnd, &m_PaintManager);
+	SetFinderOwner(m_hWnd, &m_PaintManager);
+	SetFormatterOwner(m_hWnd,&m_PaintManager);
+	SetIPConfigOwner(m_hWnd, &m_PaintManager);
+	SetHostAdminOwner(m_hWnd, &m_PaintManager);
+	SetTidyOwner(m_hWnd, &m_PaintManager);
+
 	InitAbout();
 	InitPicker();
 	InitCoder((IListCallbackUI*)this);
@@ -692,7 +705,7 @@ BOOL CMainFrame::InitPanels()
 	InitFormatter();
 	InitIPConfig();
 	InitHostAdmin();
-	InitTidy(NULL);
+	InitTidy((IListCallbackUI*)this);
 	return bRet;
 }
 

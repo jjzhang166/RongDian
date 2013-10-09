@@ -8,16 +8,19 @@ const wchar_t*	const	ARGS_ADMIN			= L"-a";
 const wchar_t*	const	ARGS_LONG_ADMIN		= L"--admin";
 const wchar_t*	const	ARGS_ADMIN_DESC		= L"RDTools Run as Administrator Mode";
 
-BOOL CheckInstance()
+
+DWORD WINAPI UserSignatureThread(LPVOID /*lpData*/)
 {
-	BOOL bAdminMode = FALSE;
-	if(g_OptOptions.isSet(ARGS_ADMIN))
-		bAdminMode = TRUE;
-	else if(g_OptOptions.isSet(ARGS_LONG_ADMIN))
-		bAdminMode = TRUE;
-	//HANDLE hUserSignature = CreateEvent(NULL, TRUE, 0, kUserSignature);
-	//HANDLE hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
-	//if(bAdminMode && hAdminSignature && hUserSignature)
+	if(!g_hUserSignature)
+		return 0;
+	WaitForSingleObject(g_hUserSignature, INFINITE);
+	if(g_pMainFrame)
+		SendMessage(g_pMainFrame->GetHWND(), WM_CLOSE, 0, 0);
+	return 0;
+}
+
+BOOL ActiveInstance()
+{
 	HWND hHwnd = ::FindWindow(kRDToolsClass, NULL);
 	if(!hHwnd)
 	{
@@ -33,9 +36,110 @@ BOOL CheckInstance()
 		data.cbData = 0;
 		data.lpData = NULL;
 		::SendMessage(hHwnd, WM_COPYDATA, (WPARAM)(HWND)hHwnd, (LPARAM)(LPVOID)&data);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL CheckInstance()
+{
+	BOOL bAdminMode = FALSE;
+	BOOL bAlreadyExist = FALSE;
+	BOOL bIsAdmin = Utility::IsAdminPrivilege();
+	if(g_OptOptions.isSet(ARGS_ADMIN))
+		bAdminMode = TRUE;
+	else if(g_OptOptions.isSet(ARGS_LONG_ADMIN))
+		bAdminMode = TRUE;
+	if(!bIsAdmin && bAdminMode) // 管理员模式，但当前进程无管理员权限
+	{
+		MessageBox(NULL, L"Admin Mode Need Admin Privilege.", L"Error", MB_OK);
 		return FALSE;
 	}
-	return TRUE;
+	if(bIsAdmin)
+		bAdminMode = TRUE;
+	if(!bAdminMode) // 普通用户模式
+	{
+		g_hUserSignature = CreateEvent(NULL, TRUE, 0, kUserSignature);
+		int nErr = GetLastError();
+		if(nErr==0) // 创建用户模式标识成功
+		{
+			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
+			nErr = GetLastError();
+			if(nErr==0) // 创建管理员模式标识成功，说明系统不存在多个RDTools
+			{
+				// 关闭管理员模式标识，进入启动RDTools流程
+				CloseHandle(g_hAdminSignature);
+				g_hAdminSignature = NULL;
+				DWORD dwThreadID = 0;
+				HANDLE hThread = CreateThread(NULL, 0, UserSignatureThread, NULL, 0, &dwThreadID);
+				CloseHandle(hThread);
+				return TRUE;
+			}
+			else if(nErr==ERROR_ALREADY_EXISTS) // 已经存在管理员模式的RDTools
+			{
+				// 关闭普通用户模式、管理员模式标识，激活管理员模式RDTools，并退出自己
+				CloseHandle(g_hAdminSignature);
+				CloseHandle(g_hUserSignature);
+				g_hAdminSignature = NULL;
+				g_hUserSignature = NULL;
+				ActiveInstance();
+				return FALSE;
+			}
+			CloseHandle(g_hUserSignature);
+			g_hUserSignature = NULL;
+			MessageBox(NULL, L"Create User Signature Error!", L"Error", MB_OK);
+			return FALSE; // 未知错误则退出自己
+		}
+		else if(nErr==ERROR_ALREADY_EXISTS)
+		{
+			CloseHandle(g_hUserSignature);
+			g_hUserSignature = NULL;
+			ActiveInstance();
+			return FALSE;
+		}
+		MessageBox(NULL, L"Create User Signature Error!", L"Error", MB_OK);
+		return FALSE; // 未知错误则退出自己
+	}
+	else // 管理员模式
+	{
+		g_hUserSignature = CreateEvent(NULL, TRUE, 0, kUserSignature);
+		int nErr = GetLastError();
+		if(nErr==0) // 创建用户模式标识成功，即不存在用户模式RDTools
+		{
+			CloseHandle(g_hUserSignature);
+			g_hUserSignature = NULL;
+			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
+			nErr = GetLastError();
+			if(nErr==0)
+				return TRUE; // 成功创建管理员模式标识，进入启动RDTools流程
+			if(nErr==ERROR_ALREADY_EXISTS) // 已经存在管理员模式RDTools，，激活管理员模式RDTools，并退出自己
+			{
+				CloseHandle(g_hAdminSignature);
+				g_hAdminSignature = NULL;
+				ActiveInstance();
+				return FALSE;
+			}
+			CloseHandle(g_hAdminSignature);
+			g_hAdminSignature = NULL;
+			MessageBox(NULL, L"Create Admin Signature Error!", L"Error", MB_OK);
+			return FALSE; // 未知错误则退出自己
+		}
+		else if(nErr==ERROR_ALREADY_EXISTS)
+		{
+			SetEvent(g_hUserSignature);
+			Sleep(1000);
+			CloseHandle(g_hUserSignature);
+			g_hUserSignature = NULL;
+			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
+			nErr = GetLastError();
+			if(nErr==0)
+				return TRUE; // 成功创建管理员模式标识，进入启动RDTools流程
+			MessageBox(NULL, L"Create Admin Signature Error!", L"Error", MB_OK);
+			return FALSE;
+		}
+	}
+	
+	return FALSE;
 }
 
 BOOL IsImageFile(LPCWSTR lpszFileName)
@@ -115,7 +219,7 @@ int EscapeSQLite(CDuiString strKeyWord)
 
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 {
-#pragma message("调用\"RDMsgBox\"前确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始话消息.")
+#pragma message("调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
 	int nRet = MB_OK;
 	wchar_t szErr[1024], szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
@@ -406,6 +510,17 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 
 	CLangManager::Release();
 	CSkinManager::Release();
+
+	if(g_hUserSignature)
+	{
+		CloseHandle(g_hUserSignature);
+		g_hUserSignature = NULL;
+	}
+	if(g_hAdminSignature)
+	{
+		CloseHandle(g_hAdminSignature);
+		g_hAdminSignature = NULL;
+	}
 
 	LOG4CPLUS_INFO(g_Logger, "RDTools Quit.");
 
