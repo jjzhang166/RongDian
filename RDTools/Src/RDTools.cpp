@@ -228,6 +228,19 @@ int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 	return nRet;
 }
 
+BOOL ShowLoading()
+{
+	if(g_pMainFrame)
+		return g_pMainFrame->ShowLoading();
+	return FALSE;
+}
+
+void CancelLoading()
+{
+	if(g_pMainFrame)
+		return g_pMainFrame->CancelLoading();
+}
+
 BOOL InitPath()
 {
 	wchar_t szModule[1024];

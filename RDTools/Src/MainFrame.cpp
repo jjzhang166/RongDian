@@ -12,9 +12,12 @@ const wchar_t* const kFormatBtn = L"formatBtn";
 const wchar_t* const kRestoreBtn = L"restorebtn";
 const wchar_t* const kCloseBtn = L"closebtn";
 const wchar_t* const kFrameContainer = L"frame_container";
+const wchar_t* const kFrameTitleContainer = L"frame_title_container";
+const wchar_t* const kFrameFooterContainer = L"frame_footer_container";
 const wchar_t* const kFrameTitle = L"frame_title";
 const wchar_t* const kFrameStatus = L"frame_status";
 const wchar_t* const kFrameAdminTip = L"frame_admin_tip";
+const wchar_t* const kFrameLoading = L"frame_loading";
 
 // System Menu
 const wchar_t* const kMenuAbout = L"menu_about";
@@ -49,6 +52,7 @@ CMainFrame::CMainFrame()
 	pPanelTabs = NULL;
 	pFrameContainer = NULL;
 	pPanelContents = NULL;
+	pLoadindFrame = NULL;
 	pStatusCtrl = NULL;
 	Open(g_szPanelsXml);
 	lpLoader = NULL;
@@ -181,6 +185,7 @@ void CMainFrame::InitWindow()
 
 	FIND_CONTROL_BY_ID(pPanelTabs, CContainerUI, (&m_PaintManager), kPanelTabs)
 	FIND_CONTROL_BY_ID(pPanelContents, CContainerUI, (&m_PaintManager), kPanelContents)
+	FIND_CONTROL_BY_ID(pLoadindFrame, CVerticalLayoutUI, (&m_PaintManager), kFrameLoading)
 
 	// Init Panel
 	InitPanels();
@@ -265,11 +270,13 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	}
 	else if(sCtrlName==kMenuBtn)
 	{
-		CDuiRect rect = msg.pSender->GetPos();
-		DuiLib::CPoint point(rect.left, rect.bottom);
-		ClientToScreen(m_hWnd, &point);
-		CMenuUI *pMenu = new CMenuUI(m_hWnd);
-		pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
+		ShowLoading();
+
+		//CDuiRect rect = msg.pSender->GetPos();
+		//DuiLib::CPoint point(rect.left, rect.bottom);
+		//ClientToScreen(m_hWnd, &point);
+		//CMenuUI *pMenu = new CMenuUI(m_hWnd);
+		//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 	}
 	if(!bHandle)
 		OnAboutClick(msg, bHandle);
@@ -408,7 +415,8 @@ LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+	lRes = WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+	return lRes;
 }
 
 LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
@@ -424,6 +432,14 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 		break;
 	}
 	return 0;
+}
+
+LRESULT CMainFrame::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	LRESULT lRes = __super::OnSize(uMsg, wParam, lParam, bHandled);
+	if(pLoadindFrame && pLoadindFrame->IsVisible())
+		ShowLoading();
+	return lRes;
 }
 
 #if 0
@@ -845,4 +861,38 @@ BOOL CMainFrame::OnAppQuit()
 	}
 	PostMessage(WM_CLOSE, 0, 0);
 	return TRUE;
+}
+
+BOOL CMainFrame::ShowLoading()
+{
+	if(!pLoadindFrame || !pFrameContainer)
+		return FALSE;
+	int nTitleBar = 0, nFooter = 0;
+	CHorizontalLayoutUI *pTitleBar = NULL, *pFooter = NULL;
+	FIND_CONTROL_BY_ID(pTitleBar, CHorizontalLayoutUI, (&m_PaintManager), kFrameTitleContainer)
+	FIND_CONTROL_BY_ID(pFooter, CHorizontalLayoutUI, (&m_PaintManager), kFrameFooterContainer)
+	if(pTitleBar)
+		nTitleBar = pTitleBar->GetHeight();
+	if(pFooter)
+		nFooter = pFooter->GetHeight();
+	CControlUI *pRoot = m_PaintManager.GetRoot();
+	RECT rtClient;
+	GetClientRect(m_hWnd, &rtClient);
+	CDuiRect rtPos;
+	rtPos.left = pRoot->GetBorderSize();
+	rtPos.right = rtClient.right - pRoot->GetBorderSize();
+	rtPos.top = nTitleBar;
+	rtPos.bottom = rtClient.bottom - nFooter;
+	pLoadindFrame->SetPos(rtPos);
+	if(pLoadindFrame->IsVisible()==false)
+		pLoadindFrame->SetVisible();
+
+	return TRUE;
+}
+
+void CMainFrame::CancelLoading()
+{
+	if(!pLoadindFrame)
+		return;
+	pLoadindFrame->SetVisible(false);
 }

@@ -110,6 +110,8 @@ BOOL IsImageFile(LPCWSTR lpszFileName);
 BOOL IsCanTidy(LPCWSTR lpszLang);
 int EscapeSQLite(CDuiString strKeyWord);
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
+BOOL ShowLoading();
+void CancelLoading();
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是工具类文件的引用
