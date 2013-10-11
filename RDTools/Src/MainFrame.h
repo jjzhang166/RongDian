@@ -38,6 +38,7 @@ public:
 
 	LRESULT			HandleMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT			OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	//LRESULT			OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT			OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT			OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
@@ -57,12 +58,16 @@ public:
 	BOOL			OnActiveApp();
 	BOOL			OnAppQuit();
 
+	BOOL			ShowLoading();
+	void			CancelLoading();
+
 public:
 	CDuiString builder_xml_;
 	CDuiString resource_dir_;
 	CContainerUI *pFrameContainer;
 	CContainerUI *pPanelTabs;
 	CContainerUI *pPanelContents;
+	CVerticalLayoutUI *pLoadindFrame;
 	CControlUI *pStatusCtrl;
 	LPVOID lpLoader;
 };

@@ -33,6 +33,11 @@ const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // Ö÷´°Ìå
 const wchar_t* const kPanelsXml						= L"Panels.xml";
 const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; // 
 
+// ICON Name
+const wchar_t* const kMsgIconName					= L"RongDian.png";
+const wchar_t* const kImageArrow					= L"ZoomIn.png";
+const wchar_t* const kImageCross					= L"Cross.png";
+
 // Lang Section
 const wchar_t* const LS_SETTINGS					= L"Settings";
 const wchar_t* const LS_LANG						= L"Lang";
@@ -50,18 +55,15 @@ const wchar_t* const LS_HOSTADMINPANEL				= L"HostAdminPanel";
 const wchar_t* const LS_MSG							= L"Msg";
 const wchar_t* const LS_DUIMSG						= L"DuiMsg";
 
-// Color Picker Panel
+// Color Picker Panel(default's Panel)
 const wchar_t* const kLayoutPicker					= L"layout_picker";
 const wchar_t* const kXmlPicker						= L"Picker.xml";
 const wchar_t* const kTabPicker						= L"tab_picker";
 const wchar_t* const kPanelPicker					= L"panel_picker";
 const wchar_t* const kNamePicker					= L"name_picker";
 const wchar_t* const kDescPicker					= L"desc_picker";
-// 
-const wchar_t* const kImageArrow					= L"ZoomIn.png";
-const wchar_t* const kImageCross					= L"Cross.png";
 
-// About Panel
+// About Panel(default's Panel)
 const wchar_t* const kLayoutAbout					= L"layout_about";
 const wchar_t* const kXmlAbout						= L"About.xml";
 const wchar_t* const kTabAbout						= L"tab_about";
@@ -70,9 +72,9 @@ const wchar_t* const kNameAbout						= L"name_about";
 const wchar_t* const kDescAbout						= L"desc_about";
 
 // MSG
-const wchar_t* const kMsgIconName					= L"RongDian.png";
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgWarning					= L"msg_warning";
+const wchar_t* const kLoading						= L"msg_loading";
 const wchar_t* const kPluginErr						= L"plugin_err";
 const wchar_t* const kNoFoundErr					= L"nofound_err";
 const wchar_t* const kFolderTitle					= L"folder_title";
@@ -81,12 +83,16 @@ const wchar_t* const kHandleText					= L"handle_text";
 const wchar_t* const kNoHandleText					= L"nohandle_text";
 const wchar_t* const kInvalidPathErr				= L"invalid_path_err";
 const wchar_t* const kInvalidFinderErr				= L"invalid_finder_err";
-const wchar_t* const kInvalidFormatterErr			= L"invalid_foramtter_err";
+const wchar_t* const kInvalidFormatterErr			= L"invalid_formatter_err";
 const wchar_t* const kInvalidIPErr					= L"invalid_ipv4_err";
 const wchar_t* const kInvalidMaskErr				= L"invalid_subnet_mask_err";
 const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
 const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
+const wchar_t* const kInvalidName					= L"invalid_name";
+
+// SysTray
+const wchar_t* const kTrayTip						= L"tray_tip";
 
 // 
 const wchar_t* const kBackGround					= L"Background";
@@ -106,6 +112,45 @@ const wchar_t* const kDns2							= L"Dns2";
 #ifndef STRING_LENGTH
 #define 			 STRING_LENGTH					260
 #endif
+
+typedef enum _tagMSG_ID {
+	// DuiMsg
+	MSG_YES = 0,
+	MSG_NO,
+	MSG_OK,
+	MSG_RETRY,
+	MSG_CANCEL,
+	// Msg Section
+	MSG_ERR = 30,
+	MSG_WARNING,
+	MSG_LOADING,
+	MSG_PLUGIN_ERR,
+	MSG_NOFOUND_ERR,
+	MSG_FOLDER_TITLE,
+	MSG_STILL_WORKING,
+	MSG_HANDLE_TEXT,
+	MSG_NOHANDLE_TEXT,
+	MSG_INVALID_PATH,
+	MSG_FINDER_ERR,
+	MSG_FORMATTER_ERR,
+	MSG_IPV4_ERR,
+	MSG_MASK_ERR,
+	MSG_GATEWAY_ERR,
+	MSG_DNS_ERR,
+	MSG_DELETE_SOLUTION,
+	MSG_INVALID_NAME,
+	// End
+	MSG_END = 200
+} MSG_ID;
+
+const UINT MAX_MSG_ID = MSG_END + 1;
+
+typedef struct _tagMSG_INFO
+{
+	int nId;
+	LPCWSTR pId;
+	LPCWSTR pSection;
+} MSG_INFO, *PMSG_INFO, *LPMSG_INFO;
 
 typedef struct _tagPANEL_INFO
 {

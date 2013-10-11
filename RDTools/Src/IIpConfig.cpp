@@ -3,7 +3,7 @@
 #include <process.h>
 
 // 第一列
-const wchar_t* const kIPConfigSettingListText = L"setting_list_text";
+const wchar_t* const kIPConfigSettingListText = L"ipconfig_setting_list_text";
 const wchar_t* const kIPConfigSolutionList = L"ipconfig_solution";		
 const wchar_t* const kIPConfigNameText = L"ipconfig_s_name_text";
 const wchar_t* const kIPConfigNameEdit = L"ipconfig_s_name_edit";
@@ -38,8 +38,8 @@ const wchar_t* const kIPConfigCurrentGatewayText = L"ipconfig_i_netgate_text";
 const wchar_t* const kIPConfigCurrentDns1Text = L"ipconfig_i_dns_text";
 const wchar_t* const kIPConfigCurrentDns2Text = L"ipconfig_i_dns2_text";
 const wchar_t* const kIPConfigMacText = L"ipconfig_i_mac_text";
-const wchar_t* const kIPConfigCurrentAdapterTypeEdit = L"ipconfig_iftype_edit";
-const wchar_t* const kIPConfigCurrentDescEdit = L"ipconfig_idesc_edit";
+const wchar_t* const kIPConfigCurrentAdapterTypeEdit = L"ipconfig_i_type_edit";
+const wchar_t* const kIPConfigCurrentDescEdit = L"ipconfig_i_desc_edit";
 const wchar_t* const kIPConfigCurrentDhcpEdit = L"ipconfig_i_dhcp_edit";
 const wchar_t* const kIPConfigCurrentIPEdit = L"ipconfig_i_ip_edit";
 const wchar_t* const kIPConfigCurrentMaskEdit = L"ipconfig_i_mask_edit";
@@ -47,8 +47,23 @@ const wchar_t* const kIPConfigCurrentGatewayEdit = L"ipconfig_i_netgate_edit";
 const wchar_t* const kIPConfigCurrentDns1Edit = L"ipconfig_i_dns_edit";
 const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
 const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
-const wchar_t* const kIPConfigNewSolution = L"ipconfig_newsolution";
-const wchar_t* const kIPConfigInvalidName = L"ipconfig_invalidname";
+const wchar_t* const kIPConfigNewSolution = L"ipconfig_new_solution";
+
+DWORD WINAPI RunAsAdminThread(LPVOID lpData)
+{
+	if(g_bActiveRunAsAdminThread)
+		return 0;
+	g_bActiveRunAsAdminThread = TRUE;
+	Sleep(1000);
+	wchar_t szFileName[2048] = {0};
+	GetModuleFileName(NULL, szFileName, _countof(szFileName));
+	if(Utility::RunAsAdmin(szFileName, L"-a"))
+	{
+		if(g_pMainFrame)
+			SendMessage(g_pMainFrame->GetHWND(), WM_CLOSE, 0, 0);
+	}
+	return 0;
+}
 
 IIPConfig::IIPConfig()
 {
@@ -230,7 +245,16 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if (sCtrlName == kIPConfigApplyBtn) // 应用方案
 	{
-		OnApplySolution();
+		if(!Utility::IsAdminPrivilege())
+		{
+			DWORD dwThreadId = 0;
+			HANDLE hThread = CreateThread(NULL, 0, RunAsAdminThread, 0, 0, &dwThreadId);
+			CloseHandle(hThread);
+		}
+		else
+		{
+			OnApplySolution();
+		}
 		bHandled = TRUE;
 	}
 }
@@ -584,7 +608,7 @@ BOOL IIPConfig::OnSaveSolution()
 		wcscpy(addr.szDns2, m_pDns2Edit->GetText());
 	if(!table.Insert(&addr))
 	{
-		RDMsgBox(m_hIPConfigOwner, LS_IPCHANGERPANEL, kIPConfigInvalidName, LS_MSG, kMsgErr, MB_OK);
+		RDMsgBox(m_hIPConfigOwner, MSG_INVALID_NAME, MSG_ERR, MB_OK);
 		return FALSE;
 	}
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
@@ -616,7 +640,7 @@ BOOL IIPConfig::OnDelSolution()
 	if(!m_pSolutionList)
 		return FALSE;
 
-	if(RDMsgBox(m_hIPConfigOwner, LS_MSG, kDeleteSolution, LS_MSG, kMsgWarning, MB_YESNO)!=IDYES)
+	if(RDMsgBox(m_hIPConfigOwner, MSG_DELETE_SOLUTION, MSG_WARNING, MB_YESNO)!=IDYES)
 		return FALSE;
 	LPCWSTR lpszSolution = m_pSolutionList->GetText();
 	int nSelected = m_pSolutionList->GetCurSel();
@@ -781,8 +805,8 @@ LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, i
 
 BOOL IIPConfig::CheckFormValid()
 {
-	wchar_t msgTitle[100];
-	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"msg_warn", msgTitle);
+	//wchar_t msgTitle[100];
+	//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"msg_warn", msgTitle);
 
 	if(!m_pIpAutoCheckBox->IsSelected())
 	{
@@ -791,9 +815,10 @@ BOOL IIPConfig::CheckFormValid()
 		BOOL isIp = ValidateUtil::IsIPv4(ip);
 		if(isIp==FALSE)
 		{
-			wchar_t text[100];
-			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_ipv4_err", text);
-			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			//wchar_t text[100];
+			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_ipv4_err", text);
+			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			RDMsgBox(m_hIPConfigOwner, MSG_IPV4_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 		//判断子网掩码
@@ -801,9 +826,10 @@ BOOL IIPConfig::CheckFormValid()
 		BOOL isMask = ValidateUtil::IsMask(mask);
 		if(isMask==FALSE)
 		{
-			wchar_t text[100];
-			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_subnet_mask_err", text);
-			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			//wchar_t text[100];
+			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_subnet_mask_err", text);
+			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			RDMsgBox(m_hIPConfigOwner, MSG_MASK_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 		//判断网关
@@ -811,9 +837,10 @@ BOOL IIPConfig::CheckFormValid()
 		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
 		if(isGateway==FALSE)
 		{
-			wchar_t text[100];
-			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_gateway_err", text);
-			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			//wchar_t text[100];
+			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_gateway_err", text);
+			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			RDMsgBox(m_hIPConfigOwner, MSG_GATEWAY_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 	}
@@ -824,9 +851,10 @@ BOOL IIPConfig::CheckFormValid()
 		BOOL isDns1 = ValidateUtil::IsIPv4(dns1);
 		if(isDns1==FALSE)
 		{
-			wchar_t text[100];
-			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
-			MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			//wchar_t text[100];
+			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
+			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+			RDMsgBox(m_hIPConfigOwner, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 		if(!m_pDns2Edit->GetText().IsEmpty())
@@ -835,9 +863,10 @@ BOOL IIPConfig::CheckFormValid()
 			BOOL isDns2 = ValidateUtil::IsIPv4(dns2);
 			if(isDns2==FALSE)
 			{
-				wchar_t text[100];
-				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
-				MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+				//wchar_t text[100];
+				//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
+				//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
+				RDMsgBox(m_hIPConfigOwner, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 				return FALSE;
 			}
 			

@@ -410,7 +410,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 }
             }
             if( pControl == NULL && m_pCallback != NULL ) {
-                pControl = m_pCallback->CreateControl(pstrClass);
+                pControl = m_pCallback->CreateControl(pstrClass, pParent);
             }
         }
 

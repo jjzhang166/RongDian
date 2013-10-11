@@ -8,6 +8,7 @@
 *.obj
 *.pdb
 *.aps
+*.orig
 /DuiMsg/DuiMsg.vcproj.MOYZ-PC.lenovo.user
 /DuiMsg/DuiMsg.vcproj.pdsync
 /DuiMsg/DuiMsg.vcproj.pdsyncu

@@ -59,7 +59,7 @@ using namespace std;
 #include <SqlTidyLib/sqltidy.h>
 #include <DuiLib/UIlib.h>
 
-#include <Duilib\Control\UIMenu.h>
+#include <Duilib/Control/UIMenu.h>
 #include <DuiMsg.h>
 #include <FileFinder.h>
 
@@ -109,7 +109,9 @@ using namespace DuiLib;
 BOOL IsImageFile(LPCWSTR lpszFileName);
 BOOL IsCanTidy(LPCWSTR lpszLang);
 int EscapeSQLite(CDuiString strKeyWord);
-int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lpszCaptionSection, LPCWSTR lpszCaptionId, UINT uType);
+int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
+BOOL ShowLoading();
+void CancelLoading();
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是工具类文件的引用
@@ -145,6 +147,9 @@ int RDMsgBox(HWND hWnd, LPCWSTR lpszTextSection, LPCWSTR lpszTextId, LPCWSTR lps
 #include "ITidy.h"
 #include "MainFrame.h"
 
+extern HANDLE					g_hUserSignature;
+extern HANDLE					g_hAdminSignature;
+extern BOOL						g_bActiveRunAsAdminThread;
 extern HINSTANCE				g_hInstance;
 extern wchar_t					g_szModule[1024];
 extern wchar_t					g_szAppName[1024];
@@ -171,4 +176,5 @@ extern list<LPPANEL_INFO>		g_lstPanelInfo;
 extern CSQLite					g_SQLite;
 extern IMG_INFO					g_ImgInfo[MAX_IMG_TYPE];
 extern TIDY_INFO				g_TidyInfo[MAX_TIDY_LANG];
+extern MSG_INFO					g_LangIDs[MAX_MSG_ID];
 

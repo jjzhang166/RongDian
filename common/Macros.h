@@ -62,6 +62,33 @@
 		}
 
 /*************************************************************************
+ * Method:    		SET_TITLE_TEXT3
+ * Description:		设置控件文本宏 -- Item
+ *						wchar_t szAdmin[1024] = L"(Admin)";
+ *						SET_TITLE_TEXT3(m_hWnd, kFrameTitle, szAdmin)
+ *							查找kFrameTitle控件，从语言文件中取出kFrameTitle控件对应的文本信息L"RongDian Tools"
+ *							然后将L"RongDian Tools"与L"(Admin)"进行拼接
+ *							拼接结果为L"RongDian Tools(Admin)"，最后设置给对应的控件
+ * ParameterList:	hwnd, id, tail
+ * Parameter:       hwnd: 控件句柄(在DuiLib中，一般是所在窗体的窗口句柄)，用于设置标题
+ * Parameter:       id: 控件id(在xml布局文件中指定)及语言文件中文本对应的id，要求控件id与ini文件中控件对应的文本id一致
+ * Parameter:       tail: 根据id获取语言文件对应的文本后，将此字符串拼接到尾部
+ * Return Value:	无
+ * Date:        	13:09:01 16:42:56
+ * Author:			LIng
+ * CopyRight:		
+ ************************************************************************/
+#define SET_TITLE_TEXT3(hwnd, id, tail) \
+		wchar_t sz##id##Text[1024], sz##id[1024]; \
+		CControlUI *p##id = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		if(p##id && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
+		{ \
+			swprintf(sz##id##Text, L"%s%s", sz##id, tail); \
+			p##id->SetText(sz##id##Text); \
+			SetWindowText(hwnd, sz##id##Text); \
+		}
+
+/*************************************************************************
  * Method:    		SET_CONTROL_TEXT
  * Description:		设置控件文本宏 -- Item
  * ParameterList:	id, str
@@ -206,6 +233,7 @@
 #define SET_CONTROL_END() \
 	}
 
+//////////////////////////////////////////////////////////////////////////
 #define FIND_CONTROL_BY_ID(ctl, cls, man, id) \
 	assert(man!=NULL);\
 	ctl = static_cast<cls *>(man->FindControl(id));
@@ -213,3 +241,27 @@
 #define FIND_CONTROL_BY_PT(ctl, cls, man, pt) \
 	assert(man!=NULL);\
 	ctl = static_cast<cls *>(man->FindControl(pt));
+
+//////////////////////////////////////////////////////////////////////////
+#define ASSOC_BEGIN() \
+	{ \
+		LPMSG_INFO lpLangIDs = g_LangIDs; \
+		assert(lpLangIDs!=NULL); \
+		memset(lpLangIDs, 0, sizeof(MSG_INFO)*MAX_MSG_ID);
+
+#define ASSOC_LANG(rid, sid, section) \
+		if(rid<MAX_MSG_ID) \
+		{ \
+			lpLangIDs[rid].nId = rid; \
+			lpLangIDs[rid].pId = sid; \
+			lpLangIDs[rid].pSection = section; \
+		} 
+
+#define ASSOC_END() \
+	}
+
+#define GET_ASSOC_ID(ids, rid) \
+	(rid)<(MAX_MSG_ID) ? ids[rid].pId : L""
+
+#define GET_ASSOC_SECTION(ids, rid) \
+	(rid)<(MAX_MSG_ID) ? ids[rid].pSection : L""

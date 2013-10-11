@@ -5,6 +5,6 @@
 
 namespace TimeUtil  
 {
-	BOOL TimeToWStr(LPWSTR wstr,time_t const timer);
+	BOOL TimeToWStr(const time_t timer, LPWSTR wstr); 
 	time_t GetCurTime();
 };
