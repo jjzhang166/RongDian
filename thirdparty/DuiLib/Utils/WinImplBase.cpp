@@ -61,7 +61,7 @@ LPCTSTR WindowImplBase::GetResourceID() const
 	return _T("");
 }
 
-CControlUI* WindowImplBase::CreateControl(LPCTSTR /*pstrClass*/)
+CControlUI* WindowImplBase::CreateControl(LPCTSTR /*pstrClass*/, CControlUI* /*pParent*/)
 {
 	return NULL;
 }
