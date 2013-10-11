@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-<VerticalLayout name="host_group" minwidth="460" minheight="75" bordersize="1" bordercolor="FFE0E0E0">
+<VerticalLayout height="250" bordersize="1" bordercolor="FFE0E0E0">
 	<Control height="5" />
 	<!--组标题-->
 	<HorizontalLayout height="25">
-		<Button name="host_group_visible_content" width="25" height="25" normalimage="file='default\arrow_up.png' dest='3,3,20,20'" tooltip="收起"/>
-		<Edit name="host_group_title_edit" minwidth="150" height="25" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="默认组的组名" bkimage="file='default\buttom_border_#999999.png'"/>
-		<Control />
-		<Button name="host_group_new_row" width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'" tooltip="添加绑定"/>
-		<Button name="host_group_save" width="25" height="25" normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存组名"/>
-		<Button name="host_group_delete" width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除该组"/>
+		<Button width="25" height="25" normalimage="file='default\arrow_up.png' dest='3,3,20,20'" tooltip="收起"/>
+		<Edit minwidth="150" height="25" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="默认组的组名" bkimage="file='default\buttom_border_#999999.png'"/>
+		<Button width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'" tooltip="添加绑定"/>
+		<Button width="25" height="25" normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存组名"/>
+		<Button width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除该组"/>
 	</HorizontalLayout>
 	<Control height="5" />
 	<!--组内容，可隐藏-->
-	<VerticalLayout name="host_group_rows" minwidth="460" minheight="50" vscrollbar="true" autovscroll="true">
+	<VerticalLayout  height="200" vscrollbar="true" autovscroll="true">
 	</VerticalLayout>
 </VerticalLayout>
 </Window>

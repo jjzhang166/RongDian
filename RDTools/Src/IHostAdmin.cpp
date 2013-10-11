@@ -23,7 +23,7 @@ const wchar_t* const kHostGroupSaveBtn = L"host_group_save";
 const wchar_t* const kHostGroupDeleteBtn = L"host_group_delete";
 const wchar_t* const kHostGroupRowsVLayout = L"host_group_rows";
 
-const wchar_t* const kHostRowVLayout = L"host_row";
+const wchar_t* const kHostRowHLayout = L"host_row";
 const wchar_t* const kHostRowActiveCB = L"host_row_active_cb";
 const wchar_t* const kHostRowIPEdit = L"host_row_ip_edit";
 const wchar_t* const kHostRowDomainEdit = L"host_row_domain_edit";
@@ -100,16 +100,9 @@ void IHostAdmin::OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled)
 	{
 		LPCTSTR szGroupIndex = msg.pSender->GetUserData().GetData();
 		//隐藏当前组列表
-		wchar_t name1[50] = {0};
-		wsprintf(name1,L"%s_%s",kHostGroupVisibleContentBtn,szGroupIndex);
-		CCheckBoxUI* pVisibleContentBtn = NULL;
-		FIND_CONTROL_BY_ID(pVisibleContentBtn, CCheckBoxUI, m_pHostAdminManager,name1)
-
-		wchar_t name[50] = {0};
-		wsprintf(name,L"%s_%s",kHostGroupRowsVLayout,szGroupIndex);
-		CVerticalLayoutUI* pGroupRowsVLayout = NULL;
-		FIND_CONTROL_BY_ID(pGroupRowsVLayout, CVerticalLayoutUI, m_pHostAdminManager, name)
-		
+		CButtonUI* pVisibleContentBtn = (CButtonUI*)msg.pSender;
+		CVerticalLayoutUI* groupLayout = (CVerticalLayoutUI*)pVisibleContentBtn->GetParent()->GetParent();
+		CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)groupLayout->GetItemAt(3);
 		if (pGroupRowsVLayout->IsVisible())
 		{
 			pGroupRowsVLayout->SetVisible(false);
@@ -129,8 +122,9 @@ void IHostAdmin::OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled)
 		char* aGroupIndex = StrUtil::w2a(szGroupIndex);
 		int groupIndex = atoi(aGroupIndex);
 
-		CVerticalLayoutUI* pGroup = (CVerticalLayoutUI*)msg.pSender->GetParent()->GetParent();
-		CreateGroupRow(pGroup,groupIndex);
+		CVerticalLayoutUI* pGroupVlayout = (CVerticalLayoutUI*)msg.pSender->GetParent()->GetParent();
+		CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)pGroupVlayout->GetItemAt(3);
+		CreateGroupRow(pGroupRowsVLayout,groupIndex);
 		delete[] aGroupIndex;
 	}
 	else if (StrUtil::is_wsubstr(ctrlName,kHostGroupDeleteBtn))//删除该组
@@ -174,59 +168,53 @@ BOOL IHostAdmin::CreateGroup(CContainerUI* pParentContainer)
 	//pGroupPanel->SetName(szGroupName);
 	pGroupPanel->SetChildLayoutXML(kHostGroupXmlPath);
 	pGroupPanel->SetVisible(true);
-	pParentContainer->AddAt(pGroupPanel,pParentContainer->GetCount());
+	pParentContainer->Add(pGroupPanel);
+
 	/**指定各控件的名字**/
-	CVerticalLayoutUI* pHostGroupVLayout = NULL;
-	FIND_CONTROL_BY_ID(pHostGroupVLayout, CVerticalLayoutUI, m_pHostAdminManager,kHostGroup)
+	CVerticalLayoutUI* pHostGroupVLayout = (CVerticalLayoutUI*)pGroupPanel->GetItemAt(0);
 	wchar_t szHostGroupVLayoutName[50] = {0};
 	wsprintf(szHostGroupVLayoutName,L"%s_%d",kHostGroup,m_groupIndex);
 	pHostGroupVLayout->SetName(szHostGroupVLayoutName);
 	pHostGroupVLayout->SetUserData(szGroupIndex);
 
-	CCheckBoxUI* pVisibleContentBtn = NULL;
-	FIND_CONTROL_BY_ID(pVisibleContentBtn, CCheckBoxUI, m_pHostAdminManager,kHostGroupVisibleContentBtn)
+	CHorizontalLayoutUI* pHostGroupTitleHLayout = (CHorizontalLayoutUI*)pHostGroupVLayout->GetItemAt(1);
+
+	CButtonUI* pVisibleContentBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(0);
 	wchar_t szVisibleContentBtnName[50] = {0};
 	wsprintf(szVisibleContentBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
 	pVisibleContentBtn->SetName(szVisibleContentBtnName);
 	pVisibleContentBtn->SetUserData(szGroupIndex);
 
-	CEditUI* pGroupTitleEdit = NULL;
-	FIND_CONTROL_BY_ID(pGroupTitleEdit, CEditUI, m_pHostAdminManager, kHostGroupTitleEdit)
+	CEditUI* pGroupTitleEdit = (CEditUI*)pHostGroupTitleHLayout->GetItemAt(1);
 	wchar_t szGroupTitleEditName[50] = {0};
 	wsprintf(szGroupTitleEditName,L"%s_%d",kHostGroupTitleEdit,m_groupIndex);
 	pGroupTitleEdit->SetName(szGroupTitleEditName);
 	pGroupTitleEdit->SetUserData(szGroupIndex);
 
-	CButtonUI* pGroupNewRowBtn = NULL;
-	FIND_CONTROL_BY_ID(pGroupNewRowBtn, CButtonUI, m_pHostAdminManager, kHostGroupNewRowBtn)
+	CButtonUI* pGroupNewRowBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(2);
 	wchar_t szGroupNewRowBtnName[50] = {0};
 	wsprintf(szGroupNewRowBtnName,L"%s_%d",kHostGroupNewRowBtn,m_groupIndex);
 	pGroupNewRowBtn->SetName(szGroupNewRowBtnName);
 	pGroupNewRowBtn->SetUserData(szGroupIndex);
 
-	CButtonUI* pGroupSaveBtn = NULL;
-	FIND_CONTROL_BY_ID(pGroupSaveBtn, CButtonUI, m_pHostAdminManager, kHostGroupSaveBtn)
+	CButtonUI* pGroupSaveBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(3);
 	wchar_t szGroupSaveBtnName[50] = {0};
 	wsprintf(szGroupSaveBtnName,L"%s_%d",kHostGroupSaveBtn,m_groupIndex);
 	pGroupSaveBtn->SetName(szGroupSaveBtnName);
 	pGroupSaveBtn->SetUserData(szGroupIndex);
 
-	CButtonUI* pGroupDeleteBtn = NULL;
-	FIND_CONTROL_BY_ID(pGroupDeleteBtn, CButtonUI, m_pHostAdminManager, kHostGroupDeleteBtn)
+	CButtonUI* pGroupDeleteBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(4);
 	wchar_t szGroupDeleteBtnName[50] = {0};
 	wsprintf(szGroupDeleteBtnName,L"%s_%d",kHostGroupDeleteBtn,m_groupIndex);
 	pGroupDeleteBtn->SetName(szGroupDeleteBtnName);
 	pGroupDeleteBtn->SetUserData(szGroupIndex);
 
-	CVerticalLayoutUI* pGroupRowsVLayout = NULL;
-	FIND_CONTROL_BY_ID(pGroupRowsVLayout, CVerticalLayoutUI, m_pHostAdminManager, kHostGroupRowsVLayout)
+	//组内容，包含多行
+	CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)pHostGroupVLayout->GetItemAt(3);
 	wchar_t szGroupRowsVLayoutName[50] = {0};
 	wsprintf(szGroupRowsVLayoutName,L"%s_%d",kHostGroupRowsVLayout,m_groupIndex);
 	pGroupRowsVLayout->SetName(szGroupRowsVLayoutName);
 	pGroupRowsVLayout->SetUserData(szGroupIndex);
-
-	CVerticalLayoutUI* pGroupRowsVLayout2 = NULL;
-	FIND_CONTROL_BY_ID(pGroupRowsVLayout2, CVerticalLayoutUI, m_pHostAdminManager, szGroupRowsVLayoutName)
 
 	CreateGroupRow(pGroupRowsVLayout,m_groupIndex);
 	return TRUE;
@@ -246,53 +234,47 @@ BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,int groupIndex)
 	//pRowPanel->SetName(szRowName);
 	pRowPanel->SetChildLayoutXML(kHostGroupRowXmlPath);
 	pRowPanel->SetVisible(true);
-	pParentContainer->AddAt(pRowPanel,pParentContainer->GetCount());
+	//pParentContainer->AddAt(pRowPanel,pParentContainer->GetCount());
+	pParentContainer->Add(pRowPanel);
 
 	/**重新指定控件名**/
-	CVerticalLayoutUI* pHostRowVLayout = NULL;
-	FIND_CONTROL_BY_ID(pHostRowVLayout, CVerticalLayoutUI, m_pHostAdminManager,kHostRowVLayout)
+	CHorizontalLayoutUI* pHostRowHLayout = (CHorizontalLayoutUI*)pRowPanel->GetItemAt(0);
 	wchar_t szHostRowVLayoutName[50] = {0};
-	wsprintf(szHostRowVLayoutName,L"%s_%d_%d",kHostRowVLayout,m_groupIndex,m_rowIndex);
-	pHostRowVLayout->SetName(szHostRowVLayoutName);
-	pHostRowVLayout->SetUserData(sDataIndex);
+	wsprintf(szHostRowVLayoutName,L"%s_%d_%d",kHostRowHLayout,m_groupIndex,m_rowIndex);
+	pHostRowHLayout->SetName(szHostRowVLayoutName);
+	pHostRowHLayout->SetUserData(sDataIndex);
 
-	CCheckBoxUI* pActiveCB = NULL;
-	FIND_CONTROL_BY_ID(pActiveCB, CCheckBoxUI, m_pHostAdminManager, kHostRowActiveCB)
+	CCheckBoxUI* pActiveCB = (CCheckBoxUI*)pHostRowHLayout->GetItemAt(0);
 	wchar_t szRowActiveCBName[50] = {0};
 	wsprintf(szRowActiveCBName,L"%s_%d_%d",kHostRowActiveCB,groupIndex,m_rowIndex);
 	pActiveCB->SetName(szRowActiveCBName);
 	pActiveCB->SetUserData(sDataIndex);
 
-	CEditUI* pIPEdit = NULL;
-	FIND_CONTROL_BY_ID(pIPEdit, CEditUI, m_pHostAdminManager, kHostRowIPEdit)
+	CEditUI* pIPEdit = (CEditUI*)pHostRowHLayout->GetItemAt(2);
 	wchar_t szRowIPEditName[50] = {0};
 	wsprintf(szRowIPEditName,L"%s_%d_%d",kHostRowIPEdit,groupIndex,m_rowIndex);
 	pIPEdit->SetName(szRowIPEditName);
 	pIPEdit->SetUserData(sDataIndex);
 
-	CEditUI* pDomainEdit = NULL;
-	FIND_CONTROL_BY_ID(pDomainEdit, CEditUI, m_pHostAdminManager, kHostRowDomainEdit)
+	CEditUI* pDomainEdit = (CEditUI*)pHostRowHLayout->GetItemAt(4);
 	wchar_t szRowDomainEditName[50] = {0};
 	wsprintf(szRowDomainEditName,L"%s_%d_%d",kHostRowDomainEdit,groupIndex,m_rowIndex);
 	pDomainEdit->SetName(szRowDomainEditName);
 	pDomainEdit->SetUserData(sDataIndex);
 
-	CEditUI* pDescEdit = NULL;
-	FIND_CONTROL_BY_ID(pDescEdit, CEditUI, m_pHostAdminManager, kHostRowDescEdit)
+	CEditUI* pDescEdit = (CEditUI*)pHostRowHLayout->GetItemAt(6);
 	wchar_t szRowDescEditName[50] = {0};
 	wsprintf(szRowDescEditName,L"%s_%d_%d",kHostRowDescEdit,groupIndex,m_rowIndex);
 	pDescEdit->SetName(szRowDescEditName);
 	pDescEdit->SetUserData(sDataIndex);
 
-	CButtonUI* pSaveBtn = NULL;
-	FIND_CONTROL_BY_ID(pSaveBtn, CButtonUI, m_pHostAdminManager, kHostRowSaveBtn)
+	CButtonUI* pSaveBtn = (CButtonUI*)pHostRowHLayout->GetItemAt(8);
 	wchar_t szRowSaveBtnName[50] = {0};
 	wsprintf(szRowSaveBtnName,L"%s_%d_%d",kHostRowSaveBtn,groupIndex,m_rowIndex);
 	pSaveBtn->SetName(szRowSaveBtnName);
 	pSaveBtn->SetUserData(sDataIndex);
 
-	CButtonUI* pDeleteBtn = NULL;
-	FIND_CONTROL_BY_ID(pDeleteBtn, CButtonUI, m_pHostAdminManager, kHostRowDeleteBtn)
+	CButtonUI* pDeleteBtn = (CButtonUI*)pHostRowHLayout->GetItemAt(9);
 	wchar_t szRowDeleteBtnName[50] = {0};
 	wsprintf(szRowDeleteBtnName,L"%s_%d_%d",kHostRowDeleteBtn,groupIndex,m_rowIndex);
 	pDeleteBtn->SetName(szRowDeleteBtnName);

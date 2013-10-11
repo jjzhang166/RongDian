@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-	<VerticalLayout name="panel_hostadmin" inset="4,4,4,4" >
+	<VerticalLayout name="panel_hostadmin" inset="4,4,4,4">
 		<!--host文件路径-->
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
 			<Control width="5" />
@@ -17,7 +17,7 @@
 		</HorizontalLayout>
 		<Control height="15" />
 		<!--host配置，以组为单位-->
-		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" inset="4,4,4,4">
+		<VerticalLayout name="host_group_container" bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" inset="4,4,4,4">
 			<Control height="5" />
 			<!--
 			<VerticalLayout name="host_group1" minwidth="460" >
@@ -33,7 +33,7 @@
 				</HorizontalLayout>
 				<Control height="5" />
 				--组内容，可隐藏-
-				<VerticalLayout name="host_group1_content" height="25">
+				<VerticalLayout name="host_group_rows" height="25">
 					<HorizontalLayout name="host_group1_row1" >
 						<CheckBox name="host_group1_row1_checkbox" width="25" height="25" selectedimage="file='default\checkbox_yes.png' dest='3,3,19,19'" normalimage="file='default\checkbox_no.png'  dest='3,3,19,19'"/>
 						<Control width="2" />
