@@ -380,7 +380,7 @@ void CMainFrame::OnFinalMessage(HWND hWnd)
 	delete this;
 }
 
-CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass)
+CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	CControlUI* pControl = NULL;
 	if(wcsicmp(pstrClass, L"TabButton")==0)
@@ -784,7 +784,7 @@ BOOL CMainFrame::CreatePanels()
 			if(!pPanel)
 				return bRet;
 			pPanel->SetName(lpPanelInfo->szLayout);
-			pPanel->SetChildLayoutXML(lpPanelInfo->szXml);
+			pPanel->SetChildLayoutXML(lpPanelInfo->szXml, this);
 			pPanel->SetVisible(false);
 			pPanelContents->AddAt(pPanel, pPanelContents->GetCount()-1);
 		}
