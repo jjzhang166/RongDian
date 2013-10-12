@@ -1148,6 +1148,13 @@ bool CPaintManagerUI::InitControls(CControlUI* pControl, CControlUI* pParent /*=
     return true;
 }
 
+bool CPaintManagerUI::UpdateControls(CControlUI* pControl)
+{
+	ASSERT(pControl);
+	pControl->FindControl(__FindControlFromNameHash, this, UIFIND_ALL);
+	return true;
+}
+
 void CPaintManagerUI::ReapObjects(CControlUI* pControl)
 {
     if( pControl == m_pEventKey ) m_pEventKey = NULL;

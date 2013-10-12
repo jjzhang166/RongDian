@@ -6,7 +6,8 @@ class CMainFrame : public WindowImplBase,
 	public IColorPicker, public ICoder,
 	public IListCallbackUI, public IFileFinder,
 	public IFormatter, public IIPConfig,
-	public IHostAdmin,public ITidy
+	public IHostAdmin, public ITidy,
+	public IChildLayoutTest
 {
 public:
 	CMainFrame();

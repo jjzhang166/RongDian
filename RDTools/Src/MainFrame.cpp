@@ -26,6 +26,7 @@ const wchar_t* const kMenuShow = L"menu_show";
 const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
+const wchar_t* const kTabButton = L"TabButton";
 const wchar_t* const kTabsHide = L"tab_hide";
 const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
@@ -131,6 +132,8 @@ SET_CONTROL_END()
 	SetHostAdminLang(lpszLang);
 
 	SetTidyLang(lpszLang);
+
+	SetChildLayoutTestLang(lpszLang);
 	return 0;
 }
 
@@ -141,8 +144,6 @@ LPCWSTR CMainFrame::GetWindowClassName() const
 
 void CMainFrame::InitWindow()
 {
-	//::SetWindowLong(GetHWND(), GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_TOOLWINDOW);
-
 	// Vista/Win7，由于UAC的限制，低权限进程不能向高权限进程发送消息
 	// 如果我们想容许一个消息可以发送给较高特权等级的进程
 	// 我们可以在较高特权等级的进程中调用ChangeWindowMessageFilter(Vista以上的API)函数，以MSGFLT_ADD作为参数将消息添加进消息过滤器的白名单。
@@ -295,6 +296,8 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	if(!bHandle)
 		OnTidyClick(msg, bHandle);
 	if(!bHandle)
+		OnChildLayoutTestClick(msg, bHandle);
+	if(!bHandle)
 		SelectPanel(sCtrlName);
 	if(!bHandle)
 		WindowImplBase::OnClick(msg);
@@ -383,21 +386,24 @@ void CMainFrame::OnFinalMessage(HWND hWnd)
 CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	CControlUI* pControl = NULL;
-	if(wcsicmp(pstrClass, L"TabButton")==0)
+	if(wcsicmp(pstrClass, kTabButton)==0)
 	{
 		pControl = new CButtonUI();
 		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
 		if(pDefaultAttributes && pControl)
 			pControl->ApplyAttributeList(pDefaultAttributes);
+		if(pControl)
+			return pControl;
 	}
-	else if (wcsicmp(pstrClass,L"HostRow")==0)
-	{
-		pControl = new CButtonUI();
-		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"HostRow");
-		if(pDefaultAttributes && pControl)
-			pControl->ApplyAttributeList(pDefaultAttributes);
-		m_PaintManager.FindSubControlByName(pControl,L"");
-	}
+	pControl = OnHostAdminCreateControl(pstrClass, pParent);
+	if(pControl)
+		return pControl;
+	pControl = OnTidyCreateControl(pstrClass, pParent);
+	if(pControl)
+		return pControl;
+	pControl = OnChildLayoutTestCreateControl(pstrClass, pParent);
+	if(pControl)
+		return pControl;
 
 	return pControl;
 }
@@ -713,6 +719,7 @@ BOOL CMainFrame::InitPanels()
 	SetIPConfigOwner(m_hWnd, &m_PaintManager);
 	SetHostAdminOwner(m_hWnd, &m_PaintManager);
 	SetTidyOwner(m_hWnd, &m_PaintManager);
+	SetChildLayoutTestOwner(m_hWnd, &m_PaintManager);
 
 	InitAbout();
 	InitPicker();
@@ -722,6 +729,7 @@ BOOL CMainFrame::InitPanels()
 	InitIPConfig();
 	InitHostAdmin();
 	InitTidy((IListCallbackUI*)this);
+	InitChildLayoutTest();
 	return bRet;
 }
 

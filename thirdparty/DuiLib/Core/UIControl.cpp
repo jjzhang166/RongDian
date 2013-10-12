@@ -88,7 +88,7 @@ void CControlUI::SetManager(CPaintManagerUI* pManager, CControlUI* pParent, bool
 {
     m_pManager = pManager;
     m_pParent = pParent;
-    if( bInit && m_pParent ) Init();
+    if( bInit && m_pParent && m_pManager) Init();
 }
 
 CControlUI* CControlUI::GetParent() const

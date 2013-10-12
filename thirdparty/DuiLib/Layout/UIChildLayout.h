@@ -8,11 +8,11 @@ namespace DuiLib
 	class UILIB_API CChildLayoutUI : public CContainerUI
 	{
 	public:
-		CChildLayoutUI();
+		CChildLayoutUI(IDialogBuilderCallback* pCallback = NULL);
 
 		void Init();
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-		void SetChildLayoutXML(CDuiString pXML, IDialogBuilderCallback* m_pCallback = NULL);
+		void SetChildLayoutXML(CDuiString pXML, IDialogBuilderCallback* pCallback = NULL);
 		DuiLib::CDuiString GetChildLayoutXML();
 		virtual LPVOID GetInterface(LPCTSTR pstrName);
 		virtual LPCTSTR GetClass() const;

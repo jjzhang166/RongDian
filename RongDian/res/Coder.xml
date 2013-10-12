@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<VerticalLayout name="panel_coder" inset="4,4,4,4" >
-		<Label name="coder_list_text" height="20" text="" />
-		<HorizontalLayout >
-			<List name="coder_list" vscrollbar="true" hscrollbar="false" bkcolor="#FFE0E0E0" itemtextcolor="#FF000000" itemalign="left" itemaltbk="true" menu="true" >
+		<Label name="coder_list_text" height="20" text="" bordersize="1" bordercolor="FFE0E0E0" />
+		<HorizontalLayout bordersize="1" bordercolor="FFE0E0E0" >
+			<List name="coder_list" vscrollbar="true" hscrollbar="false" itemtextcolor="#FF000000" itemalign="left" itemaltbk="true" menu="true" bordersize="1" bordercolor="FFE0E0E0" inset="1,1,1,1" >
 				<ListHeader height="24"  >
 					<ListHeaderItem name="coder_header_path" text="" minwidth="100" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
 					<ListHeaderItem name="coder_header_encoding" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
@@ -49,7 +49,7 @@
 			<Button name="coder_backup" text="" width="64" bkcolor="0xFF5E50E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="TRUE" />
 			<Control />
 		</HorizontalLayout>
-		<HorizontalLayout height="24" bordersize="1" bordercolor="#FFE0E0E0" >
+		<HorizontalLayout height="28" inset="2,2,2,2" bordersize="1" bordercolor="#FFE0E0E0" >
 			<Control width="5" />
 			<Label name="coder_path_text" text="" width="80" />
 			<Edit name="coder_path_edit" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true"  text="" />

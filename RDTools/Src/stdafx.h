@@ -145,6 +145,8 @@ void CancelLoading();
 #include "IIpConfig.h"
 #include "IHostAdmin.h"
 #include "ITidy.h"
+#include "ContainerTest.h"
+#include "IChildLayoutTest.h"
 #include "MainFrame.h"
 
 extern HANDLE					g_hUserSignature;
