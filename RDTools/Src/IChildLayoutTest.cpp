@@ -95,7 +95,11 @@ void IChildLayoutTest::OnChildLayoutTestClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if(wcsstr(sCtrlName.GetData(), L"SubButton"))
 	{
-		RDMsgBox(hChildLayoutTestOwner, MSG_INVALID_NAME, MSG_ERR, MB_OK);
+		wchar_t szErr[1024] = {0}, szFormat[1024] = {0}, szTitle[1024];
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_ERR), GET_ASSOC_ID(g_LangIDs, MSG_ERR), szTitle);
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_DEBUG_TEXT), GET_ASSOC_ID(g_LangIDs, MSG_DEBUG_TEXT), szFormat);
+		swprintf(szErr, szFormat, sCtrlName.GetData());
+		DuiMsgBox(hChildLayoutTestOwner, szErr, szTitle, MB_OK);
 	}
 }
 
