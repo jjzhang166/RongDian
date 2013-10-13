@@ -3,9 +3,9 @@
 
 namespace DuiLib
 {
-	CChildLayoutUI::CChildLayoutUI()
+	CChildLayoutUI::CChildLayoutUI(IDialogBuilderCallback* pCallback /*= NULL*/)
 	{
-		m_pCallback = NULL;
+		m_pCallback = pCallback;
 	}
 
 	void CChildLayoutUI::Init()
@@ -33,10 +33,11 @@ namespace DuiLib
 			CContainerUI::SetAttribute(pstrName,pstrValue);
 	}
 
-	void CChildLayoutUI::SetChildLayoutXML( DuiLib::CDuiString pXML, IDialogBuilderCallback* m_pCallback /*= NULL*/)
+	void CChildLayoutUI::SetChildLayoutXML( DuiLib::CDuiString pXML, IDialogBuilderCallback* pCallback /*= NULL*/)
 	{
 		m_pstrXMLFile = pXML;
-		m_pCallback = m_pCallback;
+		if(pCallback)
+			m_pCallback = pCallback;
 	}
 
 	DuiLib::CDuiString CChildLayoutUI::GetChildLayoutXML()
@@ -47,7 +48,7 @@ namespace DuiLib
 	LPVOID CChildLayoutUI::GetInterface( LPCTSTR pstrName )
 	{
 		if( _tcscmp(pstrName, DUI_CTR_CHILDLAYOUT) == 0 ) return static_cast<CChildLayoutUI*>(this);
-		return CControlUI::GetInterface(pstrName);
+		return CContainerUI::GetInterface(pstrName);
 	}
 
 	LPCTSTR CChildLayoutUI::GetClass() const

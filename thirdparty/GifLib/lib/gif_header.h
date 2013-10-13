@@ -393,7 +393,7 @@ public:
 		int nLen = pColorMap->ColorCount;
 		assert(nLen<=256);
 		int nCount = min(nLen, 256);
-		BYTE red = 0, green = 0, blue = 0;
+		//BYTE red = 0, green = 0, blue = 0;
 		for(int i=0; i<nCount; i++)
 		{
 			liBmi->bmiColors[i].rgbRed = pColorMap->Colors[i].Red;

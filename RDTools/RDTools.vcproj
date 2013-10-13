@@ -197,7 +197,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\ContainerTest.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\IAbout.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\IChildLayoutTest.cpp"
 					>
 				</File>
 				<File
@@ -287,7 +295,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\ContainerTest.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\IAbout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\IChildLayoutTest.h"
 					>
 				</File>
 				<File

@@ -31,12 +31,12 @@
 		<Label height="1" bkcolor="#FF669934" />
 		<!-- frame_contents -->
 		<HorizontalLayout name="frame_contents" >
-			<VerticalLayout name="panel_tabs" width="150" bktrans="true" >
+			<VerticalLayout name="panel_tabs" width="150" bktrans="true" vscrollbar="true" >
 				<TabButton name="tab_about" userdata="layout_about" />
 			</VerticalLayout>
 			<Button name="tab_hide" width="8" bkcolor="0xDDC8C8C8" hotimage="file='default\aio_flexright_normal.png'" />
 			<Button name="tab_show" width="8" bkcolor="0xDDC8C8C8" hotimage="file='default\aio_flexleft_normal.png'" visible="false" />
-			<VerticalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_ipconfig" >
+			<VerticalLayout name="panel_contents" bkcolor="0xDDC8C8C8" userdata="tab_childlayouttest" >
 				<ChildLayout name="layout_about" xmlfile="About.xml" visible="false" />
 			</VerticalLayout>
 	 	</HorizontalLayout><!-- frame_contents -->

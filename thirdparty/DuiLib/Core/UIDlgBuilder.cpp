@@ -380,7 +380,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if( _tcscmp(pstrClass, DUI_CTR_WEBBROWSER) == 0 )        pControl = new CWebBrowserUI;
                 break;
 			case 11:
-				if (_tcscmp(pstrClass, DUI_CTR_CHILDLAYOUT) == 0)			  pControl = new CChildLayoutUI;
+				if (_tcscmp(pstrClass, DUI_CTR_CHILDLAYOUT) == 0)			  pControl = new CChildLayoutUI(m_pCallback);
 				break;
             case 14:
                 if( _tcscmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )         pControl = new CVerticalLayoutUI;
@@ -426,10 +426,6 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 #endif
 			}
 
-        // Add children
-        if( node.HasChildren() ) {
-            _Parse(&node, pControl, pManager);
-        }
         // Attach to parent
         // 因为某些属性和父窗口相关，比如selected，必须先Add到父窗口
 		if( pParent != NULL ) {
@@ -447,6 +443,12 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				}
 			}
 		}
+
+		// Add children
+		if( node.HasChildren() ) {
+			_Parse(&node, pControl, pManager);
+		}
+
         // Init default attributes
         if( pManager ) {
             pControl->SetManager(pManager, NULL, false);

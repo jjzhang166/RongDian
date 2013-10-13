@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="layout_childlayouttest" inset="4,4,4,4" >
+		<HorizontalLayout height="24" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control />
+			<Button name="childlayouttest_test" text="Test" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control />
+		</HorizontalLayout>
+		<Control height="2" />
+		<VerticalLayout name="childlayouttest_container" vscrollbar="true" bordersize="1" bkcolor="FFFF0000" >
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>

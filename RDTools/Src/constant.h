@@ -90,6 +90,7 @@ const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
 const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
+const wchar_t* const kDebugText						= L"debug_text";
 
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
@@ -139,6 +140,7 @@ typedef enum _tagMSG_ID {
 	MSG_DNS_ERR,
 	MSG_DELETE_SOLUTION,
 	MSG_INVALID_NAME,
+	MSG_DEBUG_TEXT,
 	// End
 	MSG_END = 200
 } MSG_ID;

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<TestContainer height="80" bkcolor="#FF00FF00" bordersize="1" bordercolor="FFF0F0F0" inset="2,2,2,2" >
+		<SubButton height="25" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+		<SubLabel height="25" bkcolor="#FF669934" />
+		<Control height="5" bordersize="1" bordercolor="FFE0E0E0" />
+		<HorizontalLayout height="25">
+			<SubEdit height="25" bkcolor="#FFFFFFFF" nativebkcolor="#FFD0D4D8" />
+		</HorizontalLayout>
+	</TestContainer>
+</Window>

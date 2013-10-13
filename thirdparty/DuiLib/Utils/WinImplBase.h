@@ -22,7 +22,7 @@ namespace DuiLib
 	public:
 		WindowImplBase(){};
 		virtual ~WindowImplBase(){};
-		static	void	ReleaseRes();
+		static	void ReleaseRes();
 		virtual void InitWindow(){};
 		virtual void OnFinalMessage( HWND hWnd );
 		virtual void Notify(TNotifyUI& msg);

@@ -11,6 +11,7 @@ public:
 	void			SetTidyOwner(HWND hWnd, CPaintManagerUI *pManager) { hTidyOwner = hWnd; pTidyManager = pManager; };
 	BOOL			InitTidy(IListCallbackUI* pIListCallback);
 	BOOL			SetTidyLang(LPCWSTR lpszLang);
+	CControlUI* 	OnTidyCreateControl(LPCTSTR pstrClass, CControlUI *pParent);
 
 	void			OnTidyClick(TNotifyUI& msg, BOOL& bHandled);
 	void			OnTidyItemActive(TNotifyUI& msg);
