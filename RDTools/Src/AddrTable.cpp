@@ -28,43 +28,47 @@ BOOL CAddrTableDB::Query(LPADDR_TABLE lpTable)
 {
 	if(!m_pSQLite)
 		return FALSE;
-	wchar_t szSQL[2048];
 	char szSQL_u8[2048] = {0};
+	CSQLiteQuery query;
 	if(!lpTable)
 	{
 		sprintf(szSQL_u8, "select * from addr");
+		query = m_pSQLite->ExecQuery("select count(*) from addr;");
+		m_nRows = atoi(query.FieldValue(0));
 	}
 	else
 	{
+		wchar_t szSQL[2048];
 		CDuiString strSolution = lpTable->szSolution;
 		EscapeSQLite(strSolution);
 		if(strSolution.IsEmpty())
 			return FALSE;
 		swprintf(szSQL, L"select * from addr where solution_='%s'", strSolution);
 		StrUtil::u2u8(szSQL, szSQL_u8);
+		m_nRows = 1;
 	}
-	CSQLiteQuery query = m_pSQLite->ExecQuery("select count(*) from addr;");
-	m_nRows = atoi(query.FieldValue(0));
+	if(m_nRows<=0)
+		return FALSE;
 	query = m_pSQLite->ExecQuery(szSQL_u8);
 	if(m_pResults)
 		delete[] m_pResults;
 	m_pResults = NULL;
-	m_pResults = new ADDR_TABLE[query.NumFields()];
+	m_pResults = new ADDR_TABLE[m_nRows];
 	if(!m_pResults)
 		return FALSE;
-	int i = 0;
+	int nIndex = 0;
 	while(!query.Eof())
 	{
-		StrUtil::u82u(query.FieldValue("solution_"), m_pResults[i].szSolution);
-		StrUtil::u82u(query.FieldValue("addr_"), m_pResults[i].szAddr);
-		StrUtil::u82u(query.FieldValue("mask_"), m_pResults[i].szMask);
-		StrUtil::u82u(query.FieldValue("gateway_"), m_pResults[i].szGateway);
-		StrUtil::u82u(query.FieldValue("dns1_"), m_pResults[i].szDns1);
-		StrUtil::u82u(query.FieldValue("dns2_"), m_pResults[i].szDns2);
-		m_pResults[i].nAddrType = atoi(query.FieldValue("atype_"));
-		m_pResults[i].nDnsType = atoi(query.FieldValue("dtype_"));
-		m_pResults[i].nValid = atoi(query.FieldValue("valid_"));
-		i++;
+		StrUtil::u82u(query.FieldValue("solution_"), m_pResults[nIndex].szSolution);
+		StrUtil::u82u(query.FieldValue("addr_"), m_pResults[nIndex].szAddr);
+		StrUtil::u82u(query.FieldValue("mask_"), m_pResults[nIndex].szMask);
+		StrUtil::u82u(query.FieldValue("gateway_"), m_pResults[nIndex].szGateway);
+		StrUtil::u82u(query.FieldValue("dns1_"), m_pResults[nIndex].szDns1);
+		StrUtil::u82u(query.FieldValue("dns2_"), m_pResults[nIndex].szDns2);
+		m_pResults[nIndex].nAddrType = atoi(query.FieldValue("atype_"));
+		m_pResults[nIndex].nDnsType = atoi(query.FieldValue("dtype_"));
+		m_pResults[nIndex].nValid = atoi(query.FieldValue("valid_"));
+		nIndex++;
 		query.NextRow();
 	}
 

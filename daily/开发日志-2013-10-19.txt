@@ -1,0 +1,3 @@
+IPConfig
+LPADDR_TABLE与IPCONFIG_INFO结构相似，可优化
+目前xxxTable获取该表所有数据时，已进行了内存分配，在相应的窗口内里面还要重新逐条记录重新分配内存，优化时可添加Attach、Detatch方法，减少内存分配

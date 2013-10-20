@@ -75,12 +75,15 @@ const wchar_t* const kDescAbout						= L"desc_about";
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgWarning					= L"msg_warning";
 const wchar_t* const kLoading						= L"msg_loading";
+const wchar_t* const kBusy							= L"msg_busy";
 const wchar_t* const kPluginErr						= L"plugin_err";
 const wchar_t* const kNoFoundErr					= L"nofound_err";
 const wchar_t* const kFolderTitle					= L"folder_title";
 const wchar_t* const kStillWorkingErr				= L"still_working";
 const wchar_t* const kHandleText					= L"handle_text";
+const wchar_t* const kHandleErrText					= L"handle_err_text";
 const wchar_t* const kNoHandleText					= L"nohandle_text";
+const wchar_t* const kCharSetErr					= L"charset_err";
 const wchar_t* const kInvalidPathErr				= L"invalid_path_err";
 const wchar_t* const kInvalidFinderErr				= L"invalid_finder_err";
 const wchar_t* const kInvalidFormatterErr			= L"invalid_formatter_err";
@@ -125,12 +128,15 @@ typedef enum _tagMSG_ID {
 	MSG_ERR = 30,
 	MSG_WARNING,
 	MSG_LOADING,
+	MSG_BUSY,
 	MSG_PLUGIN_ERR,
 	MSG_NOFOUND_ERR,
 	MSG_FOLDER_TITLE,
 	MSG_STILL_WORKING,
 	MSG_HANDLE_TEXT,
+	MSG_HANDLE_ERR_TEXT,
 	MSG_NOHANDLE_TEXT,
+	MSG_CHARSET_ERR,
 	MSG_INVALID_PATH,
 	MSG_FINDER_ERR,
 	MSG_FORMATTER_ERR,
@@ -170,6 +176,14 @@ typedef struct _tagSKIN_INFO
 	DWORD dwBKColor;
 	BOOL bImage;
 } SKIN_INFO, *LSKIN_INFO, *LPSKIN_INFO;
+
+typedef struct _tagCHARSET_INFO
+{
+	int nType;
+	wchar_t szName[STRING_LENGTH];
+	wchar_t szValue[STRING_LENGTH];
+	wchar_t szDesc[STRING_LENGTH];
+} CHARSET_INFO, *PCHARSET_INFO, *LPCHARSET_INFO;
 
 typedef struct _tagCODER_INFO
 {

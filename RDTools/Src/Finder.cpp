@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "IFileFinder.h"
+#include "StdAfx.h"
+#include "Finder.h"
 
 const wchar_t* const kFinderNameText = L"finder_name_text";
 const wchar_t* const kFinderNameEdit = L"finder_name_edit";
@@ -18,40 +18,44 @@ const wchar_t* const kFinderResetTip = L"finder_reset_tip";
 const wchar_t* const kFinderSearch = L"finder_search";
 const wchar_t* const kFinderSearchTip = L"finder_search_tip";
 
-IFileFinder::IFileFinder()
+CFinder::CFinder()
 {
-	hFinderOwner = NULL;
-	pFinderManager = NULL;
 	pFinderList = NULL;
 	pFinderNameEdit = NULL;
 	pFinderContentEdit = NULL;
 	pFinderPathEdit = NULL;
 }
 
-IFileFinder::~IFileFinder()
+BOOL CFinder::IsCanQuit(HWND hWnd)
+{
+	return TRUE;
+}
+
+void CFinder::OnQuit()
 {
 	ResetFinder();
 }
 
-BOOL IFileFinder::InitFinder(IListCallbackUI* pIListCallback)
+BOOL CFinder::OnInit(WPARAM wParam, LPARAM lParam)
 {
-	if(!pFinderManager)
+	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
+	IListCallbackUI* pIListCallback = (IListCallbackUI *)lParam;
+	if(!pManager || !pIListCallback)
 		return FALSE;
-	FIND_CONTROL_BY_ID(pFinderList, CListUI, pFinderManager, kFinderList)
-	FIND_CONTROL_BY_ID(pFinderNameEdit, CEditUI, pFinderManager, kFinderNameEdit)
-	FIND_CONTROL_BY_ID(pFinderContentEdit, CEditUI, pFinderManager, kFinderContentEdit)
-	FIND_CONTROL_BY_ID(pFinderPathEdit, CEditUI, pFinderManager, kFinderPathEdit)
+	FIND_CONTROL_BY_ID(pFinderList, CListUI, pManager, kFinderList)
+	FIND_CONTROL_BY_ID(pFinderNameEdit, CEditUI, pManager, kFinderNameEdit)
+	FIND_CONTROL_BY_ID(pFinderContentEdit, CEditUI, pManager, kFinderContentEdit)
+	FIND_CONTROL_BY_ID(pFinderPathEdit, CEditUI, pManager, kFinderPathEdit)
 	if(pFinderList)
 		pFinderList->SetTextCallback(pIListCallback);
 	return TRUE;
 }
 
-BOOL IFileFinder::SetFinderLang(LPCWSTR lpszLang)
+BOOL CFinder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 {
-	if(!pFinderManager)
+	if(!pManager)
 		return FALSE;
-
-SET_CONTROL_BEGIN(pFinderManager, lpszLang, LS_FINDERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, LS_FINDERPANEL)
 	SET_CONTROL_TEXT2(kFinderNameText)
 	SET_CONTROL_TEXT2(kFinderContentText)
 	SET_CONTROL_TEXT2(kFinderPathText)
@@ -66,12 +70,69 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-LPCWSTR IFileFinder::GetFinderListName()
+void CFinder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-	return kFinderList;
+	bHandled = FALSE;
+	CDuiString sCtrlName = msg.pSender->GetName();
+	if(sCtrlName==kFinderPathSelect)
+	{
+		SelectFolder(hWnd);
+		bHandled = TRUE;
+	}
+	else if(sCtrlName==kFinderReset)
+	{
+		ResetFinder();
+		bHandled = TRUE;
+	}
+	else if(sCtrlName==kFinderSearch)
+	{
+		StartFinder(hWnd);
+		bHandled = TRUE;
+	}
 }
 
-LPCWSTR IFileFinder::GetFinderItemText(CControlUI* pControl, int iIndex, int iSubItem)
+void CFinder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
+	if(!pParent)
+		return;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return;
+	if(pList->GetName()!=kFinderList)
+		return;
+	CDuiString sCtrlName = msg.pSender->GetClass();
+	CListTextElementUI *pElement = (CListTextElementUI *)msg.pSender;
+	if(!pElement)
+		return;
+	if(sCtrlName!=L"ListTextElementUI")
+		return;
+	int nIndex = pElement->GetIndex();
+	if(nIndex>=(int)lstFinderInfo.size())
+		return;
+	LPFINDER_INFO pFinderInfo = (LPFINDER_INFO)lstFinderInfo[nIndex];
+	if(pFinderInfo)
+		SHHelper::OpenFile(hWnd, pFinderInfo->szPath);
+}
+
+LPCWSTR CFinder::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+{
+	LPCWSTR lpszData = L"";
+	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
+	if(!pParent)
+		return lpszData;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return lpszData;
+	if(pList->GetName()==kFinderList)
+	{
+		lpszData = GetFinderItemText(pControl, iIndex, iSubItem);
+	}
+	return lpszData;
+}
+
+LPCWSTR CFinder::GetFinderItemText(CControlUI* pControl, int iIndex, int iSubItem)
 {
 	TCHAR szText[1024] = {0};
 	LPFINDER_INFO pFinderInfo = lstFinderInfo[iIndex];
@@ -84,7 +145,6 @@ LPCWSTR IFileFinder::GetFinderItemText(CControlUI* pControl, int iIndex, int iSu
 		wcscpy(szText, pFinderInfo->szPath);
 		break;
 	case 1:
-		
 		break;
 	case 2:
 		swprintf(szText, L"%lld", pFinderInfo->llSize);
@@ -94,49 +154,13 @@ LPCWSTR IFileFinder::GetFinderItemText(CControlUI* pControl, int iIndex, int iSu
 	return pControl->GetUserData();
 }
 
-void IFileFinder::OnFinderClick(TNotifyUI& msg, BOOL& bHandled)
-{
-	CDuiString sCtrlName = msg.pSender->GetName();
-	if(sCtrlName==kFinderPathSelect)
-	{
-		SelectFolder();
-		bHandled = TRUE;
-	}
-	else if(sCtrlName==kFinderReset)
-	{
-		ResetFinder();
-		bHandled = TRUE;
-	}
-	else if(sCtrlName==kFinderSearch)
-	{
-		StartFinder();
-		bHandled = TRUE;
-	}
-}
-
-void IFileFinder::OnFinderItemActive(TNotifyUI& msg)
-{
-	CListTextElementUI *pElement = (CListTextElementUI *)msg.pSender;
-	if(!pElement)
-		return;
-	CDuiString sCtrlName = msg.pSender->GetClass();
-	if(sCtrlName!=L"ListTextElementUI")
-		return;
-	int nIndex = pElement->GetIndex();
-	if(nIndex>=(int)lstFinderInfo.size())
-		return;
-	LPFINDER_INFO pFinderInfo = (LPFINDER_INFO)lstFinderInfo[nIndex];
-	if(pFinderInfo)
-		SHHelper::OpenFile(hFinderOwner, pFinderInfo->szPath);
-}
-
-BOOL IFileFinder::SelectFolder()
+BOOL CFinder::SelectFolder(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024];
 	wchar_t szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kFolderTitle, szTitle);
-	bRet = SHHelper::SelectFolder(hFinderOwner, szPath, szTitle);
+	bRet = SHHelper::SelectFolder(hWnd, szPath, szTitle);
 	if(bRet && pFinderPathEdit)
 	{
 		pFinderPathEdit->SetText(szPath);
@@ -146,7 +170,7 @@ BOOL IFileFinder::SelectFolder()
 	return bRet;
 }
 
-BOOL IFileFinder::ResetFinder()
+BOOL CFinder::ResetFinder()
 {
 	BOOL bRet = FALSE;
 	if(!pFinderList)
@@ -174,7 +198,7 @@ BOOL IFileFinder::ResetFinder()
 	return bRet;
 }
 
-BOOL IFileFinder::StartFinder()
+BOOL CFinder::StartFinder(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	if(!pFinderPathEdit || !pFinderContentEdit || !pFinderNameEdit)
@@ -185,19 +209,13 @@ BOOL IFileFinder::StartFinder()
 	CDuiString strName = pFinderNameEdit->GetText();
 	if(strPath.IsEmpty())
 	{
-		wchar_t szErr[1024], szTitle[1024];
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgErr, szTitle);
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kInvalidPathErr, szErr);
-		DuiMsgBox(hFinderOwner, szErr, szTitle, MB_OK);
+		RDMsgBox(hWnd, MSG_INVALID_PATH, MSG_ERR, MB_OK);
 		pFinderPathEdit->SetFocus();
 		return bRet;
 	}
 	if(strContent.IsEmpty() && strName.IsEmpty())
 	{
-		wchar_t szErr[1024], szTitle[1024];
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgErr, szTitle);
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kInvalidFinderErr, szErr);
-		DuiMsgBox(hFinderOwner, szErr, szTitle, MB_OK);
+		RDMsgBox(hWnd, MSG_FINDER_ERR, MSG_ERR, MB_OK);
 		if(strName.IsEmpty())
 			pFinderNameEdit->SetFocus();
 		if(strContent.IsEmpty())
@@ -216,10 +234,10 @@ BOOL IFileFinder::StartFinder()
 	return TRUE;
 }
 
-LRESULT IFileFinder::FinderCallBack(LPFINDER_INFO lpInfo, WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CFinder::FinderCallBack(LPFINDER_INFO lpInfo, WPARAM /*wParam*/, LPARAM lParam)
 {
 	LRESULT lRet = 0;
-	IFileFinder *pFinder = (IFileFinder *)lParam;
+	CFinder *pFinder = (CFinder *)lParam;
 	if(pFinder && pFinder->pFinderList)
 	{
 		CListTextElementUI* pElement = new CListTextElementUI();
@@ -230,7 +248,7 @@ LRESULT IFileFinder::FinderCallBack(LPFINDER_INFO lpInfo, WPARAM /*wParam*/, LPA
 			return lRet;
 		wcscpy(pFinderInfo->szPath, lpInfo->szPath);
 		pFinderInfo->llSize = lpInfo->llSize;
-		
+
 		pFinder->lstFinderInfo.push_back(pFinderInfo);
 		pFinder->pFinderList->Add(pElement);
 	}

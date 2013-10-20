@@ -189,7 +189,27 @@
 				UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 				>
 				<File
+					RelativePath=".\Src\About.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\AddrTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\CharSetTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\ChildLayoutTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\Coder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\ColorPicker.cpp"
 					>
 				</File>
 				<File
@@ -201,35 +221,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IAbout.cpp"
+					RelativePath=".\Src\Finder.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IChildLayoutTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ICoder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IColorPicker.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IFileFinder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IFormatter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IHostAdmin.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IIpConfig.cpp"
+					RelativePath=".\Src\Hosts.cpp"
 					>
 				</File>
 				<File
@@ -237,7 +233,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\ITidy.cpp"
+					RelativePath=".\Src\IPConfig.cpp"
 					>
 				</File>
 				<File
@@ -246,6 +242,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\RDTools.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\Setting.cpp"
 					>
 				</File>
 				<File
@@ -273,6 +273,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\Tidy.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.cpp"
 					>
 				</File>
@@ -283,7 +287,27 @@
 				UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 				>
 				<File
+					RelativePath=".\Src\About.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\AddrTable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\CharSetTable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\ChildLayoutTest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\Coder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\ColorPicker.h"
 					>
 				</File>
 				<File
@@ -299,35 +323,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IAbout.h"
+					RelativePath=".\Src\Finder.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IChildLayoutTest.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ICoder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IColorPicker.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IFileFinder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IFormatter.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IHostAdmin.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IIpConfig.h"
+					RelativePath=".\Src\Hosts.h"
 					>
 				</File>
 				<File
@@ -335,7 +335,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\ITidy.h"
+					RelativePath=".\Src\IPConfig.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\ITools.h"
 					>
 				</File>
 				<File
@@ -351,11 +355,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\Setting.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\stdafx.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Src\SystemTraySDK.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\Tidy.h"
 					>
 				</File>
 				<File

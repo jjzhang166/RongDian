@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "ICoder.h"
+#include "StdAfx.h"
+#include "Coder.h"
 
 const wchar_t* const kCoderListText = L"coder_list_text";
 const wchar_t* const kCoderList = L"coder_list";
@@ -32,13 +32,11 @@ const wchar_t* const kCoderPathEditTip = L"coder_path_edit_tip";
 const wchar_t* const kCoderPathOpen = L"coder_path_open";
 const wchar_t* const kCoderPathOpenTip = L"coder_path_open_tip";
 
-ICoder::ICoder()
+CCoder::CCoder()
 {
-	hCoderOwner = NULL;
-	pCoderManager = NULL;
 	pCoderList = NULL;
-	pCoderFrom = NULL;
-	pCoderTo = NULL;
+	pCoderComboFrom = NULL;
+	pCoderComboTo = NULL;
 	pCoderBackupCheck = NULL;
 	pCoderNoBOM = NULL;
 	pCoderBackupEdit = NULL;
@@ -47,60 +45,84 @@ ICoder::ICoder()
 	bWorking = FALSE;
 	bQuitThread = TRUE;
 	memset(szHandleText, 0, sizeof(szHandleText));
+	memset(szHandleErrText, 0, sizeof(szHandleErrText));
 	memset(szNoHandleText, 0, sizeof(szNoHandleText));
 	dwHightLightColor = 0;
 	dwGrayColor = 0;
+	hConvertThread = NULL;
 }
 
-ICoder::~ICoder()
+BOOL CCoder::IsCanQuit(HWND hWnd)
 {
-
-}
-
-LPCWSTR ICoder::GetCoderListName()
-{
-	return kCoderList;
-}
-
-BOOL ICoder::InitCoder(IListCallbackUI* pIListCallback)
-{
-	if(!pCoderManager)
+	if(hConvertThread)
+	{
+		RDMsgBox(hWnd, MSG_BUSY, MSG_ERR, MB_OK);
 		return FALSE;
-	FIND_CONTROL_BY_ID(pCoderList, CListUI, pCoderManager, kCoderList)
-	FIND_CONTROL_BY_ID(pCoderFrom, CComboBoxUI, pCoderManager, kCoderFrom)
-	FIND_CONTROL_BY_ID(pCoderTo, CComboBoxUI, pCoderManager, kCoderTo)
-	FIND_CONTROL_BY_ID(pCoderBackupCheck, CButtonUI, pCoderManager, kCoderBackup)
+	}
+	return TRUE;
+}
+
+void CCoder::OnQuit()
+{
+	list<LPCHARSET_INFO>::iterator charset_iter;
+	LPCHARSET_INFO lpCharSetInfo = NULL;
+	for(charset_iter=lstCharSetsInfo.begin(); charset_iter!=lstCharSetsInfo.end(); )
+	{
+		lpCharSetInfo = (*charset_iter);
+		charset_iter++;
+		delete lpCharSetInfo;
+	}
+	lstCharSetsInfo.clear();
+	DelAllFiles();
+}
+
+BOOL CCoder::OnInit(WPARAM wParam, LPARAM lParam)
+{
+	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
+	IListCallbackUI* pIListCallback = (IListCallbackUI *)lParam;
+	if(!pManager || !pIListCallback)
+		return FALSE;
+	FIND_CONTROL_BY_ID(pCoderList, CListUI, pManager, kCoderList)
+	FIND_CONTROL_BY_ID(pCoderComboFrom, CComboUI, pManager, kCoderComboFrom)
+	FIND_CONTROL_BY_ID(pCoderComboTo, CComboUI, pManager, kCoderComboTo)
+	FIND_CONTROL_BY_ID(pCoderBackupCheck, CButtonUI, pManager, kCoderBackup)
 	if(pCoderBackupCheck)
 	{
 		pCoderBackupCheck->SetUserData(L"TRUE");
 		dwHightLightColor = pCoderBackupCheck->GetBkColor();
 	}
-	FIND_CONTROL_BY_ID(pCoderNoBOM, CButtonUI, pCoderManager, kCoderBOM)
+	FIND_CONTROL_BY_ID(pCoderNoBOM, CButtonUI, pManager, kCoderBOM)
 	if(pCoderNoBOM)
 	{
 		pCoderNoBOM->SetUserData(L"FALSE");
 		dwGrayColor = pCoderNoBOM->GetBkColor();
 	}
-	FIND_CONTROL_BY_ID(pCoderBackupEdit, CEditUI, pCoderManager, kCoderPathEdit)
-	if(pCoderBackupEdit)
-		pCoderBackupEdit->SetText(g_szCoderBackupPath);
+	FIND_CONTROL_BY_ID(pCoderBackupEdit, CEditUI, pManager, kCoderPathEdit)
+		if(pCoderBackupEdit)
+			pCoderBackupEdit->SetText(g_szCoderBackupPath);
 	if(pCoderList)
 		pCoderList->SetTextCallback(pIListCallback);
 	if(!PathFileExists(g_szCoderBackupPath))
 		SHCreateDirectoryEx(NULL, g_szCoderBackupPath, NULL);
+
+	LoadCharSet();
+	InitCharSetCombo();
+	
 	return TRUE;
 }
 
-BOOL ICoder::SetCoderLang(LPCWSTR lpszLang)
+BOOL CCoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 {
-	if(!pCoderManager)
+	if(!pManager)
 		return FALSE;
 	memset(szHandleText, 0, sizeof(szHandleText));
+	memset(szHandleErrText, 0, sizeof(szHandleErrText));
 	memset(szNoHandleText, 0, sizeof(szNoHandleText));
 	Utility::GetINIStr(lpszLang, LS_MSG, kHandleText, szHandleText);
+	Utility::GetINIStr(lpszLang, LS_MSG, kHandleErrText, szHandleErrText);
 	Utility::GetINIStr(lpszLang, LS_MSG, kNoHandleText, szNoHandleText);
 
-SET_CONTROL_BEGIN(pCoderManager, lpszLang, LS_CODERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, LS_CODERPANEL)
 	SET_CONTROL_TEXT2(kCoderListText)
 	SET_CONTROL_TEXT2(kCoderHeaderPath)
 	SET_CONTROL_TEXT2(kCoderHeaderEncoding)
@@ -125,40 +147,12 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-LPCWSTR ICoder::GetCoderItemText(CControlUI* pControl, int iIndex, int iSubItem)
-{
-	TCHAR szText[1024] = {0};
-	LPCODER_INFO pCoderInfo = lstCoderInfo[iIndex];
-	if(!pCoderInfo)
-		return NULL;
-	switch (iSubItem)
-	{
-	case 0:
-		pControl->SetAttribute(L"align", L"left");
-		wcscpy(szText, pCoderInfo->szPath);
-		break;
-	case 1:
-		wchar_t szFrom_w[64];
-		StrUtil::a2w(pCoderInfo->szFrom, szFrom_w);
-		wcscpy(szText, szFrom_w);
-		break;
-	case 2:
-		if(pCoderInfo->bHandle)
-			wcscpy(szText, szHandleText);
-		else
-			wcscpy(szText, szNoHandleText);
-		break;
-	}
-	pControl->SetUserData(szText);
-	return pControl->GetUserData();
-}
-
-void ICoder::OnCoderClick(TNotifyUI& msg, BOOL& bHandled)
+void CCoder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName==kCoderStart)
 	{
-		StartConvert();
+		StartConvert(hWnd);
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderStop)
@@ -168,12 +162,12 @@ void ICoder::OnCoderClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if(sCtrlName==kCoderNewFile)
 	{
-		AddNewFile();
+		AddNewFile(hWnd);
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderNewFolder)
 	{
-		AddNewFolder();
+		AddNewFolder(hWnd);
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderDel)
@@ -232,43 +226,180 @@ void ICoder::OnCoderClick(TNotifyUI& msg, BOOL& bHandled)
 	}
 	else if(sCtrlName==kCoderPathOpen)
 	{
-		SHHelper::OpenFolder(hCoderOwner, g_szCoderBackupPath);
+		SHHelper::OpenFolder(hWnd, g_szCoderBackupPath);
 		bHandled = TRUE;
 	}
 }
 
-void ICoder::OnCoderItemActive(TNotifyUI& /*msg*/)
+void CCoder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
+	bHandled = FALSE;
+	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
+	if(!pParent)
+		return;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return;
+	if(pList->GetName()!=kCoderList)
+		return;
+	CDuiString sCtrlName = msg.pSender->GetClass();
+	if(sCtrlName==L"ListLabelElementUI")
+	{
 
+	}
 }
 
-BOOL ICoder::StartConvert()
+LPCWSTR CCoder::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+{
+	LPCWSTR lpszData = NULL;
+	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
+	if(!pParent)
+		return L"";
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return L"";
+	if(pList->GetName()==kCoderList)
+	{
+		lpszData = GetCoderItemText(pControl, iIndex, iSubItem);
+	}
+	return lpszData;
+}
+
+LPCWSTR CCoder::GetCoderItemText(CControlUI* pControl, int iIndex, int iSubItem)
+{
+	TCHAR szText[1024] = {0};
+	LPCODER_INFO pCoderInfo = lstCoderInfo[iIndex];
+	if(!pCoderInfo)
+		return NULL;
+	switch (iSubItem)
+	{
+	case 0:
+		pControl->SetAttribute(L"align", L"left");
+		wcscpy(szText, pCoderInfo->szPath);
+		break;
+	case 1:
+		wchar_t szFrom_w[64];
+		StrUtil::a2w(pCoderInfo->szFrom, szFrom_w);
+		wcscpy(szText, szFrom_w);
+		break;
+	case 2:
+		if(pCoderInfo->bHandle)
+			wcscpy(szText, szHandleText);
+		else
+			wcscpy(szText, szNoHandleText);
+		break;
+	}
+	pControl->SetUserData(szText);
+	return pControl->GetUserData();
+}
+
+BOOL CCoder::LoadCharSet()
+{
+	BOOL bRet = FALSE;
+	CCharSetTableDB charset(&g_SQLite);
+	if(!charset.Init())
+		return bRet;
+	if(!charset.Query(NULL))
+		return bRet;
+
+	LPCHARSET_TABLE lpCharSetTable = charset.GetResults();
+	LPCHARSET_INFO lpCharSetInfo = NULL;
+	for(int i=0; i<charset.GetRows(); i++)
+	{
+		lpCharSetInfo = new CHARSET_INFO();
+		if(!lpCharSetInfo)
+			return bRet;
+		lpCharSetInfo->nType = lpCharSetTable[i].nType;
+		wcscpy(lpCharSetInfo->szName, lpCharSetTable[i].szName);
+		wcscpy(lpCharSetInfo->szDesc, lpCharSetTable[i].szDesc);
+		lstCharSetsInfo.push_back(lpCharSetInfo);
+	}
+
+	bRet = TRUE;
+	return bRet;
+}
+
+BOOL CCoder::InitCharSetCombo()
+{
+	BOOL bRet = FALSE;
+	if(!pCoderComboFrom || !pCoderComboTo)
+		return bRet;
+	LPCHARSET_INFO lpCharSetInfo = NULL;
+	list<LPCHARSET_INFO>::iterator iter;
+	CListLabelElementUI *pItem = NULL;
+	BOOL bFromItem = FALSE, bToItem = FALSE;
+	pCoderComboFrom->RemoveAll();
+	pCoderComboTo->RemoveAll();
+	for(iter=lstCharSetsInfo.begin(); iter!=lstCharSetsInfo.end(); iter++)
+	{
+		lpCharSetInfo = (*iter);
+		if(lpCharSetInfo->nType==CHARSET_INPUT)
+		{
+			pItem = new CListLabelElementUI();
+			pItem->SetText(lpCharSetInfo->szName);
+			pCoderComboFrom->AddAt(pItem, pCoderComboFrom->GetCount());  
+		}
+		else if(lpCharSetInfo->nType==CHARSET_OUTPUT)
+		{
+			pItem = new CListLabelElementUI();
+			pItem->SetText(lpCharSetInfo->szName);
+			pCoderComboTo->AddAt(pItem, pCoderComboTo->GetCount());
+		}
+		else if(lpCharSetInfo->nType==CHARSET_BOTH)
+		{
+			pItem = new CListLabelElementUI();
+			pItem->SetText(lpCharSetInfo->szName);
+			pCoderComboFrom->AddAt(pItem, pCoderComboFrom->GetCount());
+			pItem = new CListLabelElementUI();
+			pItem->SetText(lpCharSetInfo->szName);
+			pCoderComboTo->AddAt(pItem, pCoderComboTo->GetCount());
+		}
+	}
+
+	bRet = TRUE;
+	return bRet;
+}
+
+BOOL CCoder::StartConvert(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	if(!bQuitThread)
 	{
-		wchar_t szErr[1024], szTitle[1024];
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgErr, szTitle);
-		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kStillWorkingErr, szErr);
-		DuiMsgBox(hCoderOwner, szErr, szTitle, MB_OK);
+		RDMsgBox(hWnd, MSG_STILL_WORKING, MSG_ERR, MB_OK);
+		return bRet;
+	}
+	if(!pCoderComboTo)
+		return bRet;
+	CDuiString strCoderCharSet = pCoderComboTo->GetText();
+	if(strCoderCharSet.IsEmpty())
+	{
+		RDMsgBox(hWnd, MSG_CHARSET_ERR, MSG_ERR, MB_OK);
 		return bRet;
 	}
 	DWORD dwThread = 0;
-	HANDLE hThread = CreateThread(NULL, 0, ConvertThread, (LPVOID)this, 0, &dwThread);
-	if(!hThread)
+	hConvertThread = CreateThread(NULL, 0, ConvertThread, (LPVOID)this, 0, &dwThread);
+	if(!hConvertThread)
 		return bRet;
-	CloseHandle(hThread);
+	LPCODER_INFO lpCoderInfo = NULL;
+	vector<LPCODER_INFO>::iterator iter;
+	for(iter=lstCoderInfo.begin(); iter!=lstCoderInfo.end(); iter++)
+	{
+		lpCoderInfo = (*iter);
+		if(lpCoderInfo)
+			StrUtil::w2a(strCoderCharSet.GetData(), lpCoderInfo->szTo);
+	}
+	bWorking = TRUE;
 	return TRUE;
 }
 
-BOOL ICoder::StopConvert()
+BOOL CCoder::StopConvert()
 {
 	if(bWorking)
 		bWorking = FALSE;
 	return TRUE;
 }
 
-BOOL ICoder::DelSelFile()
+BOOL CCoder::DelSelFile()
 {
 	BOOL bRet = FALSE;
 	if(!pCoderList)
@@ -295,7 +426,7 @@ BOOL ICoder::DelSelFile()
 	return FALSE;
 }
 
-BOOL ICoder::DelAllFiles()
+BOOL CCoder::DelAllFiles()
 {
 	BOOL bRet = FALSE;
 	if(!pCoderList)
@@ -315,12 +446,12 @@ BOOL ICoder::DelAllFiles()
 	return TRUE;
 }
 
-BOOL ICoder::AddNewFile()
+BOOL CCoder::AddNewFile(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024];
 	wchar_t szFilter[] = L"All(*.*)\0*.*\0Text(*.txt)\0*.TXT\0\0";
-	bRet = SHHelper::SelectFile(hCoderOwner, szPath, szFilter);
+	bRet = SHHelper::SelectFile(hWnd, szPath, szFilter);
 	if(bRet && pCoderList)
 	{
 		CListTextElementUI* pElement = new CListTextElementUI();
@@ -333,6 +464,7 @@ BOOL ICoder::AddNewFile()
 		pCoderInfo->bHandle = FALSE;
 		pCoderInfo->bValid = TRUE;
 		char szFrom[64] = {0};
+		wchar_t szFrom_w[64] = {0};
 		if(GetFileCharSet(szPath, szFrom))
 			strcpy(pCoderInfo->szFrom, szFrom);
 		else
@@ -340,24 +472,26 @@ BOOL ICoder::AddNewFile()
 		//pElement->SetTag(lstCoderInfo.size());
 		lstCoderInfo.push_back(pCoderInfo);
 		pCoderList->Add(pElement);
+		StrUtil::a2w(szFrom, szFrom_w);
+		SelFromCharSet(szFrom_w);
 	}
 	return bRet;
 }
 
-BOOL ICoder::AddNewFolder()
+BOOL CCoder::AddNewFolder(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024];
 	wchar_t szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kFolderTitle, szTitle);
-	bRet = SHHelper::SelectFolder(hCoderOwner, szPath, szTitle);
+	bRet = SHHelper::SelectFolder(hWnd, szPath, szTitle);
 	if(bRet && pCoderList)
 		bRet = AddCoderFolder(szPath);
 
 	return bRet;
 }
 
-BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
+BOOL CCoder::AddCoderFolder(LPCWSTR lpszFolder)
 {
 	BOOL bRet = FALSE;
 	wchar_t szFolder[1024] = {0};
@@ -369,6 +503,7 @@ BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
 		return bRet;
 	BOOL bFolder = FALSE;
 	wchar_t szCurPath[1024];
+	BOOL bFirst = TRUE;
 	while(TRUE)
 	{
 		bRet = TRUE;
@@ -412,6 +547,13 @@ BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
 				//pElement->SetTag(lstCoderInfo.size());
 				lstCoderInfo.push_back(pCoderInfo);
 				pCoderList->Add(pElement);
+				if(bFirst)
+				{
+					wchar_t szFrom_w[64] = {0};
+					StrUtil::a2w(szFrom, szFrom_w);
+					SelFromCharSet(szFrom_w);
+					bFirst = FALSE;
+				}
 			}
 		}
 		if(!FindNextFileW(hFind, &FindFileData))
@@ -420,13 +562,30 @@ BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
 	return bRet;
 }
 
-BOOL ICoder::GetFileCharSet(LPCWSTR lpszPath, LPSTR lpszSet)
+BOOL CCoder::SelFromCharSet(LPCWSTR lpszCharSet)
 {
 	BOOL bRet = FALSE;
+	if(!pCoderComboFrom || !lpszCharSet)
+		return bRet;
+	CListLabelElementUI *pItem = NULL;
+	for(int i=0; i<pCoderComboFrom->GetCount(); i++)
+	{
+		pItem = (CListLabelElementUI *)pCoderComboFrom->GetItemAt(i);
+		if(pItem && wcsicmp(pItem->GetText().GetData(), lpszCharSet)==0)
+			pCoderComboFrom->SelectItem(i);
+	}
+
+	return bRet;
+}
+
+BOOL CCoder::GetFileCharSet(LPCWSTR lpszPath, LPSTR lpszSet)
+{
+	BOOL bRet = FALSE;
+#define CSD_DATA_SIZE 4096
 	if(!PathFileExists(lpszPath))
 		return bRet;
-	char szPath[1024], szData[1024];
-	int nSize = 1024;
+	char szPath[1024], szData[CSD_DATA_SIZE] = {0};
+	int nSize = CSD_DATA_SIZE;
 	StrUtil::w2a(lpszPath, szPath);
 	FILE *pFile = fopen(szPath, "rb");
 	if(!pFile)
@@ -449,7 +608,7 @@ BOOL ICoder::GetFileCharSet(LPCWSTR lpszPath, LPSTR lpszSet)
 	return bRet;
 }
 
-BOOL ICoder::ConvertFile(LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
+BOOL CCoder::ConvertFile(HWND hWnd, LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
 {
 	BOOL bRet = FALSE;
 	if(!lpszPath)
@@ -459,80 +618,114 @@ BOOL ICoder::ConvertFile(LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
 	swprintf(szNewPath_w, L"%s\\%s", g_szCoderPath, lpszFileName);
 	swprintf(szBackUp, L"%s\\%s", g_szCoderBackupPath, lpszFileName);
 	if(bCoderBackup)
-		SHHelper::CopyFile(hCoderOwner, lpszPath, szBackUp);
+		SHHelper::CopyFile(NULL, lpszPath, szBackUp);
 
-	char szOldPath[1024], szNewPath[1024], szOldData[1024], szNewData[4096];
-	int nSize = 1024;
+	char szOldPath[1024], szNewPath[1024];
+	char *lpOldData = NULL, *lpNewData = NULL;
+	DWORD dwOldData = 0, dwNewData = 0;
 	size_t nRead = 0, nLeftData = 0;
 	StrUtil::w2a(lpszPath, szOldPath);
 	StrUtil::w2a(szNewPath_w, szNewPath);
 	FILE *pOldFile = fopen(szOldPath, "rb");
 	if(!pOldFile)
 		return bRet;
-	FILE *pNewFile = fopen(szNewPath, "ab+");
+	FILE *pNewFile = fopen(szNewPath, "wb");
 	if(!pNewFile)
 	{
 		fclose(pOldFile);
 		return bRet;
 	}
-	const unsigned char* lpSrc = NULL;
-	unsigned char* lpDst = NULL;
-	iconv_t cd;
-	cd = iconv_open(lpszTo, lpszFrom);
-	if ((iconv_t)-1 == cd)
+	fseek(pOldFile, 0L, SEEK_END);
+	dwOldData = ftell(pOldFile);
+	dwNewData = dwOldData * 8;
+	fseek(pOldFile, 0L, SEEK_SET);
+	lpOldData = (char *)malloc(dwOldData);
+	if(!lpOldData)
 	{
 		fclose(pOldFile);
 		fclose(pNewFile);
 		return bRet;
 	}
-	nLeftData = _countof(szNewData);
-	nRead = fread(szOldData, (size_t)nSize, 1, pOldFile);
-	while(nRead && bWorking)
+	lpNewData = (char *)malloc(dwNewData);
+	if(!lpNewData)
 	{
-		lpSrc = (const unsigned char *)szOldData;
-		lpDst = (unsigned char *)szNewData;
-		iconv(cd, (const char**)&lpSrc, &nRead, (char**)&lpDst, &nLeftData);
-		fwrite(szNewData, _countof(szNewData)-nLeftData, 1, pNewFile);
-		memset(szOldData, 0, sizeof(szOldData));
-		memset(szNewData, 0, sizeof(szNewData));
-		nRead = fread(szOldData, (size_t)nSize, 1, pOldFile);
+		free(lpOldData);
+		fclose(pOldFile);
+		fclose(pNewFile);
+		return bRet;
+	}
+	memset(lpNewData, 0, dwNewData);
+	char* lpSrc = lpOldData;
+	char* lpDst = lpNewData;
+	iconv_t cd;
+	cd = iconv_open(lpszTo, lpszFrom);
+	if ((iconv_t)-1 == cd)
+	{
+		free(lpOldData);
+		free(lpNewData);
+		fclose(pOldFile);
+		fclose(pNewFile);
+		return bRet;
+	}
+	nRead = fread(lpOldData, 1, (size_t)dwOldData, pOldFile);
+	nLeftData = dwNewData;
+	fclose(pOldFile);
+	pOldFile = NULL;
+	if(nRead==dwOldData && bWorking)
+	{
+		size_t ret = iconv(cd, (const char**)&lpOldData, &nRead, (char**)&lpNewData, &nLeftData);
+		if(ret==0)
+		{
+			ret = fwrite(lpDst, 1, dwNewData-nLeftData, pNewFile);
+			if(ret==dwNewData-nLeftData)
+				bRet = TRUE;
+		}
 	}
 	//iconv's arg
 	iconv_close(cd);
-	fclose(pOldFile);
+	free(lpSrc);
+	free(lpDst);
 	fclose(pNewFile);
 
-	return TRUE;
+	return bRet;
 }
 
-DWORD WINAPI ICoder::ConvertThread(LPVOID lpVoid)
+DWORD WINAPI CCoder::ConvertThread(LPVOID lpVoid)
 {
-	ICoder *pICoder = (ICoder *)lpVoid;
-	if(!pICoder)
+	CCoder *pCoder = (CCoder *)lpVoid;
+	if(!pCoder)
 		return 0;
 	vector<LPCODER_INFO>::iterator iter;
 	LPCODER_INFO lpCoderInfo = NULL;
 	CListTextElementUI *pElement = NULL;
 	int i = 0;
 	BOOL bRet = FALSE;
-	pICoder->bQuitThread = FALSE;
-	while(pICoder && pICoder->bWorking)
+	pCoder->bQuitThread = FALSE;
+	while(pCoder && pCoder->bWorking)
 	{
-		lpCoderInfo=pICoder->lstCoderInfo[i];
+		lpCoderInfo=pCoder->lstCoderInfo[i];
 		if(lpCoderInfo)
 		{
-			bRet = pICoder->ConvertFile(lpCoderInfo->szPath, lpCoderInfo->szFrom, lpCoderInfo->szTo);
-			if(bRet)
+			bRet = pCoder->ConvertFile(NULL, lpCoderInfo->szPath, lpCoderInfo->szFrom, lpCoderInfo->szTo);
+			lpCoderInfo->bHandle = TRUE;
+			pElement = (CListTextElementUI *)pCoder->pCoderList->GetItemAt(i);
+			if(pElement)
 			{
-				lpCoderInfo->bHandle = TRUE;
-				pElement = (CListTextElementUI *)pICoder->pCoderList->GetItemAt(i);
-				if(pElement)
-					pElement->SetText(2, pICoder->szHandleText);
+				if(bRet)
+					pElement->SetText(2, pCoder->szHandleText);
+				else
+					pElement->SetText(2, pCoder->szHandleErrText);
 			}
 		}
 		i++;
+		if(i>=pCoder->lstCoderInfo.size())
+			break;
 	}
-	if(pICoder)
-		pICoder->bQuitThread = TRUE;
+	if(pCoder)
+	{
+		pCoder->bQuitThread = TRUE;
+		CloseHandle(pCoder->hConvertThread);
+		pCoder->hConvertThread = NULL;
+	}
 	return 0;
 }

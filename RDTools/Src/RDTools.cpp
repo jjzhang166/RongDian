@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "RDGlobal.h"
+#include "ITools.h"
 
 const wchar_t*	const	ARGS_ADMIN			= L"-a";
 const wchar_t*	const	ARGS_LONG_ADMIN		= L"--admin";
@@ -345,12 +346,15 @@ ASSOC_BEGIN()
 	ASSOC_LANG(MSG_ERR, kMsgErr, LS_MSG)
 	ASSOC_LANG(MSG_WARNING, kMsgWarning, LS_MSG)
 	ASSOC_LANG(MSG_LOADING, kLoading, LS_MSG)
+	ASSOC_LANG(MSG_BUSY, kBusy, LS_MSG)
 	ASSOC_LANG(MSG_PLUGIN_ERR, kPluginErr, LS_MSG)
 	ASSOC_LANG(MSG_NOFOUND_ERR, kNoFoundErr, LS_MSG)
 	ASSOC_LANG(MSG_FOLDER_TITLE, kFolderTitle, LS_MSG)
 	ASSOC_LANG(MSG_STILL_WORKING, kStillWorkingErr, LS_MSG)
 	ASSOC_LANG(MSG_HANDLE_TEXT, kHandleText, LS_MSG)
+	ASSOC_LANG(MSG_HANDLE_ERR_TEXT, kHandleErrText, LS_MSG)
 	ASSOC_LANG(MSG_NOHANDLE_TEXT, kNoHandleText, LS_MSG)
+	ASSOC_LANG(MSG_CHARSET_ERR, kCharSetErr, LS_MSG)
 	ASSOC_LANG(MSG_INVALID_PATH, kInvalidPathErr, LS_MSG)
 	ASSOC_LANG(MSG_FINDER_ERR, kInvalidFinderErr, LS_MSG)
 	ASSOC_LANG(MSG_FORMATTER_ERR, kInvalidFormatterErr, LS_MSG)

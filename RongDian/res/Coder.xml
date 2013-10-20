@@ -14,10 +14,6 @@
 				<Control width="10" />
 				<VerticalLayout >
 					<Control height="10" />
-					<Button name="coder_start" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-					<Control height="10" />
-					<Button name="coder_stop" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-					<Control height="10" />
 					<Button name="coder_newfile" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 					<Control height="10" />
 					<Button name="coder_newfolder" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
@@ -25,6 +21,10 @@
 					<Button name="coder_del" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 					<Control height="10" />
 					<Button name="coder_delall" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_start" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+					<Control height="10" />
+					<Button name="coder_stop" text="" tooltip="" height="30" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 					<Control />
 				</VerticalLayout>
 				<Control width="10" />
@@ -44,7 +44,7 @@
 				<ListLabelElement text="UTF-8" />
 			</Combo>
 			<Control width="3" />
-			<Button name="coder_bom" text="" width="60" bkcolor="0xFFE0E0E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="FALSE" />
+			<Button name="coder_bom" text="" width="60" bkcolor="0xFFE0E0E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="FALSE" visible="FALSE" />
 			<Control width="20" />
 			<Button name="coder_backup" text="" width="64" bkcolor="0xFF5E50E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="TRUE" />
 			<Control />

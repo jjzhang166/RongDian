@@ -2,18 +2,15 @@
 
 class CMainFrame : public WindowImplBase,
 	public ILangUI, public ISkinUI,
-	public IPanelXml, public IAbout,
-	public IColorPicker, public ICoder,
-	public IListCallbackUI, public IFileFinder,
-	public IFormatter, public IIPConfig,
-	public IHostAdmin, public ITidy,
-	public IChildLayoutTest
+	public IListCallbackUI, public IPanelXml
 {
 public:
 	CMainFrame();
 	~CMainFrame();
 
 	DUI_DECLARE_MESSAGE_MAP()
+
+	RD_DECLARE_TOOLS()
 
 public:
 	LONG SetSkin();
@@ -31,7 +28,7 @@ public:
 	void			OnClick(TNotifyUI& msg);
 	void			OnItemActive(TNotifyUI& msg);
 	void			OnItemClick(TNotifyUI& msg);
-	void			OnItemSelect(TNotifyUI& msg);
+	void			OnItemSelected(TNotifyUI& msg);
 	void			OnMenuSelect(TNotifyUI& msg);
 	void			OnTextChanged(TNotifyUI& msg);
 	void			OnFinalMessage(HWND hWnd);
@@ -45,9 +42,6 @@ public:
 	LRESULT			OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			OnTrayNotification(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
-	LRESULT			OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	LRESULT			OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	LRESULT			OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LPCWSTR			GetItemText(CControlUI* pControl, int iIndex, int iSubItem);
 
 	BOOL			SelectPanel(LPCWSTR lpszTab);

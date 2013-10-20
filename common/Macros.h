@@ -16,10 +16,10 @@
  ************************************************************************/
 #define SET_CONTROL_BEGIN(man, lang, ls) \
 	{ \
-		CPaintManagerUI *pManager = man; \
+		CPaintManagerUI *pPaintManager = man; \
 		LPCWSTR pLang = lang; \
 		LPCWSTR pSection = ls; \
-		assert(pManager!=NULL);
+		assert(pPaintManager!=NULL);
 
 /*************************************************************************
  * Method:    		SET_TITLE_TEXT
@@ -34,7 +34,7 @@
  * CopyRight:		
  ************************************************************************/
 #define SET_TITLE_TEXT(hwnd, id, str) \
-		CControlUI *p##id = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id) \
 		{ \
 			p##id->SetText(str); \
@@ -54,7 +54,7 @@
  ************************************************************************/
 #define SET_TITLE_TEXT2(hwnd, id) \
 		wchar_t sz##id[1024]; \
-		CControlUI *p##id = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 		{ \
 			p##id->SetText(sz##id); \
@@ -80,7 +80,7 @@
  ************************************************************************/
 #define SET_TITLE_TEXT3(hwnd, id, tail) \
 		wchar_t sz##id##Text[1024], sz##id[1024]; \
-		CControlUI *p##id = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 		{ \
 			swprintf(sz##id##Text, L"%s%s", sz##id, tail); \
@@ -100,7 +100,7 @@
  * CopyRight:		
  ************************************************************************/
 #define SET_CONTROL_TEXT(id, str) \
-		CControlUI *p##id##Text = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Text = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Text) \
 			p##id##Text->SetText(str);
 
@@ -116,7 +116,7 @@
  ************************************************************************/
 #define SET_CONTROL_TEXT2(id) \
 		wchar_t sz##id[1024]; \
-		CControlUI *p##id##Text2 = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Text2 = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Text2 && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 			p##id##Text2->SetText(sz##id);
 
@@ -138,7 +138,7 @@
  ************************************************************************/
 #define SET_CONTROL_TEXT3(id, tail) \
 		wchar_t sz##id##Text[1024], sz##id[1024]; \
-		CControlUI *p##id##Text3 = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Text3 = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Text3 && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 		{ \
 			swprintf(sz##id##Text, L"%s%s", sz##id, tail); \
@@ -160,7 +160,7 @@
  ************************************************************************/
 #define SET_CONTROL_TEXT4(id, iid, nid) \
 		wchar_t sz##id[1024] = {0}; \
-		CControlUI *p##id##Text4 = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Text4 = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Text4) \
 		{ \
 			if(pLang) \
@@ -182,7 +182,7 @@
  * CopyRight:		
  ************************************************************************/
 #define SET_CONTROL_TIP(id, str) \
-		CControlUI *p##id##Tip = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Tip = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Tip) \
 			p##id##Tip->SetToolTip(str); \
 
@@ -198,7 +198,7 @@
  ************************************************************************/
 #define SET_CONTROL_TIP2(id) \
 		wchar_t sz##id[1024]; \
-		CControlUI *p##id##Tip2 = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##Tip2 = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##Tip2 && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 			p##id##Tip2->SetToolTip(sz##id);
 
@@ -215,7 +215,7 @@
  ************************************************************************/
 #define SET_CONTROL_TEXT_AND_TIP(id, tip_id) \
 		wchar_t sz##id[1024], sz##tip_id[1024]; \
-		CControlUI *p##id##TextTip = static_cast<CControlUI*>(pManager->FindControl(id)); \
+		CControlUI *p##id##TextTip = static_cast<CControlUI*>(pPaintManager->FindControl(id)); \
 		if(p##id##TextTip && Utility::GetINIStr(pLang, pSection, id, sz##id)) \
 			p##id##TextTip->SetText(sz##id); \
 		if(p##id##TextTip && Utility::GetINIStr(pLang, pSection, tip_id, sz##tip_id)) \

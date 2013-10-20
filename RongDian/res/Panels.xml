@@ -25,12 +25,12 @@
 		<desc>File Finder Panel</desc>
 	</Plugin>
 	<Plugin>
-		<layout>layout_formatter</layout>
-		<xml>Formatter.xml</xml>
-		<tab>tab_formatter</tab>
-		<panel>panel_formatter</panel>
-		<name>Formatter</name>
-		<desc>Formatter Panel</desc>
+		<layout>layout_tidy</layout>
+		<xml>Tidy.xml</xml>
+		<tab>tab_tidy</tab>
+		<panel>panel_tidy</panel>
+		<name>Tidy</name>
+		<desc>Code Tidy Panel</desc>
 	</Plugin>
 	<Plugin>
 		<layout>layout_ipconfig</layout>
@@ -41,20 +41,12 @@
 		<desc>IP Config Panel</desc>
 	</Plugin>
 	<Plugin>
-		<layout>layout_hostadmin</layout>
-		<xml>HostAdmin.xml</xml>
-		<tab>tab_hostadmin</tab>
-		<panel>panel_hostadmin</panel>
-		<name>HostAdmin</name>
+		<layout>layout_hosts</layout>
+		<xml>Hosts.xml</xml>
+		<tab>tab_hosts</tab>
+		<panel>panel_hosts</panel>
+		<name>Hosts</name>
 		<desc>Host Admin Panel</desc>
-	</Plugin>
-	<Plugin>
-		<layout>layout_tidy</layout>
-		<xml>Tidy.xml</xml>
-		<tab>tab_tidy</tab>
-		<panel>panel_tidy</panel>
-		<name>Tidy</name>
-		<desc>Code Tidy Panel</desc>
 	</Plugin>
 	<Plugin>
 		<layout>layout_childlayouttest</layout>

@@ -105,13 +105,13 @@ using namespace DuiLib;
 #pragma comment(lib, "../RongDian/bin/RDFinder.lib")
 #endif 
 
+BOOL				IsImageFile(LPCWSTR lpszFileName);
+BOOL				IsCanTidy(LPCWSTR lpszLang);
+int					EscapeSQLite(CDuiString strKeyWord);
+int					RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
 
-BOOL IsImageFile(LPCWSTR lpszFileName);
-BOOL IsCanTidy(LPCWSTR lpszLang);
-int EscapeSQLite(CDuiString strKeyWord);
-int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
-BOOL ShowLoading();
-void CancelLoading();
+BOOL				ShowLoading();
+void				CancelLoading();
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是工具类文件的引用
@@ -127,6 +127,7 @@ void CancelLoading();
 #include <AdapterUtil.h>
 #include <SQLiteUtil.h>
 #include <ConfigTable.h>
+#include <CharSetTable.h>
 #include <AddrTable.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,18 +136,9 @@ void CancelLoading();
 #include "resource.h"
 #include "constant.h"
 #include "RongDian.h"
+#include "ITools.h"
 #include "SystemTraySDK.h"
 #include "IPanelXml.h"
-#include "IAbout.h"
-#include "IColorPicker.h"
-#include "ICoder.h"
-#include "IFileFinder.h"
-#include "IFormatter.h"
-#include "IIpConfig.h"
-#include "IHostAdmin.h"
-#include "ITidy.h"
-#include "ContainerTest.h"
-#include "IChildLayoutTest.h"
 #include "MainFrame.h"
 
 extern HANDLE					g_hUserSignature;

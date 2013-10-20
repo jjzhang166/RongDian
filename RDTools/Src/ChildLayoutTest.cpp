@@ -1,5 +1,6 @@
-#include "stdafx.h"
-#include "IChildLayoutTest.h"
+#include "StdAfx.h"
+#include "ChildLayoutTest.h"
+#include "ContainerTest.h"
 
 const wchar_t* const kChildLayoutTest = L"childlayouttest_test";
 const wchar_t* const kChildLayoutContainer = L"childlayouttest_container";
@@ -9,33 +10,38 @@ const wchar_t* const kSubButton = L"SubButton";
 const wchar_t* const kSubLabel = L"SubLabel";
 const wchar_t* const kSubEdit = L"SubEdit";
 
-IChildLayoutTest::IChildLayoutTest()
-{
-	hChildLayoutTestOwner = NULL;
-	pChildLayoutTestManager = NULL;
-}
-
-IChildLayoutTest::~IChildLayoutTest()
+CChildLayoutTest::CChildLayoutTest()
 {
 
 }
 
-BOOL IChildLayoutTest::InitChildLayoutTest()
+BOOL CChildLayoutTest::IsCanQuit(HWND hWnd)
 {
-	if(!pChildLayoutTestManager)
+	return TRUE;
+}
+
+void CChildLayoutTest::OnQuit()
+{
+
+}
+
+BOOL CChildLayoutTest::OnInit(WPARAM wParam, LPARAM lParam)
+{
+	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
+	if(!pManager)
 		return FALSE;
 	return TRUE;
 }
 
-BOOL IChildLayoutTest::SetChildLayoutTestLang(LPCWSTR lpszLang)
+BOOL CChildLayoutTest::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 {
-	if(!pChildLayoutTestManager)
+	if(!pManager)
 		return FALSE;
 
 	return TRUE;
 }
 
-CControlUI* IChildLayoutTest::OnChildLayoutTestCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
+CControlUI* CChildLayoutTest::OnCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	BOOL bSubControl = FALSE;
 	int nSubType = 0; // 自定义标识，0为非子控件，1为button，2为label，3为edit
@@ -85,13 +91,13 @@ CControlUI* IChildLayoutTest::OnChildLayoutTestCreateControl(LPCTSTR pstrClass, 
 	return pControl;
 }
 
-void IChildLayoutTest::OnChildLayoutTestClick(TNotifyUI& msg, BOOL& bHandled)
+void CChildLayoutTest::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	BOOL bHandle = FALSE;
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName == kChildLayoutTest)
 	{
-		CreateTestContainer();
+		CreateTestContainer(pManager);
 	}
 	else if(wcsstr(sCtrlName.GetData(), L"SubButton"))
 	{
@@ -99,21 +105,27 @@ void IChildLayoutTest::OnChildLayoutTestClick(TNotifyUI& msg, BOOL& bHandled)
 		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_ERR), GET_ASSOC_ID(g_LangIDs, MSG_ERR), szTitle);
 		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_DEBUG_TEXT), GET_ASSOC_ID(g_LangIDs, MSG_DEBUG_TEXT), szFormat);
 		swprintf(szErr, szFormat, sCtrlName.GetData());
-		DuiMsgBox(hChildLayoutTestOwner, szErr, szTitle, MB_OK);
+		DuiMsgBox(hWnd, szErr, szTitle, MB_OK);
 	}
 }
 
-void IChildLayoutTest::OnChildLayoutTestItemActive(TNotifyUI& msg)
+void CChildLayoutTest::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-
+	bHandled = FALSE;
+	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
+	if(!pParent)
+		return;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return;
 }
 
-BOOL IChildLayoutTest::CreateTestContainer()
+BOOL CChildLayoutTest::CreateTestContainer(CPaintManagerUI* pManager)
 {
 	CVerticalLayoutUI *pContainer = NULL;
-	if(!pChildLayoutTestManager)
+	if(!pManager)
 		return FALSE;
-	FIND_CONTROL_BY_ID(pContainer, CVerticalLayoutUI, pChildLayoutTestManager, kChildLayoutContainer);
+	FIND_CONTROL_BY_ID(pContainer, CVerticalLayoutUI, pManager, kChildLayoutContainer);
 	if(!pContainer)
 		return FALSE;
 	CChildLayoutUI *pChild = new CChildLayoutUI();
@@ -138,7 +150,7 @@ BOOL IChildLayoutTest::CreateTestContainer()
 		return FALSE;
 	}
 	pChild->SetFixedHeight(pChild->GetItemAt(0)->GetFixedHeight());
-	
+
 	CContainerTest *pTestContainer = (CContainerTest *)pChild->GetItemAt(0);
 	pTestContainer->SetName(szContainer);
 	CControlUI *pSubButton = pTestContainer->GetButton();
@@ -160,8 +172,8 @@ BOOL IChildLayoutTest::CreateTestContainer()
 		pSubEdit->SetText(szEdit);
 	}
 	CContainerTest *pTestContainer2 = NULL, *pTestContainer3 = NULL;
-	FIND_CONTROL_BY_ID(pTestContainer2, CContainerTest, pChildLayoutTestManager, szContainer); // 哈希表没有更新，无法通过id查找控件
-	pChildLayoutTestManager->UpdateControls(pTestContainer); // 更新哈希表
-	FIND_CONTROL_BY_ID(pTestContainer3, CContainerTest, pChildLayoutTestManager, szContainer);
+	FIND_CONTROL_BY_ID(pTestContainer2, CContainerTest, pManager, szContainer); // 哈希表没有更新，无法通过id查找控件
+	pManager->UpdateControls(pTestContainer); // 更新哈希表
+	FIND_CONTROL_BY_ID(pTestContainer3, CContainerTest, pManager, szContainer);
 	return TRUE;
 }

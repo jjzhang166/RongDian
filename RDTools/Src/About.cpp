@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "IAbout.h"
+#include "StdAfx.h"
+#include "About.h"
 
 // About's Frame
 const wchar_t* const kAboutName = L"about_name";
@@ -10,28 +10,31 @@ const wchar_t* const kAboutDesc = L"about_desc";
 const wchar_t* const kAboutUrl = L"about_url";
 const wchar_t* const kAboutCopyRight = L"about_copyright";
 
-IAbout::IAbout()
-{
-	pAboutManager = NULL;
-	hAboutOwner = NULL;
-}
-
-IAbout::~IAbout()
+CAbout::CAbout()
 {
 
 }
 
-BOOL IAbout::InitAbout()
+BOOL CAbout::IsCanQuit(HWND hWnd)
 {
 	return TRUE;
 }
 
-BOOL IAbout::SetAboutLang(LPCWSTR lpszLang)
+void CAbout::OnQuit()
 {
-	if(!pAboutManager)
+
+}
+
+BOOL CAbout::OnInit(WPARAM wParam, LPARAM lParam)
+{
+	return TRUE;
+}
+
+BOOL CAbout::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+{
+	if(!pManager)
 		return FALSE;
-	
-SET_CONTROL_BEGIN(pAboutManager, lpszLang, LS_ABOUTPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, LS_ABOUTPANEL)
 	SET_CONTROL_TEXT(kAboutName, g_szAppName)
 	SET_CONTROL_TEXT3(kAboutVer, g_szAppVer)
 	SET_CONTROL_TEXT3(kAboutMail, kAuthorMail)
@@ -44,17 +47,17 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void IAbout::OnAboutClick(TNotifyUI& msg, BOOL& bHandled)
+void CAbout::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName == kAboutMail)
 	{
 		bHandled = TRUE;
-		Utility::OpenMail(hAboutOwner, kAuthorMail);
+		Utility::OpenMail(hWnd, kAuthorMail);
 	}
 	else if(sCtrlName == kAboutUrl)
 	{
 		bHandled = TRUE;
-		Utility::OpenUrl(hAboutOwner, kAuthorUrl);
+		Utility::OpenUrl(hWnd, kAuthorUrl);
 	}
 }

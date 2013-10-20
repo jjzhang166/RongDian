@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "IColorPicker.h"
+#include "StdAfx.h"
+#include "ColorPicker.h"
 
 #define PICKERCOLOR_MOUSEMOVE 0
 
@@ -37,10 +37,8 @@ const wchar_t* const kPickerHSVColor = L"color_hsv";
 const wchar_t* const kPickerColorHistory = L"color_history";
 const wchar_t* const kPickerColorList = L"color_list";
 
-IColorPicker::IColorPicker()
+CColorPicker::CColorPicker()
 {
-	pPickerManager = NULL;
-	hPickerOwner = NULL;
 	pPickerPreview = NULL;
 	pPickerColor = NULL;
 	pPickerArrow = NULL;
@@ -58,40 +56,44 @@ IColorPicker::IColorPicker()
 	bIsCapturing = FALSE;
 }
 
-IColorPicker::~IColorPicker()
+BOOL CColorPicker::IsCanQuit(HWND hWnd)
+{
+	return TRUE;
+}
+
+void CColorPicker::OnQuit()
 {
 
 }
 
-BOOL IColorPicker::InitPicker()
+BOOL CColorPicker::OnInit(WPARAM wParam, LPARAM lParam)
 {
-	if(!pPickerManager)
+	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
+	if(!pManager)
 		return FALSE;
-
-	FIND_CONTROL_BY_ID(pPickerPreview, CControlUI, pPickerManager, kPickerPreview)
-	FIND_CONTROL_BY_ID(pPickerColor, CControlUI, pPickerManager, kPickerColor)
-	FIND_CONTROL_BY_ID(pPickerPos, CControlUI, pPickerManager, kPickerPos)
-	FIND_CONTROL_BY_ID(pPickerClass, CControlUI, pPickerManager, kPickerClass)
-	FIND_CONTROL_BY_ID(pPickerText, CControlUI, pPickerManager, kPickerText)
-	FIND_CONTROL_BY_ID(pPickerArrow, CControlUI, pPickerManager, kPickerArrow)
-	FIND_CONTROL_BY_ID(pPickerSnapShot, CControlUI, pPickerManager, kPickerSnapShot)
-	FIND_CONTROL_BY_ID(pPickerHtmlColor, CControlUI, pPickerManager, kPickerHtmlColor)
-	FIND_CONTROL_BY_ID(pPickerRGBColor, CControlUI, pPickerManager, kPickerRGBColor)
-	FIND_CONTROL_BY_ID(pPickerHexColor, CControlUI, pPickerManager, kPickerHEXColor)
-	FIND_CONTROL_BY_ID(pPickerHSLColor, CControlUI, pPickerManager, kPickerHSLColor)
-	FIND_CONTROL_BY_ID(pPickerDelphiColor, CControlUI, pPickerManager, kPickerDelphiColor)
-	FIND_CONTROL_BY_ID(pPickerHSVColor, CControlUI, pPickerManager, kPickerHSVColor)
-	FIND_CONTROL_BY_ID(pColorList, CListUI, pPickerManager, kPickerColorList)
+	FIND_CONTROL_BY_ID(pPickerPreview, CControlUI, pManager, kPickerPreview)
+	FIND_CONTROL_BY_ID(pPickerColor, CControlUI, pManager, kPickerColor)
+	FIND_CONTROL_BY_ID(pPickerPos, CControlUI, pManager, kPickerPos)
+	FIND_CONTROL_BY_ID(pPickerClass, CControlUI, pManager, kPickerClass)
+	FIND_CONTROL_BY_ID(pPickerText, CControlUI, pManager, kPickerText)
+	FIND_CONTROL_BY_ID(pPickerArrow, CControlUI, pManager, kPickerArrow)
+	FIND_CONTROL_BY_ID(pPickerSnapShot, CControlUI, pManager, kPickerSnapShot)
+	FIND_CONTROL_BY_ID(pPickerHtmlColor, CControlUI, pManager, kPickerHtmlColor)
+	FIND_CONTROL_BY_ID(pPickerRGBColor, CControlUI, pManager, kPickerRGBColor)
+	FIND_CONTROL_BY_ID(pPickerHexColor, CControlUI, pManager, kPickerHEXColor)
+	FIND_CONTROL_BY_ID(pPickerHSLColor, CControlUI, pManager, kPickerHSLColor)
+	FIND_CONTROL_BY_ID(pPickerDelphiColor, CControlUI, pManager, kPickerDelphiColor)
+	FIND_CONTROL_BY_ID(pPickerHSVColor, CControlUI, pManager, kPickerHSVColor)
+	FIND_CONTROL_BY_ID(pColorList, CListUI, pManager, kPickerColorList)
 
 	return TRUE;
 }
 
-BOOL IColorPicker::SetPickerLang(LPCWSTR lpszLang)
+BOOL CColorPicker::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 {
-	if(!pPickerManager)
+	if(!pManager || !lpszLang)
 		return FALSE;
-
-SET_CONTROL_BEGIN(pPickerManager, lpszLang, LS_PICKERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, LS_PICKERPANEL)
 	// Topic
 	SET_CONTROL_TEXT2(kPickerTopic1)
 	// Picker Color
@@ -141,12 +143,135 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-LPCWSTR IColorPicker::GetPickerListName()
+void CColorPicker::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-	return kPickerColorList;
+	bHandled = FALSE;
+	CDuiString sCtrlName = msg.pSender->GetName();
+	if(sCtrlName == kPickerPalette)
+	{
+		bHandled = TRUE;
+		OpenColorDlg(hWnd);
+	}
+	else if(sCtrlName == kPickerSnapShot)
+	{
+		bHandled = TRUE;
+		OpenSnapShot(hWnd);
+	}
+	else if(sCtrlName == kPickerArrow)
+	{
+		bHandled = TRUE;
+		OpenZoomIn(hWnd);
+	}
 }
 
-BOOL IColorPicker::SetColorInfo(POINT ptCursor)
+void CColorPicker::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
+	if(!pParent)
+		return;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return;
+	if(pList->GetName()!=kPickerColorList)
+		return;
+	CDuiString sCtrlName = msg.pSender->GetClass();
+	if(sCtrlName==L"ListLabelElementUI")
+	{
+		/*CDuiString strData = msg.pSender->GetUserData();
+		wchar_t *pszStopStr = NULL;
+		int nBase = 16;
+		DWORD dwColor = wcstoul(strData, &pszStopStr, nBase);
+		ColorUtil::AdjustColor(dwColor, m_colCurColor);
+		SetColorPicker(m_colCurColor, FALSE, FALSE);*/
+	}
+}
+
+void CColorPicker::OnItemClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
+	if(!pParent)
+		return;
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return;
+	if(pList->GetName()!=kPickerColorList)
+		return;
+	CDuiString sCtrlName = msg.pSender->GetClass();
+	if(sCtrlName==L"ListLabelElementUI")
+	{
+		CDuiString strData = msg.pSender->GetUserData();
+		wchar_t *pszStopStr = NULL;
+		int nBase = 16;
+		DWORD dwColor = wcstoul(strData, &pszStopStr, nBase);
+		ColorUtil::AdjustColor(dwColor, colCurColor);
+		if(pPickerPreview)
+		{
+			DWORD dwBackColor = 0;
+			ColorUtil::AdjustColor(colCurColor, dwBackColor);
+			pPickerPreview->SetBkColor(dwBackColor);
+		}
+		SetColorPicker(colCurColor, FALSE);
+		bHandled = TRUE;
+	}
+}
+
+void CColorPicker::OnItemSelected(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if(pPickerColor && msg.pSender==pPickerColor)
+	{
+		bHandled = TRUE;
+		DWORD dwColor = 0;
+		CDuiString strColor = msg.pSender->GetText();
+		if(ColorUtil::StrToRGB(strColor, dwColor))
+		{
+			ColorUtil::AdjustColor(dwColor, colCurColor);
+			SetColorPicker(colCurColor, TRUE, FALSE);
+			if(pPickerPreview)
+				pPickerPreview->SetBkColor(dwColor);
+		}
+		bHandled = TRUE;
+	}
+}
+
+LPCWSTR CColorPicker::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+{
+	LPCWSTR lpszData = NULL;
+	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
+	if(!pParent)
+		return L"";
+	CListUI *pList = (CListUI *)pParent->GetParent();
+	if(!pList)
+		return L"";
+	return L"";
+}
+
+LRESULT CColorPicker::OnCopyData(WPARAM wParam, LPARAM lParam)
+{
+	PCOPYDATASTRUCT lpData = (PCOPYDATASTRUCT)lParam;
+	if(lpData->dwData==WM_SNAPSHOT_MSG)
+	{
+		PSNAPSHOT_INFO lpInfo = (PSNAPSHOT_INFO)lpData->lpData;
+		if(lpInfo)
+			OnSnapShotUpdate(lpInfo->dwColor, lpInfo->szPath);
+		return TRUE;
+	}
+	else if(lpData->dwData==WM_ZOOMIN_UPDATE_MSG || lpData->dwData==WM_ZOOMIN_COLOR_MSG)
+	{
+		PZOOMIN_INFO lpInfo = (PZOOMIN_INFO)lpData->lpData;
+		if(lpInfo)
+		{
+			BOOL bRecord = (lpData->dwData==WM_ZOOMIN_COLOR_MSG);
+			OnZoomInUpdate(lpInfo->dwColor, lpInfo->ptCursor, bRecord);
+		}
+		return TRUE;
+	}
+	return 0;
+}
+
+BOOL CColorPicker::SetColorInfo(POINT ptCursor)
 {
 	wchar_t szPos[1024];
 	swprintf(szPos, L"%d, %d", ptCursor.x, ptCursor.y);
@@ -166,7 +291,7 @@ BOOL IColorPicker::SetColorInfo(POINT ptCursor)
 	return TRUE;
 }
 
-BOOL IColorPicker::SetColorPicker(DWORD dwColor, BOOL bRecord/* = TRUE*/, BOOL bAuto /*= TRUE*/)
+BOOL CColorPicker::SetColorPicker(DWORD dwColor, BOOL bRecord/* = TRUE*/, BOOL bAuto /*= TRUE*/)
 {
 	BOOL bRet = FALSE;
 	wchar_t szRGB[MAX_PATH];
@@ -246,14 +371,14 @@ BOOL IColorPicker::SetColorPicker(DWORD dwColor, BOOL bRecord/* = TRUE*/, BOOL b
 	return bRet;
 }
 
-BOOL IColorPicker::OpenColorDlg()
+BOOL CColorPicker::OpenColorDlg(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	CHOOSECOLORW cc;
 	static COLORREF crColors[16];
 	memset(&cc, 0, sizeof(CHOOSECOLORW));
 	cc.lStructSize = sizeof(CHOOSECOLORW);
-	cc.hwndOwner = hPickerOwner;
+	cc.hwndOwner = hWnd;
 	cc.lpCustColors = (LPDWORD)crColors;
 	cc.rgbResult = 0xFFFFFF;
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
@@ -276,7 +401,7 @@ BOOL IColorPicker::OpenColorDlg()
 	return bRet;
 }
 
-BOOL IColorPicker::OpenZoomIn()
+BOOL CColorPicker::OpenZoomIn(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024], szArgs[1024];
@@ -287,11 +412,11 @@ BOOL IColorPicker::OpenZoomIn()
 		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgErr, szTitle);
 		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kNoFoundErr, szNoFound);
 		swprintf(szErr, szNoFound, kSnapShotExec);
-		DuiMsgBox(hPickerOwner, szErr, szTitle, MB_OK);
+		DuiMsgBox(hWnd, szErr, szTitle, MB_OK);
 		return bRet;
 	}
-	swprintf(szArgs, _T("-h %ld -m m"), hPickerOwner);
-	//swprintf(szArgs, _T("-h %ld -m m -d"), hPickerOwner);
+	swprintf(szArgs, _T("-h %ld -m m"), hWnd);
+	//swprintf(szArgs, _T("-h %ld -m m -d"), hWnd);
 
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -309,7 +434,7 @@ BOOL IColorPicker::OpenZoomIn()
 	return bRet;
 }
 
-BOOL IColorPicker::OpenSnapShot()
+BOOL CColorPicker::OpenSnapShot(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024], szArgs[1024];
@@ -320,10 +445,10 @@ BOOL IColorPicker::OpenSnapShot()
 		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgErr, szTitle);
 		Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kNoFoundErr, szNoFound);
 		swprintf(szErr, szNoFound, kSnapShotExec);
-		DuiMsgBox(hPickerOwner, szErr, szTitle, MB_OK);
+		DuiMsgBox(hWnd, szErr, szTitle, MB_OK);
 		return bRet;
 	}
-	swprintf(szArgs, _T("-p %s -h %ld -m f"), g_szSnapShot, hPickerOwner);
+	swprintf(szArgs, _T("-p %s -h %ld -m f"), g_szSnapShot, hWnd);
 
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -341,153 +466,7 @@ BOOL IColorPicker::OpenSnapShot()
 	return bRet;
 }
 
-void IColorPicker::OnPickerClick(TNotifyUI& msg, BOOL& bHandled)
-{
-	CDuiString sCtrlName = msg.pSender->GetName();
-	if(sCtrlName == kPickerPalette)
-	{
-		bHandled = TRUE;
-		OpenColorDlg();
-	}
-	else if(sCtrlName == kPickerSnapShot)
-	{
-		bHandled = TRUE;
-		OpenSnapShot();
-	}
-	else if(sCtrlName == kPickerArrow)
-	{
-		bHandled = TRUE;
-		OpenZoomIn();
-	}
-}
-
-void IColorPicker::OnPickerItemActive(TNotifyUI& msg)
-{
-	CDuiString sCtrlName = msg.pSender->GetClass();
-	if(sCtrlName==L"ListLabelElementUI")
-	{
-		/*CDuiString strData = msg.pSender->GetUserData();
-		wchar_t *pszStopStr = NULL;
-		int nBase = 16;
-		DWORD dwColor = wcstoul(strData, &pszStopStr, nBase);
-		ColorUtil::AdjustColor(dwColor, m_colCurColor);
-		SetColorPicker(m_colCurColor, FALSE, FALSE);*/
-	}
-}
-
-void IColorPicker::OnPickerItemClick(TNotifyUI& msg)
-{
-	CDuiString sCtrlName = msg.pSender->GetClass();
-	if(sCtrlName==L"ListLabelElementUI")
-	{
-		CDuiString strData = msg.pSender->GetUserData();
-		wchar_t *pszStopStr = NULL;
-		int nBase = 16;
-		DWORD dwColor = wcstoul(strData, &pszStopStr, nBase);
-		ColorUtil::AdjustColor(dwColor, colCurColor);
-		if(pPickerPreview)
-		{
-			DWORD dwBackColor = 0;
-			ColorUtil::AdjustColor(colCurColor, dwBackColor);
-			pPickerPreview->SetBkColor(dwBackColor);
-		}
-		SetColorPicker(colCurColor, FALSE);
-	}
-}
-
-void IColorPicker::OnPickerTextChanged(TNotifyUI& msg, BOOL& bHandled)
-{
-	if(pPickerColor && msg.pSender==pPickerColor)
-	{
-		bHandled = TRUE;
-		DWORD dwColor = 0;
-		CDuiString strColor = msg.pSender->GetText();
-		if(ColorUtil::StrToRGB(strColor, dwColor))
-		{
-			ColorUtil::AdjustColor(dwColor, colCurColor);
-			SetColorPicker(colCurColor, TRUE, FALSE);
-			if(pPickerPreview)
-				pPickerPreview->SetBkColor(dwColor);
-		}
-	}
-}
-
-LRESULT IColorPicker::OnPickerLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-#if PICKERCOLOR_MOUSEMOVE
-	if(!pPickerManager)
-		return 0;
-	POINT pt;
-	GetCursorPos(&pt);
-	colCurColor = ::GetPixel(::GetDC(NULL), pt.x, pt.y);
-	ScreenToClient(hPickerOwner, &pt);
-	//CControlUI *pControl = static_cast<CControlUI *>(pPickerManager->FindControl(pt));
-	CControlUI *pControl = NULL;
-	FIND_CONTROL_BY_PT(pControl, CControlUI, pPickerManager, pt)
-	if(pControl && pPickerArrow && pControl == pPickerArrow)
-	{
-		if(pPickerPreview)
-			pPickerPreview->SetBkColor(kDefBkColor);
-		wchar_t szPos[1024];
-		swprintf(szPos, L"%d, %d", pt.x, pt.y);
-		if(pPickerPos)
-			pPickerPos->SetText(szPos);
-		wchar_t szArrowImage[1024];
-		swprintf(szArrowImage, L"%s\\default\\%s", g_szResPath, kImageCross);
-		pControl->SetBkImage(szArrowImage);
-		SetCapture(hPickerOwner);
-
-		bIsCapturing = TRUE;
-	}
-#endif
-	return 0;
-}
-
-#if PICKERCOLOR_MOUSEMOVE
-LRESULT IColorPicker::OnPickerMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam)
-{
-	if(bIsCapturing)
-	{
-		POINT pt;
-		pt.x = GET_X_LPARAM(lParam); 
-		pt.y = GET_Y_LPARAM(lParam); 
-		ClientToScreen(hPickerOwner, &pt);
-		//SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDI_COLOR_ARROW)));
-		COLORREF colColor;
-		Utility::GetScreenColor(pt.x, pt.y, colColor);
-		ColorUtil::AdjustColor(colColor, colCurColor);
-		if(pPickerPreview)
-			pPickerPreview->SetBkColor(colCurColor);
-		SetColorInfo(pt);
-		SetColorPicker(colColor, FALSE);
-	}
-#else
-LRESULT IColorPicker::OnPickerMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-#endif
-	return 0;
-}
-
-LRESULT IColorPicker::OnPickerLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
-{
-#if PICKERCOLOR_MOUSEMOVE
-	if (bIsCapturing)
-	{
-		if(pPickerArrow)
-		{
-			wchar_t szArrowImage[1024];
-			swprintf(szArrowImage, L"%s\\default\\%s", g_szResPath, kImageArrow);
-			pPickerArrow->SetBkImage(szArrowImage);
-		}
-		ReleaseCapture();
-		bIsCapturing = FALSE; 
-		SetColorPicker(colCurColor, TRUE);
-	}
-#endif
-	return 0;
-}
-
-void IColorPicker::OnSnapShotUpdate(COLORREF clrColor, LPCWSTR lpszPath /*= NULL*/)
+void CColorPicker::OnSnapShotUpdate(COLORREF clrColor, LPCWSTR lpszPath /*= NULL*/)
 {
 	wchar_t szSnapShotPath[1024] = {0};
 	wcscpy(szSnapShotPath, lpszPath);
@@ -496,10 +475,10 @@ void IColorPicker::OnSnapShotUpdate(COLORREF clrColor, LPCWSTR lpszPath /*= NULL
 	//SetColorPicker(colCurColor, TRUE, FALSE);
 	SetColorPicker(clrColor, TRUE, FALSE);
 	if(PathFileExists(szSnapShotPath))
-		SHHelper::OpenFolder(hPickerOwner, szSnapShotPath);
+		SHHelper::OpenFolder(NULL, szSnapShotPath);
 }
 
-void IColorPicker::OnZoomInUpdate(COLORREF clrColor, POINT ptCursor, BOOL bRecord)
+void CColorPicker::OnZoomInUpdate(COLORREF clrColor, POINT ptCursor, BOOL bRecord)
 {
 	colCurColor = clrColor;
 	//ColorUtil::AdjustColor(clrColor, colCurColor);

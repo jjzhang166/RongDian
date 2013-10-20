@@ -7,7 +7,7 @@
 			<Control />
 		</HorizontalLayout>
 		<Control height="2" />
-		<VerticalLayout name="childlayouttest_container" vscrollbar="true" bordersize="1" bkcolor="FFFF0000" >
+		<VerticalLayout name="childlayouttest_container" vscrollbar="true" bordersize="1" bkcolor="FFE0E0E0" >
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>

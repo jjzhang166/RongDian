@@ -1,5 +1,15 @@
 #include "stdafx.h"
 #include "MainFrame.h"
+// Panels
+#include "ColorPicker.h"
+#include "Coder.h"
+#include "Finder.h"
+#include "Tidy.h"
+#include "IPConfig.h"
+#include "Hosts.h"
+#include "ChildLayoutTest.h"
+#include "Setting.h"
+#include "About.h"
 
 const DWORD			 kSelBkColor = 0xFF3C5A78;
 const DWORD			 kSelBkColor2 = 0xFFC8C8C8;
@@ -32,11 +42,23 @@ const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
 const wchar_t* const kPanelContents = L"panel_contents";
 
+RD_BEGIN_TOOLS_MAP(CMainFrame)
+	RD_TOOL(L"ColorPicker", ColorPicker)
+	RD_TOOL(L"Coder", Coder)
+	RD_TOOL(L"Finder", Finder)
+	RD_TOOL(L"Tidy", Tidy)
+	RD_TOOL(L"IPConfig", IPConfig)
+	RD_TOOL(L"Hosts", Hosts)
+	RD_TOOL(L"ChildLayoutTest", ChildLayoutTest)
+	RD_TOOL(L"Setting", Setting)
+	RD_TOOL(L"About", About)
+RD_END_TOOLS_MAP()
+
 DUI_BEGIN_MESSAGE_MAP(CMainFrame, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick) // 这是单击
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive) // 这是List节点双击
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK, OnItemClick) //list中的item点击
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT, OnItemSelect)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT, OnItemSelected)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENUSELECT, OnMenuSelect)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged) // 这是文本框内容改变
 DUI_END_MESSAGE_MAP()
@@ -67,6 +89,7 @@ CMainFrame::~CMainFrame()
 		g_pSystemTray = NULL;
 	}
 	ReleasePanels();
+	RD_ON_QUIT();
 	PostQuitMessage(0);
 }
 
@@ -113,27 +136,8 @@ SET_CONTROL_END()
 	// Status Bar
 	FIND_CONTROL_BY_ID(pStatusCtrl, CButtonUI, (&m_PaintManager), kFrameStatus)
 
-	// About Frame
-	SetAboutLang(lpszLang);
+	RD_ON_LANG_MSG((&m_PaintManager), lpszLang)
 
-	// Picker Frame
-	SetPickerLang(lpszLang);
-
-	// Coder Frame
-	SetCoderLang(lpszLang);
-
-	// Finder Frame
-	SetFinderLang(lpszLang);
-
-	SetFormatterLang(lpszLang);
-
-	SetIPConfigLang(lpszLang);
-
-	SetHostAdminLang(lpszLang);
-
-	SetTidyLang(lpszLang);
-
-	SetChildLayoutTestLang(lpszLang);
 	return 0;
 }
 
@@ -259,6 +263,15 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 			pMax->SetVisible();
 		}
 	}
+	else if(sCtrlName == kCloseBtn)
+	{
+		BOOL bIsCanQuit = FALSE;
+		RD_ISCAN_QUIT(m_hWnd, bIsCanQuit)
+		if(!bIsCanQuit)
+		{
+			return;
+		}
+	}
 	else if(sCtrlName == kTabsHide)
 	{
 		bHandle = TRUE;
@@ -271,6 +284,7 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	}
 	else if(sCtrlName==kMenuBtn)
 	{
+		bHandle = TRUE;
 		ShowLoading();
 
 		//CDuiRect rect = msg.pSender->GetPos();
@@ -279,69 +293,30 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		//CMenuUI *pMenu = new CMenuUI(m_hWnd);
 		//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 	}
-	if(!bHandle)
-		OnAboutClick(msg, bHandle);
-	if(!bHandle)
-		OnPickerClick(msg, bHandle);
-	if(!bHandle)
-		OnCoderClick(msg, bHandle);
-	if(!bHandle)
-		OnFinderClick(msg, bHandle);
-	if(!bHandle)
-		OnFormatterClick(msg, bHandle);
-	if(!bHandle)
-		OnIPConfigClick(msg, bHandle);
-	if (!bHandle)
-		OnHostAdminClick(msg, bHandle);
-	if(!bHandle)
-		OnTidyClick(msg, bHandle);
-	if(!bHandle)
-		OnChildLayoutTestClick(msg, bHandle);
+	WindowImplBase::OnClick(msg);
+
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnClick)
+
 	if(!bHandle)
 		SelectPanel(sCtrlName);
-	if(!bHandle)
-		WindowImplBase::OnClick(msg);
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
 {
-	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
-	if(pParent)
-	{
-		CListUI *pList = (CListUI *)pParent->GetParent();
-		if(!pList)
-			return;
-		if(pList->GetName()==GetPickerListName())
-			OnPickerItemActive(msg);
-		else if(pList->GetName()==GetCoderListName())
-			OnCoderItemActive(msg);
-		else if(pList->GetName()==GetFinderListName())
-			OnFinderItemActive(msg);
-		else if(pList->GetName()==GetTidyListName())
-			OnTidyItemActive(msg);
-	}
+	BOOL bHandle = FALSE;
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemActive)
 }
 
 void CMainFrame::OnItemClick(TNotifyUI& msg)
 {
-	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
-	if(pParent)
-	{
-		CListUI *pList = (CListUI *)pParent->GetParent();
-		if(!pList)
-			return;
-		if(pList->GetName()==GetPickerListName())
-			OnPickerItemClick(msg);
-	}
+	BOOL bHandle = FALSE;
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemClick)
 }
 
-void CMainFrame::OnItemSelect(TNotifyUI& msg)
+void CMainFrame::OnItemSelected(TNotifyUI& msg)
 {
-	CDuiString controlName = msg.pSender->GetName();
-	if(controlName==GetIPConfigSolutionListName()||controlName==GetIPConfigAdaptersListName())
-	{
-		OnIPConfigItemSelect(msg);
-	}
+	BOOL bHandle = FALSE;
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemSelected)
 }
 
 void CMainFrame::OnMenuSelect(TNotifyUI& msg)
@@ -374,7 +349,7 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 void CMainFrame::OnTextChanged(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
-	OnPickerTextChanged(msg, bHandle);
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnTextChanged)
 }
 
 void CMainFrame::OnFinalMessage(HWND hWnd)
@@ -395,15 +370,8 @@ CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 		if(pControl)
 			return pControl;
 	}
-	pControl = OnHostAdminCreateControl(pstrClass, pParent);
-	if(pControl)
-		return pControl;
-	pControl = OnTidyCreateControl(pstrClass, pParent);
-	if(pControl)
-		return pControl;
-	pControl = OnChildLayoutTestCreateControl(pstrClass, pParent);
-	if(pControl)
-		return pControl;
+
+	RD_ON_CREATE_CONTROL_MSG(pstrClass, pParent)
 
 	return pControl;
 }
@@ -417,7 +385,7 @@ LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		OnDropFiles(uMsg, wParam, lParam);
 		break;
 	case WM_COPYDATA:
-		lRes = OnCopyData(uMsg, wParam, lParam);
+		OnCopyData(uMsg, wParam, lParam);
 		break;
 	}
 
@@ -433,10 +401,8 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	case WM_ICON_NOTIFY:
 		lRes = OnTrayNotification(uMsg, wParam, lParam);
 		break;
-	case WM_CMD_COMPLETE:
-		ExeCMDComplete();
-		break;
 	}
+	RD_ON_CUSTOM_MSG(uMsg, wParam, lParam);
 	return 0;
 }
 
@@ -477,7 +443,7 @@ LRESULT CMainFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
-LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
 {
 	PCOPYDATASTRUCT lpData = (PCOPYDATASTRUCT)lParam;
 	if(lpData->dwData==WM_ACTIVE_MAIN)
@@ -500,23 +466,7 @@ LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam)
 		::SetForegroundWindow(m_hWnd);
 		return TRUE;
 	}
-	else if(lpData->dwData==WM_SNAPSHOT_MSG)
-	{
-		PSNAPSHOT_INFO lpInfo = (PSNAPSHOT_INFO)lpData->lpData;
-		if(lpInfo)
-			OnSnapShotUpdate(lpInfo->dwColor, lpInfo->szPath);
-		return TRUE;
-	}
-	else if(lpData->dwData==WM_ZOOMIN_UPDATE_MSG || lpData->dwData==WM_ZOOMIN_COLOR_MSG)
-	{
-		PZOOMIN_INFO lpInfo = (PZOOMIN_INFO)lpData->lpData;
-		if(lpInfo)
-		{
-			BOOL bRecord = (lpData->dwData==WM_ZOOMIN_COLOR_MSG);
-			OnZoomInUpdate(lpInfo->dwColor, lpInfo->ptCursor, bRecord);
-		}
-		return TRUE;
-	}
+	RD_ON_COPYDATA_MSG(wParam, lParam);
 	return 0;
 }
 
@@ -586,42 +536,9 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 	return 0;
 }
 
-LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	OnPickerLButtonDown(uMsg, wParam, lParam);
-	bHandled = FALSE;
-	return 0;
-}
-
-LRESULT CMainFrame::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	OnPickerMouseMove(uMsg, wParam, lParam);
-	bHandled = FALSE;
-	return 0;
-}
-
-LRESULT CMainFrame::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	OnPickerLButtonUp(uMsg, wParam, lParam);
-	bHandled = FALSE;
-	return 0;
-}
-
 LPCWSTR CMainFrame::GetItemText(CControlUI* pControl, int iIndex, int iSubItem)
 {
-	LPCWSTR lpszData = NULL;
-	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
-	if(pParent)
-	{
-		CListUI *pList = (CListUI *)pParent->GetParent();
-		if(!pList)
-			return L"";
-		if(pList->GetName()==GetPickerListName())
-			lpszData = GetCoderItemText(pControl, iIndex, iSubItem);
-		else if(pList->GetName()==GetFinderListName())
-			lpszData = GetFinderItemText(pControl, iIndex, iSubItem);
-	}
-	return lpszData;
+	RD_ON_ITEMTEXT_MSG(m_hWnd, &m_PaintManager, pControl, iIndex, iSubItem);
 }
 
 BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
@@ -711,25 +628,8 @@ BOOL CMainFrame::InitPanels()
 	wcscpy(panel.szDesc, szDesc);
 	AddPanel(&panel);
 
-	SetAboutOwner(m_hWnd, &m_PaintManager);
-	SetPickerOwner(m_hWnd, &m_PaintManager);
-	SetCoderOwner(m_hWnd, &m_PaintManager);
-	SetFinderOwner(m_hWnd, &m_PaintManager);
-	SetFormatterOwner(m_hWnd,&m_PaintManager);
-	SetIPConfigOwner(m_hWnd, &m_PaintManager);
-	SetHostAdminOwner(m_hWnd, &m_PaintManager);
-	SetTidyOwner(m_hWnd, &m_PaintManager);
-	SetChildLayoutTestOwner(m_hWnd, &m_PaintManager);
+	RD_ON_INIT_MSG((WPARAM)&m_PaintManager, (LPARAM)(IListCallbackUI*)this);
 
-	InitAbout();
-	InitPicker();
-	InitCoder((IListCallbackUI*)this);
-	InitFinder((IListCallbackUI*)this);
-	InitFormatter();
-	InitIPConfig();
-	InitHostAdmin();
-	InitTidy((IListCallbackUI*)this);
-	InitChildLayoutTest();
 	return bRet;
 }
 

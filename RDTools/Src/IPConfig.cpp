@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "IIpConfig.h"
+#include "StdAfx.h"
+#include "IPConfig.h"
 #include <process.h>
 
-// ç¬¬ä¸€åˆ—
+// µÚÒ»ÁÐ
 const wchar_t* const kIPConfigSettingListText = L"ipconfig_setting_list_text";
 const wchar_t* const kIPConfigSolutionList = L"ipconfig_solution";		
 const wchar_t* const kIPConfigNameText = L"ipconfig_s_name_text";
@@ -25,7 +25,7 @@ const wchar_t* const kIPConfigNewBtn = L"ipconfig_new";
 const wchar_t* const kIPConfigSaveBtn = L"ipconfig_save";
 const wchar_t* const kIPConfigDelBtn = L"ipconfig_delete";
 const wchar_t* const kIPConfigApplyBtn = L"ipconfig_apply";
-// ç¬¬äºŒåˆ—
+// µÚ¶þÁÐ
 const wchar_t* const kIPConfigCurrentInfoText = L"ipconfig_current_info";
 const wchar_t* const kIPConfigCurrentAdapterListText = L"ipconfig_network_adapters_text";
 const wchar_t* const kIPConfigCurrentAdapterList = L"ipconfig_network_adapters";
@@ -65,10 +65,8 @@ DWORD WINAPI RunAsAdminThread(LPVOID lpData)
 	return 0;
 }
 
-IIPConfig::IIPConfig()
+CIPConfig::CIPConfig()
 {
-	m_hIPConfigOwner = NULL;
-	m_pIPConfigManager = NULL;
 	m_pSolutionList = NULL;
 	m_pNameEdit = NULL;
 	m_pIPEdit = NULL;
@@ -92,7 +90,12 @@ IIPConfig::IIPConfig()
 	m_pCmdInfo = NULL;
 }
 
-IIPConfig::~IIPConfig()
+BOOL CIPConfig::IsCanQuit(HWND hWnd)
+{
+	return TRUE;
+}
+
+void CIPConfig::OnQuit()
 {
 	list<LPIPCONFIG_INFO>::iterator addr_iter;
 	LPIPCONFIG_INFO lpAddrInfo = NULL;
@@ -119,34 +122,35 @@ IIPConfig::~IIPConfig()
 	}
 }
 
-BOOL IIPConfig::InitIPConfig()
+BOOL CIPConfig::OnInit(WPARAM wParam, LPARAM lParam)
 {
-	if(!m_pIPConfigManager)
+	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
+	if(!pManager)
 		return FALSE;
 
-	FIND_CONTROL_BY_ID(m_pSolutionList, CComboUI, m_pIPConfigManager, kIPConfigSolutionList)
-	FIND_CONTROL_BY_ID(m_pNameEdit, CEditUI, m_pIPConfigManager, kIPConfigNameEdit)
-	FIND_CONTROL_BY_ID(m_pIPEdit, CEditUI, m_pIPConfigManager, kIPConfigIPEdit)
-	FIND_CONTROL_BY_ID(m_pMaskEdit, CEditUI, m_pIPConfigManager, kIPConfigMaskEdit)
-	FIND_CONTROL_BY_ID(m_pGatewayEdit, CEditUI, m_pIPConfigManager, kIPConfigGatewayEdit)
-	FIND_CONTROL_BY_ID(m_pDns1Edit, CEditUI, m_pIPConfigManager, kIPConfigDns1Edit)
-	FIND_CONTROL_BY_ID(m_pDns2Edit, CEditUI, m_pIPConfigManager, kIPConfigDns2Edit)
-	FIND_CONTROL_BY_ID(m_pAdapterList, CComboUI, m_pIPConfigManager, kIPConfigCurrentAdapterList)
-	FIND_CONTROL_BY_ID(m_pCurrentAdapterTypeEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentAdapterTypeEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentDescEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDescEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentDhcpEnabledEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDhcpEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentIPEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentIPEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentMaskEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentMaskEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentGatewayEdit, CEditUI, m_pIPConfigManager, kIPConfigCurrentGatewayEdit)
-	FIND_CONTROL_BY_ID(m_pCurrentDns1Edit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDns1Edit)
-	FIND_CONTROL_BY_ID(m_pCurrentDns2Edit, CEditUI, m_pIPConfigManager, kIPConfigCurrentDns2Edit)
-	FIND_CONTROL_BY_ID(m_pMacEdit, CEditUI, m_pIPConfigManager, kIPConfigMacEdit)
-	FIND_CONTROL_BY_ID(m_pIpAutoCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigAutoSetIPCheckBox)
-	FIND_CONTROL_BY_ID(m_pIpManualCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigManualSetIPCheckBox)
-	FIND_CONTROL_BY_ID(m_pDnsAutoCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigAutoSetDnsCheckBox)
-	FIND_CONTROL_BY_ID(m_pDnsManualCheckBox, CCheckBoxUI, m_pIPConfigManager, kIPConfigManualSetDnsCheckBox)
+	FIND_CONTROL_BY_ID(m_pSolutionList, CComboUI, pManager, kIPConfigSolutionList)
+	FIND_CONTROL_BY_ID(m_pNameEdit, CEditUI, pManager, kIPConfigNameEdit)
+	FIND_CONTROL_BY_ID(m_pIPEdit, CEditUI, pManager, kIPConfigIPEdit)
+	FIND_CONTROL_BY_ID(m_pMaskEdit, CEditUI, pManager, kIPConfigMaskEdit)
+	FIND_CONTROL_BY_ID(m_pGatewayEdit, CEditUI, pManager, kIPConfigGatewayEdit)
+	FIND_CONTROL_BY_ID(m_pDns1Edit, CEditUI, pManager, kIPConfigDns1Edit)
+	FIND_CONTROL_BY_ID(m_pDns2Edit, CEditUI, pManager, kIPConfigDns2Edit)
+	FIND_CONTROL_BY_ID(m_pAdapterList, CComboUI, pManager, kIPConfigCurrentAdapterList)
+	FIND_CONTROL_BY_ID(m_pCurrentAdapterTypeEdit, CEditUI, pManager, kIPConfigCurrentAdapterTypeEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDescEdit, CEditUI, pManager, kIPConfigCurrentDescEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDhcpEnabledEdit, CEditUI, pManager, kIPConfigCurrentDhcpEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentIPEdit, CEditUI, pManager, kIPConfigCurrentIPEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentMaskEdit, CEditUI, pManager, kIPConfigCurrentMaskEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentGatewayEdit, CEditUI, pManager, kIPConfigCurrentGatewayEdit)
+	FIND_CONTROL_BY_ID(m_pCurrentDns1Edit, CEditUI, pManager, kIPConfigCurrentDns1Edit)
+	FIND_CONTROL_BY_ID(m_pCurrentDns2Edit, CEditUI, pManager, kIPConfigCurrentDns2Edit)
+	FIND_CONTROL_BY_ID(m_pMacEdit, CEditUI, pManager, kIPConfigMacEdit)
+	FIND_CONTROL_BY_ID(m_pIpAutoCheckBox, CCheckBoxUI, pManager, kIPConfigAutoSetIPCheckBox)
+	FIND_CONTROL_BY_ID(m_pIpManualCheckBox, CCheckBoxUI, pManager, kIPConfigManualSetIPCheckBox)
+	FIND_CONTROL_BY_ID(m_pDnsAutoCheckBox, CCheckBoxUI, pManager, kIPConfigAutoSetDnsCheckBox)
+	FIND_CONTROL_BY_ID(m_pDnsManualCheckBox, CCheckBoxUI, pManager, kIPConfigManualSetDnsCheckBox)
 
-	//åˆå§‹å€¼
+	//³õÊ¼Öµ
 	LoadSolutions();
 	InitSolutionsList();
 	LoadAdapters();
@@ -155,16 +159,12 @@ BOOL IIPConfig::InitIPConfig()
 	return TRUE;
 }
 
-BOOL IIPConfig::SetIPConfigLang(LPCWSTR lpszLang)
+BOOL CIPConfig::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 {
-	if(!m_pIPConfigManager)
+	if(!pManager)
 		return FALSE;
-	memset(m_szHandleText, 0, sizeof(m_szHandleText));
-	memset(m_szNoHandleText, 0, sizeof(m_szNoHandleText));
-	Utility::GetINIStr(lpszLang, LS_MSG, kHandleText, m_szHandleText);
-	Utility::GetINIStr(lpszLang, LS_MSG, kNoHandleText, m_szNoHandleText);
 
-SET_CONTROL_BEGIN(m_pIPConfigManager, lpszLang, LS_IPCHANGERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, LS_IPCHANGERPANEL)
 	SET_CONTROL_TEXT2(kIPConfigSettingListText)
 	SET_CONTROL_TEXT2(kIPConfigNameText)
 	SET_CONTROL_TEXT2(kIPConfigAutoSetIPCheckBox)
@@ -196,19 +196,17 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
+void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-	if(!m_pIPConfigManager)
-		return;
 	CDuiString sCtrlName = msg.pSender->GetName();
-	if (sCtrlName == kIPConfigAutoSetIPCheckBox)	//è‡ªåŠ¨èŽ·å–ip
+	if (sCtrlName == kIPConfigAutoSetIPCheckBox)	//×Ô¶¯»ñÈ¡ip
 	{
 		m_pIPEdit->SetEnabled(false);
 		m_pGatewayEdit->SetEnabled(false);
 		m_pMaskEdit->SetEnabled(false);
 		m_pDnsAutoCheckBox->SetEnabled(true);
 	}
-	else if(sCtrlName == kIPConfigManualSetIPCheckBox)	//æ‰‹åŠ¨è®¾ç½®ip,åˆ™dnsä¹Ÿåªèƒ½æ‰‹åŠ¨è®¾ç½®
+	else if(sCtrlName == kIPConfigManualSetIPCheckBox)	//ÊÖ¶¯ÉèÖÃip,ÔòdnsÒ²Ö»ÄÜÊÖ¶¯ÉèÖÃ
 	{
 		m_pIPEdit->SetEnabled(true);
 		m_pGatewayEdit->SetEnabled(true);
@@ -218,32 +216,32 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 		m_pDns1Edit->SetEnabled(true);
 		m_pDns2Edit->SetEnabled(true);
 	}
-	else if (sCtrlName == kIPConfigAutoSetDnsCheckBox)	//è‡ªåŠ¨èŽ·å–dns
+	else if (sCtrlName == kIPConfigAutoSetDnsCheckBox)	//×Ô¶¯»ñÈ¡dns
 	{
 		m_pDns1Edit->SetEnabled(false);
 		m_pDns2Edit->SetEnabled(false);
 	}
-	else if(sCtrlName == kIPConfigManualSetDnsCheckBox)	// æ‰‹åŠ¨è®¾ç½®dns
+	else if(sCtrlName == kIPConfigManualSetDnsCheckBox)	// ÊÖ¶¯ÉèÖÃdns
 	{
 		m_pDns1Edit->SetEnabled(true);
 		m_pDns2Edit->SetEnabled(true);
 	}
-	else if(sCtrlName == kIPConfigNewBtn) // å¢žåŠ 
+	else if(sCtrlName == kIPConfigNewBtn) // Ôö¼Ó
 	{
 		OnNewSolution();
 		bHandled = TRUE;
 	}
-	else if(sCtrlName == kIPConfigSaveBtn) // ä¿å­˜
+	else if(sCtrlName == kIPConfigSaveBtn) // ±£´æ
 	{
-		OnSaveSolution();
+		OnSaveSolution(hWnd);
 		bHandled = TRUE;
 	}
-	else if (sCtrlName == kIPConfigDelBtn) // åˆ é™¤
+	else if (sCtrlName == kIPConfigDelBtn) // É¾³ý
 	{
-		OnDelSolution();
+		OnDelSolution(hWnd);
 		bHandled = TRUE;
 	}
-	else if (sCtrlName == kIPConfigApplyBtn) // åº”ç”¨æ–¹æ¡ˆ
+	else if (sCtrlName == kIPConfigApplyBtn) // Ó¦ÓÃ·½°¸
 	{
 		if(!Utility::IsAdminPrivilege())
 		{
@@ -253,13 +251,13 @@ void IIPConfig::OnIPConfigClick(TNotifyUI& msg, BOOL& bHandled)
 		}
 		else
 		{
-			OnApplySolution();
+			OnApplySolution(hWnd);
 		}
 		bHandled = TRUE;
 	}
 }
 
-void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
+void CIPConfig::OnItemSelect(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg)
 {
 	CComboUI* pCombo = (CComboUI*)msg.pSender;
 	CDuiString sItemName = pCombo->GetName();
@@ -269,17 +267,20 @@ void IIPConfig::OnIPConfigItemSelect(TNotifyUI& msg)
 		OnSelectAdapter();
 }
 
-LPCWSTR IIPConfig::GetIPConfigSolutionListName()
+LRESULT CIPConfig::HandleCustomMessage(UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	return kIPConfigSolutionList;
+	LRESULT lRes = 0;
+	switch(uMsg)
+	{
+	case WM_CMD_COMPLETE:
+		ExeCMDComplete();
+		return 1;
+	default:
+		return 0;
+	}
 }
 
-LPCWSTR IIPConfig::GetIPConfigAdaptersListName()
-{
-	return kIPConfigCurrentAdapterList;
-}
-
-BOOL IIPConfig::LoadSolutions()
+BOOL CIPConfig::LoadSolutions()
 {
 	BOOL bRet = FALSE;
 	CAddrTableDB addr(&g_SQLite);
@@ -308,7 +309,7 @@ BOOL IIPConfig::LoadSolutions()
 	return bRet;
 }
 
-BOOL IIPConfig::InitSolutionsList()
+BOOL CIPConfig::InitSolutionsList()
 {
 	int nSelected = 0;
 	CConfigTableDB table(&g_SQLite);
@@ -336,7 +337,7 @@ BOOL IIPConfig::InitSolutionsList()
 	return TRUE;
 }
 
-BOOL IIPConfig::LoadAdapters()
+BOOL CIPConfig::LoadAdapters()
 {
 	BOOL bRet = FALSE;
 	ULONG uAdapterSize = sizeof(IP_ADAPTER_INFO);
@@ -396,7 +397,7 @@ BOOL IIPConfig::LoadAdapters()
 	return bRet;
 }
 
-BOOL IIPConfig::InitAdaptersList()
+BOOL CIPConfig::InitAdaptersList()
 {
 	CListLabelElementUI *pItem = NULL;
 	LPCWSTR lpszAddr = NULL;
@@ -429,7 +430,7 @@ BOOL IIPConfig::InitAdaptersList()
 	return TRUE;
 }
 
-void IIPConfig::OnSelectSolution()
+void CIPConfig::OnSelectSolution()
 {
 	if(!m_pSolutionList)
 		return;
@@ -521,7 +522,7 @@ void IIPConfig::OnSelectSolution()
 	}
 }
 
-void IIPConfig::OnSelectAdapter()
+void CIPConfig::OnSelectAdapter()
 {
 	if(!m_pAdapterList)
 		return;
@@ -576,7 +577,7 @@ void IIPConfig::OnSelectAdapter()
 		m_pMacEdit->SetText(lpAdapter->szMac);
 }
 
-BOOL IIPConfig::OnNewSolution()
+BOOL CIPConfig::OnNewSolution()
 {
 	m_pSolutionList->SelectItem(-1);
 	//m_pSolutionList->SetText(L"");
@@ -584,7 +585,7 @@ BOOL IIPConfig::OnNewSolution()
 	return TRUE;
 }
 
-BOOL IIPConfig::OnSaveSolution()
+BOOL CIPConfig::OnSaveSolution(HWND hWnd)
 {
 	CAddrTableDB table(&g_SQLite);
 	ADDR_TABLE addr;
@@ -608,7 +609,7 @@ BOOL IIPConfig::OnSaveSolution()
 		wcscpy(addr.szDns2, m_pDns2Edit->GetText());
 	if(!table.Insert(&addr))
 	{
-		RDMsgBox(m_hIPConfigOwner, MSG_INVALID_NAME, MSG_ERR, MB_OK);
+		RDMsgBox(hWnd, MSG_INVALID_NAME, MSG_ERR, MB_OK);
 		return FALSE;
 	}
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
@@ -635,12 +636,12 @@ BOOL IIPConfig::OnSaveSolution()
 	return TRUE;
 }
 
-BOOL IIPConfig::OnDelSolution()
+BOOL CIPConfig::OnDelSolution(HWND hWnd)
 {
 	if(!m_pSolutionList)
 		return FALSE;
 
-	if(RDMsgBox(m_hIPConfigOwner, MSG_DELETE_SOLUTION, MSG_WARNING, MB_YESNO)!=IDYES)
+	if(RDMsgBox(hWnd, MSG_DELETE_SOLUTION, MSG_WARNING, MB_YESNO)!=IDYES)
 		return FALSE;
 	LPCWSTR lpszSolution = m_pSolutionList->GetText();
 	int nSelected = m_pSolutionList->GetCurSel();
@@ -671,17 +672,17 @@ BOOL IIPConfig::OnDelSolution()
 	return TRUE;
 }
 
-BOOL IIPConfig::OnApplySolution()
+BOOL CIPConfig::OnApplySolution(HWND hWnd)
 {
-	if (CheckFormValid()==FALSE)
+	if (CheckFormValid(hWnd)==FALSE)
 	{
 		return FALSE;
 	}
-	//è¿žæŽ¥åå­—
+	//Á¬½ÓÃû×Ö
 	int curSel = m_pAdapterList->GetCurSel();
 	CListLabelElementUI *pItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(curSel);
 	LPCTSTR lpszConnectName = pItem->GetText().GetData();
-	
+
 	wchar_t *lpszCommand = NULL;
 	wchar_t szIpCommand[MAX_PATH] = {0};
 	wchar_t szDnsCommand[MAX_PATH] = {0};
@@ -723,7 +724,7 @@ BOOL IIPConfig::OnApplySolution()
 	}
 	m_pCmdInfo = (PCMD_EXE_INFO)malloc(sizeof(CMD_EXE_INFO));
 	memset(m_pCmdInfo, 0, sizeof(CMD_EXE_INFO));
-	m_pCmdInfo->hWnd = m_hIPConfigOwner;
+	m_pCmdInfo->hWnd = hWnd;
 	m_pCmdInfo->lpszCommand = lpszCommand;
 	//UINT uThreadId;
 	//HANDLE hThread = (HANDLE)_beginthreadex(NULL,0,ExeCMDThreadFunc, (void*)m_pCmdInfo, 0, &uThreadId);
@@ -733,7 +734,7 @@ BOOL IIPConfig::OnApplySolution()
 	return TRUE;
 }
 
-BOOL IIPConfig::ResetSolution()
+BOOL CIPConfig::ResetSolution()
 {
 	wchar_t szNewSolution[1024] = {0};
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_IPCHANGERPANEL, kIPConfigNewSolution, szNewSolution);
@@ -774,7 +775,7 @@ BOOL IIPConfig::ResetSolution()
 	return TRUE;
 }
 
-LONG CALLBACK IIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LONG CALLBACK CIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	//list<LPADAPTER_INFO> *plstAdapters = (list<LPADAPTER_INFO> *)lParam;
 	//if(!plstAdapters)
@@ -782,7 +783,7 @@ LONG CALLBACK IIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*
 	return 0;
 }
 
-LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex)
+LONG CALLBACK CIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex)
 {
 	list<LPADAPTER_INFO> *plstAdapters = (list<LPADAPTER_INFO> *)lParam;
 	if(!plstAdapters)
@@ -803,14 +804,14 @@ LONG CALLBACK IIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, i
 	return 0;
 }
 
-BOOL IIPConfig::CheckFormValid()
+BOOL CIPConfig::CheckFormValid(HWND hWnd)
 {
 	//wchar_t msgTitle[100];
 	//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"msg_warn", msgTitle);
 
 	if(!m_pIpAutoCheckBox->IsSelected())
 	{
-		//åˆ¤æ–­ip
+		//ÅÐ¶Ïip
 		LPCTSTR ip = m_pIPEdit->GetText().GetData();
 		BOOL isIp = ValidateUtil::IsIPv4(ip);
 		if(isIp==FALSE)
@@ -818,10 +819,10 @@ BOOL IIPConfig::CheckFormValid()
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_ipv4_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-			RDMsgBox(m_hIPConfigOwner, MSG_IPV4_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
+			RDMsgBox(hWnd, MSG_IPV4_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
-		//åˆ¤æ–­å­ç½‘æŽ©ç 
+		//ÅÐ¶Ï×ÓÍøÑÚÂë
 		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
 		BOOL isMask = ValidateUtil::IsMask(mask);
 		if(isMask==FALSE)
@@ -829,10 +830,10 @@ BOOL IIPConfig::CheckFormValid()
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_subnet_mask_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-			RDMsgBox(m_hIPConfigOwner, MSG_MASK_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
+			RDMsgBox(hWnd, MSG_MASK_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
-		//åˆ¤æ–­ç½‘å…³
+		//ÅÐ¶ÏÍø¹Ø
 		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
 		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
 		if(isGateway==FALSE)
@@ -840,7 +841,7 @@ BOOL IIPConfig::CheckFormValid()
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_gateway_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-			RDMsgBox(m_hIPConfigOwner, MSG_GATEWAY_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
+			RDMsgBox(hWnd, MSG_GATEWAY_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 	}
@@ -854,7 +855,7 @@ BOOL IIPConfig::CheckFormValid()
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-			RDMsgBox(m_hIPConfigOwner, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
+			RDMsgBox(hWnd, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 			return FALSE;
 		}
 		if(!m_pDns2Edit->GetText().IsEmpty())
@@ -866,16 +867,17 @@ BOOL IIPConfig::CheckFormValid()
 				//wchar_t text[100];
 				//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 				//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
-				RDMsgBox(m_hIPConfigOwner, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
+				RDMsgBox(hWnd, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
 				return FALSE;
 			}
-			
+
 		}
 	}
 	return TRUE;
 }
-//unsigned IIPConfig::ExeCMDThreadFunc(void * pParams)
-DWORD IIPConfig::ExeCMDThreadFunc(void * pParams)
+
+//unsigned CIPConfig::ExeCMDThreadFunc(void * pParams)
+DWORD CIPConfig::ExeCMDThreadFunc(void * pParams)
 {	
 	PCMD_EXE_INFO info = (PCMD_EXE_INFO)pParams;
 	HWND hWnd = info->hWnd;
@@ -888,7 +890,7 @@ DWORD IIPConfig::ExeCMDThreadFunc(void * pParams)
 	return 0;
 }
 
-BOOL IIPConfig::ExeCMDComplete()
+BOOL CIPConfig::ExeCMDComplete()
 {
 	if (m_pCmdInfo)
 	{
