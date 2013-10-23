@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-<HorizontalLayout height="25" padding="4,4,4,4">
-	<CheckBox width="25" height="25" selectedimage="file='default\checkbox_yes.png' dest='3,3,19,19'" normalimage="file='default\checkbox_no.png'  dest='3,3,19,19'"/>
+<HostRowContainer height="25" padding="4,4,4,4">
+	<HostRowCheckBox width="25" height="25" selectedimage="file='default\checkbox_yes.png' dest='3,3,19,19'" normalimage="file='default\checkbox_no.png'  dest='3,3,19,19'"/>
 	<Control width="2" />
-	<Edit width="110" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="192.168.0.0"/>
+	<HostRowIPEdit width="110" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="192.168.0.0"/>
 	<Control width="8" />
-	<Edit width="160" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
+	<HostRowDomainEdit width="160" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
 	<Control width="8" />
-	<Edit minwidth="250" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
+	<HostRowDescEdit minwidth="250" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
 	<Control />
-	<Button width="25" height="25"  normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存"/>
-	<Button width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除"/>
-</HorizontalLayout>
+	<HostRowSaveButton width="25" height="25"  normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存"/>
+	<HostRowDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除"/>
+</HostRowContainer>
 </Window >

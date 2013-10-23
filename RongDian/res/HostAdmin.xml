@@ -17,8 +17,7 @@
 		</HorizontalLayout>
 		<Control height="15" />
 		<!--host配置，以组为单位-->
-		<VerticalLayout name="host_group_container" bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" inset="4,4,4,4">
-			<Control height="5" />
+		<VerticalLayout minwidth="350" height="450" name="host_groups_box" bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" childpadding="4">
 			<!--
 			<VerticalLayout name="host_group1" minwidth="460" >
 				--组标题--

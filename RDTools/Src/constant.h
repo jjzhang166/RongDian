@@ -72,6 +72,7 @@ const wchar_t* const kNameAbout						= L"name_about";
 const wchar_t* const kDescAbout						= L"desc_about";
 
 // MSG
+const wchar_t* const kMsgSuccess					= L"msg_success";
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgWarning					= L"msg_warning";
 const wchar_t* const kLoading						= L"msg_loading";
@@ -91,7 +92,7 @@ const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
-
+const wchar_t* const kOperationSuccess				= L"operation_success";
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
 
@@ -122,7 +123,8 @@ typedef enum _tagMSG_ID {
 	MSG_RETRY,
 	MSG_CANCEL,
 	// Msg Section
-	MSG_ERR = 30,
+	MSG_SUCCESS = 30,
+	MSG_ERR,
 	MSG_WARNING,
 	MSG_LOADING,
 	MSG_PLUGIN_ERR,
@@ -141,6 +143,7 @@ typedef enum _tagMSG_ID {
 	MSG_DELETE_SOLUTION,
 	MSG_INVALID_NAME,
 	MSG_DEBUG_TEXT,
+	MSG_OPT_SUCCESS,
 	// End
 	MSG_END = 200
 } MSG_ID;
@@ -293,3 +296,11 @@ typedef struct _tagCMD_EXE_INFO
 	LPWSTR	lpszCommand;
 	LPVOID	lpLoader;
 } CMD_EXE_INFO, *PCMD_EXE_INFO, *LPCMD_EXE_INFO;
+
+typedef struct _tagHOSTS_INFO
+{
+	wchar_t szIP[STRING_LENGTH];
+	wchar_t szDomain[STRING_LENGTH];
+	wchar_t szDesc[STRING_LENGTH];
+	int type;
+}HOSTS_INFO,*PHOSTS_INFO,*LPHOSTS_INFO;

@@ -10,27 +10,30 @@ const wchar_t* const kHostBackupBtn = L"host_backup";
 const wchar_t* const kHostBackupTip = L"host_backup_tip";
 const wchar_t* const kHostNewGroupBtn = L"host_new_group";
 const wchar_t* const kHostNewGroupTip = L"host_new_group_tip";
-const wchar_t* const kHostGroupContainer = L"host_group_container";
+const wchar_t* const kHostGroupRowsBox = L"host_groups_box";
 //xml路径
 const wchar_t* const kHostGroupXmlPath = L"HostGroup.xml";
 const wchar_t* const kHostGroupRowXmlPath = L"HostGroupRow.xml";
 //动态控件名
+const wchar_t* const kHostGroupContainer = L"HostGroupContainer";
 const wchar_t* const kHostGroup = L"host_group";
-const wchar_t* const kHostGroupVisibleContentBtn = L"host_group_visible_content";
-const wchar_t* const kHostGroupTitleEdit = L"host_group_title_edit";
-const wchar_t* const kHostGroupNewRowBtn = L"host_group_new_row";
-const wchar_t* const kHostGroupSaveBtn = L"host_group_save";
-const wchar_t* const kHostGroupDeleteBtn = L"host_group_delete";
-const wchar_t* const kHostGroupRowsVLayout = L"host_group_rows";
+const wchar_t* const kHostGroupVisibleContentBtn = L"HostGroupVisibleButton";
+const wchar_t* const kHostGroupTitleEdit = L"HostGroupTitleEdit";
+const wchar_t* const kHostGroupNewRowBtn = L"HostGroupNewRowButton";
+const wchar_t* const kHostGroupSaveBtn = L"HostGroupSaveButton";
+const wchar_t* const kHostGroupDeleteBtn = L"HostGroupDeleteButton";
+const wchar_t* const kHostGroupRowsVLayout = L"HostGroupRowsVLayout";
 
+const wchar_t* const kHostRowContainer = L"HostRowContainer";
 const wchar_t* const kHostRowHLayout = L"host_row";
-const wchar_t* const kHostRowActiveCB = L"host_row_active_cb";
-const wchar_t* const kHostRowIPEdit = L"host_row_ip_edit";
-const wchar_t* const kHostRowDomainEdit = L"host_row_domain_edit";
-const wchar_t* const kHostRowDescEdit = L"host_row_desc_edit";
-const wchar_t* const kHostRowSaveBtn = L"host_row_save";
-const wchar_t* const kHostRowDeleteBtn = L"host_row_delete";
+const wchar_t* const kHostRowActiveCB = L"HostRowCheckBox";
+const wchar_t* const kHostRowIPEdit = L"HostRowIPEdit";
+const wchar_t* const kHostRowDomainEdit = L"HostRowDomainEdit";
+const wchar_t* const kHostRowDescEdit = L"HostRowDescEdit";
+const wchar_t* const kHostRowSaveBtn = L"HostRowSaveButton";
+const wchar_t* const kHostRowDeleteBtn = L"HostRowDeleteButton";
 
+const wchar_t* const kHostSaveSuccessWord = L"host_save_success";
 const wchar_t* const kHostDownArrowImage = L"default\\arrow_down.png";
 const wchar_t* const kHostUpArrowImage = L"default\\arrow_up.png";
 
@@ -38,12 +41,20 @@ IHostAdmin::IHostAdmin():m_groupIndex(0),m_rowIndex(0)
 {
 	m_hHostAdminOwner = NULL;
 	m_pHostAdminManager = NULL;
-	m_pHostGroupContainerLayout = NULL;
+
+	m_pHostPathEdit = NULL;
+	m_pHostOpenBtn = NULL;
+	m_pHostBackupBtn = NULL;
+	m_pHostNewGroupBtn = NULL;
+	m_pHostGroupsBox = NULL;
+	m_pLastRowsBox = NULL;
+
+	m_pHostParser = new CHostsParser();
 }
 
 IHostAdmin::~IHostAdmin()
 {
-
+	delete m_pHostParser;
 }
 
 BOOL IHostAdmin::InitHostAdmin()
@@ -54,7 +65,28 @@ BOOL IHostAdmin::InitHostAdmin()
 	FIND_CONTROL_BY_ID(m_pHostOpenBtn, CButtonUI, m_pHostAdminManager, kHostOpenBtn)
 	FIND_CONTROL_BY_ID(m_pHostBackupBtn, CButtonUI, m_pHostAdminManager, kHostBackupBtn)
 	FIND_CONTROL_BY_ID(m_pHostNewGroupBtn, CButtonUI, m_pHostAdminManager, kHostNewGroupBtn)
-	FIND_CONTROL_BY_ID(m_pHostGroupContainerLayout, CVerticalLayoutUI, m_pHostAdminManager, kHostGroupContainer)
+	FIND_CONTROL_BY_ID(m_pHostGroupsBox, CVerticalLayoutUI, m_pHostAdminManager, kHostGroupRowsBox)
+
+	m_pHostPathEdit->SetText(m_pHostParser->m_lpszHostsFilePath);
+
+	list<PHOSTS_INFO> rows = m_pHostParser->m_rows;
+	list<PHOSTS_INFO>::iterator it;
+	for(it=rows.begin();it!=rows.end();it++)
+	{
+		PHOSTS_INFO row = *it;
+		if(row->type==TAG_GROUP)
+		{
+			m_pLastRowsBox = CreateGroup(row->szDesc);
+		}
+		else if (row->type==TAG_ACTIVE_HOST)
+		{
+			CreateGroupRow(m_pLastRowsBox,TRUE,row->szIP,row->szDomain,row->szDesc);
+		}
+		else if (row->type==TAG_STOP_HOST)
+		{
+			CreateGroupRow(m_pLastRowsBox,FALSE,row->szIP,row->szDomain,row->szDesc);
+		}
+	}
 	return TRUE;
 }
 
@@ -83,14 +115,15 @@ void IHostAdmin::OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled)
 
 	if(sCtrlName == kHostOpenBtn)
 	{
-
+		ShellExecute(NULL,L"open",L"notepad.exe",m_pHostParser->m_lpszHostsFilePath,NULL,SW_SHOWNORMAL);
 	}
 	else if (sCtrlName == kHostBackupBtn)
 	{
+
 	}
 	else if (sCtrlName == kHostNewGroupBtn)
 	{
-		CreateGroup(m_pHostGroupContainerLayout);
+		CreateGroup(L"");
 	}
 	else if (StrUtil::is_wsubstr(ctrlName,kHostGroupVisibleContentBtn))//收起或者展开内容
 	{
@@ -120,8 +153,12 @@ void IHostAdmin::OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled)
 
 		CVerticalLayoutUI* pGroupVlayout = (CVerticalLayoutUI*)msg.pSender->GetParent()->GetParent();
 		CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)pGroupVlayout->GetItemAt(3);
-		CreateGroupRow(pGroupRowsVLayout,groupIndex);
+		CreateGroupRow(pGroupRowsVLayout,FALSE,L"",L"",L"");
 		delete[] aGroupIndex;
+	}
+	else if (StrUtil::is_wsubstr(ctrlName,kHostGroupSaveBtn))//保存
+	{
+		SaveAll();
 	}
 	else if (StrUtil::is_wsubstr(ctrlName,kHostGroupDeleteBtn))//删除该组
 	{
@@ -150,7 +187,129 @@ void IHostAdmin::OnHostAdminItemSelect(TNotifyUI& msg)
 	// }
 }
 
-BOOL IHostAdmin::CreateGroup(CContainerUI* pParentContainer)
+CControlUI*	IHostAdmin::OnHostAdminCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
+{
+	BOOL bSubControl = FALSE;
+	int nSubType = 0; // 自定义标识
+	CControlUI* pControl = NULL;
+	if (wcsicmp(pstrClass, kHostGroupContainer)==0)
+	{
+		pControl = new CHostAdminGroupContainer();
+	}
+	else if(wcsicmp(pstrClass, kHostRowContainer)==0)
+	{
+		pControl = new CHostAdminRowContainer();
+	}
+	//group
+	else if (wcsicmp(pstrClass, kHostGroupVisibleContentBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 1;
+	}
+	else if (wcsicmp(pstrClass, kHostGroupNewRowBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 2;
+	}
+	else if (wcsicmp(pstrClass, kHostGroupSaveBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 3;
+	}
+	else if (wcsicmp(pstrClass, kHostGroupDeleteBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 4;
+	}
+	else if (wcsicmp(pstrClass, kHostGroupRowsVLayout)==0)
+	{
+		pControl = new CVerticalLayoutUI();
+		nSubType = 5;
+	}
+	else if (wcsicmp(pstrClass, kHostGroupTitleEdit)==0)
+	{
+		pControl = new CEditUI();
+		nSubType = 6;
+	}
+	//row
+	else if (wcsicmp(pstrClass, kHostRowActiveCB)==0)
+	{
+		pControl = new CCheckBoxUI();
+		nSubType = 1;
+	}
+	else if (wcsicmp(pstrClass, kHostRowIPEdit)==0)
+	{
+		pControl = new CEditUI();
+		nSubType = 2;
+	}
+	else if (wcsicmp(pstrClass, kHostRowDomainEdit)==0)
+	{
+		pControl = new CEditUI();
+		nSubType = 3;
+	}
+	else if (wcsicmp(pstrClass, kHostRowDescEdit)==0)
+	{
+		pControl = new CEditUI();
+		nSubType = 4;
+	}
+	else if (wcsicmp(pstrClass, kHostRowSaveBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 5;
+	}
+	else if (wcsicmp(pstrClass, kHostRowDeleteBtn)==0)
+	{
+		pControl = new CButtonUI();
+		nSubType = 6;
+	}
+	if(pControl && nSubType!=0)
+	{
+		
+		CControlUI *pContainer = pParent;
+		while(pContainer && pContainer->GetParent())
+			pContainer = pContainer->GetParent();
+		if(!pContainer)
+		{
+			delete pControl;
+			pControl = NULL;
+			return pControl;
+		}
+		if(wcsicmp(pContainer->GetClass(), L"HostAdminGroupContainerUI")==0)
+		{
+			CHostAdminGroupContainer *pGroupConainer = static_cast<CHostAdminGroupContainer *>(pContainer);
+			if(nSubType==1)
+				pGroupConainer->SaveVisibleBtn(pControl);
+			else if(nSubType==2)
+				pGroupConainer->SaveNewRowBtn(pControl);
+			else if(nSubType==3)
+				pGroupConainer->SaveSaveBtn(pControl);
+			else if(nSubType==4)
+				pGroupConainer->SaveDeleteBtn(pControl);
+			else if (nSubType==5)
+				pGroupConainer->SaveRowsVLayout(pControl);
+			else if(nSubType==6)
+				pGroupConainer->SaveTitleEdit(pControl);
+		}
+		else if (wcsicmp(pContainer->GetClass(), L"HostAdminRowContainerUI")==0)
+		{
+			CHostAdminRowContainer* pRowConainer = static_cast<CHostAdminRowContainer*>(pContainer);
+			if(nSubType==1)
+				pRowConainer->SaveCheckBox(pControl);
+			else if(nSubType==2)
+				pRowConainer->SaveIPEdit(pControl);
+			else if(nSubType==3)
+				pRowConainer->SaveDomainEdit(pControl);
+			else if(nSubType==4)
+				pRowConainer->SaveDescEdit(pControl);
+			else if (nSubType==5)
+				pRowConainer->SaveSaveBtn(pControl);
+			else if (nSubType==6)
+				pRowConainer->SaveDeleteBtn(pControl);
+		}
+	}
+	return pControl;
+}
+CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 {
 	m_groupIndex++;
 	wchar_t szGroupIndex[3] = {0};
@@ -161,120 +320,187 @@ BOOL IHostAdmin::CreateGroup(CContainerUI* pParentContainer)
 		return FALSE;
 	wchar_t szGroupName[25] = {0};
 	wsprintf(szGroupName,L"%s_%d",kHostGroup,m_groupIndex);
-	//pGroupPanel->SetName(szGroupName);
-	pGroupPanel->SetChildLayoutXML(kHostGroupXmlPath);
+	pGroupPanel->SetName(szGroupName);
+	pGroupPanel->SetChildLayoutXML(kHostGroupXmlPath,(DuiLib::IDialogBuilderCallback *)g_pMainFrame);
 	pGroupPanel->SetVisible(true);
-	pParentContainer->Add(pGroupPanel);
 
-	/**指定各控件的名字**/
-	CVerticalLayoutUI* pHostGroupVLayout = (CVerticalLayoutUI*)pGroupPanel->GetItemAt(0);
+	if (!m_pHostGroupsBox->Add(pGroupPanel))
+	{
+		return FALSE;
+	}
+	//pGroupPanel->SetFixedHeight(pGroupPanel->GetItemAt(0)->GetFixedHeight());
+
+	CHostAdminGroupContainer *pGroupContainer = (CHostAdminGroupContainer *)pGroupPanel->GetItemAt(0);
+	
 	wchar_t szHostGroupVLayoutName[50] = {0};
 	wsprintf(szHostGroupVLayoutName,L"%s_%d",kHostGroup,m_groupIndex);
-	pHostGroupVLayout->SetName(szHostGroupVLayoutName);
-	pHostGroupVLayout->SetUserData(szGroupIndex);
+	pGroupContainer->SetName(szHostGroupVLayoutName);
+	pGroupContainer->SetUserData(szGroupIndex);
+	
+	CControlUI* pVisibleBtn = pGroupContainer->GetVisibleBtn();
+	wchar_t szGroupVisibleBtnName[50] = {0};
+	wsprintf(szGroupVisibleBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
+	pVisibleBtn->SetName(szGroupVisibleBtnName);
+	pVisibleBtn->SetUserData(szGroupIndex);
 
-	CHorizontalLayoutUI* pHostGroupTitleHLayout = (CHorizontalLayoutUI*)pHostGroupVLayout->GetItemAt(1);
+	//CHorizontalLayoutUI* pHostGroupTitleHLayout = (CHorizontalLayoutUI*)pHostGroupVLayout->GetItemAt(1);
+	//CButtonUI* pVisibleContentBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(0);
+	//wchar_t szVisibleContentBtnName[50] = {0};
+	//wsprintf(szVisibleContentBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
+	//pVisibleContentBtn->SetUserData(szGroupIndex);
 
-	CButtonUI* pVisibleContentBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(0);
-	wchar_t szVisibleContentBtnName[50] = {0};
-	wsprintf(szVisibleContentBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
-	pVisibleContentBtn->SetName(szVisibleContentBtnName);
-	pVisibleContentBtn->SetUserData(szGroupIndex);
-
-	CEditUI* pGroupTitleEdit = (CEditUI*)pHostGroupTitleHLayout->GetItemAt(1);
+	CControlUI* pGroupTitleEdit = pGroupContainer->GetTitleEdit();
 	wchar_t szGroupTitleEditName[50] = {0};
 	wsprintf(szGroupTitleEditName,L"%s_%d",kHostGroupTitleEdit,m_groupIndex);
 	pGroupTitleEdit->SetName(szGroupTitleEditName);
 	pGroupTitleEdit->SetUserData(szGroupIndex);
+	pGroupTitleEdit->SetText(lpszGroupTitle);
 
-	CButtonUI* pGroupNewRowBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(2);
+	CControlUI* pGroupNewRowBtn = pGroupContainer->GetNewRowBtn();
 	wchar_t szGroupNewRowBtnName[50] = {0};
 	wsprintf(szGroupNewRowBtnName,L"%s_%d",kHostGroupNewRowBtn,m_groupIndex);
 	pGroupNewRowBtn->SetName(szGroupNewRowBtnName);
 	pGroupNewRowBtn->SetUserData(szGroupIndex);
 
-	CButtonUI* pGroupSaveBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(3);
+	CControlUI* pGroupSaveBtn = pGroupContainer->GetSaveBtn();
 	wchar_t szGroupSaveBtnName[50] = {0};
 	wsprintf(szGroupSaveBtnName,L"%s_%d",kHostGroupSaveBtn,m_groupIndex);
 	pGroupSaveBtn->SetName(szGroupSaveBtnName);
 	pGroupSaveBtn->SetUserData(szGroupIndex);
 
-	CButtonUI* pGroupDeleteBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(4);
+	CControlUI* pGroupDeleteBtn = pGroupContainer->GetDeleteBtn();
 	wchar_t szGroupDeleteBtnName[50] = {0};
 	wsprintf(szGroupDeleteBtnName,L"%s_%d",kHostGroupDeleteBtn,m_groupIndex);
 	pGroupDeleteBtn->SetName(szGroupDeleteBtnName);
 	pGroupDeleteBtn->SetUserData(szGroupIndex);
 
 	//组内容，包含多行
-	CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)pHostGroupVLayout->GetItemAt(3);
+	CContainerUI* pGroupRowsVLayout = (CContainerUI*)pGroupContainer->GetRowsLayout();
 	wchar_t szGroupRowsVLayoutName[50] = {0};
 	wsprintf(szGroupRowsVLayoutName,L"%s_%d",kHostGroupRowsVLayout,m_groupIndex);
 	pGroupRowsVLayout->SetName(szGroupRowsVLayoutName);
 	pGroupRowsVLayout->SetUserData(szGroupIndex);
 
-	CreateGroupRow(pGroupRowsVLayout,m_groupIndex);
-	return TRUE;
+	//CreateGroupRow(pGroupRowsVLayout,L"",L"",L"");
+	return pGroupRowsVLayout;
 }
 
-BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,int groupIndex)
+BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPCWSTR lpszIP,LPCWSTR lpszDomain,LPCWSTR lpszDesc)
 {
+	LPCTSTR groupIndex = pParentContainer->GetUserData().GetData();
+
 	m_rowIndex++;
 	wchar_t sDataIndex[7] = {0};
-	wsprintf(sDataIndex,L"%d_%d",m_groupIndex,m_rowIndex);
+	wsprintf(sDataIndex,L"%s_%d",groupIndex,m_rowIndex);
 
 	CChildLayoutUI* pRowPanel = new CChildLayoutUI();
 	if(!pRowPanel)
 		return FALSE;
 	wchar_t szRowName[25] = {0};
-	wsprintf(szRowName,L"host_row_%d_%d",groupIndex,m_rowIndex);
-	//pRowPanel->SetName(szRowName);
-	pRowPanel->SetChildLayoutXML(kHostGroupRowXmlPath);
+	wsprintf(szRowName,L"host_row_%s_%d",groupIndex,m_rowIndex);
+	pRowPanel->SetName(szRowName);
+	pRowPanel->SetChildLayoutXML(kHostGroupRowXmlPath,(DuiLib::IDialogBuilderCallback *)g_pMainFrame);
 	pRowPanel->SetVisible(true);
-	//pParentContainer->AddAt(pRowPanel,pParentContainer->GetCount());
-	pParentContainer->Add(pRowPanel);
+	if(!pParentContainer->Add(pRowPanel))
+	{
+		return FALSE;
+	}
+	//重置控件高度（group、row）
+	pRowPanel->SetFixedHeight(pRowPanel->GetItemAt(0)->GetFixedHeight());
+	int rowCount = pParentContainer->GetCount();
+	int rowsHeight = rowCount*(pRowPanel->GetFixedHeight()+4);
+	pParentContainer->SetFixedHeight(rowsHeight);
+	pParentContainer->GetParent()->SetFixedHeight(rowsHeight+30);
 
 	/**重新指定控件名**/
-	CHorizontalLayoutUI* pHostRowHLayout = (CHorizontalLayoutUI*)pRowPanel->GetItemAt(0);
+	CHostAdminRowContainer* pHostRowHLayout = (CHostAdminRowContainer*)pRowPanel->GetItemAt(0);
 	wchar_t szHostRowVLayoutName[50] = {0};
-	wsprintf(szHostRowVLayoutName,L"%s_%d_%d",kHostRowHLayout,m_groupIndex,m_rowIndex);
+	wsprintf(szHostRowVLayoutName,L"%s_%s_%d",kHostRowHLayout,groupIndex,m_rowIndex);
 	pHostRowHLayout->SetName(szHostRowVLayoutName);
 	pHostRowHLayout->SetUserData(sDataIndex);
 
-	CCheckBoxUI* pActiveCB = (CCheckBoxUI*)pHostRowHLayout->GetItemAt(0);
+	CCheckBoxUI* pActiveCB = (CCheckBoxUI*)pHostRowHLayout->GetCheckBox();
 	wchar_t szRowActiveCBName[50] = {0};
-	wsprintf(szRowActiveCBName,L"%s_%d_%d",kHostRowActiveCB,groupIndex,m_rowIndex);
+	wsprintf(szRowActiveCBName,L"%s_%s_%d",kHostRowActiveCB,groupIndex,m_rowIndex);
 	pActiveCB->SetName(szRowActiveCBName);
 	pActiveCB->SetUserData(sDataIndex);
+	pActiveCB->SetCheck(isActive==TRUE?true:false);
 
-	CEditUI* pIPEdit = (CEditUI*)pHostRowHLayout->GetItemAt(2);
+	CControlUI* pIPEdit = pHostRowHLayout->GetIPEdit();
 	wchar_t szRowIPEditName[50] = {0};
-	wsprintf(szRowIPEditName,L"%s_%d_%d",kHostRowIPEdit,groupIndex,m_rowIndex);
+	wsprintf(szRowIPEditName,L"%s_%s_%d",kHostRowIPEdit,groupIndex,m_rowIndex);
 	pIPEdit->SetName(szRowIPEditName);
 	pIPEdit->SetUserData(sDataIndex);
+	pIPEdit->SetText(lpszIP);
 
-	CEditUI* pDomainEdit = (CEditUI*)pHostRowHLayout->GetItemAt(4);
+	CControlUI* pDomainEdit = pHostRowHLayout->GetDomainEdit();
 	wchar_t szRowDomainEditName[50] = {0};
-	wsprintf(szRowDomainEditName,L"%s_%d_%d",kHostRowDomainEdit,groupIndex,m_rowIndex);
+	wsprintf(szRowDomainEditName,L"%s_%s_%d",kHostRowDomainEdit,groupIndex,m_rowIndex);
 	pDomainEdit->SetName(szRowDomainEditName);
 	pDomainEdit->SetUserData(sDataIndex);
+	pDomainEdit->SetText(lpszDomain);
 
-	CEditUI* pDescEdit = (CEditUI*)pHostRowHLayout->GetItemAt(6);
+	CControlUI* pDescEdit = pHostRowHLayout->GetDescEdit();
 	wchar_t szRowDescEditName[50] = {0};
-	wsprintf(szRowDescEditName,L"%s_%d_%d",kHostRowDescEdit,groupIndex,m_rowIndex);
+	wsprintf(szRowDescEditName,L"%s_%s_%d",kHostRowDescEdit,groupIndex,m_rowIndex);
 	pDescEdit->SetName(szRowDescEditName);
 	pDescEdit->SetUserData(sDataIndex);
+	pDescEdit->SetText(lpszDesc);
 
-	CButtonUI* pSaveBtn = (CButtonUI*)pHostRowHLayout->GetItemAt(8);
+	CControlUI* pSaveBtn = pHostRowHLayout->GetSaveBtn();
 	wchar_t szRowSaveBtnName[50] = {0};
-	wsprintf(szRowSaveBtnName,L"%s_%d_%d",kHostRowSaveBtn,groupIndex,m_rowIndex);
+	wsprintf(szRowSaveBtnName,L"%s_%s_%d",kHostRowSaveBtn,groupIndex,m_rowIndex);
 	pSaveBtn->SetName(szRowSaveBtnName);
 	pSaveBtn->SetUserData(sDataIndex);
 
-	CButtonUI* pDeleteBtn = (CButtonUI*)pHostRowHLayout->GetItemAt(9);
+	CControlUI* pDeleteBtn = pHostRowHLayout->GetDeleteBtn();
 	wchar_t szRowDeleteBtnName[50] = {0};
-	wsprintf(szRowDeleteBtnName,L"%s_%d_%d",kHostRowDeleteBtn,groupIndex,m_rowIndex);
+	wsprintf(szRowDeleteBtnName,L"%s_%s_%d",kHostRowDeleteBtn,groupIndex,m_rowIndex);
 	pDeleteBtn->SetName(szRowDeleteBtnName);
 	pDeleteBtn->SetUserData(sDataIndex);
 
+	return TRUE;
+}
+
+BOOL IHostAdmin::SaveAll()
+{
+	wchar_t* hostsFileContent = new wchar_t[10240];
+	int contentLenght = 10240;
+	wmemset(hostsFileContent,0,contentLenght);
+	int groupsCount = m_pHostGroupsBox->GetCount();
+	for (int i=0;i<groupsCount;i++)
+	{
+		CContainerUI* groupWindow = (CContainerUI*)m_pHostGroupsBox->GetItemAt(i);
+		CHostAdminGroupContainer* groupContainer = (CHostAdminGroupContainer*)groupWindow->GetItemAt(0);
+		LPCTSTR groupTitle = groupContainer->GetTitleEdit()->GetText().GetData();
+		wcscat_s(hostsFileContent,contentLenght,L"# ");
+		wcscat_s(hostsFileContent,contentLenght,groupTitle);
+		wcscat_s(hostsFileContent,contentLenght,L"\n");
+		
+		CContainerUI* rowsBox = (CContainerUI*)groupContainer->GetRowsLayout();
+		int rowsCount = rowsBox->GetCount();
+		for (int j=0;j<rowsCount;j++)
+		{
+			CContainerUI* rowWindow = (CContainerUI*)rowsBox->GetItemAt(j);
+			CHostAdminRowContainer* rowContainer = (CHostAdminRowContainer*)rowWindow->GetItemAt(0);
+			CCheckBoxUI* activeCB = (CCheckBoxUI*)rowContainer->GetCheckBox();
+			if (activeCB->IsSelected())
+			{
+				wcscat_s(hostsFileContent,contentLenght,L"#");
+			}
+			LPCTSTR ip =rowContainer->GetIPEdit()->GetText().GetData();
+			LPCTSTR domain =rowContainer->GetDomainEdit()->GetText().GetData();
+			LPCTSTR desc =rowContainer->GetDescEdit()->GetText().GetData();
+			wcscat_s(hostsFileContent,contentLenght,ip);
+			wcscat_s(hostsFileContent,contentLenght,L" ");
+			wcscat_s(hostsFileContent,contentLenght,domain);
+			wcscat_s(hostsFileContent,contentLenght,L" #");
+			wcscat_s(hostsFileContent,contentLenght,desc);
+			wcscat_s(hostsFileContent,contentLenght,L"\n");
+		}
+	}
+	m_pHostParser->SaveHostsFile(hostsFileContent);
+	delete[] hostsFileContent;
+	RDMsgBox(m_hHostAdminOwner,MSG_OPT_SUCCESS,MSG_SUCCESS, MB_OK);
 	return TRUE;
 }

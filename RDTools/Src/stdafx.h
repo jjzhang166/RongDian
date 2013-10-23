@@ -128,6 +128,7 @@ void CancelLoading();
 #include <SQLiteUtil.h>
 #include <ConfigTable.h>
 #include <AddrTable.h>
+#include <PCREUtil.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是自定义文件的引用
@@ -143,6 +144,9 @@ void CancelLoading();
 #include "IFileFinder.h"
 #include "IFormatter.h"
 #include "IIpConfig.h"
+#include "HostAdminGroupContainer.h"
+#include "HostAdminRowContainer.h"
+#include "HostsParser.h"
 #include "IHostAdmin.h"
 #include "ITidy.h"
 #include "ContainerTest.h"
