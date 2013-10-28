@@ -5,7 +5,6 @@ CHostAdminGroupContainer::CHostAdminGroupContainer()
 {
 	pVisibleBtn = NULL;
 	pNewRowBtn = NULL;
-	pSaveBtn = NULL;
 	pDeleteBtn = NULL;
 	pTitleEdit = NULL;
 	pRowsVLayout = NULL;

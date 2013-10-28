@@ -26,5 +26,5 @@ public:
 	LPWSTR m_lpszHostsFilePath;
 	LPSTR m_szHostFilePath;
 private:
-	void Parser(LPWSTR row,PHOSTS_INFO pHosts);
+	BOOL Parser(LPWSTR row,PHOSTS_INFO pHosts);
 };

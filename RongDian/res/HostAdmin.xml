@@ -4,20 +4,22 @@
 		<!--host文件路径-->
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
 			<Control width="5" />
-			<Label name="host_path_text" width="100" />
+			<Label name="host_path_text" width="80" />
 			<Control width="3" />
-			<Edit name="host_path_edit" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
+			<Edit name="host_path_edit" minwidth="180" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" readonly="true"/>
 			<Control width="3" />
 			<Button name="host_open" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
 			<Button name="host_backup" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="3" />
+			<Button name="host_save" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
 			<Button name="host_new_group" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
 		</HorizontalLayout>
 		<Control height="15" />
 		<!--host配置，以组为单位-->
-		<VerticalLayout minwidth="350" height="450" name="host_groups_box" bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" childpadding="4">
+		<VerticalLayout minwidth="350" height="420" name="host_groups_box" bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" childpadding="2">
 			<!--
 			<VerticalLayout name="host_group1" minwidth="460" >
 				--组标题--

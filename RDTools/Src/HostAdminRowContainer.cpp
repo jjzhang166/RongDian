@@ -7,7 +7,6 @@ CHostAdminRowContainer::CHostAdminRowContainer()
 	pIPEdit = NULL;
 	pDomainEdit = NULL;
 	pDescEdit = NULL;
-	pSaveBtn = NULL;
 	pDeleteBtn = NULL;
 }
 

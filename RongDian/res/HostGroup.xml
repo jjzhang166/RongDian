@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-<HostGroupContainer minwidth="350" height="150" bordersize="1" bordercolor="FFE0E0E0">
+<HostGroupContainer minwidth="360" height="200" bordersize="1" bordercolor="FFE0E0E0" padding="2,2,2,2">
 	<Control height="5" />
 	<!--组标题-->
 	<HorizontalLayout height="25">
-		<HostGroupVisibleButton width="25" height="25" normalimage="file='default\arrow_up.png' dest='3,3,20,20'" tooltip="收起"/>
+		<HostGroupVisibleButton width="25" height="25" tooltip="收起" selectedimage="file='default\arrow_down.png' dest='3,3,19,19'" normalimage="file='default\arrow_up.png'  dest='3,3,19,19'"
+/>
 		<HostGroupTitleEdit minwidth="150" height="25" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="默认组的组名" bkimage="file='default\buttom_border_#999999.png'"/>
 		<HostGroupNewRowButton width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'" tooltip="添加绑定"/>
-		<HostGroupSaveButton width="25" height="25" normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存组名"/>
 		<HostGroupDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除该组"/>
 	</HorizontalLayout>
 	<Control height="5" />
 	<!--组内容，可隐藏-->
-	<HostGroupRowsVLayout height="100" vscrollbar="true" autovscroll="true" childpadding="4">
+	<HostGroupRowsVLayout height="150" vscrollbar="true" autovscroll="true" childpadding="4">
 	</HostGroupRowsVLayout>
 </HostGroupContainer>
 </Window>

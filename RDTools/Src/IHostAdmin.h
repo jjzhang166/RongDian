@@ -16,6 +16,7 @@ public:
 	void			OnHostAdminItemSelect(TNotifyUI& msg);
 	CContainerUI*	CreateGroup(LPCWSTR lpszGroupTitle);
 	BOOL			CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPCWSTR lpszIP,LPCWSTR lpszDomain,LPCWSTR lpszDesc);
+	BOOL			ResetRowsPos(CContainerUI* pContainer);//重置每一行的位置
 	BOOL			SaveAll();
 public:
 	HWND m_hHostAdminOwner;
@@ -24,6 +25,7 @@ public:
 	CEditUI*   m_pHostPathEdit;
 	CButtonUI* m_pHostOpenBtn;
 	CButtonUI* m_pHostBackupBtn;
+	CButtonUI* m_pHostSaveBtn;
 	CButtonUI* m_pHostNewGroupBtn;
 	CVerticalLayoutUI* m_pHostGroupsBox;
 	CContainerUI* m_pLastRowsBox;

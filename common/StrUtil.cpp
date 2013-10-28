@@ -191,13 +191,13 @@ wchar_t* StrUtil::u82u(const char *utf8)
 	return wstr;
 }
 
-int StrUtil::is_special_utf8(unsigned char c)
+bool StrUtil::is_special_utf8(unsigned char c)
 {
 	unsigned special_byte = 0X02; // binary 00000010
 	if ((unsigned char)(c >> 6) == special_byte)
-		return 1;
+		return true;
 	else
-		return 0;
+		return false;
 }
 
 int StrUtil::is_utf8(const char *str)
@@ -308,7 +308,7 @@ int StrUtil::is_utf8(const char *str)
 		return UTF8_INVALID;
 }
 
-int StrUtil::is_gb2312(const char *str)
+bool StrUtil::is_gb2312(const char *str)
 {
 	unsigned one_byte = 0X00; // binary 00000000
 	int gb2312_yes = 0;
@@ -351,7 +351,7 @@ int StrUtil::is_gb2312(const char *str)
 		return false;
 }
 
-int StrUtil::is_big5(const char *str)
+bool StrUtil::is_big5(const char *str)
 {
 	unsigned one_byte = 0X00; // binary 00000000
 	int big5_yes = 0;
@@ -389,7 +389,7 @@ int StrUtil::is_big5(const char *str)
 		return false;
 }
 
-int StrUtil::is_gbk(const char *str)
+bool StrUtil::is_gbk(const char *str)
 {
 	unsigned one_byte = 0X00; // binary 00000000
 	int gbk_yes = 0;

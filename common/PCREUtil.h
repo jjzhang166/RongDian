@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include <Windows.h>
 #include <list>
 #include <pcre/pcre.h>

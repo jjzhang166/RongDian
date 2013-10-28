@@ -29,18 +29,26 @@ void CHostsParser::LoadHostsFile()
 	{
 		if (strlen(line)>0)
 		{
-			//hosts文件为gbk文件
-			int utf8Check = StrUtil::is_utf8(line);
-			if (utf8Check==UTF8_BOM||utf8Check==UTF8_NOBOM)
+			//line字符串为gbk
+			//bool gbkCheck = StrUtil::is_gbk(line);
+			//if (gbkCheck)
+			//{
+			//	char* utf8 = StrUtil::a2u8(line);
+			//	strcpy_s(line,sizeof(line),utf8);
+			//	delete[] utf8;
+			//}
+			wchar_t* row;
+			int utf8Type = StrUtil::is_utf8(line);
+			if (utf8Type==UTF8_BOM||utf8Type==UTF8_NOBOM)
 			{
-				char* gbk = StrUtil::u82a(line);
-				strcpy_s(line,sizeof(line),gbk);
-				delete[] gbk;
+				row = StrUtil::u82u(line);
 			}
-			wchar_t* row = StrUtil::a2w(line);
+			else
+			{
+				row = StrUtil::a2w(line);
+			}
 			PHOSTS_INFO pHostsRow = new HOSTS_INFO();
 			Parser(row,pHostsRow);
-
 			delete[] row;
 		}
 	}  
@@ -51,7 +59,7 @@ void CHostsParser::LoadHostsFile()
 void CHostsParser::SaveHostsFile(wchar_t* content)
 {
 	locale &loc=locale::global(locale(locale(),"",LC_CTYPE));
-	wofstream fon(m_lpszHostsFilePath, ios::out);
+	wofstream fon(m_szHostFilePath, ios::out);
 	locale::global(loc);
 	if (fon.is_open())
 	{
@@ -60,7 +68,7 @@ void CHostsParser::SaveHostsFile(wchar_t* content)
 	}
 }
 
-void CHostsParser::Parser(LPWSTR row,PHOSTS_INFO pHosts)
+BOOL CHostsParser::Parser(LPWSTR row,PHOSTS_INFO pHosts)
 {
 	list<char*> hostParts;
 	StrUtil::wcstrim(row,wcslen(row));
@@ -79,6 +87,11 @@ void CHostsParser::Parser(LPWSTR row,PHOSTS_INFO pHosts)
 	{
 		pHosts->type = TAG_STOP_HOST;
 		
+	}
+	//格式不对
+	else
+	{
+		return FALSE;
 	}
 
 	list<char*>::iterator it;
@@ -120,5 +133,6 @@ void CHostsParser::Parser(LPWSTR row,PHOSTS_INFO pHosts)
 		delete[] *it;
 	}
 	delete[] row_a;
+	return TRUE;
 }
 
