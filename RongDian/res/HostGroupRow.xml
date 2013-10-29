@@ -9,6 +9,6 @@
 	<Control width="8" />
 	<HostRowDescEdit minwidth="260" height="25" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
 	<Control />
-	<HostRowDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除"/>
+	<HostRowDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'"/>
 </HostRowContainer>
 </Window >

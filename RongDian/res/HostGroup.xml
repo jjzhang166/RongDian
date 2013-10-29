@@ -7,8 +7,8 @@
 		<HostGroupVisibleButton width="25" height="25" tooltip="收起" selectedimage="file='default\arrow_down.png' dest='3,3,19,19'" normalimage="file='default\arrow_up.png'  dest='3,3,19,19'"
 />
 		<HostGroupTitleEdit minwidth="150" height="25" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="默认组的组名" bkimage="file='default\buttom_border_#999999.png'"/>
-		<HostGroupNewRowButton width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'" tooltip="添加绑定"/>
-		<HostGroupDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除该组"/>
+		<HostGroupNewRowButton width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'"/>
+		<HostGroupDeleteButton width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" />
 	</HorizontalLayout>
 	<Control height="5" />
 	<!--组内容，可隐藏-->

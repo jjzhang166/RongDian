@@ -13,7 +13,12 @@ const wchar_t* const kHostSaveBtn = L"host_save";
 const wchar_t* const kHostSaveTip = L"host_save_tip";
 const wchar_t* const kHostNewGroupBtn = L"host_new_group";
 const wchar_t* const kHostNewGroupTip = L"host_new_group_tip";
+const wchar_t* const kHostDeleteGroupTip = L"host_delete_group_tip";
 const wchar_t* const kHostGroupRowsBox = L"host_groups_box";
+const wchar_t* const kHostRowsHideBox = L"host_rows_hide";
+const wchar_t* const kHostRowsShowBox = L"host_rows_show";
+const wchar_t* const kHostNewRowTip = L"host_new_row_tip";
+const wchar_t* const kHostDeleteRowTip = L"host_delete_row_tip";
 //xml路径
 const wchar_t* const kHostGroupXmlPath = L"HostGroup.xml";
 const wchar_t* const kHostGroupRowXmlPath = L"HostGroupRow.xml";
@@ -152,30 +157,26 @@ void IHostAdmin::OnHostAdminClick(TNotifyUI& msg, BOOL& bHandled)
 	{
 		LPCTSTR szGroupIndex = msg.pSender->GetUserData().GetData();
 		//隐藏当前组列表
-		CButtonUI* pVisibleContentBtn = (CButtonUI*)msg.pSender;
+		CCheckBoxUI* pVisibleContentBtn = (CCheckBoxUI*)msg.pSender;
 		CVerticalLayoutUI* groupLayout = (CVerticalLayoutUI*)pVisibleContentBtn->GetParent()->GetParent();
 		CVerticalLayoutUI* pGroupRowsVLayout = (CVerticalLayoutUI*)groupLayout->GetItemAt(3);
 		if (pGroupRowsVLayout->IsVisible())
 		{
 			pGroupRowsVLayout->SetVisible(false);
 
-			/*CContainerUI* groupContainer = (CContainerUI*)pGroupRowsVLayout->GetParent();
-			CContainerUI* groupWindow = (CContainerUI*)groupContainer->GetParent();
-			groupContainer->Remove(pGroupRowsVLayout);
-			pGroupRowsVLayout->GetItemAt(0)->SetFixedHeight(0);
-			ResetRowsPos(pGroupRowsVLayout);*/
+			wchar_t cbTip[50] = {0};
+			Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostRowsShowBox,cbTip);
+			pVisibleContentBtn->SetToolTip(cbTip);
 		}
 		else
 		{
 			pGroupRowsVLayout->SetVisible(true);
 
-			/*LPCTSTR szHeight = pGroupRowsVLayout->GetUserData().GetData();
-			char* aHeight = StrUtil::w2a(szHeight);
-			int height = atoi(aHeight);
-			pGroupRowsVLayout->SetFixedHeight(height);
-			ResetRowsPos(pGroupRowsVLayout);
-			delete[] aHeight;*/
+			wchar_t cbTip[50] = {0};
+			Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostRowsHideBox,cbTip);
+			pVisibleContentBtn->SetToolTip(cbTip);
 		}
+		ResetRowsPos(pGroupRowsVLayout);
 	}
 	else if (StrUtil::is_wsubstr(ctrlName,kHostGroupNewRowBtn))//为该组添加新行
 	{
@@ -342,7 +343,6 @@ CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 	wsprintf(szGroupName,L"%s_%d",kHostGroup,m_groupIndex);
 	pGroupPanel->SetName(szGroupName);
 	pGroupPanel->SetChildLayoutXML(kHostGroupXmlPath,(DuiLib::IDialogBuilderCallback *)g_pMainFrame);
-	pGroupPanel->SetVisible(true);
 
 	if (!m_pHostGroupsBox->AddAt(pGroupPanel,m_pHostGroupsBox->GetCount()))
 	{
@@ -351,15 +351,6 @@ CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 	//重设父容器高度
 	pGroupPanel->SetFixedHeight(pGroupPanel->GetItemAt(0)->GetFixedHeight());
 
-	//int groupsCount = m_pHostGroupsBox->GetCount();
-	//int groupsHeight = 0;
-	//for(int i=0;i<groupsCount;i++)
-	//{
-	//	groupsHeight = groupsHeight+m_pHostGroupsBox->GetItemAt(i)->GetFixedHeight();
-	//}
-	//m_pHostGroupsBox->SetFixedHeight(groupsHeight); //groups box
-	//m_pHostGroupsBox->GetParent()->SetFixedHeight(groupsHeight+35);
-
 	CHostAdminGroupContainer *pGroupContainer = (CHostAdminGroupContainer *)pGroupPanel->GetItemAt(0);
 	
 	wchar_t szHostGroupVLayoutName[50] = {0};
@@ -367,17 +358,14 @@ CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 	pGroupContainer->SetName(szHostGroupVLayoutName);
 	pGroupContainer->SetUserData(szGroupIndex);
 	
-	CControlUI* pVisibleBtn = pGroupContainer->GetVisibleBtn();
+	CCheckBoxUI* pVisibleBtn = (CCheckBoxUI*)pGroupContainer->GetVisibleBtn();
 	wchar_t szGroupVisibleBtnName[50] = {0};
 	wsprintf(szGroupVisibleBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
 	pVisibleBtn->SetName(szGroupVisibleBtnName);
 	pVisibleBtn->SetUserData(szGroupIndex);
-
-	//CHorizontalLayoutUI* pHostGroupTitleHLayout = (CHorizontalLayoutUI*)pHostGroupVLayout->GetItemAt(1);
-	//CButtonUI* pVisibleContentBtn = (CButtonUI*)pHostGroupTitleHLayout->GetItemAt(0);
-	//wchar_t szVisibleContentBtnName[50] = {0};
-	//wsprintf(szVisibleContentBtnName,L"%s_%d",kHostGroupVisibleContentBtn,m_groupIndex);
-	//pVisibleContentBtn->SetUserData(szGroupIndex);
+	wchar_t hideTip[50] = {0};
+	Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostRowsHideBox,hideTip);
+	pVisibleBtn->SetToolTip(hideTip);
 
 	CControlUI* pGroupTitleEdit = pGroupContainer->GetTitleEdit();
 	wchar_t szGroupTitleEditName[50] = {0};
@@ -391,12 +379,18 @@ CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 	wsprintf(szGroupNewRowBtnName,L"%s_%d",kHostGroupNewRowBtn,m_groupIndex);
 	pGroupNewRowBtn->SetName(szGroupNewRowBtnName);
 	pGroupNewRowBtn->SetUserData(szGroupIndex);
+	wchar_t addRowTip[50] = {0};
+	Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostNewRowTip,addRowTip);
+	pGroupNewRowBtn->SetToolTip(addRowTip);
 
 	CControlUI* pGroupDeleteBtn = pGroupContainer->GetDeleteBtn();
 	wchar_t szGroupDeleteBtnName[50] = {0};
 	wsprintf(szGroupDeleteBtnName,L"%s_%d",kHostGroupDeleteBtn,m_groupIndex);
 	pGroupDeleteBtn->SetName(szGroupDeleteBtnName);
 	pGroupDeleteBtn->SetUserData(szGroupIndex);
+	wchar_t deleteGroupTip[50] = {0};
+	Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostDeleteGroupTip,deleteGroupTip);
+	pGroupDeleteBtn->SetToolTip(deleteGroupTip);
 
 	//组内容，包含多行
 	CContainerUI* pGroupRowsVLayout = (CContainerUI*)pGroupContainer->GetRowsLayout();
@@ -404,7 +398,8 @@ CContainerUI* IHostAdmin::CreateGroup(LPCWSTR lpszGroupTitle)
 	wsprintf(szGroupRowsVLayoutName,L"%s_%d",kHostGroupRowsVLayout,m_groupIndex);
 	pGroupRowsVLayout->SetName(szGroupRowsVLayoutName);
 	pGroupRowsVLayout->SetUserData(szGroupIndex);
-
+	pGroupRowsVLayout->SetVisible(true);
+	pGroupRowsVLayout->SetInternVisible(true);
 	//CreateGroupRow(pGroupRowsVLayout,FALSE,L"",L"",L"");
 	return pGroupRowsVLayout;
 }
@@ -424,7 +419,6 @@ BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPC
 	wsprintf(szRowName,L"host_row_%s_%d",groupIndex,m_rowIndex);
 	pRowPanel->SetName(szRowName);
 	pRowPanel->SetChildLayoutXML(kHostGroupRowXmlPath,(DuiLib::IDialogBuilderCallback *)g_pMainFrame);
-	pRowPanel->SetVisible(true);
 
 	if(!pParentContainer->Add(pRowPanel))
 	{
@@ -475,6 +469,9 @@ BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPC
 	wsprintf(szRowDeleteBtnName,L"%s_%s_%d",kHostRowDeleteBtn,groupIndex,m_rowIndex);
 	pDeleteBtn->SetName(szRowDeleteBtnName);
 	pDeleteBtn->SetUserData(sDataIndex);
+	wchar_t deleteTip[50] = {0};
+	Utility::GetINIStr(g_pLangManager->GetLangName(),LS_HOSTADMINPANEL,kHostDeleteRowTip,deleteTip);
+	pDeleteBtn->SetToolTip(deleteTip);
 
 	m_pHostAdminManager->Init(m_hHostAdminOwner);
 
@@ -482,16 +479,15 @@ BOOL IHostAdmin::CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPC
 	return TRUE;
 }
 
-BOOL IHostAdmin::ResetRowsPos(CContainerUI* pContainer)
+BOOL IHostAdmin::ResetRowsPos(CContainerUI* pRowsBox)
 {
 	int rowHeight = 30;
 	int y = 85;
-	int count = pContainer->GetCount();
+	int count = pRowsBox->GetCount();
 	for (int i=0;i<count;i++)
 	{
-		CControlUI* child = pContainer->GetItemAt(i);
+		CControlUI* child = pRowsBox->GetItemAt(i);
 		RECT rect = child->GetPos();
-		int height = rect.bottom-rect.top;
 		rect.top = y;
 		rect.bottom = rect.top+rowHeight;
 		child->SetPos(rect);
@@ -500,14 +496,18 @@ BOOL IHostAdmin::ResetRowsPos(CContainerUI* pContainer)
 	}
 
 	int rowsHeight = count*rowHeight;
+	if (!pRowsBox->IsVisible())
+	{
+		rowsHeight=0;
+	}
 	int groupHeight = rowsHeight+40;
 
-	RECT rowsBoxRect = pContainer->GetPos();
+	RECT rowsBoxRect = pRowsBox->GetPos();
 	rowsBoxRect.bottom = rowsBoxRect.top+rowsHeight;
-	pContainer->SetFixedHeight(rowsHeight);
-	pContainer->SetPos(rowsBoxRect);
+	pRowsBox->SetFixedHeight(rowsHeight);
+	pRowsBox->SetPos(rowsBoxRect);
 
-	CHostAdminRowContainer* pGroupContainer = (CHostAdminRowContainer*)pContainer->GetParent();
+	CHostAdminRowContainer* pGroupContainer = (CHostAdminRowContainer*)pRowsBox->GetParent();
 	RECT groupRect = pGroupContainer->GetPos();
 	groupRect.bottom = groupRect.top+groupHeight;
 	pGroupContainer->SetFixedHeight(groupHeight);
@@ -546,7 +546,7 @@ BOOL IHostAdmin::SaveAll()
 			CContainerUI* rowWindow = (CContainerUI*)rowsBox->GetItemAt(j);
 			CHostAdminRowContainer* rowContainer = (CHostAdminRowContainer*)rowWindow->GetItemAt(0);
 			CCheckBoxUI* activeCB = (CCheckBoxUI*)rowContainer->GetCheckBox();
-			if (activeCB->IsSelected())
+			if (!activeCB->IsSelected())
 			{
 				wcscat_s(hostsFileContent,contentLenght,L"#");
 			}
