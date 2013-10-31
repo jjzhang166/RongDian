@@ -17,7 +17,7 @@ public:
 	CHostsParser();
 	virtual ~CHostsParser();
 	void LoadHostsFile();
-	void SaveHostsFile(wchar_t* content);
+	void SaveHostsFile(char* content);
 public:
 	list<PHOSTS_INFO> m_rows;
 	LPSTR m_pGroupReg;			//БъЬт

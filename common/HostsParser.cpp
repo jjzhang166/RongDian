@@ -56,11 +56,11 @@ void CHostsParser::LoadHostsFile()
 	fin.close();
 }
 
-void CHostsParser::SaveHostsFile(wchar_t* content)
+void CHostsParser::SaveHostsFile(char* content)
 {
-	locale &loc=locale::global(locale(locale(),"",LC_CTYPE));
-	wofstream fon(m_szHostFilePath, ios::out);
-	locale::global(loc);
+	//locale &loc=locale::global(locale(locale(),"",LC_CTYPE));
+	ofstream fon(m_szHostFilePath, ios::out);
+	//locale::global(loc);
 	if (fon.is_open())
 	{
 		fon<<content;

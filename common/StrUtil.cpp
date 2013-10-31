@@ -105,6 +105,21 @@ unsigned int StrUtil::u2u8(const wchar_t *wstr, char *utf8)
 	return len;
 }
 
+char* StrUtil::u2u8(const wchar_t *wstr)
+{
+	int len = u2u8(wstr, NULL);
+	char* utf8 = new char[len];
+	if (!utf8)
+		return NULL;
+	int new_len = u2u8(wstr, utf8);
+	if(len!=new_len)
+	{
+		delete[] utf8;
+		utf8 = NULL;
+	}
+	return utf8;
+}
+
 unsigned int StrUtil::u82u(const char *utf8, wchar_t *wstr)
 {
 	int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);

@@ -531,13 +531,9 @@ BOOL IHostAdmin::SaveAll()
 		CHostAdminGroupContainer* groupContainer = (CHostAdminGroupContainer*)groupWindow->GetItemAt(0);
 		LPCTSTR groupTitle = groupContainer->GetTitleEdit()->GetText().GetData();
 
-		char u8[50] = {0};
-		StrUtil::u2u8(groupTitle,u8);
-		wchar_t* u8w = StrUtil::a2w(u8);
 		wcscat_s(hostsFileContent,contentLenght,L"# ");
-		wcscat_s(hostsFileContent,contentLenght,u8w);
+		wcscat_s(hostsFileContent,contentLenght,groupTitle);
 		wcscat_s(hostsFileContent,contentLenght,L"\n");
-		delete[] u8w;
 		
 		CContainerUI* rowsBox = (CContainerUI*)groupContainer->GetRowsLayout();
 		int rowsCount = rowsBox->GetCount();
@@ -557,15 +553,14 @@ BOOL IHostAdmin::SaveAll()
 			wcscat_s(hostsFileContent,contentLenght,L" ");
 			wcscat_s(hostsFileContent,contentLenght,domain);
 			wcscat_s(hostsFileContent,contentLenght,L" #");
-			char u8[50] = {0};
-			StrUtil::u2u8(desc,u8);
-			wchar_t* u8w = StrUtil::a2w(u8);
-			wcscat_s(hostsFileContent,contentLenght,u8w);
-			delete[] u8w;
+			wcscat_s(hostsFileContent,contentLenght,desc);
 			wcscat_s(hostsFileContent,contentLenght,L"\n");
 		}
 	}
-	m_pHostParser->SaveHostsFile(hostsFileContent);
+
+	char* utf8 = StrUtil::u2u8(hostsFileContent);
+	m_pHostParser->SaveHostsFile(utf8);
+	delete[] utf8;
 	delete[] hostsFileContent;
 	RDMsgBox(m_hHostAdminOwner,MSG_OPT_SUCCESS,MSG_SUCCESS, MB_OK);
 	return TRUE;

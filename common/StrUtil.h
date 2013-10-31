@@ -29,6 +29,8 @@ char* w2a(const wchar_t *wstr);
 
 char* a2u8(const char *astr);
 
+char* u2u8(const wchar_t *wstr);
+
 char* u82a(const char *utf8);
 
 wchar_t* u82u(const char *utf8);
