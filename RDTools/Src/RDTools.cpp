@@ -30,7 +30,7 @@ BOOL ActiveInstance()
 	}
 	if(hHwnd)
 	{
-		//SendMessage(hHwnd, WM_ACTIVE_MAIN, 0, 0); // ´æÔÚWin7 UI¸ôÀëÎÊÌâ£¬µÍÈ¨ÏŞÓ¦ÓÃÎŞ·¨¸ú¸ßÈ¨ÏŞÓ¦ÓÃ·¢ËÍÏûÏ¢
+		//SendMessage(hHwnd, WM_ACTIVE_MAIN, 0, 0); // å­˜åœ¨Win7 UIéš”ç¦»é—®é¢˜ï¼Œä½æƒé™åº”ç”¨æ— æ³•è·Ÿé«˜æƒé™åº”ç”¨å‘é€æ¶ˆæ¯
 		COPYDATASTRUCT data;
 		data.dwData = WM_ACTIVE_MAIN;
 		data.cbData = 0;
@@ -50,24 +50,24 @@ BOOL CheckInstance()
 		bAdminMode = TRUE;
 	else if(g_OptOptions.isSet(ARGS_LONG_ADMIN))
 		bAdminMode = TRUE;
-	if(!bIsAdmin && bAdminMode) // ¹ÜÀíÔ±Ä£Ê½£¬µ«µ±Ç°½ø³ÌÎŞ¹ÜÀíÔ±È¨ÏŞ
+	if(!bIsAdmin && bAdminMode) // ç®¡ç†å‘˜æ¨¡å¼ï¼Œä½†å½“å‰è¿›ç¨‹æ— ç®¡ç†å‘˜æƒé™
 	{
 		MessageBox(NULL, L"Admin Mode Need Admin Privilege.", L"Error", MB_OK);
 		return FALSE;
 	}
 	if(bIsAdmin)
 		bAdminMode = TRUE;
-	if(!bAdminMode) // ÆÕÍ¨ÓÃ»§Ä£Ê½
+	if(!bAdminMode) // æ™®é€šç”¨æˆ·æ¨¡å¼
 	{
 		g_hUserSignature = CreateEvent(NULL, TRUE, 0, kUserSignature);
 		int nErr = GetLastError();
-		if(nErr==0) // ´´½¨ÓÃ»§Ä£Ê½±êÊ¶³É¹¦
+		if(nErr==0) // åˆ›å»ºç”¨æˆ·æ¨¡å¼æ ‡è¯†æˆåŠŸ
 		{
 			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
 			nErr = GetLastError();
-			if(nErr==0) // ´´½¨¹ÜÀíÔ±Ä£Ê½±êÊ¶³É¹¦£¬ËµÃ÷ÏµÍ³²»´æÔÚ¶à¸öRDTools
+			if(nErr==0) // åˆ›å»ºç®¡ç†å‘˜æ¨¡å¼æ ‡è¯†æˆåŠŸï¼Œè¯´æ˜ç³»ç»Ÿä¸å­˜åœ¨å¤šä¸ªRDTools
 			{
-				// ¹Ø±Õ¹ÜÀíÔ±Ä£Ê½±êÊ¶£¬½øÈëÆô¶¯RDToolsÁ÷³Ì
+				// å…³é—­ç®¡ç†å‘˜æ¨¡å¼æ ‡è¯†ï¼Œè¿›å…¥å¯åŠ¨RDToolsæµç¨‹
 				CloseHandle(g_hAdminSignature);
 				g_hAdminSignature = NULL;
 				DWORD dwThreadID = 0;
@@ -75,9 +75,9 @@ BOOL CheckInstance()
 				CloseHandle(hThread);
 				return TRUE;
 			}
-			else if(nErr==ERROR_ALREADY_EXISTS) // ÒÑ¾­´æÔÚ¹ÜÀíÔ±Ä£Ê½µÄRDTools
+			else if(nErr==ERROR_ALREADY_EXISTS) // å·²ç»å­˜åœ¨ç®¡ç†å‘˜æ¨¡å¼çš„RDTools
 			{
-				// ¹Ø±ÕÆÕÍ¨ÓÃ»§Ä£Ê½¡¢¹ÜÀíÔ±Ä£Ê½±êÊ¶£¬¼¤»î¹ÜÀíÔ±Ä£Ê½RDTools£¬²¢ÍË³ö×Ô¼º
+				// å…³é—­æ™®é€šç”¨æˆ·æ¨¡å¼ã€ç®¡ç†å‘˜æ¨¡å¼æ ‡è¯†ï¼Œæ¿€æ´»ç®¡ç†å‘˜æ¨¡å¼RDToolsï¼Œå¹¶é€€å‡ºè‡ªå·±
 				CloseHandle(g_hAdminSignature);
 				CloseHandle(g_hUserSignature);
 				g_hAdminSignature = NULL;
@@ -88,7 +88,7 @@ BOOL CheckInstance()
 			CloseHandle(g_hUserSignature);
 			g_hUserSignature = NULL;
 			MessageBox(NULL, L"Create User Signature Error!", L"Error", MB_OK);
-			return FALSE; // Î´Öª´íÎóÔòÍË³ö×Ô¼º
+			return FALSE; // æœªçŸ¥é”™è¯¯åˆ™é€€å‡ºè‡ªå·±
 		}
 		else if(nErr==ERROR_ALREADY_EXISTS)
 		{
@@ -98,21 +98,21 @@ BOOL CheckInstance()
 			return FALSE;
 		}
 		MessageBox(NULL, L"Create User Signature Error!", L"Error", MB_OK);
-		return FALSE; // Î´Öª´íÎóÔòÍË³ö×Ô¼º
+		return FALSE; // æœªçŸ¥é”™è¯¯åˆ™é€€å‡ºè‡ªå·±
 	}
-	else // ¹ÜÀíÔ±Ä£Ê½
+	else // ç®¡ç†å‘˜æ¨¡å¼
 	{
 		g_hUserSignature = CreateEvent(NULL, TRUE, 0, kUserSignature);
 		int nErr = GetLastError();
-		if(nErr==0) // ´´½¨ÓÃ»§Ä£Ê½±êÊ¶³É¹¦£¬¼´²»´æÔÚÓÃ»§Ä£Ê½RDTools
+		if(nErr==0) // åˆ›å»ºç”¨æˆ·æ¨¡å¼æ ‡è¯†æˆåŠŸï¼Œå³ä¸å­˜åœ¨ç”¨æˆ·æ¨¡å¼RDTools
 		{
 			CloseHandle(g_hUserSignature);
 			g_hUserSignature = NULL;
 			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
 			nErr = GetLastError();
 			if(nErr==0)
-				return TRUE; // ³É¹¦´´½¨¹ÜÀíÔ±Ä£Ê½±êÊ¶£¬½øÈëÆô¶¯RDToolsÁ÷³Ì
-			if(nErr==ERROR_ALREADY_EXISTS) // ÒÑ¾­´æÔÚ¹ÜÀíÔ±Ä£Ê½RDTools£¬£¬¼¤»î¹ÜÀíÔ±Ä£Ê½RDTools£¬²¢ÍË³ö×Ô¼º
+				return TRUE; // æˆåŠŸåˆ›å»ºç®¡ç†å‘˜æ¨¡å¼æ ‡è¯†ï¼Œè¿›å…¥å¯åŠ¨RDToolsæµç¨‹
+			if(nErr==ERROR_ALREADY_EXISTS) // å·²ç»å­˜åœ¨ç®¡ç†å‘˜æ¨¡å¼RDToolsï¼Œï¼Œæ¿€æ´»ç®¡ç†å‘˜æ¨¡å¼RDToolsï¼Œå¹¶é€€å‡ºè‡ªå·±
 			{
 				CloseHandle(g_hAdminSignature);
 				g_hAdminSignature = NULL;
@@ -122,7 +122,7 @@ BOOL CheckInstance()
 			CloseHandle(g_hAdminSignature);
 			g_hAdminSignature = NULL;
 			MessageBox(NULL, L"Create Admin Signature Error!", L"Error", MB_OK);
-			return FALSE; // Î´Öª´íÎóÔòÍË³ö×Ô¼º
+			return FALSE; // æœªçŸ¥é”™è¯¯åˆ™é€€å‡ºè‡ªå·±
 		}
 		else if(nErr==ERROR_ALREADY_EXISTS)
 		{
@@ -133,7 +133,7 @@ BOOL CheckInstance()
 			g_hAdminSignature = CreateEvent(NULL, TRUE, 0, kAdminSignature);
 			nErr = GetLastError();
 			if(nErr==0)
-				return TRUE; // ³É¹¦´´½¨¹ÜÀíÔ±Ä£Ê½±êÊ¶£¬½øÈëÆô¶¯RDToolsÁ÷³Ì
+				return TRUE; // æˆåŠŸåˆ›å»ºç®¡ç†å‘˜æ¨¡å¼æ ‡è¯†ï¼Œè¿›å…¥å¯åŠ¨RDToolsæµç¨‹
 			MessageBox(NULL, L"Create Admin Signature Error!", L"Error", MB_OK);
 			return FALSE;
 		}
@@ -195,10 +195,10 @@ BOOL IsCanTidy(LPCWSTR lpszLang)
  */
 /*************************************************************************
  * Method:    		EscapeSQLite
- * Description:		sqlite×ªÒå·û´¦Àí 
+ * Description:		sqliteè½¬ä¹‰ç¬¦å¤„ç† 
  * ParameterList:	LPSTR lpszValue
- * Parameter:       lpszValueÎªsqliteÓï¾ä
- * Return Value:	intÎª·µ»Ø×Ö·û´®³¤¶È
+ * Parameter:       lpszValueä¸ºsqliteè¯­å¥
+ * Return Value:	intä¸ºè¿”å›å­—ç¬¦ä¸²é•¿åº¦
  * Date:        	13:08:29 12:37:04
  * Author:			
  * CopyRight:		
@@ -219,7 +219,7 @@ int EscapeSQLite(CDuiString strKeyWord)
 
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 {
-#pragma message("µ÷ÓÃ\"RDMsgBox\"ÇëÈ·±£ÒÑ¾­µ÷ÓÃ\"AssocLangIDs\" && \"InitDuiMsg\"³õÊ¼»¯.")
+#pragma message("è°ƒç”¨\"RDMsgBox\"è¯·ç¡®ä¿å·²ç»è°ƒç”¨\"AssocLangIDs\" && \"InitDuiMsg\"åˆå§‹åŒ–.")
 	int nRet = MB_OK;
 	wchar_t szErr[1024], szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
@@ -396,7 +396,7 @@ BOOL WMITest()
 {
 	//if(!Utility::IsAdminPrivilege())
 	//{
-	//	MessageBox(NULL, L"´Ë²Ù×÷ĞèÒª¹ÜÀíÔ­È¨ÏŞ", NULL, MB_ICONINFORMATION);
+	//	MessageBox(NULL, L"æ­¤æ“ä½œéœ€è¦ç®¡ç†åŸæƒé™", NULL, MB_ICONINFORMATION);
 	//	return FALSE;
 	//}
 	CAdapterUtil util;
@@ -433,7 +433,7 @@ BOOL WMITest()
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /*lpCmdLine*/, int /*nCmdShow*/)
 {
-	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
+	// å†…å­˜è·Ÿè¸ªè°ƒè¯•
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(767);

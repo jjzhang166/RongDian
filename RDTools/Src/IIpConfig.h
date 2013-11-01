@@ -19,9 +19,9 @@ public:
 	LPCWSTR			GetIPConfigAdaptersListName();
 
 	BOOL			LoadSolutions();
-	BOOL			InitSolutionsList(); // ³õÊ¼»¯·½°¸ÁĞ±í
+	BOOL			InitSolutionsList(); // åˆå§‹åŒ–æ–¹æ¡ˆåˆ—è¡¨
 	BOOL			LoadAdapters();
-	BOOL			InitAdaptersList(); // ³õÊ¼»¯ÊÊÅäÆ÷ÁĞ±í
+	BOOL			InitAdaptersList(); // åˆå§‹åŒ–é€‚é…å™¨åˆ—è¡¨
 	void			OnSelectSolution();
 	void			OnSelectAdapter();
 

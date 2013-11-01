@@ -38,7 +38,7 @@ BOOL IChildLayoutTest::SetChildLayoutTestLang(LPCWSTR lpszLang)
 CControlUI* IChildLayoutTest::OnChildLayoutTestCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	BOOL bSubControl = FALSE;
-	int nSubType = 0; // ×Ô¶¨Òå±êÊ¶£¬0Îª·Ç×Ó¿Ø¼þ£¬1Îªbutton£¬2Îªlabel£¬3Îªedit
+	int nSubType = 0; // è‡ªå®šä¹‰æ ‡è¯†ï¼Œ0ä¸ºéžå­æŽ§ä»¶ï¼Œ1ä¸ºbuttonï¼Œ2ä¸ºlabelï¼Œ3ä¸ºedit
 	CControlUI* pControl = NULL;
 	if (wcsicmp(pstrClass, kTestContainer)==0)
 	{
@@ -160,8 +160,8 @@ BOOL IChildLayoutTest::CreateTestContainer()
 		pSubEdit->SetText(szEdit);
 	}
 	CContainerTest *pTestContainer2 = NULL, *pTestContainer3 = NULL;
-	FIND_CONTROL_BY_ID(pTestContainer2, CContainerTest, pChildLayoutTestManager, szContainer); // ¹þÏ£±íÃ»ÓÐ¸üÐÂ£¬ÎÞ·¨Í¨¹ýid²éÕÒ¿Ø¼þ
-	pChildLayoutTestManager->UpdateControls(pTestContainer); // ¸üÐÂ¹þÏ£±í
+	FIND_CONTROL_BY_ID(pTestContainer2, CContainerTest, pChildLayoutTestManager, szContainer); // å“ˆå¸Œè¡¨æ²¡æœ‰æ›´æ–°ï¼Œæ— æ³•é€šè¿‡idæŸ¥æ‰¾æŽ§ä»¶
+	pChildLayoutTestManager->UpdateControls(pTestContainer); // æ›´æ–°å“ˆå¸Œè¡¨
 	FIND_CONTROL_BY_ID(pTestContainer3, CContainerTest, pChildLayoutTestManager, szContainer);
 	return TRUE;
 }

@@ -15,7 +15,7 @@ BOOL RenameFile(HWND hWnd, LPCWSTR lpszFromPath, LPCWSTR lpszToPath);
 
 BOOL OpenFile(HWND hWnd, LPCWSTR lpszFile);
 BOOL OpenFolder(HWND hWnd, LPCWSTR lpszPath);
-// Ñ¡ÔñÎÄ¼ş¶Ô»°¿ò
+// é€‰æ‹©æ–‡ä»¶å¯¹è¯æ¡†
 BOOL SelectFile(HWND hWnd, LPWSTR lpszFile, LPCWSTR lpszFilter);
 BOOL SelectFolder(HWND hWnd, LPWSTR lpszFolder, LPCWSTR lpszTitle = NULL);
 };

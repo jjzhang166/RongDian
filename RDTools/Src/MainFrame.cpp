@@ -33,12 +33,12 @@ const wchar_t* const kPanelTabs = L"panel_tabs";
 const wchar_t* const kPanelContents = L"panel_contents";
 
 DUI_BEGIN_MESSAGE_MAP(CMainFrame, CNotifyPump)
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick) // ÕâÊÇµ¥»÷
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive) // ÕâÊÇList½ÚµãË«»÷
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK, OnItemClick) //listÖÐµÄitemµã»÷
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick) // è¿™æ˜¯å•å‡»
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive) // è¿™æ˜¯ListèŠ‚ç‚¹åŒå‡»
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK, OnItemClick) //listä¸­çš„itemç‚¹å‡»
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT, OnItemSelect)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENUSELECT, OnMenuSelect)
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged) // ÕâÊÇÎÄ±¾¿òÄÚÈÝ¸Ä±ä
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged) // è¿™æ˜¯æ–‡æœ¬æ¡†å†…å®¹æ”¹å˜
 DUI_END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
@@ -144,9 +144,9 @@ LPCWSTR CMainFrame::GetWindowClassName() const
 
 void CMainFrame::InitWindow()
 {
-	// Vista/Win7£¬ÓÉÓÚUACµÄÏÞÖÆ£¬µÍÈ¨ÏÞ½ø³Ì²»ÄÜÏò¸ßÈ¨ÏÞ½ø³Ì·¢ËÍÏûÏ¢
-	// Èç¹ûÎÒÃÇÏëÈÝÐíÒ»¸öÏûÏ¢¿ÉÒÔ·¢ËÍ¸ø½Ï¸ßÌØÈ¨µÈ¼¶µÄ½ø³Ì
-	// ÎÒÃÇ¿ÉÒÔÔÚ½Ï¸ßÌØÈ¨µÈ¼¶µÄ½ø³ÌÖÐµ÷ÓÃChangeWindowMessageFilter(VistaÒÔÉÏµÄAPI)º¯Êý£¬ÒÔMSGFLT_ADD×÷Îª²ÎÊý½«ÏûÏ¢Ìí¼Ó½øÏûÏ¢¹ýÂËÆ÷µÄ°×Ãûµ¥¡£
+	// Vista/Win7ï¼Œç”±äºŽUACçš„é™åˆ¶ï¼Œä½Žæƒé™è¿›ç¨‹ä¸èƒ½å‘é«˜æƒé™è¿›ç¨‹å‘é€æ¶ˆæ¯
+	// å¦‚æžœæˆ‘ä»¬æƒ³å®¹è®¸ä¸€ä¸ªæ¶ˆæ¯å¯ä»¥å‘é€ç»™è¾ƒé«˜ç‰¹æƒç­‰çº§çš„è¿›ç¨‹
+	// æˆ‘ä»¬å¯ä»¥åœ¨è¾ƒé«˜ç‰¹æƒç­‰çº§çš„è¿›ç¨‹ä¸­è°ƒç”¨ChangeWindowMessageFilter(Vistaä»¥ä¸Šçš„API)å‡½æ•°ï¼Œä»¥MSGFLT_ADDä½œä¸ºå‚æ•°å°†æ¶ˆæ¯æ·»åŠ è¿›æ¶ˆæ¯è¿‡æ»¤å™¨çš„ç™½åå•ã€‚
 	PFNChangeWindowMessageFilter pfnChangeWindowMessageFilter = NULL;
 	HMODULE hModule = LoadLibrary(_T("user32.dll"));
 	if(hModule)
@@ -167,7 +167,7 @@ void CMainFrame::InitWindow()
 		FreeLibrary(hModule);
 	}
 
-	DragAcceptFiles(m_hWnd, TRUE); // Ìí¼ÓÍÏ×§Ö§³Ö
+	DragAcceptFiles(m_hWnd, TRUE); // æ·»åŠ æ‹–æ‹½æ”¯æŒ
 
 	HICON hIcon = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, TRUE, (LPARAM)hIcon);
@@ -778,7 +778,7 @@ BOOL CMainFrame::CreatePanels()
 			pTab = new CButtonUI();
 			if(!pTab)
 				return bRet;
-			//Êú°æ²Ëµ¥²ÎÊý
+			//ç«–ç‰ˆèœå•å‚æ•°
 			//pTab->SetAttribute(L"height", L"35");
 			//pTab->SetAttribute(L"align", L"center");
 			//pTab->SetAttribute(L"endellipsis", L"true");

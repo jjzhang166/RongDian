@@ -45,7 +45,7 @@ BOOL IPanelXml::LoadPanels()
 			lpszName = pName->getString();
 			lpszDesc = pDesc->getString();
 			swprintf(szPath, L"%s\\%s", g_szResPath, lpszXml);
-			if(PathFileExists(szPath)) // 检测界面xml文集是否存在
+			if(PathFileExists(szPath)) // 妫�娴嬬晫闈ml鏂囬泦鏄惁瀛樺湪
 			{
 				lpPanelInfo = new PANEL_INFO();
 				if(lpPanelInfo)

@@ -16,7 +16,7 @@ public:
 	void			OnHostAdminItemSelect(TNotifyUI& msg);
 	CContainerUI*	CreateGroup(LPCWSTR lpszGroupTitle);
 	BOOL			CreateGroupRow(CContainerUI* pParentContainer,BOOL isActive,LPCWSTR lpszIP,LPCWSTR lpszDomain,LPCWSTR lpszDesc);
-	BOOL			ResetRowsPos(CContainerUI* pContainer);//重置每一行的位置
+	BOOL			ResetRowsPos(CContainerUI* pContainer);//閲嶇疆姣忎竴琛岀殑浣嶇疆
 	BOOL			SaveAll();
 public:
 	HWND m_hHostAdminOwner;

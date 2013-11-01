@@ -159,11 +159,11 @@ BOOL Utility::OpenFile(HWND hWnd, LPCWSTR lpszFile)
 
 /*************************************************************************
  * Method:    		OpenFolder
- * Description:		´ò¿ªÎÄ¼şËùÔÚµÄÎÄ¼ş¼Ğ£¬²¢Ñ¡ÖĞ¸ÃÎÄ¼ş
+ * Description:		æ‰“å¼€æ–‡ä»¶æ‰€åœ¨çš„æ–‡ä»¶å¤¹ï¼Œå¹¶é€‰ä¸­è¯¥æ–‡ä»¶
  * ParameterList:	HWND hWnd, LPCTSTR lpszPath
- * Parameter:       hWndÎªµ÷ÓÃ¸Ãº¯ÊıµÄ´°¿Ú¾ä±ú
- * Parameter:       lpszPathÎªÎÄ¼şÂ·¾¶
- * Return Value:	BOOL´ò¿ª³É¹¦·µ»ØTRUE£¬Ê§°Ü·µ»ØFALSE
+ * Parameter:       hWndä¸ºè°ƒç”¨è¯¥å‡½æ•°çš„çª—å£å¥æŸ„
+ * Parameter:       lpszPathä¸ºæ–‡ä»¶è·¯å¾„
+ * Return Value:	BOOLæ‰“å¼€æˆåŠŸè¿”å›TRUEï¼Œå¤±è´¥è¿”å›FALSE
  * Date:        	13:08:29 12:22:25
  * Author:			
  * CopyRight:		
@@ -179,9 +179,9 @@ BOOL Utility::OpenFolder(HWND hWnd, LPCWSTR lpszPath)
 
 /*************************************************************************
  * Method:    		OpenUrl
- * Description:		µ÷ÓÃÄ¬ÈÏä¯ÀÀÆ÷´ò¿ªurlµØÖ·
+ * Description:		è°ƒç”¨é»˜è®¤æµè§ˆå™¨æ‰“å¼€urlåœ°å€
  * ParameterList:	LPCWSTR lpszUrl
- * Parameter:       lpszUrlÎªurlµØÖ·
+ * Parameter:       lpszUrlä¸ºurlåœ°å€
  * Return Value:	BOOL
  * Date:        	13:08:29 12:37:04
  * Author:			
@@ -321,7 +321,7 @@ BOOL Utility::IsAdminPrivilege()
 			&dwType,
 			&dwValue,
 			&dwData);
-		if(lStatus==ERROR_SUCCESS && dwValue==0) // µ±Ç°Ã»ÓĞ´ò¿ªUAC£¬¾ßÓĞ¹ÜÀíÔ±È¨ÏŞ
+		if(lStatus==ERROR_SUCCESS && dwValue==0) // å½“å‰æ²¡æœ‰æ‰“å¼€UACï¼Œå…·æœ‰ç®¡ç†å‘˜æƒé™
 			return TRUE;
 		DWORD dwElevationType;
 		DWORD dwSize = 0;
@@ -482,7 +482,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 
 BOOL Utility::ExcuteCommand(LPWSTR pCommandParam)
 {
-	//³õÊ¼»¯shellexeĞÅÏ¢
+	//åˆå§‹åŒ–shellexeä¿¡æ¯
 	SHELLEXECUTEINFO   ExeInfo; 
 	ZeroMemory(&ExeInfo, sizeof(SHELLEXECUTEINFO)); 
 	ExeInfo.cbSize = sizeof(SHELLEXECUTEINFO); 
@@ -494,9 +494,9 @@ BOOL Utility::ExcuteCommand(LPWSTR pCommandParam)
 	ExeInfo.lpVerb = L"runas";
 	ExeInfo.lpDirectory = NULL;
 	ExeInfo.hInstApp = NULL;
-	//Ö´ĞĞÃüÁî
+	//æ‰§è¡Œå‘½ä»¤
 	ShellExecuteEx(&ExeInfo);
-	//µÈ´ı½ø³Ì½áÊø
+	//ç­‰å¾…è¿›ç¨‹ç»“æŸ
 	WaitForSingleObject(ExeInfo.hProcess, INFINITE);//INFINITE	
 	return TRUE;
 }

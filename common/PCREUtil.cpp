@@ -35,7 +35,7 @@ bool PCREUtil::find(const char* lpszPattern,char* lpszText,list<char*>* result)
 	int rc;
 
 	re = pcre_compile(lpszPattern, PCRE_MULTILINE, &error, &erroffset, NULL);
-	if (re == NULL) //±àÒëÊ§°Ü£¬·µ»Ø´íÎóĞÅÏ¢
+	if (re == NULL) //ç¼–è¯‘å¤±è´¥ï¼Œè¿”å›é”™è¯¯ä¿¡æ¯
 	{
 		return false;
 	}
@@ -44,7 +44,7 @@ bool PCREUtil::find(const char* lpszPattern,char* lpszText,list<char*>* result)
 	{
 		for(int j=1; j<rc; j++)
 		{
-			int substring_length = ovector[2*j+1] - ovector[2*j];//ansiÀàĞÍµÄ×Ö·û´®³¤¶È
+			int substring_length = ovector[2*j+1] - ovector[2*j];//ansiç±»å‹çš„å­—ç¬¦ä¸²é•¿åº¦
 			if (substring_length>0)
 			{
 				char *subStr_start = lpszText + ovector[2*j];

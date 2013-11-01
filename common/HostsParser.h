@@ -20,7 +20,7 @@ public:
 	void SaveHostsFile(char* content);
 public:
 	list<PHOSTS_INFO> m_rows;
-	LPSTR m_pGroupReg;			//±êÌâ
+	LPSTR m_pGroupReg;			//æ ‡é¢˜
 	LPSTR m_pStopHostReg;
 	LPSTR m_pActiveHostReg;
 	LPWSTR m_lpszHostsFilePath;

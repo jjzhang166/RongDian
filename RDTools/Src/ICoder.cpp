@@ -375,7 +375,7 @@ BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
 		memset(szCurPath, 0, sizeof(szCurPath));
 		wcscpy_s(szCurPath, lpszFolder);
 		PathAppendW(szCurPath, FindFileData.cFileName);
-		if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) // ºöÂÔÓ²Á¬½ÓÎÄ¼þ
+		if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) // å¿½ç•¥ç¡¬è¿žæŽ¥æ–‡ä»¶
 		{
 			bFolder = TRUE;
 		}

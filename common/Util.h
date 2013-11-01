@@ -21,10 +21,10 @@ BOOL GetVersion(LPCWSTR lpszModule, LPWSTR lpszVer);
 
 BOOL OpenFile(HWND hWnd, LPCWSTR lpszFile);
 
-// ���ļ����ڵ��ļ��У���ѡ�и��ļ�
+// 打开文件所在的文件夹，并选中该文件
 BOOL OpenFolder(HWND hWnd, LPCWSTR lpszPath);
 
-// ����Ĭ���������url��ַ
+// 调用默认浏览器打开url地址
 BOOL OpenUrl(HWND hWnd, LPCWSTR lpszUrl);
 
 BOOL OpenMail(HWND hWnd, LPCWSTR lpszMail);

@@ -33,7 +33,7 @@ BOOL SHHelper::CopyFile(HWND hWnd, LPCWSTR  lpszFromPath, LPCWSTR  lpszToPath, B
 		sh.fFlags = FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_SIMPLEPROGRESS;// FOF_SILENT;
 	else
 		sh.fFlags = FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_SILENT;
-	sh.pFrom = szFromPath; // ���뱣֤������"\0"��β
+	sh.pFrom = szFromPath; // 必须保证以两个"\0"结尾
 	sh.pTo = lpszToPath;
 	sh.wFunc = FO_COPY;
 	int nRet = SHFileOperationW(&sh);
@@ -50,7 +50,7 @@ BOOL SHHelper::MoveFile(HWND hWnd, LPCWSTR  lpszFromPath, LPCWSTR  lpszToPath, B
 		sh.fFlags = FOF_NOERRORUI | FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_SIMPLEPROGRESS;// FOF_SILENT;
 	else
 		sh.fFlags = FOF_NOCONFIRMATION | FOF_NOCONFIRMMKDIR | FOF_NOERRORUI | FOF_SILENT;
-	sh.pFrom = szFromPath; // ���뱣֤������"\0"��β
+	sh.pFrom = szFromPath; // 必须保证以两个"\0"结尾
 	sh.pTo = lpszToPath;
 	sh.wFunc = FO_MOVE;
 	int nRet = SHFileOperationW(&sh);
@@ -63,7 +63,7 @@ BOOL SHHelper::RenameFile(HWND hWnd, LPCWSTR lpszFromPath, LPCWSTR lpszToPath)
 	wcscpy(szFromPath, lpszFromPath);
 	SHFILEOPSTRUCTW sh = { 0 };
 	sh.fFlags = FOF_NOCONFIRMATION;
-	sh.pFrom = szFromPath; // ���뱣֤������"\0"��β
+	sh.pFrom = szFromPath; // 必须保证以两个"\0"结尾
 	sh.pTo = lpszToPath;
 	sh.wFunc = FO_RENAME;
 	sh.hwnd= hWnd;
@@ -88,12 +88,12 @@ BOOL SHHelper::OpenFolder(HWND hWnd, LPCWSTR lpszPath)
 
 /*************************************************************************
  * Method:    		SelectFile
- * Description:		ѡ���ļ��Ի���
+ * Description:		选择文件对话框
  * ParameterList:	HWND hWnd, LPTSTR lpszFile, LPCTSTR lpszFilter
- * Parameter:       hWndΪ���øú����Ĵ��ھ��
- * Parameter:       lpszFileΪ��ѡ�ļ����ļ�·��
- * Parameter:       lpszFilterΪ�ļ�ѡ�����ļ����͹����ַ���
- * Return Value:	�ɹ�ѡȡ�ļ�����TRUE��ȡ��ѡ�񷵻�FALSE
+ * Parameter:       hWnd为调用该函数的窗口句柄
+ * Parameter:       lpszFile为被选文件的文件路径
+ * Parameter:       lpszFilter为文件选择框的文件类型过滤字符串
+ * Return Value:	成功选取文件返回TRUE，取消选择返货FALSE
  * Date:        	13:08:29 12:27:39
  * Author:			
  * CopyRight:		

@@ -29,7 +29,7 @@ void CHostsParser::LoadHostsFile()
 	{
 		if (strlen(line)>0)
 		{
-			//line字符串为gbk
+			//line瀛楃涓蹭负gbk
 			//bool gbkCheck = StrUtil::is_gbk(line);
 			//if (gbkCheck)
 			//{
@@ -88,7 +88,7 @@ BOOL CHostsParser::Parser(LPWSTR row,PHOSTS_INFO pHosts)
 		pHosts->type = TAG_STOP_HOST;
 		
 	}
-	//格式不对
+	//鏍煎紡涓嶅
 	else
 	{
 		return FALSE;
