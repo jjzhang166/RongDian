@@ -1,7 +1,7 @@
 #include "jsontidy.h"
 #include "json.h"
 
-namespace JsonTibLib{
+namespace JsonTidyLib{
 JsonTidy::JsonTidy()
 {
 

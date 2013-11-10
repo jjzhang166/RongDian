@@ -15,7 +15,7 @@
 # include <string>
 # include <iostream>
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
    /** \brief Unserialize a <a HREF="http://www.json.org">JSON</a> document into a Value.
     *
@@ -67,7 +67,7 @@ namespace JsonTibLib {
                   bool collectComments = true );
 
       /// \brief Parse from input stream.
-      /// \see JsonTibLib::operator>>(std::istream&, JsonTibLib::Value&).
+      /// \see JsonTidyLib::operator>>(std::istream&, JsonTidyLib::Value&).
       bool parse( std::istream &is,
                   Value &root,
                   bool collectComments = true );
@@ -190,7 +190,7 @@ namespace JsonTibLib {
     This can be used to read a file into a particular sub-object.
     For example:
     \code
-    JsonTibLib::Value root;
+    JsonTidyLib::Value root;
     cin >> root["dir"]["file"];
     cout << root;
     \endcode
@@ -205,10 +205,10 @@ namespace JsonTibLib {
     }
     \endverbatim
     \throw std::exception on parse error.
-    \see JsonTibLib::operator<<()
+    \see JsonTidyLib::operator<<()
    */
    std::istream& operator>>( std::istream&, Value& );
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib
 
 #endif // CPPTL_JSON_READER_H_INCLUDED

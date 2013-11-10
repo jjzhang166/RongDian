@@ -13,7 +13,7 @@
 # include <string>
 # include <iostream>
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
    class Value;
 
@@ -176,10 +176,10 @@ namespace JsonTibLib {
    std::string JSON_API valueToQuotedString( const char *value );
 
    /// \brief Output using the StyledStreamWriter.
-   /// \see JsonTibLib::operator>>()
+   /// \see JsonTidyLib::operator>>()
    std::ostream& operator<<( std::ostream&, const Value &root );
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib
 
 
 

@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace PhpTidyLib{
+
 /* errors enumeration */
 enum EError {
 	E_INTERNAL,
@@ -36,4 +38,5 @@ public:
 
 	string message;
 };
+}
 #endif

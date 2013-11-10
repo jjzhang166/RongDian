@@ -10,7 +10,7 @@
 # include "forwards.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
    /** \brief Configuration passed to reader and writer.
     * This configuration object can be used to force the Reader or Writer
@@ -44,6 +44,6 @@ namespace JsonTibLib {
       bool strictRoot_;
    };
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib
 
 #endif // CPPTL_JSON_FEATURES_H_INCLUDED

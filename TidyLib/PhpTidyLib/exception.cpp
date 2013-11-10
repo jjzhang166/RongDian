@@ -18,6 +18,8 @@
 
 #include "exception.h"
 
+namespace PhpTidyLib{
+
 /* constructor */
 CException::CException(EError type, string msg)
 {
@@ -64,4 +66,5 @@ CException::CException(EError type)
 		message = "Internal error!";
 		break;
 	}
+}
 }

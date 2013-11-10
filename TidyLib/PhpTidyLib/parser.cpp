@@ -141,6 +141,7 @@
 #include "settings.h"
 #include "formatter.h"
 #include "scanner.h"
+namespace PhpTidyLib{
 
 extern CSettings  *settings;
 extern PhpFormatter *formatter;
@@ -3756,3 +3757,4 @@ yyerrlab:
 /* enable unreachable code warning */
 //#pragma warn +8066
 
+}

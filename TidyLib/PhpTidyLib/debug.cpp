@@ -5,3 +5,5 @@
 // ../src/common.h:
 // 
 // ../src/debug.h:
+namespace PhpTidyLib{
+}

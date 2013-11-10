@@ -20,6 +20,7 @@
 
 #include "exception.h"
 
+namespace PhpTidyLib{
 /* constructor */
 CSettings::CSettings() {
 	/* STRUCTURES */
@@ -326,4 +327,6 @@ void CSettings::SetTidyOption( const char *pOption, int nPos, int nSize )
 			indent_style = (EOption)(nNumValue + 3);
 		}
 	}
+}
+
 }

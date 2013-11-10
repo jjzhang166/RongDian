@@ -23,7 +23,7 @@
 
 /** \brief JSON (JavaScript Object Notation).
  */
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
    /** \brief Type of the value held by a Value object.
     */
@@ -60,8 +60,8 @@ namespace JsonTibLib {
     *
     * Example of usage:
     * \code
-    * JsonTibLib::Value aValue( StaticString("some text") );
-    * JsonTibLib::Value object;
+    * JsonTidyLib::Value aValue( StaticString("some text") );
+    * JsonTidyLib::Value object;
     * static const StaticString code("code");
     * object[code] = 1234;
     * \endcode
@@ -126,36 +126,36 @@ namespace JsonTibLib {
       typedef std::vector<std::string> Members;
       typedef ValueIterator iterator;
       typedef ValueConstIterator const_iterator;
-      typedef JsonTibLib::UInt UInt;
-      typedef JsonTibLib::Int Int;
+      typedef JsonTidyLib::UInt UInt;
+      typedef JsonTidyLib::Int Int;
 # if defined(JSON_HAS_INT64)
-      typedef JsonTibLib::UInt64 UInt64;
-      typedef JsonTibLib::Int64 Int64;
+      typedef JsonTidyLib::UInt64 UInt64;
+      typedef JsonTidyLib::Int64 Int64;
 #endif // defined(JSON_HAS_INT64)
-      typedef JsonTibLib::LargestInt LargestInt;
-      typedef JsonTibLib::LargestUInt LargestUInt;
-      typedef JsonTibLib::ArrayIndex ArrayIndex;
+      typedef JsonTidyLib::LargestInt LargestInt;
+      typedef JsonTidyLib::LargestUInt LargestUInt;
+      typedef JsonTidyLib::ArrayIndex ArrayIndex;
 
       static const Value null;
-      /// Minimum signed integer value that can be stored in a JsonTibLib::Value.
+      /// Minimum signed integer value that can be stored in a JsonTidyLib::Value.
       static const LargestInt minLargestInt;
-      /// Maximum signed integer value that can be stored in a JsonTibLib::Value.
+      /// Maximum signed integer value that can be stored in a JsonTidyLib::Value.
       static const LargestInt maxLargestInt;
-      /// Maximum unsigned integer value that can be stored in a JsonTibLib::Value.
+      /// Maximum unsigned integer value that can be stored in a JsonTidyLib::Value.
       static const LargestUInt maxLargestUInt;
 
-      /// Minimum signed int value that can be stored in a JsonTibLib::Value.
+      /// Minimum signed int value that can be stored in a JsonTidyLib::Value.
       static const Int minInt;
-      /// Maximum signed int value that can be stored in a JsonTibLib::Value.
+      /// Maximum signed int value that can be stored in a JsonTidyLib::Value.
       static const Int maxInt;
-      /// Maximum unsigned int value that can be stored in a JsonTibLib::Value.
+      /// Maximum unsigned int value that can be stored in a JsonTidyLib::Value.
       static const UInt maxUInt;
 
-      /// Minimum signed 64 bits int value that can be stored in a JsonTibLib::Value.
+      /// Minimum signed 64 bits int value that can be stored in a JsonTidyLib::Value.
       static const Int64 minInt64;
-      /// Maximum signed 64 bits int value that can be stored in a JsonTibLib::Value.
+      /// Maximum signed 64 bits int value that can be stored in a JsonTidyLib::Value.
       static const Int64 maxInt64;
-      /// Maximum unsigned 64 bits int value that can be stored in a JsonTibLib::Value.
+      /// Maximum unsigned 64 bits int value that can be stored in a JsonTidyLib::Value.
       static const UInt64 maxUInt64;
 
    private:
@@ -206,9 +206,9 @@ namespace JsonTibLib {
 
         Examples:
     \code
-    JsonTibLib::Value null_value; // null
-    JsonTibLib::Value arr_value(JsonTibLib::arrayValue); // []
-    JsonTibLib::Value obj_value(JsonTibLib::objectValue); // {}
+    JsonTidyLib::Value null_value; // null
+    JsonTidyLib::Value arr_value(JsonTidyLib::arrayValue); // []
+    JsonTidyLib::Value obj_value(JsonTidyLib::objectValue); // {}
     \endcode
       */
       Value( ValueType type = nullValue );
@@ -228,7 +228,7 @@ namespace JsonTibLib {
        * constructor.
        * Example of usage:
        * \code
-       * JsonTibLib::Value aValue( StaticString("some text") );
+       * JsonTidyLib::Value aValue( StaticString("some text") );
        * \endcode
        */
       Value( const StaticString &value );
@@ -357,7 +357,7 @@ namespace JsonTibLib {
        * the new entry is not duplicated.
        * Example of use:
        * \code
-       * JsonTibLib::Value object;
+       * JsonTidyLib::Value object;
        * static const StaticString code("code");
        * object[code] = 1234;
        * \endcode
@@ -1099,7 +1099,7 @@ public: // overridden from ValueArrayAllocator
    };
 
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib
 
 
 #endif // CPPTL_JSON_H_INCLUDED

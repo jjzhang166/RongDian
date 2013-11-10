@@ -17,6 +17,7 @@
  */
 
 #include "str.h"
+namespace PhpTidyLib{
 
 /* function to convert an integer to a string */
 string int_to_string(int num) {
@@ -27,4 +28,5 @@ string int_to_string(int num) {
 
     /* convert stream to string */
 	return out.str();
+}
 }

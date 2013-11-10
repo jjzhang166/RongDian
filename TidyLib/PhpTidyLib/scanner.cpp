@@ -23,6 +23,8 @@
 #include "settings.h"
 #include "formatter.h"
 
+namespace PhpTidyLib{
+
 extern CSettings  *settings;
 extern PhpFormatter *formatter;
 
@@ -4904,4 +4906,4 @@ state_784:
 
 /* enable var never used warning */
 //#pragma warn +8004
-
+}

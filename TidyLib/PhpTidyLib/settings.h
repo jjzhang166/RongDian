@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace PhpTidyLib{
+
 /* options enumeration */
 enum EOption {
     OPT_LOWER,
@@ -206,5 +208,6 @@ public:
 	uint num;
 	bool boolean;
 };
+}
 
 #endif

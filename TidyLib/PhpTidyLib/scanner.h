@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "node.h"
+namespace PhpTidyLib{
 
 /* state enumeration */
 enum EScannerState {
@@ -70,5 +71,6 @@ public:
 	CNode *next_node;
 	int next_token;
 };
+}
 
 #endif

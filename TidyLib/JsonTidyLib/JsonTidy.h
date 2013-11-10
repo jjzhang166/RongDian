@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-namespace JsonTibLib{
+namespace JsonTidyLib{
 class JsonTidy
 {
 public:

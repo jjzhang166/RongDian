@@ -20,7 +20,9 @@
 #define _STR_H
 
 #include "common.h"
+namespace PhpTidyLib{
 
 string int_to_string(int);
+}
 
 #endif

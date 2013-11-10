@@ -23,6 +23,8 @@
 #include "scanner.h"
 #include "parser.h"
 
+namespace PhpTidyLib{
+
 /* definitions for formatting long comment */
 #define CHAR_IS_NEWLINE(p)    (((*p == '\r') && (*(p + 1) != '\n')) || (*p == '\n'))
 #define CHAR_IS_TABSSPACES(p) ((*p == '\t') || (*p == ' '))
@@ -394,4 +396,5 @@ void PhpFormatter::AddStructureComment(CNode *expr, CNode *node) //NOTE: changin
 
 	//set newnode as node its next
 	node->next = newnode;
+}
 }

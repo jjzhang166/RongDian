@@ -70,7 +70,7 @@
 # define JSONCPP_DEPRECATED(message)
 #endif // if !defined(JSONCPP_DEPRECATED)
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
    typedef int Int;
    typedef unsigned int UInt;
 # if defined(JSON_NO_INT64)
@@ -90,7 +90,7 @@ namespace JsonTibLib {
    typedef UInt64 LargestUInt;
 #  define JSON_HAS_INT64
 # endif // if defined(JSON_NO_INT64)
-} // end namespace JsonTibLib
+} // end namespace JsonTidyLib
 
 
 #endif // JSON_CONFIG_H_INCLUDED

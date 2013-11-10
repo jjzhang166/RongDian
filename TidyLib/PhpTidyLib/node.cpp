@@ -23,6 +23,8 @@
 #include "scanner.h"
 #include "settings.h"
 
+namespace PhpTidyLib{
+
 extern PhpFormatter *formatter;
 extern CScanner   *scanner;
 extern CSettings  *settings;
@@ -184,4 +186,5 @@ void CNode::Append(CNode *last, bool newlines)
 void CNode::PrependNewline(int add, bool half)
 {
 	token = "\n" + formatter->GetIndent(add, half) + token;
+}
 }

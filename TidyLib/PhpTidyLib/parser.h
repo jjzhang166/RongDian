@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace PhpTidyLib{
+
 class CParser
 {
 public:
@@ -30,4 +32,5 @@ public:
 	void Init();
 	void Parse();
 };
+}
 #endif

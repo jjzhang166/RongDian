@@ -23,6 +23,8 @@
 #include "node.h"
 #include "exception.h"
 
+namespace PhpTidyLib{
+
 /* state enumeration */
 enum EState {
 	S_NONE,
@@ -108,5 +110,6 @@ inline void PhpFormatter::FormatOperator(CNode *first, CNode *second, CNode *thi
 	/* join them in first */
 	//first->Append(second);
 	first->Append(third);
+}
 }
 #endif

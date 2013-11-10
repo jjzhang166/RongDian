@@ -5,7 +5,7 @@
 
 // included by json_value.cpp
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
@@ -296,4 +296,4 @@ ValueIterator::operator =( const SelfType &other )
    return *this;
 }
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib

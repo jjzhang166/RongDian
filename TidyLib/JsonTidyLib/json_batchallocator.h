@@ -11,7 +11,7 @@
 
 # ifndef JSONCPP_DOC_EXCLUDE_IMPLEMENTATION
 
-namespace JsonTibLib {
+namespace JsonTidyLib {
 
 /* Fast memory allocator.
  *
@@ -122,7 +122,7 @@ private:
 };
 
 
-} // namespace JsonTibLib
+} // namespace JsonTidyLib
 
 # endif // ifndef JSONCPP_DOC_INCLUDE_IMPLEMENTATION
 

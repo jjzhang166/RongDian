@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace PhpTidyLib{
+
 /* node types enumeration */
 enum ENodeType {
 	NT_TOKEN,
@@ -90,6 +92,7 @@ inline void CNode::Surround(string str) {
 inline void CNode::Surround(char chr) {
 	/* surround with char */
 	token = chr + token + chr;
+}
 }
 
 #endif

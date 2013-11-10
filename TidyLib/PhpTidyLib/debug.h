@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace PhpTidyLib{
+
 #ifdef DEBUG
 
 /* debug function */
@@ -49,5 +51,6 @@ inline
 void debug(const char *, ...) { }
 
 #endif
+}
 
 #endif
