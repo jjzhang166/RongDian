@@ -41,7 +41,7 @@ CHosts::CHosts()
 	m_pHostGroupContainerLayout = NULL;
 }
 
-BOOL CHosts::IsCanQuit(HWND hWnd)
+BOOL CHosts::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -51,7 +51,7 @@ void CHosts::OnQuit()
 
 }
 
-BOOL CHosts::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 {
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
@@ -76,17 +76,17 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-CControlUI* CHosts::OnCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
+CControlUI* CHosts::OnCreateControl(CPaintManagerUI* /*pManager*/, LPCTSTR /*pstrClass*/, CControlUI* /*pParent*/)
 {
 	return NULL;
 }
 
-void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CHosts::OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& /*bHandled*/)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 }
 
-void CHosts::OnItemSelect(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg)
+void CHosts::OnItemSelect(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg)
 {
 	CComboUI* pCombo = (CComboUI*)msg.pSender;
 	CDuiString sItemName = pCombo->GetName();

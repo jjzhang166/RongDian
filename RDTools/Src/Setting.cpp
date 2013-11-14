@@ -6,7 +6,7 @@ CSetting::CSetting()
 
 }
 
-BOOL CSetting::IsCanQuit(HWND hWnd)
+BOOL CSetting::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -16,12 +16,12 @@ void CSetting::OnQuit()
 
 }
 
-BOOL CSetting::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CSetting::OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	return TRUE;
 }
 
-BOOL CSetting::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CSetting::SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/)
 {
 	return TRUE;
 }

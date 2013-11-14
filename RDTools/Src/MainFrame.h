@@ -2,7 +2,7 @@
 
 class CMainFrame : public WindowImplBase,
 	public ILangUI, public ISkinUI,
-	public IListCallbackUI, public IPanelXml
+	public IListCallbackUI
 {
 public:
 	CMainFrame();
@@ -46,7 +46,7 @@ public:
 
 	BOOL			SelectPanel(LPCWSTR lpszTab);
 	BOOL			InitPanels();
-	BOOL			AddPanel(LPPANEL_INFO lpPanelInfo);
+	BOOL			AddPanel(LPMAIN_PANEL lpPanelInfo);
 	BOOL			CreatePanels();
 	BOOL			ReleasePanels();
 	BOOL			ShowTabs(BOOL bShow);

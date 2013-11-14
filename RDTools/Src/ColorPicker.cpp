@@ -56,7 +56,7 @@ CColorPicker::CColorPicker()
 	bIsCapturing = FALSE;
 }
 
-BOOL CColorPicker::IsCanQuit(HWND hWnd)
+BOOL CColorPicker::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -66,7 +66,7 @@ void CColorPicker::OnQuit()
 
 }
 
-BOOL CColorPicker::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CColorPicker::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 {
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
@@ -143,7 +143,7 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void CColorPicker::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CColorPicker::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CDuiString sCtrlName = msg.pSender->GetName();
@@ -164,7 +164,7 @@ void CColorPicker::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg,
 	}
 }
 
-void CColorPicker::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CColorPicker::OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
@@ -187,7 +187,7 @@ void CColorPicker::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI&
 	}
 }
 
-void CColorPicker::OnItemClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CColorPicker::OnItemClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
@@ -217,7 +217,7 @@ void CColorPicker::OnItemClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& 
 	}
 }
 
-void CColorPicker::OnItemSelected(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CColorPicker::OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	if(pPickerColor && msg.pSender==pPickerColor)
@@ -236,9 +236,8 @@ void CColorPicker::OnItemSelected(HWND hWnd, CPaintManagerUI* pManager, TNotifyU
 	}
 }
 
-LPCWSTR CColorPicker::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+LPCWSTR CColorPicker::GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* pControl, int /*iIndex*/, int /*iSubItem*/)
 {
-	LPCWSTR lpszData = NULL;
 	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
 	if(!pParent)
 		return L"";
@@ -248,7 +247,7 @@ LPCWSTR CColorPicker::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControl
 	return L"";
 }
 
-LRESULT CColorPicker::OnCopyData(WPARAM wParam, LPARAM lParam)
+LRESULT CColorPicker::OnCopyData(WPARAM /*wParam*/, LPARAM lParam)
 {
 	PCOPYDATASTRUCT lpData = (PCOPYDATASTRUCT)lParam;
 	if(lpData->dwData==WM_SNAPSHOT_MSG)

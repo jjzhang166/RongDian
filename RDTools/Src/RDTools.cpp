@@ -45,7 +45,6 @@ BOOL ActiveInstance()
 BOOL CheckInstance()
 {
 	BOOL bAdminMode = FALSE;
-	BOOL bAlreadyExist = FALSE;
 	BOOL bIsAdmin = Utility::IsAdminPrivilege();
 	if(g_OptOptions.isSet(ARGS_ADMIN))
 		bAdminMode = TRUE;
@@ -171,7 +170,7 @@ BOOL IsCanTidy(LPCWSTR lpszLang)
 
 	for(int i=0; i<TIDY_END; i++)
 	{
-		if(wcsicmp(g_TidyInfo[i].szLang, lpszLang)==0)
+		if(wcsicmp(g_TidyInfo[i].szName, lpszLang)==0)
 		{
 			if(i!=TIDY_END)
 			{
@@ -439,7 +438,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(767);
+	//_CrtSetBreakAlloc(2767);
 #endif
 
 	g_hInstance = hInstance;

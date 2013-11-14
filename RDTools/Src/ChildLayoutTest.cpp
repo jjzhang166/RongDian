@@ -15,7 +15,7 @@ CChildLayoutTest::CChildLayoutTest()
 
 }
 
-BOOL CChildLayoutTest::IsCanQuit(HWND hWnd)
+BOOL CChildLayoutTest::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -25,7 +25,7 @@ void CChildLayoutTest::OnQuit()
 
 }
 
-BOOL CChildLayoutTest::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CChildLayoutTest::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 {
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
@@ -33,7 +33,7 @@ BOOL CChildLayoutTest::OnInit(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-BOOL CChildLayoutTest::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CChildLayoutTest::SetLang(CPaintManagerUI* pManager, LPCWSTR /*lpszLang*/)
 {
 	if(!pManager)
 		return FALSE;
@@ -41,11 +41,12 @@ BOOL CChildLayoutTest::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 	return TRUE;
 }
 
-CControlUI* CChildLayoutTest::OnCreateControl(LPCTSTR pstrClass, CControlUI *pParent)
+CControlUI* CChildLayoutTest::OnCreateControl(CPaintManagerUI* pManager, LPCTSTR pstrClass, CControlUI *pParent)
 {
-	BOOL bSubControl = FALSE;
 	int nSubType = 0; // 自定义标识，0为非子控件，1为button，2为label，3为edit
 	CControlUI* pControl = NULL;
+	if(!pManager)
+		return pControl;
 	if (wcsicmp(pstrClass, kTestContainer)==0)
 	{
 		pControl = new CContainerTest();
@@ -93,14 +94,15 @@ CControlUI* CChildLayoutTest::OnCreateControl(LPCTSTR pstrClass, CControlUI *pPa
 
 void CChildLayoutTest::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-	BOOL bHandle = FALSE;
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName == kChildLayoutTest)
 	{
+		bHandled = TRUE;
 		CreateTestContainer(pManager);
 	}
 	else if(wcsstr(sCtrlName.GetData(), L"SubButton"))
 	{
+		bHandled = TRUE;
 		wchar_t szErr[1024] = {0}, szFormat[1024] = {0}, szTitle[1024];
 		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_ERR), GET_ASSOC_ID(g_LangIDs, MSG_ERR), szTitle);
 		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_DEBUG_TEXT), GET_ASSOC_ID(g_LangIDs, MSG_DEBUG_TEXT), szFormat);
@@ -109,7 +111,7 @@ void CChildLayoutTest::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& 
 	}
 }
 
-void CChildLayoutTest::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CChildLayoutTest::OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();

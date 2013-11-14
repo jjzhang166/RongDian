@@ -48,12 +48,4 @@
 		<name>Hosts</name>
 		<desc>Host Admin Panel</desc>
 	</Plugin>
-	<Plugin>
-		<layout>layout_childlayouttest</layout>
-		<xml>ChildLayoutTest.xml</xml>
-		<tab>tab_childlayouttest</tab>
-		<panel>panel_childlayouttest</panel>
-		<name>ChildLayoutTest</name>
-		<desc>Load ChildLayout Test</desc>
-	</Plugin>
 </Root>

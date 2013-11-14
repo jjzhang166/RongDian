@@ -4,7 +4,7 @@
 		<!-- first column -->
 		<VerticalLayout name="first_column" width="200" bordersize="1" bordercolor="FFE0E0E0" >
 			<Label name="picker_topic1" height="20" text="" align="center" />
-			<Label name="picker_preview" height="160" bkcolor="" padding="3,3,3,3" bordersize="1" bordercolor="FFE0E0E0" />
+			<Label name="picker_preview" height="160" bkcolor="" padding="3,3,3,3" bordersize="1" bordercolor="#FFE0E0E0" />
 			<Control height="5" />
 			<HorizontalLayout height="24" >
 				<Label name="picker_color_text" width="60" text="" /><Edit name="picker_color"  bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" /><Control width="5" />
@@ -21,18 +21,14 @@
 			<HorizontalLayout height="24" >
 				<Label name="picker_text_text" width="60" text="" /><Edit name="picker_text" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" readonly="true" /><Control width="5" />
 			</HorizontalLayout>
-			<Control height="5" />
+			<Control height="10" />
 			<HorizontalLayout height="36" >
 				<Control />
 				<Button name="picker_arrow" width="36" bkimage="file='default\ZoomIn.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
 				<Control width="5" />
-				<Button name="picker_snapshot" width="36" bkimage="file='default\SnapShot.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
-				<Control />
-			</HorizontalLayout>
-			<Control height="10" />
-			<HorizontalLayout height="24" >
-				<Control />
-				<Button name="picker_palette" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" tooltip="" />
+				<Button name="picker_snapshot" width="36" bkimage="file='default\Photos.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+				<Control width="5" />
+				<Button name="picker_palette" width="36" bkimage="file='default\palette.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
 				<Control />
 			</HorizontalLayout>
 		</VerticalLayout><!-- first column -->

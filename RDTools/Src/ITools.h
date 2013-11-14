@@ -9,7 +9,7 @@ public:
 public:
 	virtual BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/) = 0;
 	virtual BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/)  = 0;
-	virtual CControlUI* OnCreateControl(LPCWSTR /*lpszClass*/, CControlUI* /*pParent*/) { return NULL; };
+	virtual CControlUI* OnCreateControl(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszClass*/, CControlUI* /*pParent*/) { return NULL; };
 	virtual void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
 	virtual void OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
 	virtual void OnItemClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
@@ -23,11 +23,15 @@ public:
 	virtual LRESULT OnCopyData(WPARAM /*wParam*/, LPARAM /*lParam*/) { return 0; };
 };
 
+typedef LONG (*LPFNCreateRDTool)(LPWSTR lpszTName, LPVOID *lpClass);
+typedef LONG (*LPFNDestroyRDTool)(LPVOID lpClass);
+
 typedef struct _tagTOOLS_INFO
 {
 	int nIndex;
 	wchar_t szName[1024];
 	CBaseTool* lpClass;
+	LPFNDestroyRDTool lpfnDestroy;
 } TOOLS_INFO, *PTOOLS_INFO, *LPTOOLS_INFO;
 
 #define RD_DECLARE_BEGIN(tool) \
@@ -45,31 +49,77 @@ typedef struct _tagTOOLS_INFO
 #define RD_DECLARE_MEMBER(type, method) \
 		type method
 
-#define RD_DECLARE_END(tool) \
-	}; \
-	__declspec(selectany) C##tool the##tool##Class;
+#define RD_DECLARE_END() \
+	public: \
+		wchar_t _TOOL_NAME[1024]; \
+	}; 
 
 #define RD_DECLARE_TOOLS() \
 	private: \
-		static const TOOLS_INFO _toolsEntries[]; 
+		BOOL _InitTools(); \
+		void _ReleaseTools(); \
+	private: \
+		list<LPTOOLS_INFO> _toolsEntries; 
 
 #define RD_BEGIN_TOOLS_MAP(cls) \
-	UILIB_COMDAT const TOOLS_INFO cls::_toolsEntries[] = \
-	{
+	void cls::_ReleaseTools() \
+	{ \
+		LPTOOLS_INFO tool = NULL; \
+		if(_toolsEntries.size()) \
+		tool = (LPTOOLS_INFO)_toolsEntries.back(); \
+		while(tool) \
+		{ \
+			_toolsEntries.pop_back(); \
+			if(tool->lpClass) \
+			{ \
+				if(tool->lpfnDestroy) \
+					tool->lpfnDestroy(tool->lpClass); \
+				else \
+					delete tool->lpClass; \
+			} \
+			delete tool; \
+			tool = NULL; \
+			if(_toolsEntries.size()) \
+				tool = (LPTOOLS_INFO)_toolsEntries.back(); \
+		} \
+	} \
+	BOOL cls::_InitTools() \
+	{ 
 
-#define RD_TOOL(name, x) \
-		{ 0, name, &the##x##Class }, \
+#define RD_TOOL(x) \
+	{ \
+		x *entry = new x(); \
+		LPTOOLS_INFO tool = new TOOLS_INFO(); \
+		if(tool) \
+		{ \
+			memset(tool, 0, sizeof(TOOLS_INFO)); \
+			if(entry) \
+			{ \
+				tool->nIndex = _toolsEntries.size(); \
+				tool->lpClass = entry; \
+				_toolsEntries.push_back(tool); \
+			} \
+		} \
+	}
 
 #define RD_END_TOOLS_MAP() \
-		{ 0, NULL, NULL } \
-	};
+		return TRUE; \
+	} 
 
 #define RD_ISCAN_QUIT(h, r) \
 	{ \
 		r = TRUE; \
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			r = _toolsEntries[i].lpClass->IsCanQuit(h); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				r = FALSE; \
+				break; \
+			} \
+			r = tool->lpClass->IsCanQuit(h); \
 			if(!r) \
 				break; \
 		} \
@@ -78,48 +128,72 @@ typedef struct _tagTOOLS_INFO
 #define RD_ON_INIT_MSG(w, l) \
 	{ \
 		BOOL bRet = FALSE;\
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			bRet = _toolsEntries[i].lpClass->OnInit(w, l); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				break; \
+			} \
+			bRet = tool->lpClass->OnInit(w, l); \
 			if(!bRet) \
-				return bRet; \
+				break; \
 		} \
 	}
 
 #define RD_ON_LANG_MSG(manager, lang) \
 	{ \
 		BOOL bRet = FALSE;\
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return FALSE; \
-			bRet = _toolsEntries[i].lpClass->SetLang(manager, lang); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				break; \
+			} \
+			bRet = tool->lpClass->SetLang(manager, lang); \
 			if(!bRet) \
-				return bRet; \
+				break; \
 		} \
 	}
 
-#define RD_ON_CREATE_CONTROL_MSG(c, p) \
+#define RD_ON_CREATE_CONTROL_MSG(m, c, p) \
 	{ \
 		CControlUI *pControl = NULL;\
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return NULL; \
-			pControl = _toolsEntries[i].lpClass->OnCreateControl(c, p); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				pControl = NULL; \
+				break; \
+			} \
+			pControl = tool->lpClass->OnCreateControl(m, c, p); \
 			if(pControl) \
-				return pControl;\
+				return pControl; \
 		} \
 	}
 
 #define RD_ON_COMMON_MSG(h, p, m, b, fn) \
 	{ \
 		b = FALSE; \
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return ; \
-			_toolsEntries[i].lpClass->fn(h, p, m, b); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				b = FALSE; \
+				break; \
+			} \
+			tool->lpClass->fn(h, p, m, b); \
 			if(b) \
 				break; \
 		} \
@@ -128,11 +202,16 @@ typedef struct _tagTOOLS_INFO
 #define RD_ON_ITEMTEXT_MSG(h, p, c, x, y) \
 	{ \
 		LPCWSTR lpData = L""; \
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return FALSE; \
-			lpData = _toolsEntries[i].lpClass->GetItemText(h, p, c, x, y); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				break; \
+			} \
+			lpData = tool->lpClass->GetItemText(h, p, c, x, y); \
 			if(wcscmp(lpData, L"")!=0) \
 				break; \
 		} \
@@ -141,11 +220,16 @@ typedef struct _tagTOOLS_INFO
 
 #define RD_ON_QUIT() \
 	{ \
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
 				return; \
-			_toolsEntries[i].lpClass->OnQuit(); \
+			} \
+			tool->lpClass->OnQuit(); \
 		} \
 	} 
 
@@ -153,11 +237,16 @@ typedef struct _tagTOOLS_INFO
 	{ \
 		HRESULT hRes = 0;\
 		BOOL bHandle = FALSE; \
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return hRes; \
-			hRes = _toolsEntries[i].lpClass->HandleCustomMessage(u, w, l, bHandle); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				continue; \
+			} \
+			hRes = tool->lpClass->HandleCustomMessage(u, w, l, bHandle); \
 			if(hRes) \
 				break; \
 		} \
@@ -166,11 +255,16 @@ typedef struct _tagTOOLS_INFO
 #define RD_ON_COPYDATA_MSG(w, l) \
 	{ \
 		BOOL bRet = FALSE;\
-		for(int i=0; i<_countof(_toolsEntries)-1; i++) \
+		list<LPTOOLS_INFO>::iterator iter; \
+		LPTOOLS_INFO tool = NULL; \
+		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
 		{ \
-			if(!_toolsEntries[i].lpClass) \
-				return bRet; \
-			bRet = _toolsEntries[i].lpClass->OnCopyData(w, l); \
+			tool = (*iter); \
+			if(!tool->lpClass) \
+			{ \
+				continue; \
+			} \
+			bRet = tool->lpClass->OnCopyData(w, l); \
 			if(bRet) \
 				break; \
 		} \

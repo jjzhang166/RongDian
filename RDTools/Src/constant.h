@@ -160,7 +160,7 @@ typedef struct _tagMSG_INFO
 	LPCWSTR pSection;
 } MSG_INFO, *PMSG_INFO, *LPMSG_INFO;
 
-typedef struct _tagPANEL_INFO
+typedef struct _tagMAIN_PANEL
 {
 	wchar_t szLayout[STRING_LENGTH];
 	wchar_t szXml[STRING_LENGTH];
@@ -168,7 +168,8 @@ typedef struct _tagPANEL_INFO
 	wchar_t szPanel[STRING_LENGTH];
 	wchar_t szName[STRING_LENGTH];
 	wchar_t szDesc[STRING_LENGTH];
-} PANEL_INFO, *PPANEL_INFO, *LPPANEL_INFO;
+	wchar_t szDll[STRING_LENGTH*2];
+} MAIN_PANEL, *PMAIN_PANEL, *LPMAIN_PANEL;
 
 typedef struct _tagSKIN_INFO
 {
@@ -193,6 +194,14 @@ typedef struct _tagCODER_INFO
 	BOOL bHandle;
 	BOOL bValid;
 } CODER_INFO, *LCODER_INFO, *LPCODER_INFO;
+
+typedef struct _tagTIDY_PANEL
+{
+	wchar_t szName[STRING_LENGTH];
+	wchar_t szPath[STRING_LENGTH*4];
+	wchar_t szPanel[STRING_LENGTH];
+	wchar_t szDesc[STRING_LENGTH];
+} TIDY_PANEL, *PTIDY_PANEL, *LPTIDY_PANEL;
 
 typedef enum _tagADDR_MODE
 {
@@ -270,6 +279,12 @@ typedef enum _tagTIDY_TYPE {
 	TIDY_FORTRAN,
 	TIDY_HASKELL,
 	TIDY_HTML,
+	TIDY_HTML_AT,
+	TIDY_HTML_CP,
+	TIDY_HTML_NBT,
+	TIDY_HTML_NET,
+	TIDY_HTML_NIT,
+	TIDY_HTML_NPT,
 	TIDY_INI,
 	TIDY_JAVA,
 	TIDY_JAVASCRIPT,
@@ -296,8 +311,8 @@ const UINT MAX_TIDY_LANG = TIDY_END + 1;
 
 typedef struct _tagTIDY_INFO
 {
-	wchar_t szLang[STRING_LENGTH];
-	wchar_t szDesc[STRING_LENGTH];
+	wchar_t szName[STRING_LENGTH];
+	char szOption[STRING_LENGTH];
 	UINT uID;
 } TIDY_INFO, *PTIDY_INFO, *LPTIDY_INFO;
 

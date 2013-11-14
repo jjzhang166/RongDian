@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////////
 // CIPConfig
 RD_DECLARE_BEGIN(IPConfig)
-	RD_DECLARE_MEMBER(void, OnClick)(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled);
-	RD_DECLARE_MEMBER(void, OnItemSelect)(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg);
+	RD_DECLARE_MEMBER(void, OnClick)(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	RD_DECLARE_MEMBER(void, OnItemSelect)(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
 
 	RD_DECLARE_MEMBER(LRESULT, HandleCustomMessage) (UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
@@ -58,6 +58,6 @@ public:
 	RD_DECLARE_MEMBER(list<LPADAPTER_INFO>, lstAdaptersInfo);
 	RD_DECLARE_MEMBER(PCMD_EXE_INFO, m_pCmdInfo);
 	RD_DECLARE_MEMBER(LPVOID, m_lpLoader);
-RD_DECLARE_END(IPConfig)
+RD_DECLARE_END()
 // CIPConfig
 //////////////////////////////////////////////////////////////////////////

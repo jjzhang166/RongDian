@@ -89,7 +89,7 @@ BOOL CCoder::OnInit(WPARAM wParam, LPARAM lParam)
 	if(pCoderBackupCheck)
 	{
 		pCoderBackupCheck->SetUserData(L"TRUE");
-		dwHightLightColor = pCoderBackupCheck->GetBkColor();
+		dwHightLightColor = pCoderBackupCheck->GetBorderColor();
 	}
 	FIND_CONTROL_BY_ID(pCoderNoBOM, CButtonUI, pManager, kCoderBOM)
 	if(pCoderNoBOM)
@@ -147,7 +147,7 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void CCoder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CCoder::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName==kCoderStart)
@@ -208,16 +208,16 @@ void CCoder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 			if(strData==L"FALSE")
 			{
 				if(dwGrayColor==0)
-					dwGrayColor = pCoderBackupCheck->GetBkColor();
-				pCoderBackupCheck->SetBkColor(dwHightLightColor);
+					dwGrayColor = pCoderBackupCheck->GetBorderColor();
+				pCoderBackupCheck->SetBorderColor(dwHightLightColor);
 				pCoderBackupCheck->SetUserData(L"TRUE");
 				bCoderBackup = TRUE;
 			}
 			else
 			{
 				if(dwHightLightColor==0)
-					dwHightLightColor = pCoderBackupCheck->GetBkColor();
-				pCoderBackupCheck->SetBkColor(dwGrayColor);
+					dwHightLightColor = pCoderBackupCheck->GetBorderColor();
+				pCoderBackupCheck->SetBorderColor(dwGrayColor);
 				pCoderBackupCheck->SetUserData(L"FALSE");
 				bCoderBackup = FALSE;
 			}
@@ -231,7 +231,7 @@ void CCoder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 	}
 }
 
-void CCoder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CCoder::OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
@@ -249,7 +249,7 @@ void CCoder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, 
 	}
 }
 
-LPCWSTR CCoder::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+LPCWSTR CCoder::GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* pControl, int iIndex, int iSubItem)
 {
 	LPCWSTR lpszData = NULL;
 	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();
@@ -327,7 +327,6 @@ BOOL CCoder::InitCharSetCombo()
 	LPCHARSET_INFO lpCharSetInfo = NULL;
 	list<LPCHARSET_INFO>::iterator iter;
 	CListLabelElementUI *pItem = NULL;
-	BOOL bFromItem = FALSE, bToItem = FALSE;
 	pCoderComboFrom->RemoveAll();
 	pCoderComboTo->RemoveAll();
 	for(iter=lstCharSetsInfo.begin(); iter!=lstCharSetsInfo.end(); iter++)
@@ -608,7 +607,7 @@ BOOL CCoder::GetFileCharSet(LPCWSTR lpszPath, LPSTR lpszSet)
 	return bRet;
 }
 
-BOOL CCoder::ConvertFile(HWND hWnd, LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
+BOOL CCoder::ConvertFile(HWND /*hWnd*/, LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
 {
 	BOOL bRet = FALSE;
 	if(!lpszPath)

@@ -50,14 +50,16 @@ using namespace std;
 #include <SQLite/sqlite3.h>
 #include <SlimXml/Src/SlimXml.h>
 #include <GifLib/lib/gif_lib_private.h>
+#include <DuiLib/UIlib.h>
 #include <Tidy/include/tidy.h>
+#include <Tidy/include/buffio.h>
 #include <AsTidyLib/astyle.h>
-#include <CssTidyLib/csspp_globals.hpp>
+#include <CssTidyLib/formatter.h>
+#include <JsonTidyLib/json.h>
 #include <JsonTidyLib/jsontidy.h>
 #include <JsTidyLib/jstidy.h>
 #include <PhpTidyLib/phptidy.h>
 #include <SqlTidyLib/sqltidy.h>
-#include <DuiLib/UIlib.h>
 
 #include <Duilib/Control/UIMenu.h>
 #include <DuiMsg.h>
@@ -138,7 +140,7 @@ void				CancelLoading();
 #include "RongDian.h"
 #include "ITools.h"
 #include "SystemTraySDK.h"
-#include "IPanelXml.h"
+#include "TidyHelper.h"
 #include "MainFrame.h"
 
 extern HANDLE					g_hUserSignature;
@@ -166,7 +168,7 @@ extern CLangManager				*g_pLangManager;
 extern CSkinManager				*g_pSkinManager;
 extern CSystemTray				*g_pSystemTray;
 extern CMainFrame				*g_pMainFrame;
-extern list<LPPANEL_INFO>		g_lstPanelInfo;
+extern list<LPMAIN_PANEL>		g_lstPanelInfo;
 extern CSQLite					g_SQLite;
 extern IMG_INFO					g_ImgInfo[MAX_IMG_TYPE];
 extern TIDY_INFO				g_TidyInfo[MAX_TIDY_LANG];

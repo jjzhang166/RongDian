@@ -26,7 +26,7 @@ CFinder::CFinder()
 	pFinderPathEdit = NULL;
 }
 
-BOOL CFinder::IsCanQuit(HWND hWnd)
+BOOL CFinder::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -70,7 +70,7 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void CFinder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CFinder::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CDuiString sCtrlName = msg.pSender->GetName();
@@ -91,7 +91,7 @@ void CFinder::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL
 	}
 }
 
-void CFinder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CFinder::OnItemActive(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CListBodyUI *pParent = (CListBodyUI *)msg.pSender->GetParent();
@@ -116,7 +116,7 @@ void CFinder::OnItemActive(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg,
 		SHHelper::OpenFile(hWnd, pFinderInfo->szPath);
 }
 
-LPCWSTR CFinder::GetItemText(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pControl, int iIndex, int iSubItem)
+LPCWSTR CFinder::GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* pControl, int iIndex, int iSubItem)
 {
 	LPCWSTR lpszData = L"";
 	CListBodyUI *pParent = (CListBodyUI *)pControl->GetParent();

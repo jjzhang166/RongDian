@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "MainFrame.h"
+#include "PanelXml.h"
+
 // Panels
 #include "ColorPicker.h"
 #include "Coder.h"
@@ -36,22 +38,22 @@ const wchar_t* const kMenuShow = L"menu_show";
 const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
-const wchar_t* const kTabButton = L"TabButton";
+const wchar_t* const kMainTabButton = L"MainTabButton";
 const wchar_t* const kTabsHide = L"tab_hide";
 const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
 const wchar_t* const kPanelContents = L"panel_contents";
 
 RD_BEGIN_TOOLS_MAP(CMainFrame)
-	RD_TOOL(L"ColorPicker", ColorPicker)
-	RD_TOOL(L"Coder", Coder)
-	RD_TOOL(L"Finder", Finder)
-	RD_TOOL(L"Tidy", Tidy)
-	RD_TOOL(L"IPConfig", IPConfig)
-	RD_TOOL(L"Hosts", Hosts)
-	RD_TOOL(L"ChildLayoutTest", ChildLayoutTest)
-	RD_TOOL(L"Setting", Setting)
-	RD_TOOL(L"About", About)
+	RD_TOOL(CColorPicker)
+	RD_TOOL(CCoder)
+	RD_TOOL(CFinder)
+	RD_TOOL(CTidy)
+	RD_TOOL(CIPConfig)
+	RD_TOOL(CHosts)
+	//RD_TOOL(CChildLayoutTest)
+	RD_TOOL(CSetting)
+	RD_TOOL(CAbout)
 RD_END_TOOLS_MAP()
 
 DUI_BEGIN_MESSAGE_MAP(CMainFrame, CNotifyPump)
@@ -77,7 +79,6 @@ CMainFrame::CMainFrame()
 	pPanelContents = NULL;
 	pLoadindFrame = NULL;
 	pStatusCtrl = NULL;
-	Open(g_szPanelsXml);
 	lpLoader = NULL;
 }
 
@@ -90,6 +91,7 @@ CMainFrame::~CMainFrame()
 	}
 	ReleasePanels();
 	RD_ON_QUIT();
+	_ReleaseTools();
 	PostQuitMessage(0);
 }
 
@@ -177,6 +179,8 @@ void CMainFrame::InitWindow()
 	::SendMessage(m_hWnd, WM_SETICON, TRUE, (LPARAM)hIcon);
 	HICON hIconSmall = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, FALSE, (LPARAM)hIconSmall);
+
+	_InitTools();
 
 	g_pSystemTray = new CSystemTray();
 	if(!g_pSystemTray)
@@ -361,17 +365,17 @@ void CMainFrame::OnFinalMessage(HWND hWnd)
 CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	CControlUI* pControl = NULL;
-	if(wcsicmp(pstrClass, kTabButton)==0)
+	if(wcsicmp(pstrClass, kMainTabButton)==0)
 	{
 		pControl = new CButtonUI();
-		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
+		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kMainTabButton);
 		if(pDefaultAttributes && pControl)
 			pControl->ApplyAttributeList(pDefaultAttributes);
 		if(pControl)
 			return pControl;
 	}
 
-	RD_ON_CREATE_CONTROL_MSG(pstrClass, pParent)
+	RD_ON_CREATE_CONTROL_MSG(&m_PaintManager, pstrClass, pParent)
 
 	return pControl;
 }
@@ -545,7 +549,7 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 {
 	BOOL bRet = FALSE;
 	CDuiString sCtrlName = lpszTab, sCurTab, sCurLayout;
-	LPPANEL_INFO lpInfo = NULL;
+	LPMAIN_PANEL lpInfo = NULL;
 	CControlUI *pTab = NULL;
 	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
 	sCurTab = pPanelContents->GetUserData();
@@ -561,7 +565,7 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 		pCurLayout = NULL;
 		pCurTab = NULL;
 	}
-	list<LPPANEL_INFO>::iterator iter;
+	list<LPMAIN_PANEL>::iterator iter;
 	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
 	{
 		lpInfo = (*iter);
@@ -599,10 +603,10 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 BOOL CMainFrame::InitPanels()
 {
 	BOOL bRet = FALSE;
-	PANEL_INFO panel = {0};
+	MAIN_PANEL panel = {0};
 	wchar_t szName[1024], szDesc[1024];
 
-	memset(&panel, 0, sizeof(PANEL_INFO));
+	memset(&panel, 0, sizeof(MAIN_PANEL));
 	wcscpy(panel.szLayout, kLayoutPicker);
 	wcscpy(panel.szXml, kXmlPicker);
 	wcscpy(panel.szTab, kTabPicker);
@@ -614,7 +618,48 @@ BOOL CMainFrame::InitPanels()
 	AddPanel(&panel);
 
 	// Load Plugin's Panel
-	LoadPanels();
+	CPanelXml panels;
+	if(!panels.Open(g_szPanelsXml))
+		return bRet;
+	if(!panels.LoadPanels(g_szResPath, g_lstPanelInfo))
+		return bRet;
+	// Load Panel Instance from DLL
+	LPFNCreateRDTool lpfnCreateTool = NULL;
+	LPFNDestroyRDTool lpfnDestroyRDTool = NULL;
+	wchar_t szTool[1024] = {0};
+	CBaseTool *pToolClass = NULL;
+	LPMAIN_PANEL lpPanelInfo = NULL;
+	list<LPMAIN_PANEL>::iterator iter;
+	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
+	{
+		lpPanelInfo = (*iter);
+		if(wcslen(lpPanelInfo->szDll)==0)
+			continue;
+		HMODULE hModule = LoadLibraryW(lpPanelInfo->szDll);
+		if(!hModule)
+			continue;
+		lpfnCreateTool = (LPFNCreateRDTool)GetProcAddress(hModule, "CreateRDTool");
+		lpfnDestroyRDTool = (LPFNDestroyRDTool)GetProcAddress(hModule, "DestroyRDTool");
+		if(!lpfnDestroyRDTool || lpfnCreateTool)
+		{
+			FreeLibrary(hModule);
+			continue;
+		}
+		if(lpfnCreateTool(szTool, (LPVOID *)&pToolClass)==0)
+		{
+			LPTOOLS_INFO pTool = new TOOLS_INFO();
+			if(!pTool)
+			{
+				lpfnDestroyRDTool(pToolClass);
+				continue;
+			}
+			pTool->nIndex = _toolsEntries.size();
+			pTool->lpClass = pToolClass;
+			pTool->lpfnDestroy = lpfnDestroyRDTool;
+			_toolsEntries.push_back(pTool);
+		}
+	}
+
 	// Create Plugin's Panel
 	CreatePanels();
 
@@ -633,13 +678,13 @@ BOOL CMainFrame::InitPanels()
 	return bRet;
 }
 
-BOOL CMainFrame::AddPanel(LPPANEL_INFO lpPanelInfo)
+BOOL CMainFrame::AddPanel(LPMAIN_PANEL lpPanelInfo)
 {
 	BOOL bRet = FALSE;
-	LPPANEL_INFO lpNewPanel = new PANEL_INFO();
+	LPMAIN_PANEL lpNewPanel = new MAIN_PANEL();
 	if(!lpNewPanel)
 		return bRet;
-	memset(lpNewPanel, 0, sizeof(PANEL_INFO));
+	memset(lpNewPanel, 0, sizeof(MAIN_PANEL));
 	wcscpy(lpNewPanel->szLayout, lpPanelInfo->szLayout);
 	wcscpy(lpNewPanel->szXml, lpPanelInfo->szXml);
 	wcscpy(lpNewPanel->szTab, lpPanelInfo->szTab);
@@ -661,14 +706,14 @@ BOOL CMainFrame::CreatePanels()
 	BOOL bRet = FALSE;
 	if(!pPanelTabs || !pPanelContents)
 		return bRet;
-	LPPANEL_INFO lpPanelInfo = NULL;
-	list<LPPANEL_INFO>::iterator iter;
+	LPMAIN_PANEL lpPanelInfo = NULL;
+	list<LPMAIN_PANEL>::iterator iter;
 	CButtonUI *pTab = NULL;
 	CChildLayoutUI *pPanel = NULL;
-	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
+	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kMainTabButton);
 	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
 	{
-		lpPanelInfo = (LPPANEL_INFO)(*iter);
+		lpPanelInfo = (LPMAIN_PANEL)(*iter);
 		if(lpPanelInfo)
 		{
 			FIND_CONTROL_BY_ID(pTab, CButtonUI, (&m_PaintManager), lpPanelInfo->szTab)
@@ -703,16 +748,16 @@ BOOL CMainFrame::CreatePanels()
 
 BOOL CMainFrame::ReleasePanels()
 {
-	LPPANEL_INFO lpPanelInfo = NULL;
-	list<LPPANEL_INFO>::iterator iter;
-	lpPanelInfo = (LPPANEL_INFO)g_lstPanelInfo.front();
+	LPMAIN_PANEL lpPanelInfo = NULL;
+	list<LPMAIN_PANEL>::iterator iter;
+	lpPanelInfo = (LPMAIN_PANEL)g_lstPanelInfo.front();
 	while(lpPanelInfo)
 	{
 		g_lstPanelInfo.pop_front();
 		delete lpPanelInfo;
 		lpPanelInfo = NULL;
 		if(g_lstPanelInfo.size())
-			lpPanelInfo = (LPPANEL_INFO)g_lstPanelInfo.front();
+			lpPanelInfo = (LPMAIN_PANEL)g_lstPanelInfo.front();
 		else
 			break;
 	}

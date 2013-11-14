@@ -15,7 +15,7 @@ CAbout::CAbout()
 
 }
 
-BOOL CAbout::IsCanQuit(HWND hWnd)
+BOOL CAbout::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -25,7 +25,7 @@ void CAbout::OnQuit()
 
 }
 
-BOOL CAbout::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CAbout::OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	return TRUE;
 }
@@ -47,7 +47,7 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void CAbout::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CAbout::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName == kAboutMail)

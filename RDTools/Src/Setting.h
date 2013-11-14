@@ -4,6 +4,6 @@
 // CSetting
 RD_DECLARE_BEGIN(Setting)
 	RD_DECLARE_MEMBER(BOOL, Apply) ();
-RD_DECLARE_END(Setting)
+RD_DECLARE_END()
 // CSetting
 //////////////////////////////////////////////////////////////////////////

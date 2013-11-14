@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////////
 // CCoder
 RD_DECLARE_BEGIN(Coder)
-	RD_DECLARE_MEMBER(void, OnClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled);
-	RD_DECLARE_MEMBER(void, OnItemActive) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled);
+	RD_DECLARE_MEMBER(void, OnClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	RD_DECLARE_MEMBER(void, OnItemActive) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	RD_DECLARE_MEMBER(LPCWSTR, GetItemText) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/);
 
 	RD_DECLARE_MEMBER(LPCWSTR, GetCoderItemText) (CControlUI* pControl, int iIndex, int iSubItem);
@@ -43,6 +43,6 @@ public:
 	RD_DECLARE_MEMBER(DWORD, dwGrayColor);
 	RD_DECLARE_MEMBER(list<LPCHARSET_INFO>, lstCharSetsInfo);
 	RD_DECLARE_MEMBER(HANDLE, hConvertThread);
-RD_DECLARE_END(Coder)
+RD_DECLARE_END()
 // CCoder
 //////////////////////////////////////////////////////////////////////////

@@ -49,7 +49,7 @@ const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
 const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
 const wchar_t* const kIPConfigNewSolution = L"ipconfig_new_solution";
 
-DWORD WINAPI RunAsAdminThread(LPVOID lpData)
+DWORD WINAPI RunAsAdminThread(LPVOID /*lpData*/)
 {
 	if(g_bActiveRunAsAdminThread)
 		return 0;
@@ -90,7 +90,7 @@ CIPConfig::CIPConfig()
 	m_pCmdInfo = NULL;
 }
 
-BOOL CIPConfig::IsCanQuit(HWND hWnd)
+BOOL CIPConfig::IsCanQuit(HWND /*hWnd*/)
 {
 	return TRUE;
 }
@@ -122,7 +122,7 @@ void CIPConfig::OnQuit()
 	}
 }
 
-BOOL CIPConfig::OnInit(WPARAM wParam, LPARAM lParam)
+BOOL CIPConfig::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 {
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
@@ -196,7 +196,7 @@ SET_CONTROL_END()
 	return TRUE;
 }
 
-void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if (sCtrlName == kIPConfigAutoSetIPCheckBox)	//自动获取ip
@@ -257,7 +257,7 @@ void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BO
 	}
 }
 
-void CIPConfig::OnItemSelect(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg)
+void CIPConfig::OnItemSelect(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg)
 {
 	CComboUI* pCombo = (CComboUI*)msg.pSender;
 	CDuiString sItemName = pCombo->GetName();
@@ -269,7 +269,6 @@ void CIPConfig::OnItemSelect(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& ms
 
 LRESULT CIPConfig::HandleCustomMessage(UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	LRESULT lRes = 0;
 	switch(uMsg)
 	{
 	case WM_CMD_COMPLETE:
