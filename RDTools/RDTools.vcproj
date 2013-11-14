@@ -201,6 +201,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\HostAdminGroupContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\HostAdminRowContainer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\IAbout.cpp"
 					>
 				</File>
@@ -296,6 +304,14 @@
 				</File>
 				<File
 					RelativePath=".\Src\ContainerTest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\HostAdminGroupContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\HostAdminRowContainer.h"
 					>
 				</File>
 				<File
@@ -420,6 +436,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\common\HostsParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\HostsParser.h"
+				>
+			</File>
+			<File
 				RelativePath="..\common\ILangUI.cpp"
 				>
 			</File>
@@ -445,6 +469,14 @@
 			</File>
 			<File
 				RelativePath="..\common\Macros.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\PCREUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\PCREUtil.h"
 				>
 			</File>
 			<File
