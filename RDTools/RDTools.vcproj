@@ -229,15 +229,15 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IPanelXml.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\IPConfig.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Src\MainFrame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\PanelXml.cpp"
 					>
 				</File>
 				<File
@@ -275,6 +275,26 @@
 				<File
 					RelativePath=".\Src\Tidy.cpp"
 					>
+				</File>
+				<File
+					RelativePath=".\Src\TidyHelper.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="2"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="2"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.cpp"
@@ -331,10 +351,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\IPanelXml.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\IPConfig.h"
 					>
 				</File>
@@ -344,6 +360,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\MainFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\PanelXml.h"
 					>
 				</File>
 				<File
@@ -368,6 +388,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\Tidy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\TidyHelper.h"
 					>
 				</File>
 				<File
