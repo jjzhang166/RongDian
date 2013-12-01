@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="curl"
-	ProjectGUID="{65D69359-4B22-4319-8C58-77AE0786C796}"
-	RootNamespace="curl"
+	Name="libcurl"
+	ProjectGUID="{2F61C3F5-7D76-4667-BD71-523DA7CC346E}"
+	RootNamespace="libcurl"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,11 +41,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\;..\..\include\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;CURL_STATICLIB"
+				AdditionalIncludeDirectories=".\;\lib"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;BUILDING_LIBCURL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="0"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="4"
@@ -60,11 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName)d.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="wldap32.lib ws2_32.lib"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -76,6 +84,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -83,7 +94,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -106,7 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				AdditionalIncludeDirectories=".\;\lib"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;BUILDING_LIBCURL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -123,10 +135,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="wldap32.lib ws2_32.lib"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,6 +159,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -689,11 +715,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\curl\curl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\curl.h"
+				RelativePath=".\curl\curl.h"
 				>
 			</File>
 			<File
@@ -797,27 +819,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\curlbuild.h"
+				RelativePath=".\curl\curlbuild.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\curl\curlbuild.h"
+				RelativePath=".\curl\curlrules.h"
 				>
 			</File>
 			<File
-				RelativePath=".\curlrules.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\curl\curlrules.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\curl\curlver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\curlver.h"
+				RelativePath=".\curl\curlver.h"
 				>
 			</File>
 			<File
@@ -837,11 +847,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\easy.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\curl\easy.h"
+				RelativePath=".\curl\easy.h"
 				>
 			</File>
 			<File
@@ -949,19 +955,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\curl\mprintf.h"
+				RelativePath=".\curl\mprintf.h"
 				>
 			</File>
 			<File
-				RelativePath=".\mprintf.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\curl\multi.h"
-				>
-			</File>
-			<File
-				RelativePath=".\multi.h"
+				RelativePath=".\curl\multi.h"
 				>
 			</File>
 			<File
@@ -1085,11 +1083,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdcheaders.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\curl\stdcheaders.h"
+				RelativePath=".\curl\stdcheaders.h"
 				>
 			</File>
 			<File
@@ -1129,11 +1123,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\curl\typecheck-gcc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\typecheck-gcc.h"
+				RelativePath=".\curl\typecheck-gcc.h"
 				>
 			</File>
 			<File

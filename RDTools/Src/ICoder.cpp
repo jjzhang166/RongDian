@@ -36,7 +36,7 @@ ICoder::ICoder()
 {
 	hCoderOwner = NULL;
 	pCoderManager = NULL;
-	pCoderList = NULL;
+	m_CoderList = NULL;
 	pCoderFrom = NULL;
 	pCoderTo = NULL;
 	pCoderBackupCheck = NULL;
@@ -66,7 +66,11 @@ BOOL ICoder::InitCoder(IListCallbackUI* pIListCallback)
 {
 	if(!pCoderManager)
 		return FALSE;
-	FIND_CONTROL_BY_ID(pCoderList, CListUI, pCoderManager, kCoderList)
+	FIND_CONTROL_BY_ID(m_startBtn, CButtonUI, pCoderManager, kCoderStart)
+	FIND_CONTROL_BY_ID(m_stopBtn, CButtonUI, pCoderManager, kCoderStop)
+	FIND_CONTROL_BY_ID(m_delSelBtn, CButtonUI, pCoderManager, kCoderDel)
+	FIND_CONTROL_BY_ID(m_delAllBtn, CButtonUI, pCoderManager, kCoderDelAll)
+	FIND_CONTROL_BY_ID(m_CoderList, CListUI, pCoderManager, kCoderList)
 	FIND_CONTROL_BY_ID(pCoderFrom, CComboBoxUI, pCoderManager, kCoderFrom)
 	FIND_CONTROL_BY_ID(pCoderTo, CComboBoxUI, pCoderManager, kCoderTo)
 	FIND_CONTROL_BY_ID(pCoderBackupCheck, CButtonUI, pCoderManager, kCoderBackup)
@@ -84,8 +88,8 @@ BOOL ICoder::InitCoder(IListCallbackUI* pIListCallback)
 	FIND_CONTROL_BY_ID(pCoderBackupEdit, CEditUI, pCoderManager, kCoderPathEdit)
 	if(pCoderBackupEdit)
 		pCoderBackupEdit->SetText(g_szCoderBackupPath);
-	if(pCoderList)
-		pCoderList->SetTextCallback(pIListCallback);
+	if(m_CoderList)
+		m_CoderList->SetTextCallback(pIListCallback);
 	if(!PathFileExists(g_szCoderBackupPath))
 		SHCreateDirectoryEx(NULL, g_szCoderBackupPath, NULL);
 	return TRUE;
@@ -169,21 +173,25 @@ void ICoder::OnCoderClick(TNotifyUI& msg, BOOL& bHandled)
 	else if(sCtrlName==kCoderNewFile)
 	{
 		AddNewFile();
+		ResetBtnStatus();
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderNewFolder)
 	{
 		AddNewFolder();
+		ResetBtnStatus();
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderDel)
 	{
 		DelSelFile();
+		ResetBtnStatus();
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderDelAll)
 	{
 		DelAllFiles();
+		ResetBtnStatus();
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kCoderBOM)
@@ -271,9 +279,9 @@ BOOL ICoder::StopConvert()
 BOOL ICoder::DelSelFile()
 {
 	BOOL bRet = FALSE;
-	if(!pCoderList)
+	if(!m_CoderList)
 		return bRet;
-	int nSel = pCoderList->GetCurSel();
+	int nSel = m_CoderList->GetCurSel();
 	if(nSel<0)
 		return bRet;
 	LPCODER_INFO lpCoderInfo = NULL;
@@ -290,7 +298,7 @@ BOOL ICoder::DelSelFile()
 			break;
 		}
 	}
-	if(bRet && pCoderList->RemoveAt(nSel))
+	if(bRet && m_CoderList->RemoveAt(nSel))
 		return TRUE;
 	return FALSE;
 }
@@ -298,7 +306,7 @@ BOOL ICoder::DelSelFile()
 BOOL ICoder::DelAllFiles()
 {
 	BOOL bRet = FALSE;
-	if(!pCoderList)
+	if(!m_CoderList)
 		return bRet;
 	LPCODER_INFO lpCoderInfo = NULL;
 	if(lstCoderInfo.size())
@@ -311,7 +319,7 @@ BOOL ICoder::DelAllFiles()
 		if(lstCoderInfo.size())
 			lpCoderInfo = (LPCODER_INFO)lstCoderInfo.back();
 	}
-	pCoderList->RemoveAll();
+	m_CoderList->RemoveAll();
 	return TRUE;
 }
 
@@ -321,7 +329,7 @@ BOOL ICoder::AddNewFile()
 	wchar_t szPath[1024];
 	wchar_t szFilter[] = L"All(*.*)\0*.*\0Text(*.txt)\0*.TXT\0\0";
 	bRet = SHHelper::SelectFile(hCoderOwner, szPath, szFilter);
-	if(bRet && pCoderList)
+	if(bRet && m_CoderList)
 	{
 		CListTextElementUI* pElement = new CListTextElementUI();
 		if(!pElement)
@@ -339,7 +347,7 @@ BOOL ICoder::AddNewFile()
 			strcpy(pCoderInfo->szFrom, "UnKnown");
 		//pElement->SetTag(lstCoderInfo.size());
 		lstCoderInfo.push_back(pCoderInfo);
-		pCoderList->Add(pElement);
+		m_CoderList->Add(pElement);
 	}
 	return bRet;
 }
@@ -351,7 +359,7 @@ BOOL ICoder::AddNewFolder()
 	wchar_t szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kFolderTitle, szTitle);
 	bRet = SHHelper::SelectFolder(hCoderOwner, szPath, szTitle);
-	if(bRet && pCoderList)
+	if(bRet && m_CoderList)
 		bRet = AddCoderFolder(szPath);
 
 	return bRet;
@@ -411,7 +419,7 @@ BOOL ICoder::AddCoderFolder(LPCWSTR lpszFolder)
 				strcpy(pCoderInfo->szFrom, szFrom);
 				//pElement->SetTag(lstCoderInfo.size());
 				lstCoderInfo.push_back(pCoderInfo);
-				pCoderList->Add(pElement);
+				m_CoderList->Add(pElement);
 			}
 		}
 		if(!FindNextFileW(hFind, &FindFileData))
@@ -505,6 +513,24 @@ BOOL ICoder::ConvertFile(LPCWSTR lpszPath, LPCSTR lpszFrom, LPCSTR lpszTo)
 	return TRUE;
 }
 
+BOOL ICoder::ResetBtnStatus()
+{
+	if (m_CoderList->GetCount()>0)
+	{
+		m_startBtn->SetEnabled(true);
+		m_stopBtn->SetEnabled(true);
+		m_delSelBtn->SetEnabled(true);
+		m_delAllBtn->SetEnabled(true);
+	}
+	else
+	{
+		m_startBtn->SetEnabled(false);
+		m_stopBtn->SetEnabled(false);
+		m_delSelBtn->SetEnabled(false);
+		m_delAllBtn->SetEnabled(false);
+	}
+	return TRUE;
+}
 DWORD WINAPI ICoder::ConvertThread(LPVOID lpVoid)
 {
 	ICoder *pICoder = (ICoder *)lpVoid;
@@ -525,7 +551,7 @@ DWORD WINAPI ICoder::ConvertThread(LPVOID lpVoid)
 			if(bRet)
 			{
 				lpCoderInfo->bHandle = TRUE;
-				pElement = (CListTextElementUI *)pICoder->pCoderList->GetItemAt(i);
+				pElement = (CListTextElementUI *)pICoder->m_CoderList->GetItemAt(i);
 				if(pElement)
 					pElement->SetText(2, pICoder->szHandleText);
 			}

@@ -16,6 +16,7 @@
 		<name>Coder</name>
 		<desc>Coder Panel</desc>
 	</Plugin>
+	<!--
 	<Plugin>
 		<layout>layout_finder</layout>
 		<xml>Finder.xml</xml>
@@ -24,6 +25,7 @@
 		<name>File Finder</name>
 		<desc>File Finder Panel</desc>
 	</Plugin>
+	-->
 	<Plugin>
 		<layout>layout_formatter</layout>
 		<xml>Formatter.xml</xml>
@@ -48,6 +50,7 @@
 		<name>HostAdmin</name>
 		<desc>Host Admin Panel</desc>
 	</Plugin>
+	<!--
 	<Plugin>
 		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>
@@ -56,6 +59,7 @@
 		<name>Tidy</name>
 		<desc>Code Tidy Panel</desc>
 	</Plugin>
+	
 	<Plugin>
 		<layout>layout_childlayouttest</layout>
 		<xml>ChildLayoutTest.xml</xml>
@@ -64,4 +68,5 @@
 		<name>ChildLayoutTest</name>
 		<desc>Load ChildLayout Test</desc>
 	</Plugin>
+	-->
 </Root>

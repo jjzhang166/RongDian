@@ -271,13 +271,13 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	}
 	else if(sCtrlName==kMenuBtn)
 	{
-		ShowLoading();
+		//ShowLoading();
 
-		//CDuiRect rect = msg.pSender->GetPos();
-		//DuiLib::CPoint point(rect.left, rect.bottom);
-		//ClientToScreen(m_hWnd, &point);
-		//CMenuUI *pMenu = new CMenuUI(m_hWnd);
-		//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
+		CDuiRect rect = msg.pSender->GetPos();
+		DuiLib::CPoint point(rect.left, rect.bottom);
+		ClientToScreen(m_hWnd, &point);
+		CMenuUI *pMenu = new CMenuUI(m_hWnd);
+		pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 	}
 	if(!bHandle)
 		OnAboutClick(msg, bHandle);
@@ -285,18 +285,18 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		OnPickerClick(msg, bHandle);
 	if(!bHandle)
 		OnCoderClick(msg, bHandle);
-	if(!bHandle)
-		OnFinderClick(msg, bHandle);
+	//if(!bHandle)
+	//	OnFinderClick(msg, bHandle);
 	if(!bHandle)
 		OnFormatterClick(msg, bHandle);
 	if(!bHandle)
 		OnIPConfigClick(msg, bHandle);
 	if (!bHandle)
 		OnHostAdminClick(msg, bHandle);
-	if(!bHandle)
+	/*if(!bHandle)
 		OnTidyClick(msg, bHandle);
 	if(!bHandle)
-		OnChildLayoutTestClick(msg, bHandle);
+		OnChildLayoutTestClick(msg, bHandle);*/
 	if(!bHandle)
 		SelectPanel(sCtrlName);
 	if(!bHandle)
@@ -435,6 +435,19 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 		break;
 	case WM_CMD_COMPLETE:
 		ExeCMDComplete();
+		break;
+	case WM_VERSION_NOTIFY:
+		{
+			int newVersionId = COnlineKeeper::GetInstance()->m_versionId;
+			if (newVersionId>kVersionId)
+			{
+				wchar_t szContent[1024], szTitle[1024];
+				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgInfo, szTitle);
+				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kNewVersion, szContent);
+				DuiMsgBox(hCoderOwner, szContent, szTitle, MB_OK);
+				COnlineKeeper::GetInstance()->m_newVersionAlarm=TRUE;
+			}
+		}
 		break;
 	}
 	return 0;
@@ -616,7 +629,7 @@ LPCWSTR CMainFrame::GetItemText(CControlUI* pControl, int iIndex, int iSubItem)
 		CListUI *pList = (CListUI *)pParent->GetParent();
 		if(!pList)
 			return L"";
-		if(pList->GetName()==GetPickerListName())
+		if(pList->GetName()==GetCoderListName())
 			lpszData = GetCoderItemText(pControl, iIndex, iSubItem);
 		else if(pList->GetName()==GetFinderListName())
 			lpszData = GetFinderItemText(pControl, iIndex, iSubItem);
@@ -724,12 +737,14 @@ BOOL CMainFrame::InitPanels()
 	InitAbout();
 	InitPicker();
 	InitCoder((IListCallbackUI*)this);
-	InitFinder((IListCallbackUI*)this);
+	//InitFinder((IListCallbackUI*)this);
 	InitFormatter();
 	InitIPConfig();
 	InitHostAdmin();
-	InitTidy((IListCallbackUI*)this);
-	InitChildLayoutTest();
+	//InitTidy((IListCallbackUI*)this);
+	//InitChildLayoutTest();
+	
+	COnlineKeeper::GetInstance()->SetRequest(GetHWND(),"http://www.rongdian.net/rdol.php?type=3",FALSE);
 	return bRet;
 }
 

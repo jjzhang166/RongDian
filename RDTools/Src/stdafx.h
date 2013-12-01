@@ -58,7 +58,8 @@ using namespace std;
 #include <PhpTidyLib/phptidy.h>
 #include <SqlTidyLib/sqltidy.h>
 #include <DuiLib/UIlib.h>
-#include <curl/curl.h>
+#include <libcurl/curl/curl.h>
+#include <jsoncpp/json/json.h>
 
 #include <Duilib/Control/UIMenu.h>
 #include <DuiMsg.h>
@@ -85,7 +86,8 @@ using namespace DuiLib;
 #pragma comment(lib, "../RongDian/bin/PhpTidyLibd.lib")
 #pragma comment(lib, "../RongDian/bin/SqlTidyLibd.lib")
 #pragma comment(lib, "../RongDian/bin/DuiLibd.lib")
-#pragma comment(lib, "../RongDian/bin/curld.lib")
+#pragma comment(lib, "../RongDian/bin/libcurld.lib")
+#pragma comment(lib, "../RongDian/bin/jsoncppd.lib")
 #pragma comment(lib, "../RongDian/bin/DuiMsgd.lib")
 #pragma comment(lib, "../RongDian/bin/RDFinderd.lib")
 #else
@@ -103,7 +105,8 @@ using namespace DuiLib;
 #pragma comment(lib, "../RongDian/bin/PhpTidyLib.lib")
 #pragma comment(lib, "../RongDian/bin/SqlTidyLib.lib")
 #pragma comment(lib, "../RongDian/bin/DuiLib.lib")
-#pragma comment(lib, "../RongDian/bin/curl.lib")
+#pragma comment(lib, "../RongDian/bin/libcurl.lib")
+#pragma comment(lib, "../RongDian/bin/jsoncpp.lib")
 #pragma comment(lib, "../RongDian/bin/DuiMsg.lib")
 #pragma comment(lib, "../RongDian/bin/RDFinder.lib")
 #endif 
@@ -132,6 +135,7 @@ void CancelLoading();
 #include <ConfigTable.h>
 #include <AddrTable.h>
 #include <PCREUtil.h>
+#include <OnlineKeeper.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是自定义文件的引用

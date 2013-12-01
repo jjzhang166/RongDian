@@ -29,12 +29,17 @@ public:
 
 	static DWORD WINAPI ConvertThread(LPVOID lpVoid);
 
+	BOOL			ResetBtnStatus();
 public:
 	HWND hCoderOwner;
 	CPaintManagerUI *pCoderManager;
-	CListUI *pCoderList;
+	CListUI *m_CoderList;
 	CComboBoxUI *pCoderFrom;
 	CComboBoxUI *pCoderTo;
+	CButtonUI *m_startBtn;
+	CButtonUI *m_stopBtn;
+	CButtonUI *m_delSelBtn;
+	CButtonUI *m_delAllBtn;
 	CButtonUI *pCoderBackupCheck;
 	CButtonUI *pCoderNoBOM;
 	CEditUI *pCoderBackupEdit;

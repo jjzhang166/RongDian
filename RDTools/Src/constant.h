@@ -7,6 +7,10 @@ const wchar_t* const kAuthorUrl						= L"http://www.rongdian.net";
 // CopyRight
 const wchar_t* const kCopyRight						= L"CopyRight 2013 RongDian.net";
 
+const int			 kVersionId						= 1;
+
+const wchar_t* const kVersionName					= L"2.0.0.1";
+
 // SnapShot.exe
 #ifdef _DEBUG
 const wchar_t* const kSnapShotExec					= L"SnapShotd.exe";
@@ -26,7 +30,7 @@ const wchar_t* const kConfigDB						= L"Config.db";
 
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
-const wchar_t* const kDefaultLangIni				= L"lang_en.ini"; // 语言文件
+const wchar_t* const kDefaultLangIni				= L"lang_CH-ZH.ini"; // 语言文件 lang_CH-ZH.ini lang_en.ini
 
 // XML文件
 const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // 主窗体
@@ -75,6 +79,7 @@ const wchar_t* const kDescAbout						= L"desc_about";
 const wchar_t* const kMsgSuccess					= L"msg_success";
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgWarning					= L"msg_warning";
+const wchar_t* const kMsgInfo						= L"msg_info";
 const wchar_t* const kLoading						= L"msg_loading";
 const wchar_t* const kPluginErr						= L"plugin_err";
 const wchar_t* const kNoFoundErr					= L"nofound_err";
@@ -93,6 +98,7 @@ const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
 const wchar_t* const kOperationSuccess				= L"operation_success";
+const wchar_t* const kNewVersion					= L"new_version";
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
 

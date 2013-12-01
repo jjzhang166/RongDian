@@ -20,7 +20,7 @@
  *
  ***************************************************************************/
 #include <winver.h>
-#include "../curlver.h"
+#include "../curl/curlver.h"
 
 LANGUAGE  0x09,0x01
 

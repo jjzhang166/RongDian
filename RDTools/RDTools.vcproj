@@ -472,6 +472,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\common\OnlineKeeper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\OnlineKeeper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\common\PCREUtil.cpp"
 				>
 			</File>

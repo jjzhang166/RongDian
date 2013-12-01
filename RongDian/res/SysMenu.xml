@@ -11,13 +11,13 @@
 					<Label name="item_text" textpadding="5,0,0,0" text="关于" mouse="false" />
 				</HorizontalLayout>
 			</ListContainerElement> <!-- 菜单-关于 -->
-			<!-- 菜单-帮助 -->
+			<!-- 菜单-帮助 
 			<ListContainerElement name="menu_help" height="22" >
 				<HorizontalLayout>
 					<Label name="item_image" width="24" bkimage="file='default\menu_help.png' dest='2,2,20,20' corner='1,1,1,1'" mouse="false" />
 					<Label name="item_text" textpadding="5,0,0,0" text="帮助" mouse="false" />
 				</HorizontalLayout>
-			</ListContainerElement> <!-- 菜单-帮助 -->
+			</ListContainerElement>--> <!-- 菜单-帮助 -->
 			<!-- 菜单-显示主窗口 -->
 			<ListContainerElement name="menu_show" height="22">
 				<HorizontalLayout>
