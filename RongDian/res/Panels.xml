@@ -4,17 +4,13 @@
 		<layout>layout_picker</layout>
 		<xml>Picker.xml</xml>
 		<tab>tab_picker</tab>
-		<panel>panel_picker</panel>
-		<name>Color Picker</name>
-		<desc>Color Picker Panel</desc>
+		<name>picker</name>
 	</Plugin>
 	<Plugin>
 		<layout>layout_coder</layout>
 		<xml>Coder.xml</xml>
 		<tab>tab_coder</tab>
-		<panel>panel_coder</panel>
-		<name>Coder</name>
-		<desc>Coder Panel</desc>
+		<name>coder</name>
 	</Plugin>
 	<!--
 	<Plugin>
@@ -30,43 +26,33 @@
 		<layout>layout_formatter</layout>
 		<xml>Formatter.xml</xml>
 		<tab>tab_formatter</tab>
-		<panel>panel_formatter</panel>
-		<name>Formatter</name>
-		<desc>Formatter Panel</desc>
+		<name>formatter</name>
 	</Plugin>
 	<Plugin>
 		<layout>layout_ipconfig</layout>
 		<xml>IpConfig.xml</xml>
 		<tab>tab_ipconfig</tab>
-		<panel>panel_ipconfig</panel>
-		<name>IPConfig</name>
-		<desc>IP Config Panel</desc>
+		<name>ipconfig</name>
 	</Plugin>
 	<Plugin>
 		<layout>layout_hostadmin</layout>
 		<xml>HostAdmin.xml</xml>
 		<tab>tab_hostadmin</tab>
-		<panel>panel_hostadmin</panel>
-		<name>HostAdmin</name>
-		<desc>Host Admin Panel</desc>
+		<name>hostsadmin</name>
 	</Plugin>
 	<!--
 	<Plugin>
 		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>
 		<tab>tab_tidy</tab>
-		<panel>panel_tidy</panel>
 		<name>Tidy</name>
-		<desc>Code Tidy Panel</desc>
 	</Plugin>
 	
 	<Plugin>
 		<layout>layout_childlayouttest</layout>
 		<xml>ChildLayoutTest.xml</xml>
 		<tab>tab_childlayouttest</tab>
-		<panel>panel_childlayouttest</panel>
 		<name>ChildLayoutTest</name>
-		<desc>Load ChildLayout Test</desc>
 	</Plugin>
 	-->
 </Root>

@@ -7,7 +7,7 @@ const wchar_t* const kAuthorUrl						= L"http://www.rongdian.net";
 // CopyRight
 const wchar_t* const kCopyRight						= L"CopyRight 2013 RongDian.net";
 
-const int			 kVersionId						= 1;
+const int			 kVersionId						= 2;	//Á¨¨2‰∏™ÂèëË°åÁâàÊú¨
 
 const wchar_t* const kVersionName					= L"2.0.0.1";
 
@@ -30,10 +30,10 @@ const wchar_t* const kConfigDB						= L"Config.db";
 
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
-const wchar_t* const kDefaultLangIni				= L"lang_CH-ZH.ini"; // ”Ô—‘Œƒº˛ lang_CH-ZH.ini lang_en.ini
+const wchar_t* const kDefaultLangIni				= L"lang_ZH-CN.ini"; // ÈªòËÆ§ËØ≠Ë®ÄÊñá‰ª∂ lang_CH-ZH.ini lang_en.ini
 
-// XMLŒƒº˛
-const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // ÷˜¥∞ÃÂ
+// XMLÊñá‰ª∂
+const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // ‰∏ªÁ™ó‰Ωì
 const wchar_t* const kPanelsXml						= L"Panels.xml";
 const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; // 
 
@@ -50,6 +50,7 @@ const wchar_t* const LS_IPSETS						= L"IPSets";
 const wchar_t* const LS_MAINFRAME					= L"MainFrame";
 const wchar_t* const LS_SYSTRAY						= L"SysTray";
 const wchar_t* const LS_ABOUTPANEL					= L"AboutPanel";
+const wchar_t* const LS_PLUGINS						= L"Plugins";
 const wchar_t* const LS_PICKERPANEL					= L"PickerPanel";
 const wchar_t* const LS_CODERPANEL					= L"CoderPanel";
 const wchar_t* const LS_FINDERPANEL					= L"FinderPanel";
@@ -60,12 +61,12 @@ const wchar_t* const LS_MSG							= L"Msg";
 const wchar_t* const LS_DUIMSG						= L"DuiMsg";
 
 // Color Picker Panel(default's Panel)
-const wchar_t* const kLayoutPicker					= L"layout_picker";
-const wchar_t* const kXmlPicker						= L"Picker.xml";
-const wchar_t* const kTabPicker						= L"tab_picker";
-const wchar_t* const kPanelPicker					= L"panel_picker";
-const wchar_t* const kNamePicker					= L"name_picker";
-const wchar_t* const kDescPicker					= L"desc_picker";
+// const wchar_t* const kLayoutPicker					= L"layout_picker";
+// const wchar_t* const kXmlPicker						= L"Picker.xml";
+// const wchar_t* const kTabPicker						= L"tab_picker";
+// const wchar_t* const kPanelPicker					= L"panel_picker";
+// const wchar_t* const kNamePicker					= L"name_picker";
+// const wchar_t* const kDescPicker					= L"desc_picker";
 
 // About Panel(default's Panel)
 const wchar_t* const kLayoutAbout					= L"layout_about";

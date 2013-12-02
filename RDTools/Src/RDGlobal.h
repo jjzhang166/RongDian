@@ -19,7 +19,7 @@ wchar_t				g_szSnapShot[1024] = {0};
 wchar_t				g_szCoderPath[1024] = {0};
 wchar_t				g_szCoderBackupPath[1024] = {0};
 wchar_t				g_szBackground[1024] = L"FF32506E";
-wchar_t				g_szLangFile[1024] = L"lang_en.ini";
+wchar_t				g_szLangFile[1024] = L"lang_ZH-CN.ini";	//指定当前使用的语言版本lang_ZH-CN.ini lang_en.ini
 wchar_t				g_szAddrSolution[1024] = {0};
 Logger				g_Logger;
 Options				g_OptOptions;

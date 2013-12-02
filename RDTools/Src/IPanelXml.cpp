@@ -36,14 +36,15 @@ BOOL IPanelXml::LoadPanels()
 		pPanel = pPlugin->findChild(L"panel");
 		pName = pPlugin->findChild(L"name");
 		pDesc = pPlugin->findChild(L"desc");
-		if(pLayout && pXml && pTab && pPanel && pName && pDesc)
+		if(pLayout && pXml && pTab /*&& pPanel*/ && pName /*&& pDesc*/)
 		{
 			lpszLayout = pLayout->getString();
 			lpszXml = pXml->getString();
 			lpszTab = pTab->getString();
-			lpszPanel = pPanel->getString();
+			//lpszPanel = pPanel->getString();
 			lpszName = pName->getString();
-			lpszDesc = pDesc->getString();
+			//lpszDesc = pDesc->getString();
+			
 			swprintf(szPath, L"%s\\%s", g_szResPath, lpszXml);
 			if(PathFileExists(szPath)) // 检测界面xml文集是否存在
 			{
@@ -54,9 +55,9 @@ BOOL IPanelXml::LoadPanels()
 					wcscpy(lpPanelInfo->szLayout, lpszLayout);
 					wcscpy(lpPanelInfo->szXml, lpszXml);
 					wcscpy(lpPanelInfo->szTab, lpszTab);
-					wcscpy(lpPanelInfo->szPanel, lpszPanel);
+					//wcscpy(lpPanelInfo->szPanel, lpszPanel);
 					wcscpy(lpPanelInfo->szName, lpszName);
-					wcscpy(lpPanelInfo->szDesc, lpszDesc);
+					//wcscpy(lpPanelInfo->szDesc, lpszDesc);
 					g_lstPanelInfo.push_back(lpPanelInfo);
 				}
 			}

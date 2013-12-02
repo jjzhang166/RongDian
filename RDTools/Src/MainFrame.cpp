@@ -698,16 +698,16 @@ BOOL CMainFrame::InitPanels()
 	PANEL_INFO panel = {0};
 	wchar_t szName[1024], szDesc[1024];
 
-	memset(&panel, 0, sizeof(PANEL_INFO));
-	wcscpy(panel.szLayout, kLayoutPicker);
-	wcscpy(panel.szXml, kXmlPicker);
-	wcscpy(panel.szTab, kTabPicker);
-	wcscpy(panel.szPanel, kPanelPicker);
-	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kNamePicker, szName);
-	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kDescPicker, szDesc);
-	wcscpy(panel.szName, szName);
-	wcscpy(panel.szDesc, szDesc);
-	AddPanel(&panel);
+	// memset(&panel, 0, sizeof(PANEL_INFO));
+	// wcscpy(panel.szLayout, kLayoutPicker);
+	// wcscpy(panel.szXml, kXmlPicker);
+	// wcscpy(panel.szTab, kTabPicker);
+	// wcscpy(panel.szPanel, kPanelPicker);
+	// Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kNamePicker, szName);
+	// Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kDescPicker, szDesc);
+	// wcscpy(panel.szName, szName);
+	// wcscpy(panel.szDesc, szDesc);
+	// AddPanel(&panel);
 
 	// Load Plugin's Panel
 	LoadPanels();
@@ -799,6 +799,17 @@ BOOL CMainFrame::CreatePanels()
 			//pTab->SetAttribute(L"endellipsis", L"true");
 			if(pDefaultAttributes)
 				pTab->ApplyAttributeList(pDefaultAttributes);
+
+			//获取tab的名字和面板描述
+			wchar_t szName[1024], szDesc[1024];
+			wchar_t szNameKey[1024],szDescKey[1024];
+			swprintf(szNameKey, L"%s_name", lpPanelInfo->szName);
+			swprintf(szDescKey, L"%s_desc", lpPanelInfo->szName);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PLUGINS, szNameKey, szName);
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PLUGINS, szDescKey, szDesc);
+			wcscpy(lpPanelInfo->szName, szName);
+			wcscpy(lpPanelInfo->szDesc, szDesc);
+
 			pTab->SetUserData(lpPanelInfo->szLayout);
 			pTab->SetName(lpPanelInfo->szTab);
 			pTab->SetText(lpPanelInfo->szName);
