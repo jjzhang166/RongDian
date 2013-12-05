@@ -50,13 +50,15 @@ CMainFrame::CMainFrame()
 #else
 	resource_dir_ = CPaintManagerUI::GetResourcePath();
 #endif
-	pPanelTabs = NULL;
-	pFrameContainer = NULL;
-	pPanelContents = NULL;
-	pLoadindFrame = NULL;
-	pStatusCtrl = NULL;
+	m_pPanelTabs = NULL;
+	m_pFrameContainer = NULL;
+	m_pPanelContents = NULL;
+	m_pLoadindFrame = NULL;
+	m_pStatusCtrl = NULL;
 	Open(g_szPanelsXml);
-	lpLoader = NULL;
+	m_lpLoader = NULL;
+	m_pTabNormalColor = NULL;
+	m_pTabHotColor = NULL;
 }
 
 CMainFrame::~CMainFrame()
@@ -72,21 +74,21 @@ CMainFrame::~CMainFrame()
 
 LONG CMainFrame::SetSkin()
 {
-	if(!pFrameContainer)
-		FIND_CONTROL_BY_ID(pFrameContainer, CContainerUI, (&m_PaintManager), kFrameContainer)
-	if(!pFrameContainer)
+	if(!m_pFrameContainer)
+		FIND_CONTROL_BY_ID(m_pFrameContainer, CContainerUI, (&m_PaintManager), kFrameContainer)
+	if(!m_pFrameContainer)
 		return -1;
 	if(g_pSkinManager->IsBkColor())
 	{
-		pFrameContainer->SetBkColor(g_pSkinManager->GetBkColor());
-		pFrameContainer->SetBkColor2(g_pSkinManager->GetBkColor2());
-		pFrameContainer->SetBkImage(L"");
+		m_pFrameContainer->SetBkColor(g_pSkinManager->GetBkColor());
+		m_pFrameContainer->SetBkColor2(g_pSkinManager->GetBkColor2());
+		m_pFrameContainer->SetBkImage(L"");
 	}
 	else
 	{
-		pFrameContainer->SetBkColor(kDefBkColor);
-		pFrameContainer->SetBkColor2(kDefBkColor);
-		pFrameContainer->SetBkImage(g_pSkinManager->GetBkImage());
+		m_pFrameContainer->SetBkColor(kDefBkColor);
+		m_pFrameContainer->SetBkColor2(kDefBkColor);
+		m_pFrameContainer->SetBkImage(g_pSkinManager->GetBkImage());
 	}
 	return 0;
 }
@@ -111,7 +113,7 @@ SET_CONTROL_BEGIN((&m_PaintManager), lpszLang, LS_MAINFRAME)
 	SET_CONTROL_TEXT2(kFrameStatus)
 SET_CONTROL_END()
 	// Status Bar
-	FIND_CONTROL_BY_ID(pStatusCtrl, CButtonUI, (&m_PaintManager), kFrameStatus)
+	FIND_CONTROL_BY_ID(m_pStatusCtrl, CButtonUI, (&m_PaintManager), kFrameStatus)
 
 	// About Frame
 	SetAboutLang(lpszLang);
@@ -184,9 +186,9 @@ void CMainFrame::InitWindow()
 		g_pSystemTray->Create(g_hInstance, m_hWnd, WM_ICON_NOTIFY, szText, hIcon, NULL);
 	}
 
-	FIND_CONTROL_BY_ID(pPanelTabs, CContainerUI, (&m_PaintManager), kPanelTabs)
-	FIND_CONTROL_BY_ID(pPanelContents, CContainerUI, (&m_PaintManager), kPanelContents)
-	FIND_CONTROL_BY_ID(pLoadindFrame, CVerticalLayoutUI, (&m_PaintManager), kFrameLoading)
+	FIND_CONTROL_BY_ID(m_pPanelTabs, CContainerUI, (&m_PaintManager), kPanelTabs)
+	FIND_CONTROL_BY_ID(m_pPanelContents, CContainerUI, (&m_PaintManager), kPanelContents)
+	FIND_CONTROL_BY_ID(m_pLoadindFrame, CVerticalLayoutUI, (&m_PaintManager), kFrameLoading)
 
 	// Init Panel
 	InitPanels();
@@ -197,9 +199,9 @@ void CMainFrame::InitWindow()
 	g_pLangManager->AddFrame(this);
 	SetLang(g_pLangManager->GetLangName());
 
-	if(pPanelContents)
+	if(m_pPanelContents)
 	{
-		CDuiString strCurTab = pPanelContents->GetUserData();
+		CDuiString strCurTab = m_pPanelContents->GetUserData();
 		SelectPanel(strCurTab);
 	}
 }
@@ -353,15 +355,15 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 	}
 	else if(sCtrlName == kMenuHelp)
 	{
-		if(!lpLoader)
-			DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
+		if(!m_lpLoader)
+			DuiShowLoading(m_hWnd, L"Test...", NULL, &m_lpLoader);
 	}
 	else if(sCtrlName == kMenuShow)
 	{
-		if(lpLoader)
+		if(m_lpLoader)
 		{
-			DuiCancelLoading(lpLoader);
-			lpLoader = NULL;
+			DuiCancelLoading(m_lpLoader);
+			m_lpLoader = NULL;
 		}
 		OnActiveApp();
 	}
@@ -420,7 +422,7 @@ LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		lRes = OnCopyData(uMsg, wParam, lParam);
 		break;
 	}
-
+	if (!lRes)
 	lRes = WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 	return lRes;
 }
@@ -441,10 +443,7 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 			int newVersionId = COnlineKeeper::GetInstance()->m_versionId;
 			if (newVersionId>kVersionId)
 			{
-				wchar_t szContent[1024], szTitle[1024];
-				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kMsgInfo, szTitle);
-				Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, kNewVersion, szContent);
-				DuiMsgBox(hCoderOwner, szContent, szTitle, MB_OK);
+				RDMsgBox(GetHWND(), MSG_NEW_VERSION, MSG_INFORMATION, MB_OK | MB_ICONINFORMATION);
 				COnlineKeeper::GetInstance()->m_newVersionAlarm=TRUE;
 			}
 		}
@@ -456,7 +455,7 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 LRESULT CMainFrame::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT lRes = __super::OnSize(uMsg, wParam, lParam, bHandled);
-	if(pLoadindFrame && pLoadindFrame->IsVisible())
+	if(m_pLoadindFrame && m_pLoadindFrame->IsVisible())
 		ShowLoading();
 	return lRes;
 }
@@ -644,7 +643,7 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 	LPPANEL_INFO lpInfo = NULL;
 	CControlUI *pTab = NULL;
 	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
-	sCurTab = pPanelContents->GetUserData();
+	sCurTab = m_pPanelContents->GetUserData();
 	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab.GetData())
 	if(!pCurTab)
 		return FALSE;
@@ -667,22 +666,24 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 		{
 			FIND_CONTROL_BY_ID(pLayout, CContainerUI, (&m_PaintManager), lpInfo->szLayout)
 			FIND_CONTROL_BY_ID(pTab, CControlUI, (&m_PaintManager), lpInfo->szTab)
-			if(pStatusCtrl && pLayout)
+			if(m_pStatusCtrl && pLayout)
 			{
 				if(pCurLayout && pCurTab)
 				{
 					pCurLayout->SetVisible(false);
-					pCurTab->SetBkColor(kDefBkColor);
-					pCurTab->SetBkColor2(kDefBkColor);
+					pCurTab->ApplyAttributeList(m_pTabNormalColor);
+					CButtonUI* curTabBtn = (CButtonUI*)pCurTab;
+					curTabBtn->SetTextColor(kTextColor);
 				}
 				if(pTab)
 				{
-					pTab->SetBkColor(kSelBkColor);
-					pTab->SetBkColor2(kSelBkColor2);
+					pTab->ApplyAttributeList(m_pTabHotColor);
+					CButtonUI* clickedTab = (CButtonUI*)pTab;
+					clickedTab->SetTextColor(kSelectedTextColor);
 				}
-				pStatusCtrl->SetText(lpInfo->szDesc);
+				m_pStatusCtrl->SetText(lpInfo->szDesc);
 				pLayout->SetVisible();
-				pPanelContents->SetUserData(lpInfo->szTab);
+				m_pPanelContents->SetUserData(lpInfo->szTab);
 				bRet = TRUE;
 			}
 			break;
@@ -774,13 +775,15 @@ BOOL CMainFrame::AddPanel(LPPANEL_INFO lpPanelInfo)
 BOOL CMainFrame::CreatePanels()
 {
 	BOOL bRet = FALSE;
-	if(!pPanelTabs || !pPanelContents)
+	if(!m_pPanelTabs || !m_pPanelContents)
 		return bRet;
 	LPPANEL_INFO lpPanelInfo = NULL;
 	list<LPPANEL_INFO>::iterator iter;
 	CButtonUI *pTab = NULL;
 	CChildLayoutUI *pPanel = NULL;
 	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(L"TabButton");
+	m_pTabNormalColor = m_PaintManager.GetDefaultAttributeList(L"TabNormalColor");
+	m_pTabHotColor = m_PaintManager.GetDefaultAttributeList(L"TabHotColor");
 	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
 	{
 		lpPanelInfo = (LPPANEL_INFO)(*iter);
@@ -813,14 +816,14 @@ BOOL CMainFrame::CreatePanels()
 			pTab->SetUserData(lpPanelInfo->szLayout);
 			pTab->SetName(lpPanelInfo->szTab);
 			pTab->SetText(lpPanelInfo->szName);
-			pPanelTabs->AddAt(pTab, pPanelTabs->GetCount()-1);
+			m_pPanelTabs->AddAt(pTab, m_pPanelTabs->GetCount()-1);
 			pPanel = new CChildLayoutUI();
 			if(!pPanel)
 				return bRet;
 			pPanel->SetName(lpPanelInfo->szLayout);
 			pPanel->SetChildLayoutXML(lpPanelInfo->szXml, this);
 			pPanel->SetVisible(false);
-			pPanelContents->AddAt(pPanel, pPanelContents->GetCount()-1);
+			m_pPanelContents->AddAt(pPanel, m_pPanelContents->GetCount()-1);
 		}
 	}
 
@@ -853,8 +856,8 @@ BOOL CMainFrame::ShowTabs(BOOL bShow)
 	FIND_CONTROL_BY_ID(pTabsHide, CButtonUI, (&m_PaintManager), kTabsHide)
 	if(bShow)
 	{
-		if(pPanelTabs)
-			pPanelTabs->SetVisible();
+		if(m_pPanelTabs)
+			m_pPanelTabs->SetVisible();
 		if(pTabsHide)
 			pTabsHide->SetVisible();
 		if(pTabsShow)
@@ -862,8 +865,8 @@ BOOL CMainFrame::ShowTabs(BOOL bShow)
 	}
 	else
 	{
-		if(pPanelTabs)
-			pPanelTabs->SetVisible(false);
+		if(m_pPanelTabs)
+			m_pPanelTabs->SetVisible(false);
 		if(pTabsHide)
 			pTabsHide->SetVisible(false);
 		if(pTabsShow)
@@ -888,10 +891,10 @@ BOOL CMainFrame::OnActiveApp()
 
 BOOL CMainFrame::OnAppQuit()
 {
-	if(lpLoader)
+	if(m_lpLoader)
 	{
-		DuiCancelLoading(lpLoader);
-		lpLoader = NULL;
+		DuiCancelLoading(m_lpLoader);
+		m_lpLoader = NULL;
 	}
 	PostMessage(WM_CLOSE, 0, 0);
 	return TRUE;
@@ -899,7 +902,7 @@ BOOL CMainFrame::OnAppQuit()
 
 BOOL CMainFrame::ShowLoading()
 {
-	if(!pLoadindFrame || !pFrameContainer)
+	if(!m_pLoadindFrame || !m_pFrameContainer)
 		return FALSE;
 	int nTitleBar = 0, nFooter = 0;
 	CHorizontalLayoutUI *pTitleBar = NULL, *pFooter = NULL;
@@ -917,16 +920,42 @@ BOOL CMainFrame::ShowLoading()
 	rtPos.right = rtClient.right - pRoot->GetBorderSize();
 	rtPos.top = nTitleBar;
 	rtPos.bottom = rtClient.bottom - nFooter;
-	pLoadindFrame->SetPos(rtPos);
-	if(pLoadindFrame->IsVisible()==false)
-		pLoadindFrame->SetVisible();
+	m_pLoadindFrame->SetPos(rtPos);
+	if(m_pLoadindFrame->IsVisible()==false)
+		m_pLoadindFrame->SetVisible();
 
 	return TRUE;
 }
 
 void CMainFrame::CancelLoading()
 {
-	if(!pLoadindFrame)
+	if(!m_pLoadindFrame)
 		return;
-	pLoadindFrame->SetVisible(false);
+	m_pLoadindFrame->SetVisible(false);
+}
+
+LRESULT CMainFrame::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& bHandled)
+{
+	if (uMsg == WM_KEYDOWN)
+	{
+		switch (wParam)
+		{
+		case VK_RETURN:
+		case VK_ESCAPE:                     // ESC 
+			{
+				if (m_pPanelTabs->IsVisible())
+				{
+					ShowTabs(FALSE);
+				}
+				else
+				{
+					ShowTabs(TRUE);
+				}
+				bHandled = true;
+			}
+			
+			break;
+		}
+	}
+	return FALSE;
 }

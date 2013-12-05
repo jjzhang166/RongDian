@@ -126,7 +126,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"

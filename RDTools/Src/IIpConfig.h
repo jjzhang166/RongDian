@@ -25,18 +25,22 @@ public:
 	void			OnSelectSolution();
 	void			OnSelectAdapter();
 
-	BOOL			OnNewSolution();
-	BOOL			OnSaveSolution();
+	BOOL			OnBlankSolution();
+	BOOL			OnUpdateSolution();
+	BOOL			OnCreateSolution();
 	BOOL			OnDelSolution();
 	BOOL			OnApplySolution();
 	BOOL			ResetSolution();
 	BOOL			CheckFormValid();
 	BOOL			ExeCMDComplete();
+
+	BOOL			SetManualIpUI();
+	BOOL			SetAutoIpUI();
 	//static unsigned __stdcall	ExeCMDThreadFunc(void * pParams);
 	static DWORD WINAPI ExeCMDThreadFunc(void * pParams);
 
 	static LONG	CALLBACK	AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
-	static LONG CALLBACK	AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex);
+	static LONG CALLBACK	AdaptersFriendlyNameAndStateCallBack(LPVOID lParam, LPCWSTR lpszFriendlyName,BOOL connectState, int nIndex);
 
 public:
 	HWND m_hIPConfigOwner;

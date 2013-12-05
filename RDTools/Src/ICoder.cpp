@@ -67,32 +67,32 @@ BOOL ICoder::InitCoder(IListCallbackUI* pIListCallback)
 	if(!pCoderManager)
 		return FALSE;
 	FIND_CONTROL_BY_ID(m_startBtn, CButtonUI, pCoderManager, kCoderStart)
-	FIND_CONTROL_BY_ID(m_stopBtn, CButtonUI, pCoderManager, kCoderStop)
-	FIND_CONTROL_BY_ID(m_delSelBtn, CButtonUI, pCoderManager, kCoderDel)
-	FIND_CONTROL_BY_ID(m_delAllBtn, CButtonUI, pCoderManager, kCoderDelAll)
-	FIND_CONTROL_BY_ID(m_CoderList, CListUI, pCoderManager, kCoderList)
-	FIND_CONTROL_BY_ID(pCoderFrom, CComboBoxUI, pCoderManager, kCoderFrom)
-	FIND_CONTROL_BY_ID(pCoderTo, CComboBoxUI, pCoderManager, kCoderTo)
-	FIND_CONTROL_BY_ID(pCoderBackupCheck, CButtonUI, pCoderManager, kCoderBackup)
-	if(pCoderBackupCheck)
-	{
-		pCoderBackupCheck->SetUserData(L"TRUE");
-		dwHightLightColor = pCoderBackupCheck->GetBkColor();
-	}
-	FIND_CONTROL_BY_ID(pCoderNoBOM, CButtonUI, pCoderManager, kCoderBOM)
-	if(pCoderNoBOM)
-	{
-		pCoderNoBOM->SetUserData(L"FALSE");
-		dwGrayColor = pCoderNoBOM->GetBkColor();
-	}
-	FIND_CONTROL_BY_ID(pCoderBackupEdit, CEditUI, pCoderManager, kCoderPathEdit)
-	if(pCoderBackupEdit)
-		pCoderBackupEdit->SetText(g_szCoderBackupPath);
-	if(m_CoderList)
-		m_CoderList->SetTextCallback(pIListCallback);
-	if(!PathFileExists(g_szCoderBackupPath))
-		SHCreateDirectoryEx(NULL, g_szCoderBackupPath, NULL);
-	return TRUE;
+		FIND_CONTROL_BY_ID(m_stopBtn, CButtonUI, pCoderManager, kCoderStop)
+		FIND_CONTROL_BY_ID(m_delSelBtn, CButtonUI, pCoderManager, kCoderDel)
+		FIND_CONTROL_BY_ID(m_delAllBtn, CButtonUI, pCoderManager, kCoderDelAll)
+		FIND_CONTROL_BY_ID(m_CoderList, CListUI, pCoderManager, kCoderList)
+		FIND_CONTROL_BY_ID(pCoderFrom, CComboBoxUI, pCoderManager, kCoderFrom)
+		FIND_CONTROL_BY_ID(pCoderTo, CComboBoxUI, pCoderManager, kCoderTo)
+		FIND_CONTROL_BY_ID(pCoderBackupCheck, CButtonUI, pCoderManager, kCoderBackup)
+		if(pCoderBackupCheck)
+		{
+			pCoderBackupCheck->SetUserData(L"TRUE");
+			dwHightLightColor = pCoderBackupCheck->GetBkColor();
+		}
+		FIND_CONTROL_BY_ID(pCoderNoBOM, CButtonUI, pCoderManager, kCoderBOM)
+			if(pCoderNoBOM)
+			{
+				pCoderNoBOM->SetUserData(L"FALSE");
+				dwGrayColor = pCoderNoBOM->GetBkColor();
+			}
+			FIND_CONTROL_BY_ID(pCoderBackupEdit, CEditUI, pCoderManager, kCoderPathEdit)
+				if(pCoderBackupEdit)
+					pCoderBackupEdit->SetText(g_szCoderBackupPath);
+			if(m_CoderList)
+				m_CoderList->SetTextCallback(pIListCallback);
+			if(!PathFileExists(g_szCoderBackupPath))
+				SHCreateDirectoryEx(NULL, g_szCoderBackupPath, NULL);
+			return TRUE;
 }
 
 BOOL ICoder::SetCoderLang(LPCWSTR lpszLang)
@@ -104,29 +104,29 @@ BOOL ICoder::SetCoderLang(LPCWSTR lpszLang)
 	Utility::GetINIStr(lpszLang, LS_MSG, kHandleText, szHandleText);
 	Utility::GetINIStr(lpszLang, LS_MSG, kNoHandleText, szNoHandleText);
 
-SET_CONTROL_BEGIN(pCoderManager, lpszLang, LS_CODERPANEL)
-	SET_CONTROL_TEXT2(kCoderListText)
-	SET_CONTROL_TEXT2(kCoderHeaderPath)
-	SET_CONTROL_TEXT2(kCoderHeaderEncoding)
-	SET_CONTROL_TEXT2(kCoderHeaderStatus)
-	SET_CONTROL_TEXT_AND_TIP(kCoderStart, kCoderStartTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderStop, kCoderStopTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderNewFile, kCoderNewFileTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderNewFolder, kCoderNewFolderTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderDel, kCoderDelTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderDelAll, kCoderDelAllTip)
-	SET_CONTROL_TEXT2(kCoderFrom)
-	SET_CONTROL_TIP2(kCoderComboFrom)
-	SET_CONTROL_TEXT2(kCoderTo)
-	SET_CONTROL_TIP2(kCoderComboTo)
-	SET_CONTROL_TEXT_AND_TIP(kCoderBOM, kCoderBOMTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderBackup, kCoderBackupTip)
-	SET_CONTROL_TEXT2(kCoderPathText)
-	SET_CONTROL_TIP2(kCoderPathEditTip)
-	SET_CONTROL_TEXT_AND_TIP(kCoderPathOpen, kCoderPathOpenTip)
-SET_CONTROL_END()
+	SET_CONTROL_BEGIN(pCoderManager, lpszLang, LS_CODERPANEL)
+		SET_CONTROL_TEXT2(kCoderListText)
+		SET_CONTROL_TEXT2(kCoderHeaderPath)
+		SET_CONTROL_TEXT2(kCoderHeaderEncoding)
+		SET_CONTROL_TEXT2(kCoderHeaderStatus)
+		SET_CONTROL_TEXT_AND_TIP(kCoderStart, kCoderStartTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderStop, kCoderStopTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderNewFile, kCoderNewFileTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderNewFolder, kCoderNewFolderTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderDel, kCoderDelTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderDelAll, kCoderDelAllTip)
+		SET_CONTROL_TEXT2(kCoderFrom)
+		SET_CONTROL_TIP2(kCoderComboFrom)
+		SET_CONTROL_TEXT2(kCoderTo)
+		SET_CONTROL_TIP2(kCoderComboTo)
+		SET_CONTROL_TEXT_AND_TIP(kCoderBOM, kCoderBOMTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderBackup, kCoderBackupTip)
+		SET_CONTROL_TEXT2(kCoderPathText)
+		SET_CONTROL_TIP2(kCoderPathEditTip)
+		SET_CONTROL_TEXT_AND_TIP(kCoderPathOpen, kCoderPathOpenTip)
+		SET_CONTROL_END()
 
-	return TRUE;
+		return TRUE;
 }
 
 LPCWSTR ICoder::GetCoderItemText(CControlUI* pControl, int iIndex, int iSubItem)

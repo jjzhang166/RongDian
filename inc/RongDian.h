@@ -1,9 +1,10 @@
 #pragma once
 
 // default BkColor
-const DWORD			 kDefBackground = 0xFF32506E;	
-const DWORD			 kDefBkColor	= 0x00FFFFFF;
-const DWORD			 kTextColor		= 0xFFE0E0E0;
+const DWORD			 kDefBackground			= 0xFF32506E;	
+const DWORD			 kDefBkColor			= 0x00FFFFFF;
+const DWORD			 kTextColor				= 0xFFE0E0E0;
+const DWORD			 kSelectedTextColor		= 0xFF405C7A;
 
 // App Signature
 const wchar_t* const kAdminSignature			= L"RongDianTools_Admin";
@@ -18,20 +19,20 @@ const wchar_t* const kZoomInClass				= L"ZoomIn_Class";
 
 typedef BOOL (WINAPI *PFNChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
 
-#define WM_SNAPSHOT_MSG				WM_USER + 100 // ½ØÆÁÄ£¿é½»»¥ÏûÏ¢
-#define WM_ACTIVE_MAIN				WM_USER + 101 // ¼¤»îÖ÷´°¿Ú
-#define WM_ICON_NOTIFY				WM_USER + 102 // ÍĞÅÌÏûÏ¢
-#define WM_ZOOMIN_UPDATE_MSG		WM_USER	+ 103 // È¡É«Ä£¿é½»»¥ÏûÏ¢
-#define WM_ZOOMIN_COLOR_MSG			WM_USER + 104 // È¥É«Ä£¿é£¬Í¨Öªµ÷ÓÃ·½¼ÇÂ¼µ±Ç°ÑÕÉ«
-#define WM_ZOOMIN_QUIT_MSG			WM_USER + 105 // Í¨ÖªRDZoomInÄ£¿éÍË³ö
-#define WM_ZOOMIN_ZOOM_MSG			WM_USER + 106 // Í¨ÖªRDZoomIn·Å´ó¾µ·Å´ó
-#define WM_ZOOMIN_REDUCE_MSG		WM_USER + 107 // Í¨ÖªRDZoomInËõĞ¡
-#define WM_ZOOMIN_MOVE_UP			WM_USER + 108 // ·Å´ó¾µÉÏÒÆ1¸öÏñËØ
-#define WM_ZOOMIN_MOVE_DOWN			WM_USER + 109 // ·Å´ó¾µÏÂÒÆ1¸öÏñËØ
-#define WM_ZOOMIN_MOVE_LEFT			WM_USER + 110 // ·Å´ó¾µ×óÒÆ1¸öÏñËØ
-#define WM_ZOOMIN_MOVE_RIGHT		WM_USER + 111 // ·Å´ó¾µÓÒÒÆ1¸öÏñËØ
-#define WM_CMD_COMPLETE				WM_USER + 112 // cmdÃüÁî³É¹¦Ö´ĞĞ½áÊø
-#define WM_VERSION_NOTIFY			WM_USER + 113 // »ñÈ¡×îĞÂµÄ°æ±¾ºÅ
+#define WM_SNAPSHOT_MSG				WM_USER + 100 // æˆªå±æ¨¡å—äº¤äº’æ¶ˆæ¯
+#define WM_ACTIVE_MAIN				WM_USER + 101 // æ¿€æ´»ä¸»çª—å£
+#define WM_ICON_NOTIFY				WM_USER + 102 // æ‰˜ç›˜æ¶ˆæ¯
+#define WM_ZOOMIN_UPDATE_MSG		WM_USER	+ 103 // å–è‰²æ¨¡å—äº¤äº’æ¶ˆæ¯
+#define WM_ZOOMIN_COLOR_MSG			WM_USER + 104 // å»è‰²æ¨¡å—ï¼Œé€šçŸ¥è°ƒç”¨æ–¹è®°å½•å½“å‰é¢œè‰²
+#define WM_ZOOMIN_QUIT_MSG			WM_USER + 105 // é€šçŸ¥RDZoomInæ¨¡å—é€€å‡º
+#define WM_ZOOMIN_ZOOM_MSG			WM_USER + 106 // é€šçŸ¥RDZoomInæ”¾å¤§é•œæ”¾å¤§
+#define WM_ZOOMIN_REDUCE_MSG		WM_USER + 107 // é€šçŸ¥RDZoomInç¼©å°
+#define WM_ZOOMIN_MOVE_UP			WM_USER + 108 // æ”¾å¤§é•œä¸Šç§»1ä¸ªåƒç´ 
+#define WM_ZOOMIN_MOVE_DOWN			WM_USER + 109 // æ”¾å¤§é•œä¸‹ç§»1ä¸ªåƒç´ 
+#define WM_ZOOMIN_MOVE_LEFT			WM_USER + 110 // æ”¾å¤§é•œå·¦ç§»1ä¸ªåƒç´ 
+#define WM_ZOOMIN_MOVE_RIGHT		WM_USER + 111 // æ”¾å¤§é•œå³ç§»1ä¸ªåƒç´ 
+#define WM_CMD_COMPLETE				WM_USER + 112 // cmdå‘½ä»¤æˆåŠŸæ‰§è¡Œç»“æŸ
+#define WM_VERSION_NOTIFY			WM_USER + 113 // è·å–æœ€æ–°çš„ç‰ˆæœ¬å·
 
 typedef struct _tagSNAPSHOT_INFO
 {

@@ -80,7 +80,7 @@ const wchar_t* const kDescAbout						= L"desc_about";
 const wchar_t* const kMsgSuccess					= L"msg_success";
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgWarning					= L"msg_warning";
-const wchar_t* const kMsgInfo						= L"msg_info";
+const wchar_t* const kMsgInformation				= L"msg_information";
 const wchar_t* const kLoading						= L"msg_loading";
 const wchar_t* const kPluginErr						= L"plugin_err";
 const wchar_t* const kNoFoundErr					= L"nofound_err";
@@ -96,6 +96,9 @@ const wchar_t* const kInvalidMaskErr				= L"invalid_subnet_mask_err";
 const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
 const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
+const wchar_t* const kUpdateFail					= L"update_fail";
+const wchar_t* const kUpdateSuccess					= L"update_success";
+const wchar_t* const kExistedName					= L"existed_name";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
 const wchar_t* const kOperationSuccess				= L"operation_success";
@@ -133,6 +136,7 @@ typedef enum _tagMSG_ID {
 	MSG_SUCCESS = 30,
 	MSG_ERR,
 	MSG_WARNING,
+	MSG_INFORMATION,
 	MSG_LOADING,
 	MSG_PLUGIN_ERR,
 	MSG_NOFOUND_ERR,
@@ -148,9 +152,13 @@ typedef enum _tagMSG_ID {
 	MSG_GATEWAY_ERR,
 	MSG_DNS_ERR,
 	MSG_DELETE_SOLUTION,
+	MSG_UPDATE_FAIL,
+	MSG_UPDATE_SUCCESS,
+	MSG_EXISTED_NAME,
 	MSG_INVALID_NAME,
 	MSG_DEBUG_TEXT,
 	MSG_OPT_SUCCESS,
+	MSG_NEW_VERSION,
 	// End
 	MSG_END = 200
 } MSG_ID;
@@ -204,6 +212,7 @@ typedef enum _tagDNS_MODE
 
 typedef struct _tagIPCONFIG_INFO
 {
+	int nId;
 	int nValid;
 	int nAddrType;
 	int nDnsType;
@@ -219,7 +228,7 @@ typedef struct _tagADAPTER_INFO
 {
 	int nIndex;
 	BOOL bEnableDHCP;
-	wchar_t szName[STRING_LENGTH];
+	wchar_t szFriendlyName[STRING_LENGTH];
 	wchar_t szType[STRING_LENGTH];
 	wchar_t szDesc[STRING_LENGTH];
 	wchar_t szAdapter[STRING_LENGTH];
@@ -228,6 +237,7 @@ typedef struct _tagADAPTER_INFO
 	wchar_t szGateway[STRING_LENGTH];
 	wchar_t szDns[2][STRING_LENGTH];
 	wchar_t szMac[STRING_LENGTH];
+	BOOL	nConnectState;
 } ADAPTER_INFO, *PADAPTER_INFO, *LPADAPTER_INFO;
 
 typedef enum _tagIMG_TYPE

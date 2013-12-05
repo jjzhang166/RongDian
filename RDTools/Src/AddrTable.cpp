@@ -61,6 +61,7 @@ BOOL CAddrTableDB::Query(LPADDR_TABLE lpTable)
 		StrUtil::u82u(query.FieldValue("gateway_"), m_pResults[i].szGateway);
 		StrUtil::u82u(query.FieldValue("dns1_"), m_pResults[i].szDns1);
 		StrUtil::u82u(query.FieldValue("dns2_"), m_pResults[i].szDns2);
+		m_pResults[i].nId = atoi(query.FieldValue("id_"));
 		m_pResults[i].nAddrType = atoi(query.FieldValue("atype_"));
 		m_pResults[i].nDnsType = atoi(query.FieldValue("dtype_"));
 		m_pResults[i].nValid = atoi(query.FieldValue("valid_"));
@@ -123,11 +124,11 @@ BOOL CAddrTableDB::Update(LPADDR_TABLE lpTable)
 	EscapeSQLite(strGateway);
 	EscapeSQLite(strDns1);
 	EscapeSQLite(strDns2);
-	swprintf(szSQL, L"update config set atype_=%d, addr_='%s', mask_='%s', gateway_='%s', dtype=%d, dns1='%s', dns2='%s' where solution_=%s", 
-		strSolution.GetData(), lpTable->nAddrType, strAddr.GetData(), strMask.GetData(), strGateway.GetData(), 
-		lpTable->nDnsType, strDns1.GetData(), strDns2.GetData());
+	swprintf(szSQL, L"update addr set solution_='%s', atype_=%d, addr_='%s', mask_='%s', gateway_='%s', dtype_=%d, dns1_='%s', dns2_='%s' where id_=%d",strSolution.GetData(), 
+		lpTable->nAddrType, strAddr.GetData(), strMask.GetData(), strGateway.GetData(), 
+		lpTable->nDnsType, strDns1.GetData(), strDns2.GetData(),lpTable->nId);
 	StrUtil::u2u8(szSQL, szSQL_u8);
-	m_pSQLite->ExecQuery(szSQL_u8);
+	CSQLiteQuery result = m_pSQLite->ExecQuery(szSQL_u8);
 	return TRUE;
 }
 

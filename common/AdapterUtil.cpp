@@ -1,8 +1,9 @@
 #include "AdapterUtil.h"
+#include <WS2tcpip.h>
 #include <assert.h>
 #include <stdio.h>
-#include <Mprapi.h>
-#pragma comment(lib, "Mprapi.lib")
+//#include <Mprapi.h>
+//#pragma comment(lib, "Mprapi.lib")
 #pragma comment(lib, "Iphlpapi.lib")
 
 #pragma comment(lib, "Wbemuuid.lib")
@@ -20,9 +21,9 @@ BOOL AdapterUtil::LoadAdapters(LPFNAdapterInfoCallBack /*lpCallBack*/, WPARAM /*
 	return TRUE;
 }
 
-BOOL AdapterUtil::GetName(LPFNAdapterNameCallBack lpCallBack, LPVOID lpParam)
+BOOL AdapterUtil::GetFriendlyName(LPFNAdapterFriendlyNameAndStateCallBack lpCallBack, LPVOID lpParam)
 {
-	HANDLE hMprConfig = NULL;
+	/*HANDLE hMprConfig = NULL;
 	DWORD dwRet = 0;
 	PIP_INTERFACE_INFO plfTable = NULL;
 	DWORD dwSize = 0;
@@ -46,7 +47,30 @@ BOOL AdapterUtil::GetName(LPFNAdapterNameCallBack lpCallBack, LPVOID lpParam)
 			lpCallBack(lpParam, szName, adaptMap.Index);
 		memset(szName, 0, sizeof(szName));
 	}
-	free(plfTable);
+	free(plfTable);*/
+
+
+	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
+	ULONG outBufLen = 0;  
+	DWORD dwRetVal = 0;
+	GetAdaptersAddresses(AF_UNSPEC,0, NULL, pAddresses,&outBufLen);
+	pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
+	if ((dwRetVal = GetAdaptersAddresses(AF_INET,GAA_FLAG_SKIP_ANYCAST,NULL,pAddresses,&outBufLen)) == NO_ERROR) 
+	{
+		while (pAddresses)
+		{
+			int active = (pAddresses->OperStatus==IfOperStatusUp)?TRUE:FALSE;
+			if(lpCallBack)
+				lpCallBack(lpParam, pAddresses->FriendlyName,active, pAddresses->IfIndex);
+			pAddresses = pAddresses->Next;  
+		}
+
+	}
+	else
+	{
+		return FALSE;
+	}
+	free(pAddresses);
 	return TRUE;
 }
 
@@ -873,11 +897,11 @@ CAdapterCfgObj::~CAdapterCfgObj()
 
 /*************************************************************************
  * Method:    		SetAddr
- * Description:		ÉèÖÃIPµØÖ·¡¢×ÓÍøÑÚÂë
+ * Description:		è®¾ç½®IPåœ°å€ã€å­ç½‘æ©ç 
  * ParameterList:	LPCWSTR lpszAddr, LPCWSTR lpszMask, LONG *plRet
- * Parameter:       lpszAddr:IPµØÖ·×Ö·û´®
- * Parameter:       lpszMask:×ÓÍøÑÚÂë×Ö·û´®
- * Parameter:       plRet:·µ»ØÖµ£¬³É¹¦·µ»Ø0£¬Ê§°Ü·µ»ØÏàÓ¦´íÎóÖµ(WBEMSTATUSÃ¶¾ÙÀàĞÍ£¬ÔÚWbemCli.hÎÄ¼ş¶¨Òå)
+ * Parameter:       lpszAddr:IPåœ°å€å­—ç¬¦ä¸²
+ * Parameter:       lpszMask:å­ç½‘æ©ç å­—ç¬¦ä¸²
+ * Parameter:       plRet:è¿”å›å€¼ï¼ŒæˆåŠŸè¿”å›0ï¼Œå¤±è´¥è¿”å›ç›¸åº”é”™è¯¯å€¼(WBEMSTATUSæšä¸¾ç±»å‹ï¼Œåœ¨WbemCli.hæ–‡ä»¶å®šä¹‰)
  * Return Value:	HRESULT
  * Date:        	2013:10:06 22:38:14
  * Author:			LIng
@@ -951,10 +975,10 @@ cleanup:
 
 /*************************************************************************
  * Method:    		SetGateway
- * Description:		ÉèÖÃÍø¹Ø
+ * Description:		è®¾ç½®ç½‘å…³
  * ParameterList:	LPCWSTR lpszGateway, LONG *plRet
- * Parameter:       lpszGateway:Íø¹Ø×Ö·û´®
- * Parameter:       plRet:·µ»ØÖµ£¬³É¹¦·µ»Ø0£¬Ê§°Ü·µ»ØÏàÓ¦´íÎóÖµ(WBEMSTATUSÃ¶¾ÙÀàĞÍ£¬ÔÚWbemCli.hÎÄ¼ş¶¨Òå)
+ * Parameter:       lpszGateway:ç½‘å…³å­—ç¬¦ä¸²
+ * Parameter:       plRet:è¿”å›å€¼ï¼ŒæˆåŠŸè¿”å›0ï¼Œå¤±è´¥è¿”å›ç›¸åº”é”™è¯¯å€¼(WBEMSTATUSæšä¸¾ç±»å‹ï¼Œåœ¨WbemCli.hæ–‡ä»¶å®šä¹‰)
  * Return Value:	HRESULT
  * Date:        	2013:10:06 22:37:03
  * Author:			LIng
@@ -1029,11 +1053,11 @@ cleanup:
 
 /*************************************************************************
  * Method:    		SetDns
- * Description:		ÉèÖÃDNS
+ * Description:		è®¾ç½®DNS
  * ParameterList:	LPBYTE lpszDns, int nCount, LONG *plRet
- * Parameter:       lpszDns:dns×Ö·û´®Êı×é£¬×Ö·û´®Êı×é³¤¶ÈÎª260£¬Ê¹ÓÃÇ°Ğè×ª»»ÎªLPCWSTR£¬Í¨¹ıÖ¸ÕëÆ«ÒÆ(MAX_PATH*sizeof(wchar_t)*i)·ÃÎÊ×Ö·û´®Êı×éÔªËØ
- * Parameter:       nCount:DNS¸öÊı
- * Parameter:       plRet:·µ»ØÖµ£¬³É¹¦·µ»Ø0£¬Ê§°Ü·µ»ØÏàÓ¦´íÎóÖµ(WBEMSTATUSÃ¶¾ÙÀàĞÍ£¬ÔÚWbemCli.hÎÄ¼ş¶¨Òå)
+ * Parameter:       lpszDns:dnså­—ç¬¦ä¸²æ•°ç»„ï¼Œå­—ç¬¦ä¸²æ•°ç»„é•¿åº¦ä¸º260ï¼Œä½¿ç”¨å‰éœ€è½¬æ¢ä¸ºLPCWSTRï¼Œé€šè¿‡æŒ‡é’ˆåç§»(MAX_PATH*sizeof(wchar_t)*i)è®¿é—®å­—ç¬¦ä¸²æ•°ç»„å…ƒç´ 
+ * Parameter:       nCount:DNSä¸ªæ•°
+ * Parameter:       plRet:è¿”å›å€¼ï¼ŒæˆåŠŸè¿”å›0ï¼Œå¤±è´¥è¿”å›ç›¸åº”é”™è¯¯å€¼(WBEMSTATUSæšä¸¾ç±»å‹ï¼Œåœ¨WbemCli.hæ–‡ä»¶å®šä¹‰)
  * Return Value:	HRESULT
  * Date:        	2013:10:06 22:32:16
  * Author:			LIng
@@ -1101,9 +1125,9 @@ cleanup:
 
 /*************************************************************************
  * Method:    		EnableDHCP
- * Description:		×Ô¶¯»ñÈ¡IP¡¢DNSÄ£Ê½
+ * Description:		è‡ªåŠ¨è·å–IPã€DNSæ¨¡å¼
  * ParameterList:	LONG plRet
- * Parameter:       plRet:·µ»ØÖµ£¬³É¹¦·µ»Ø0£¬Ê§°Ü·µ»ØÏàÓ¦´íÎóÖµ(WBEMSTATUSÃ¶¾ÙÀàĞÍ£¬ÔÚWbemCli.hÎÄ¼ş¶¨Òå)
+ * Parameter:       plRet:è¿”å›å€¼ï¼ŒæˆåŠŸè¿”å›0ï¼Œå¤±è´¥è¿”å›ç›¸åº”é”™è¯¯å€¼(WBEMSTATUSæšä¸¾ç±»å‹ï¼Œåœ¨WbemCli.hæ–‡ä»¶å®šä¹‰)
  * Return Value:	HRESULT
  * Date:        	2013:10:06 22:30:45
  * Author:			LIng

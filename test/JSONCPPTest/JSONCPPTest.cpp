@@ -6,7 +6,11 @@
 using namespace std;
 
 #include "json/json.h"
-#pragma comment(lib, "jsoncppd.lib")
+#ifdef _DEBUG
+#pragma comment(lib, "../../RongDian/bin/jsoncppd.lib")
+#else
+#pragma comment(lib, "../../RongDian/bin/jsoncpp.lib")
+#endif
 
 int main()
 {

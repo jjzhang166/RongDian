@@ -61,14 +61,16 @@ public:
 
 	BOOL			ShowLoading();
 	void			CancelLoading();
-
+	LRESULT			MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& /*bHandled*/);
 public:
 	CDuiString builder_xml_;
 	CDuiString resource_dir_;
-	CContainerUI *pFrameContainer;
-	CContainerUI *pPanelTabs;
-	CContainerUI *pPanelContents;
-	CVerticalLayoutUI *pLoadindFrame;
-	CControlUI *pStatusCtrl;
-	LPVOID lpLoader;
+	CContainerUI *m_pFrameContainer;
+	CContainerUI *m_pPanelTabs;
+	CContainerUI *m_pPanelContents;
+	CVerticalLayoutUI *m_pLoadindFrame;
+	CControlUI *m_pStatusCtrl;
+	LPVOID m_lpLoader;
+	LPCTSTR m_pTabNormalColor;
+	LPCTSTR m_pTabHotColor;
 };

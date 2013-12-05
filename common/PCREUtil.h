@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include <Windows.h>
 #include <list>
-#include <pcre/pcre.h>
 
 using namespace std;
 namespace PCREUtil

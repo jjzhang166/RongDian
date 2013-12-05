@@ -1,10 +1,14 @@
 #include <Windows.h>
 #include <iostream>
-#include "libcurl/curl/curl.h"
+#include "curl/curl.h"
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
+#ifdef _DEBUG
 #pragma comment(lib, "../../RongDian/bin/libcurld.lib")
+#else
+#pragma comment(lib, "../../RongDian/bin/libcurl.lib")
+#endif
 
 size_t callbackFunc(char *ptr, size_t size, size_t nmemb, void *userdata)
  {

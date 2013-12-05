@@ -1,11 +1,4 @@
-#include "stdafx.h"
 #include "PCREUtil.h"
-
-#ifdef _DEBUG
-#pragma comment(lib, "../RongDian/bin/pcred.lib")
-#else
-#pragma comment(lib, "../RongDian/bin/pcre.lib")
-#endif 
 
 bool PCREUtil::IsMatch(const char* lpszPattern, const char* lpszText)
 {
