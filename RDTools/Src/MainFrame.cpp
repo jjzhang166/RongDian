@@ -13,9 +13,6 @@
 #include "Setting.h"
 #include "About.h"
 
-const DWORD			 kSelBkColor = 0xFF3C5A78;
-const DWORD			 kSelBkColor2 = 0xFFC8C8C8;
-
 const wchar_t* const kFrameLogo = L"frame_logo";
 const wchar_t* const kMenuBtn = L"menubtn";
 const wchar_t* const kMinBtn = L"minbtn";
@@ -38,7 +35,11 @@ const wchar_t* const kMenuShow = L"menu_show";
 const wchar_t* const kMenuQuit = L"menu_quit";
 
 // Panel Contents
-const wchar_t* const kMainTabButton = L"MainTabButton";
+const wchar_t* const kTabNormalColor = L"TabNormalColor";
+const wchar_t* const kTabHotColor = L"TabHotColor";
+const wchar_t* const kTabTextColor = L"TabTextColor";
+const wchar_t* const kTabSelTextColor = L"TabSelTextColor";
+const wchar_t* const kTabButton = L"TabButton";
 const wchar_t* const kTabsHide = L"tab_hide";
 const wchar_t* const kTabsShow = L"tab_show";
 const wchar_t* const kPanelTabs = L"panel_tabs";
@@ -80,6 +81,9 @@ CMainFrame::CMainFrame()
 	pLoadindFrame = NULL;
 	pStatusCtrl = NULL;
 	lpLoader = NULL;
+	pszUpdateResponeData = NULL;
+	ulUpdateResponeDataSize = 0;
+	bRunning = FALSE;
 }
 
 CMainFrame::~CMainFrame()
@@ -89,6 +93,8 @@ CMainFrame::~CMainFrame()
 		delete g_pSystemTray;
 		g_pSystemTray = NULL;
 	}
+	if(pszUpdateResponeData)
+		delete pszUpdateResponeData;
 	ReleasePanels();
 	RD_ON_QUIT();
 	_ReleaseTools();
@@ -150,6 +156,8 @@ LPCWSTR CMainFrame::GetWindowClassName() const
 
 void CMainFrame::InitWindow()
 {
+	bRunning = TRUE;
+
 	// Vista/Win7，由于UAC的限制，低权限进程不能向高权限进程发送消息
 	// 如果我们想容许一个消息可以发送给较高特权等级的进程
 	// 我们可以在较高特权等级的进程中调用ChangeWindowMessageFilter(Vista以上的API)函数，以MSGFLT_ADD作为参数将消息添加进消息过滤器的白名单。
@@ -210,6 +218,11 @@ void CMainFrame::InitWindow()
 		CDuiString strCurTab = pPanelContents->GetUserData();
 		SelectPanel(strCurTab);
 	}
+
+	unsigned int nThread = 0;
+	HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+	if(hThread)
+		CloseHandle(hThread);
 }
 
 CDuiString CMainFrame::GetSkinFile()
@@ -334,6 +347,7 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 	{
 		if(!lpLoader)
 			DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
+		//DuiMenuMsgBox(m_hWnd, NULL, NULL, MB_OK);
 	}
 	else if(sCtrlName == kMenuShow)
 	{
@@ -365,10 +379,10 @@ void CMainFrame::OnFinalMessage(HWND hWnd)
 CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 {
 	CControlUI* pControl = NULL;
-	if(wcsicmp(pstrClass, kMainTabButton)==0)
+	if(wcsicmp(pstrClass, kTabButton)==0)
 	{
 		pControl = new CButtonUI();
-		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kMainTabButton);
+		LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kTabButton);
 		if(pDefaultAttributes && pControl)
 			pControl->ApplyAttributeList(pDefaultAttributes);
 		if(pControl)
@@ -405,6 +419,9 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	case WM_ICON_NOTIFY:
 		lRes = OnTrayNotification(uMsg, wParam, lParam);
 		break;
+	case WM_UPDATE_RESPONE:
+		lRes = OnParseUpdateRespone(uMsg, wParam, lParam);
+		break;
 	}
 	RD_ON_CUSTOM_MSG(uMsg, wParam, lParam);
 	return 0;
@@ -435,6 +452,13 @@ LRESULT CMainFrame::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPa
 
 LRESULT CMainFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	HWND hModalWnd = FindWindow(kDuiMsgModalClass, NULL);
+	if(hModalWnd)
+	{
+		SetForegroundWindow(hModalWnd);
+		return 0;
+	}
+	bRunning = FALSE;
 	HWND hZoomIn = FindWindow(kZoomInClass, NULL);
 	if(hZoomIn)
 	{
@@ -498,6 +522,30 @@ LRESULT CMainFrame::OnTrayNotification(UINT /*uMsg*/, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
+LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
+{	
+	JsonTidyLib::Reader reader;
+	JsonTidyLib::Value root;
+	char szVersion[64] = {0};
+	char szUrl[1024] = {0};
+	char szRDVersion[64] = {0};
+	if (pszUpdateResponeData && reader.parse(pszUpdateResponeData, root)&&root["version"].type()!=JsonTidyLib::nullValue)
+	{
+		strcpy(szVersion, root["version"].asString().c_str());
+		strcpy(szUrl, root["url"].asString().c_str());
+		wchar_t szPath[1024] = {0};
+		wchar_t szRDVersionW[64];
+		GetModuleFileName(NULL, szPath, sizeof(szPath));
+		Utility::GetVersion(szPath, szRDVersionW);
+		StrUtil::w2a(szRDVersionW, szRDVersion);
+		if(stricmp(szVersion, szRDVersion))
+		{
+			OutputDebugStringW(L"Find New Version\n");
+		}
+	}
+	return 0;
+}
+
 LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 {
 	HDROP hDrop = (HDROP)wParam;
@@ -550,10 +598,14 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 	BOOL bRet = FALSE;
 	CDuiString sCtrlName = lpszTab, sCurTab, sCurLayout;
 	LPMAIN_PANEL lpInfo = NULL;
-	CControlUI *pTab = NULL;
-	CContainerUI *pLayout = NULL, *pCurTab = NULL, *pCurLayout = NULL;
+	CControlUI *pTab = NULL, *pCurTab = NULL;
+	CContainerUI *pLayout = NULL, *pCurLayout = NULL;
+	static LPCWSTR pszTabNormalColor = m_PaintManager.GetDefaultAttributeList(kTabNormalColor);
+	static LPCWSTR pszTabHotColor = m_PaintManager.GetDefaultAttributeList(kTabHotColor);
+	static LPCWSTR pszTabTextColor = m_PaintManager.GetDefaultAttributeList(kTabTextColor);
+	static LPCWSTR pszTabSelTextColor = m_PaintManager.GetDefaultAttributeList(kTabSelTextColor);
 	sCurTab = pPanelContents->GetUserData();
-	FIND_CONTROL_BY_ID(pCurTab, CContainerUI, (&m_PaintManager), sCurTab.GetData())
+	FIND_CONTROL_BY_ID(pCurTab, CControlUI, (&m_PaintManager), sCurTab.GetData())
 	if(!pCurTab)
 		return FALSE;
 	sCurLayout = pCurTab->GetUserData();
@@ -580,13 +632,17 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 				if(pCurLayout && pCurTab)
 				{
 					pCurLayout->SetVisible(false);
-					pCurTab->SetBkColor(kDefBkColor);
-					pCurTab->SetBkColor2(kDefBkColor);
+					//pCurTab->SetBkColor(kDefBkColor);
+					//pCurTab->SetBkColor2(kDefBkColor);
+					pCurTab->ApplyAttributeList(pszTabNormalColor);
+					pCurTab->ApplyAttributeList(pszTabTextColor);
 				}
 				if(pTab)
 				{
-					pTab->SetBkColor(kSelBkColor);
-					pTab->SetBkColor2(kSelBkColor2);
+					//pTab->SetBkColor(kSelBkColor);
+					//pTab->SetBkColor2(kSelBkColor2);
+					pTab->ApplyAttributeList(pszTabHotColor);
+					pTab->ApplyAttributeList(pszTabSelTextColor);
 				}
 				pStatusCtrl->SetText(lpInfo->szDesc);
 				pLayout->SetVisible();
@@ -710,7 +766,7 @@ BOOL CMainFrame::CreatePanels()
 	list<LPMAIN_PANEL>::iterator iter;
 	CButtonUI *pTab = NULL;
 	CChildLayoutUI *pPanel = NULL;
-	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kMainTabButton);
+	LPCTSTR pDefaultAttributes = m_PaintManager.GetDefaultAttributeList(kTabButton);
 	for(iter=g_lstPanelInfo.begin(); iter!=g_lstPanelInfo.end(); iter++)
 	{
 		lpPanelInfo = (LPMAIN_PANEL)(*iter);
@@ -807,11 +863,6 @@ BOOL CMainFrame::OnActiveApp()
 
 BOOL CMainFrame::OnAppQuit()
 {
-	if(lpLoader)
-	{
-		DuiCancelLoading(lpLoader);
-		lpLoader = NULL;
-	}
 	PostMessage(WM_CLOSE, 0, 0);
 	return TRUE;
 }
@@ -848,4 +899,24 @@ void CMainFrame::CancelLoading()
 	if(!pLoadindFrame)
 		return;
 	pLoadindFrame->SetVisible(false);
+}
+
+unsigned int CMainFrame::UpdateCheckThread(LPVOID lpData)
+{
+	const int MAX_RESPONE_SIZE = 4096;
+	CMainFrame *pThis = (CMainFrame *)lpData;
+	if(!pThis)
+		return 0;
+	char szData[MAX_RESPONE_SIZE] = {0};
+	unsigned long ulSize = 0;
+	if(0==CheckVersion(pThis->m_hWnd, kCheckVersionUrl, szData, &ulSize) && pThis->bRunning)
+	{
+		pThis->pszUpdateResponeData = new char[MAX_RESPONE_SIZE];
+		assert(NULL!=pThis->pszUpdateResponeData);
+		memset(pThis->pszUpdateResponeData, 0, sizeof(char)*MAX_RESPONE_SIZE);
+		memcpy(pThis->pszUpdateResponeData, szData, MAX_RESPONE_SIZE);
+		pThis->ulUpdateResponeDataSize = ulSize;
+		::PostMessage(pThis->m_hWnd, WM_UPDATE_RESPONE, 0, 0);
+	}
+	return 0;
 }

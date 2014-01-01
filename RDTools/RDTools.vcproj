@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -449,10 +449,6 @@
 			</File>
 			<File
 				RelativePath="..\common\Formatter.h"
-				>
-			</File>
-			<File
-				RelativePath="..\common\GifHeader.h"
 				>
 			</File>
 			<File

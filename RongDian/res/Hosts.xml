@@ -15,7 +15,7 @@
 			<Button name="host_new_group" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
 		</HorizontalLayout>
-		<Control height="15" />
+		<Control height="1" />
 		<!--host配置，以组为单位-->
 		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" inset="4,4,4,4">
 			<Control height="5" />

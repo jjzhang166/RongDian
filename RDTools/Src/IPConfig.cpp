@@ -29,8 +29,8 @@ const wchar_t* const kIPConfigApplyBtn = L"ipconfig_apply";
 const wchar_t* const kIPConfigCurrentInfoText = L"ipconfig_current_info";
 const wchar_t* const kIPConfigCurrentAdapterListText = L"ipconfig_network_adapters_text";
 const wchar_t* const kIPConfigCurrentAdapterList = L"ipconfig_network_adapters";
-const wchar_t* const kIPConfigCurrentAdapterTypeText = L"ipconfig_iftype_text";
-const wchar_t* const kIPConfigCurrentDescText = L"ipconfig_idesc_text";
+const wchar_t* const kIPConfigCurrentAdapterTypeText = L"ipconfig_i_type_text";
+const wchar_t* const kIPConfigCurrentDescText = L"ipconfig_i_desc_text";
 const wchar_t* const kIPConfigCurrentDhcpText = L"ipconfig_i_dhcp_text";
 const wchar_t* const kIPConfigCurrentIPText = L"ipconfig_i_ip_text";
 const wchar_t* const kIPConfigCurrentMaskText = L"ipconfig_i_mask_text";
@@ -257,14 +257,19 @@ void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg
 	}
 }
 
-void CIPConfig::OnItemSelect(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg)
+void CIPConfig::OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
-	CComboUI* pCombo = (CComboUI*)msg.pSender;
-	CDuiString sItemName = pCombo->GetName();
-	if(sItemName == kIPConfigSolutionList)
-		OnSelectSolution();
-	else if (sItemName == kIPConfigCurrentAdapterList)
-		OnSelectAdapter();
+	bHandled = FALSE;
+	if(msg.pSender && (msg.pSender==m_pSolutionList || msg.pSender==m_pAdapterList))
+	{
+		CComboUI* pCombo = (CComboUI*)msg.pSender;
+		CDuiString sItemName = pCombo->GetName();
+		if(sItemName == kIPConfigSolutionList)
+			OnSelectSolution();
+		else if (sItemName == kIPConfigCurrentAdapterList)
+			OnSelectAdapter();
+		bHandled = TRUE;
+	}
 }
 
 LRESULT CIPConfig::HandleCustomMessage(UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)

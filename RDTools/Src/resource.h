@@ -3,7 +3,7 @@
 // Used by RDTools.rc
 //
 #define IDI_RDTOOLS                     100
-#define IDI_COLOR_ARROW					101
+#define IDC_CHARSET_SQL					101
 
 // Next default values for new objects
 // 

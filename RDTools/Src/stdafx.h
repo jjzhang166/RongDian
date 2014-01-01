@@ -21,6 +21,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <iostream>
+#include <process.h>
 
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
@@ -64,6 +65,7 @@ using namespace std;
 #include <Duilib/Control/UIMenu.h>
 #include <DuiMsg.h>
 #include <FileFinder.h>
+#include <RDNet.h>
 
 using namespace log4cplus;
 using namespace log4cplus::helpers;
@@ -88,6 +90,7 @@ using namespace DuiLib;
 #pragma comment(lib, "../RongDian/bin/DuiLibd.lib")
 #pragma comment(lib, "../RongDian/bin/DuiMsgd.lib")
 #pragma comment(lib, "../RongDian/bin/RDFinderd.lib")
+#pragma comment(lib, "../RongDian/bin/RDNetd.lib")
 #else
 #pragma comment(lib, "../RongDian/bin/log4cplus.lib")
 #pragma comment(lib, "../RongDian/bin/pcre.lib")
@@ -105,6 +108,7 @@ using namespace DuiLib;
 #pragma comment(lib, "../RongDian/bin/DuiLib.lib")
 #pragma comment(lib, "../RongDian/bin/DuiMsg.lib")
 #pragma comment(lib, "../RongDian/bin/RDFinder.lib")
+#pragma comment(lib, "../RongDian/bin/RDNet.lib")
 #endif 
 
 BOOL				IsImageFile(LPCWSTR lpszFileName);

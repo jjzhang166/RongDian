@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<Default name="TidyTabButton" value="height=&quot;22&quot; minwidth=&quot;36&quot; width=&quot;60&quot; align=&quot;center&quot; endellipsis=&quot;true&quot; bordersize=&quot;1&quot; bkcolor=&quot;#FFE0E07B&quot;" />
+	<Default name="TidyHotTabButton" value="height=&quot;22&quot; minwidth=&quot;36&quot; width=&quot;60&quot; align=&quot;center&quot; endellipsis=&quot;true&quot; bordersize=&quot;1&quot; bkcolor=&quot;#FFFFE07B&quot;" />
+	<VerticalLayout name="panel_tidy" inset="4,4,4,4" >
+		<Label height="1" bkcolor="#FF669934" />
+		<HorizontalLayout name="tidy_toolbar" height="64" >
+			<!-- Start of tidy_clipbrd -->
+			<VerticalLayout name="tidy_clipbrd" width="154" >
+				<Control height="2" />
+				<!-- Clipbrd's Button -->
+				<HorizontalLayout height="36" >
+					<Control width="2" />
+					<Button name="tidy_paste" width="36" bkimage="file='default\paste.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_cut" width="36" bkimage="file='default\cut.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_copy" width="36" bkimage="file='default\copy.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_selall" width="36" bkimage="file='default\selectall.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+				</HorizontalLayout> <!-- Clipbrd's Button -->
+				<Control height="2" />
+				<!-- Text -->
+				<HorizontalLayout height="24" >
+					<Label name="tidy_clipbrd_text" text="Clipbrd" align="center" />
+				</HorizontalLayout> <!-- Text -->
+			</VerticalLayout> <!-- End of tidy_clipbrd -->
+			<Control width="1" />
+			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
+			<Control width="1" />
+			<!-- Start of tidy_operator -->
+			<VerticalLayout name="tidy_operator" width="116" >
+				<Control height="2" />
+				<!-- Operator's Button -->
+				<HorizontalLayout height="36" >
+					<Control width="2" />
+					<Button name="tidy_format" width="36" bkimage="file='default\run.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_format_sel" width="36" bkimage="file='default\run2.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_format_batch" width="36" bkimage="file='default\run3.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+				</HorizontalLayout> <!-- Operator's Button -->
+				<Control height="2" />
+				<HorizontalLayout height="24" >
+					<Label name="tidy_operator_text" text="Operator" align="center" />
+				</HorizontalLayout>
+			</VerticalLayout> <!-- End of tidy_operator -->
+			<Control width="1" />
+			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
+			<Control width="1" />
+			<!-- Start of tidy_style -->
+			<VerticalLayout name="tidy_style" width="192" >
+				<Control height="2" />
+				<!-- Style's Button -->
+				<HorizontalLayout height="36" >
+					<Control width="2" />
+					<Button name="tidy_language" width="36" bkimage="file='default\language.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_indent_less" width="36" bkimage="file='default\indent_less.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_indent_more" width="36" bkimage="file='default\indent_more.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_comment" width="36" bkimage="file='default\ascending.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+					<Button name="tidy_uncomment" width="36" bkimage="file='default\descending.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
+					<Control width="2" />
+				</HorizontalLayout> <!-- Style's Button -->
+				<Control height="2" />
+				<HorizontalLayout height="24" >
+					<Label name="tidy_style_text" text="Style" align="center" />
+				</HorizontalLayout>
+			</VerticalLayout> <!-- End of tidy_style -->
+			<Control width="1" />
+			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
+		</HorizontalLayout>
+		<Label height="1" bkcolor="#FF669934" />
+		<HorizontalLayout name="tidy_tab" height="22" userdata="tidy_tab0" >
+			<TidyHotTabButton name="tidy_tab0" text="NewFile" userdata="tidy_edit0" />
+			<Control width="1" />
+			<Button name="tidy_new" text="" height="22" width="22" bkimage="file='default\new.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+			<Control width="1" />
+		</HorizontalLayout>
+		<VerticalLayout name="tidy_panels" bordersize="1" bordercolor="#FFFFE07B" bkcolor="0xDDC8C8C8" userdata="tab_tidy" >
+			<RichEdit name="tidy_edit0" font="2" hscrollbar="true" vscrollbar="true" visible="true" padding="2,2,2,2" />
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>

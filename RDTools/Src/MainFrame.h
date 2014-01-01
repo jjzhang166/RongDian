@@ -41,6 +41,7 @@ public:
 	LRESULT			OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT			OnCopyData(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			OnTrayNotification(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
+	LRESULT			OnParseUpdateRespone(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LRESULT			OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 	LPCWSTR			GetItemText(CControlUI* pControl, int iIndex, int iSubItem);
 
@@ -56,6 +57,8 @@ public:
 	BOOL			ShowLoading();
 	void			CancelLoading();
 
+	static unsigned int __stdcall UpdateCheckThread(LPVOID lpData);
+
 public:
 	CDuiString builder_xml_;
 	CDuiString resource_dir_;
@@ -65,4 +68,7 @@ public:
 	CVerticalLayoutUI *pLoadindFrame;
 	CControlUI *pStatusCtrl;
 	LPVOID lpLoader;
+	char *pszUpdateResponeData;
+	unsigned long ulUpdateResponeDataSize;
+	BOOL bRunning;
 };

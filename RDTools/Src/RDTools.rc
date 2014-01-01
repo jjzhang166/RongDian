@@ -35,6 +35,13 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // remains consistent on all systems.
 IDI_RDTOOLS             ICON                    "RDTools.ico"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// Sql
+//
+
+IDC_CHARSET_SQL			SQL                    "charset.sql"
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //

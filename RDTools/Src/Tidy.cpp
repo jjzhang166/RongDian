@@ -158,7 +158,8 @@ BOOL CTidy::OnNewTab(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& /*msg*
 	int nCount = pTidyTab->GetCount();
 	CControlUI *pNewTabBlank = new CControlUI();
 	pNewTabBlank->SetFixedWidth(1);
-	pTidyTab->AddAt(pNewTabBlank, nCount-2);
+	const int nFixControlCount = 3; // 标签兰尾部固定控件个数
+	pTidyTab->AddAt(pNewTabBlank, nCount-nFixControlCount - 1); // - 1，控件索引值从0开始
 	CButtonUI *pNewTab = new CButtonUI();
 	wchar_t szNewTab[1024] = {0}, szNewText[1024] = {0}, szNewEdit[1024] = {0};
 	swprintf(szNewTab, L"tidy_tab%d", nNewTabIndex);
@@ -170,7 +171,7 @@ BOOL CTidy::OnNewTab(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& /*msg*
 	pNewTab->SetUserData(szNewEdit);
 	if(pHotAttributes && pNewTab)
 		pNewTab->ApplyAttributeList(pHotAttributes);
-	pTidyTab->AddAt(pNewTab, nCount-2);
+	pTidyTab->AddAt(pNewTab, nCount-4);
 	pTidyTab->SetUserData(szNewTab);
 	CRichEditUI *pNewEdit = new CRichEditUI();
 	pNewEdit->SetName(szNewEdit);

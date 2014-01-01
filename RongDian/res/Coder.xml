@@ -10,21 +10,27 @@
 					<ListHeaderItem name="coder_header_status" text="" width="80" minwidth="40" hotimage="file='default\list_header_hot.png'" pushedimage="file='default\list_header_pushed.png'" sepimage="file='default\list_header_sep.png'" sepwidth="1" />
 				</ListHeader>
 			</List>
-			<HorizontalLayout width="56" bordersize="1" bordercolor="FFE0E0E0" >
+			<HorizontalLayout width="80" bordersize="1" bordercolor="FFE0E0E0" >
 				<Control width="10" />
 				<VerticalLayout >
 					<Control height="10" />
-					<Button name="coder_newfile" width="36" height="36" bkimage="file='default\file.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_newfile" width="36" height="36" bkimage="file='default\file.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_newfile" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control height="10" />
-					<Button name="coder_newfolder" width="36" height="36" bkimage="file='default\folder.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_newfolder" width="36" height="36" bkimage="file='default\folder.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_newfolder" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control height="10" />
-					<Button name="coder_del" width="36" height="36" bkimage="file='default\del.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_del" width="36" height="36" bkimage="file='default\del.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_del" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control height="10" />
-					<Button name="coder_delall" width="36" height="36" bkimage="file='default\trash.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_delall" width="36" height="36" bkimage="file='default\trash.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_delall" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control height="10" />
-					<Button name="coder_start" width="36" height="36" bkimage="file='default\start.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_start" width="36" height="36" bkimage="file='default\start.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_start" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control height="10" />
-					<Button name="coder_stop" width="36" height="36" bkimage="file='default\stop.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+					<!--Button name="coder_stop" width="36" height="36" bkimage="file='default\stop.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" /-->
+					<Button name="coder_stop" width="60" height="22" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 					<Control />
 				</VerticalLayout>
 				<Control width="10" />

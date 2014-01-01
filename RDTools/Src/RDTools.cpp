@@ -282,7 +282,7 @@ BOOL InitLog()
 	g_Logger.setLogLevel(ALL_LOG_LEVEL);
 	g_Logger.addAppender(pFileAppender);
 
-	LOG4CPLUS_INFO(g_Logger, "RDTools Start.");
+	LOG4CPLUS_INFO(g_Logger, L"RDTools Start.");
 
 	return TRUE;
 }
@@ -438,7 +438,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(2767);
+	//_CrtSetBreakAlloc(4890);
 #endif
 
 	g_hInstance = hInstance;
@@ -539,7 +539,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 		g_hAdminSignature = NULL;
 	}
 
-	LOG4CPLUS_INFO(g_Logger, "RDTools Quit.");
+	LOG4CPLUS_INFO(g_Logger, L"RDTools Quit.");
 
 	return 0;
 }
