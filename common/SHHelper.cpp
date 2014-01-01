@@ -76,6 +76,11 @@ BOOL SHHelper::OpenFile(HWND hWnd, LPCWSTR lpszFile)
 	return (int)ShellExecuteW(hWnd, _T("open"), lpszFile, NULL, NULL, SW_SHOW)>32;
 }
 
+BOOL SHHelper::OpenFileEx(HWND hWnd, LPCWSTR lpszFile, LPCWSTR lpszParameters)
+{
+	return (int)ShellExecuteW(hWnd, _T("open"), lpszFile, lpszParameters, NULL, SW_SHOW)>32;
+}
+
 BOOL SHHelper::OpenFolder(HWND hWnd, LPCWSTR lpszPath)
 {
 	if(!lpszPath)

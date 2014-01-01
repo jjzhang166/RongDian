@@ -14,6 +14,7 @@ BOOL MoveFile(HWND hWnd, LPCWSTR  lpszFromPath, LPCWSTR  lpszToPath, BOOL bShowU
 BOOL RenameFile(HWND hWnd, LPCWSTR lpszFromPath, LPCWSTR lpszToPath);
 
 BOOL OpenFile(HWND hWnd, LPCWSTR lpszFile);
+BOOL OpenFileEx(HWND hWnd, LPCWSTR lpszFile, LPCWSTR lpszParameters);
 BOOL OpenFolder(HWND hWnd, LPCWSTR lpszPath);
 // 选择文件对话框
 BOOL SelectFile(HWND hWnd, LPWSTR lpszFile, LPCWSTR lpszFilter);
