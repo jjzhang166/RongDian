@@ -293,11 +293,48 @@ LPCWSTR CCoder::GetCoderItemText(CControlUI* pControl, int iIndex, int iSubItem)
 	return pControl->GetUserData();
 }
 
+BOOL CCoder::InitCharSet()
+{
+	BOOL bRet = FALSE;
+	HRSRC hRes = FindResource(NULL, MAKEINTRESOURCEW(IDC_CHARSET_SQL), L"SQL");
+	if(hRes == NULL)
+		return bRet;
+	DWORD dwSize = 0;
+	HGLOBAL hGlobal = ::LoadResource(NULL, hRes);
+	if(hGlobal == NULL)
+	{
+		::FreeResource(hRes);
+		return bRet; 
+	}
+	dwSize = ::SizeofResource(NULL, hRes);
+	if(dwSize == 0)
+	{
+		::FreeResource(hRes);
+		return bRet; 
+	}
+	LPBYTE lpData = (LPBYTE)::LockResource(hGlobal);
+	char *pszSQL = new char[dwSize+1];
+	if(!pszSQL)
+	{
+		::FreeResource(hRes);
+		return bRet; 
+	}
+	memcpy(pszSQL, lpData, dwSize);
+	pszSQL[dwSize] = '\0';
+	g_SQLite.ExecDML(pszSQL);
+	delete pszSQL;
+	::FreeResource(hRes);
+	bRet = TRUE;
+	return bRet;
+}
+
 BOOL CCoder::LoadCharSet()
 {
 	BOOL bRet = FALSE;
 	CCharSetTableDB charset(&g_SQLite);
 	if(!charset.Init())
+		bRet = InitCharSet();
+	if(!bRet)
 		return bRet;
 	if(!charset.Query(NULL))
 		return bRet;

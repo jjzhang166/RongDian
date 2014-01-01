@@ -8,6 +8,7 @@ RD_DECLARE_BEGIN(Coder)
 	RD_DECLARE_MEMBER(LPCWSTR, GetItemText) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/);
 
 	RD_DECLARE_MEMBER(LPCWSTR, GetCoderItemText) (CControlUI* pControl, int iIndex, int iSubItem);
+	RD_DECLARE_MEMBER(BOOL, InitCharSet) ();
 	RD_DECLARE_MEMBER(BOOL, LoadCharSet) ();
 	RD_DECLARE_MEMBER(BOOL, InitCharSetCombo) ();
 	RD_DECLARE_MEMBER(BOOL, StartConvert) (HWND hWnd);
