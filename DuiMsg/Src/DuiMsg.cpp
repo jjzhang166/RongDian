@@ -195,8 +195,11 @@ SET_CONTROL_END()
 	}
 
 	LPCTSTR GetWindowClassName() const 
-	{ 
-		return _T("DuiMsg_Class");
+	{
+		if(bPopup)
+			return kDuiMsgPopupClass;
+		else
+			return kDuiMsgModalClass;
 	}
 
 	UINT GetClassStyle() const
@@ -228,8 +231,7 @@ SET_CONTROL_END()
 	void OnFinalMessage(HWND hWnd)
 	{
 		WindowImplBase::OnFinalMessage(hWnd);
-		if(nType==MB_LOADING)
-			delete this;
+		delete this;
 	}
 	void InitWindow()
 	{
@@ -510,7 +512,7 @@ SET_CONTROL_END()
 		case LOADING_QUIT:
 			{
 				KillTimer(m_hWnd, LOADING_QUIT);
-				PostMessage(WM_CLOSE, 0L, 0L);
+				::PostMessage(m_hWnd, WM_CLOSE, 0L, 0L);
 				HWND hWndParent = GetWindowOwner(m_hWnd);
 				if(hWndParent)
 				{
@@ -535,11 +537,15 @@ SET_CONTROL_END()
 	}
 	void SetCaption(LPCWSTR lpszCaption)
 	{
+		if(!lpszCaption)
+			return;
 		if(lpszCaption)
 			wcscpy(szCaption, lpszCaption);
 	}
 	BOOL SetText(LPCWSTR lpszText)
 	{
+		if(!lpszText)
+			return TRUE;
 		int nLen = 1024;
 		int nStrLen = 0;
 		if(lpszText && (nStrLen=wcslen(lpszText)+1)>nLen)
@@ -575,6 +581,18 @@ public:
 	HWND hParent;
 	BOOL bTransparent;
 };
+
+DWORD WINAPI StartMenuMsgBox(LPVOID lpParam)
+{
+	CDuiMsg *pMsg = (CDuiMsg *)lpParam;
+	if(pMsg)
+	{
+		pMsg->Create(pMsg->hParent, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+		pMsg->CenterWindow();
+		pMsg->ShowModal();
+	}
+	return 0;
+}
 
 DWORD WINAPI StartLoading(LPVOID lpParam)
 {
@@ -614,9 +632,20 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 {
 	if(!g_hMsgInst)
 		return -1;
-	CDuiMsg msg;
-	msg.hParent = hWnd;
-	msg.SetIcon(g_szIconName);
+	if(uType!=MB_POPUP)
+	{
+		HWND hModalWnd = FindWindow(kDuiMsgModalClass, NULL);
+		if(hModalWnd)
+		{
+			SetForegroundWindow(hModalWnd);
+			return -1;
+		}
+	}
+	CDuiMsg *pMsg = new CDuiMsg();
+	if(!pMsg)
+		return -1;
+	pMsg->hParent = hWnd;
+	pMsg->SetIcon(g_szIconName);
 	wchar_t szText[1024];
 	if(lpszCaption)
 		wcscpy(szText, lpszCaption);
@@ -624,8 +653,8 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 		Utility::GetINIStr(g_pLangMan->GetLangName(), LS_MSG, kMsgErr, szText);
 	else
 		LoadString(g_hMsgInst, IDS_MSG_ERR, szText, _countof(szText));
-	msg.SetCaption(szText);
-	if(!msg.SetText(lpszText))
+	pMsg->SetCaption(szText);
+	if(!pMsg->SetText(lpszText))
 		return -1;
 	
 	int nTemp = 0;
@@ -633,32 +662,45 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 	{
 		nTemp = uType & 0x0000000FL;
 		if(nTemp==MB_RETRYCANCEL)
-			msg.nType = MB_RETRYCANCEL;
+			pMsg->nType = MB_RETRYCANCEL;
 		else if(nTemp==MB_YESNO)
-			msg.nType = MB_YESNO;
+			pMsg->nType = MB_YESNO;
 		else if(nTemp==MB_OKCANCEL)
-			msg.nType = MB_OKCANCEL;
+			pMsg->nType = MB_OKCANCEL;
 		else
-			msg.nType = MB_OK;
+			pMsg->nType = MB_OK;
 	}
 	else
 	{
-		msg.nType = uType;
-		msg.bPopup = TRUE;
+		pMsg->nType = uType;
+		pMsg->bPopup = TRUE;
 	}
-	if(!msg.bPopup)
+	if(uType & MB_MENU)
 	{
-		msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
-		msg.CenterWindow();
-		msg.ShowModal();
+		DWORD dwThread = 0;
+		HANDLE hThread = CreateThread(NULL, 0, StartMenuMsgBox, (LPVOID)pMsg, 0, &dwThread);
+		CloseHandle(hThread);
+		return 0;
+	}
+	if(!pMsg->bPopup)
+	{
+		pMsg->Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+		pMsg->CenterWindow();
+		pMsg->ShowModal();
 	}
 	else
 	{
-		msg.Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
-		msg.PopupWindow();
+		pMsg->Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
+		pMsg->PopupWindow();
 	}
+	int nRet = pMsg->nRet;
 
-	return msg.nRet;
+	return nRet;
+}
+
+int __stdcall DuiMenuMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT uType)
+{
+	return DuiMsgBox(hWnd, lpszText, lpszCaption, uType | MB_MENU);
 }
 
 int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption)

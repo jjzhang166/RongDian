@@ -11,9 +11,18 @@
 #define MB_LOADING 0x0FFFFFFFL
 #endif
 
+#ifndef MB_MENU
+#define MB_MENU 0x00FFFFFFL
+#endif
+
+const wchar_t* const kDuiMsgPopupClass = L"DuiMsgPopup_Class";
+const wchar_t* const kDuiMsgModalClass = L"DuiMsgModal_Class";
+
 int __stdcall InitDuiMsg(HINSTANCE hInst, LPVOID pLangMan, LPVOID pSkinMan, LPCWSTR lpszIconName);
 
 int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT uType);
+
+int __stdcall DuiMenuMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT uType);
 
 int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption);
 
