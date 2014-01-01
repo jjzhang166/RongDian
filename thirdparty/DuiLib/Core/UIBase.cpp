@@ -300,18 +300,21 @@ UINT CWindowWnd::ShowModal()
             ::TranslateMessage(&msg);
             ::DispatchMessage(&msg);
         }
-        if( msg.message == WM_QUIT ) break;
+        if( msg.message == WM_QUIT )
+			break;
     }
     ::EnableWindow(hWndParent, TRUE);
     ::SetFocus(hWndParent);
-    if( msg.message == WM_QUIT ) ::PostQuitMessage(msg.wParam);
+    if( msg.message == WM_QUIT )
+		::PostQuitMessage(msg.wParam);
     return nRet;
 }
 
 void CWindowWnd::Close(UINT nRet)
 {
     ASSERT(::IsWindow(m_hWnd));
-    if( !::IsWindow(m_hWnd) ) return;
+    if( !::IsWindow(m_hWnd) )
+		return;
     PostMessage(WM_CLOSE, (WPARAM)nRet, 0L);
 }
 
@@ -413,16 +416,20 @@ LRESULT CALLBACK CWindowWnd::__WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
         pThis->m_hWnd = hWnd;
         ::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(pThis));
     } 
-    else {
-        pThis = reinterpret_cast<CWindowWnd*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
-        if( uMsg == WM_NCDESTROY && pThis != NULL ) {
-            LRESULT lRes = ::CallWindowProc(pThis->m_OldWndProc, hWnd, uMsg, wParam, lParam);
-            ::SetWindowLongPtr(pThis->m_hWnd, GWLP_USERDATA, 0L);
-            if( pThis->m_bSubclassed ) pThis->Unsubclass();
-            pThis->m_hWnd = NULL;
-            pThis->OnFinalMessage(hWnd);
-            return lRes;
-        }
+	else {
+		ASSERT(::IsWindow(hWnd));
+		if(::IsWindow(hWnd))
+		{
+			pThis = reinterpret_cast<CWindowWnd*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+			if( uMsg == WM_NCDESTROY && pThis != NULL ) {
+				LRESULT lRes = ::CallWindowProc(pThis->m_OldWndProc, hWnd, uMsg, wParam, lParam);
+				::SetWindowLongPtr(pThis->m_hWnd, GWLP_USERDATA, 0L);
+				if( pThis->m_bSubclassed ) pThis->Unsubclass();
+				pThis->m_hWnd = NULL;
+				pThis->OnFinalMessage(hWnd);
+				return lRes;
+			}
+		}
     }
     if( pThis != NULL ) {
         return pThis->HandleMessage(uMsg, wParam, lParam);
@@ -441,16 +448,20 @@ LRESULT CALLBACK CWindowWnd::__ControlProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
         ::SetProp(hWnd, _T("WndX"), (HANDLE) pThis);
         pThis->m_hWnd = hWnd;
     } 
-    else {
-        pThis = reinterpret_cast<CWindowWnd*>(::GetProp(hWnd, _T("WndX")));
-        if( uMsg == WM_NCDESTROY && pThis != NULL ) {
-            LRESULT lRes = ::CallWindowProc(pThis->m_OldWndProc, hWnd, uMsg, wParam, lParam);
-            if( pThis->m_bSubclassed ) pThis->Unsubclass();
-            ::SetProp(hWnd, _T("WndX"), NULL);
-            pThis->m_hWnd = NULL;
-            pThis->OnFinalMessage(hWnd);
-            return lRes;
-        }
+	else {
+		ASSERT(::IsWindow(hWnd));
+		if(::IsWindow(hWnd))
+		{
+			pThis = reinterpret_cast<CWindowWnd*>(::GetProp(hWnd, _T("WndX")));
+			if( uMsg == WM_NCDESTROY && pThis != NULL ) {
+				LRESULT lRes = ::CallWindowProc(pThis->m_OldWndProc, hWnd, uMsg, wParam, lParam);
+				if( pThis->m_bSubclassed ) pThis->Unsubclass();
+				::SetProp(hWnd, _T("WndX"), NULL);
+				pThis->m_hWnd = NULL;
+				pThis->OnFinalMessage(hWnd);
+				return lRes;
+			}
+		}
     }
     if( pThis != NULL ) {
         return pThis->HandleMessage(uMsg, wParam, lParam);
