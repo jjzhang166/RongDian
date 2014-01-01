@@ -219,7 +219,7 @@ int EscapeSQLite(CDuiString strKeyWord)
 
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 {
-#pragma message("调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
+#pragma message("RD消息框注意项：调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
 	int nRet = MB_OK;
 	wchar_t szErr[1024], szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);

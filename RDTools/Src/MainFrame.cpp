@@ -541,7 +541,7 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 		if(stricmp(szVersion, szRDVersion))
 		{
 			OutputDebugStringW(L"Find New Version\n");
-#pragma message("CMainFrame::OnParseUpdateRespone需添加更新对话框的弹出代码.")
+#pragma message("版本更新待完善：CMainFrame::OnParseUpdateRespone需添加更新对话框的弹出代码.")
 		}
 	}
 	return 0;
