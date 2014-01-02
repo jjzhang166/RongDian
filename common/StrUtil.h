@@ -29,19 +29,21 @@ char* w2a(const wchar_t *wstr);
 
 char* a2u8(const char *astr);
 
+char* u2u8(const wchar_t *wstr);
+
 char* u82a(const char *utf8);
 
 wchar_t* u82u(const char *utf8);
 
-int is_special_utf8(unsigned char c);
+bool is_special_utf8(unsigned char c);
 
 int is_utf8(const char *str);
 
-int is_gb2312(const char *str);
+bool is_gb2312(const char *str);
 
-int is_big5(const char *str);
+bool is_big5(const char *str);
 
-int is_gbk(const char *str);
+bool is_gbk(const char *str);
 
 int get_coder(const char *str);
 
