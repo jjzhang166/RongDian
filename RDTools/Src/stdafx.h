@@ -50,6 +50,7 @@ using namespace std;
 #include <libiconv/Src/include/iconv.h>
 #include <SQLite/sqlite3.h>
 #include <SlimXml/Src/SlimXml.h>
+#include <StringTokenizer/StringTokenizer.h>
 #include <GifLib/lib/gif_lib_private.h>
 #include <DuiLib/UIlib.h>
 #include <Tidy/include/tidy.h>
@@ -163,6 +164,7 @@ extern wchar_t					g_szLogPath[1024];
 extern wchar_t					g_szSnapShot[1024];
 extern wchar_t					g_szCoderPath[1024];
 extern wchar_t					g_szCoderBackupPath[1024];
+extern wchar_t					g_szHostsPath[1024];
 extern wchar_t					g_szBackground[1024];
 extern wchar_t					g_szLangFile[1024];
 extern wchar_t					g_szAddrSolution[1024];

@@ -61,7 +61,7 @@ bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 	fseek(pFile, 0, SEEK_END);
 	DWORD dwSize = ftell(pFile);
 	fseek(pFile, 0, SEEK_SET);
-	char *pData = (char *)malloc(dwSize);
+	char *pData = (char *)malloc(dwSize+1);
 	if(!pData)
 	{
 		fclose(pFile);
@@ -69,6 +69,7 @@ bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 	}
 	memset(pData, 0, dwSize);
 	fread(pData, 1, dwSize, pFile);
+	pData[dwSize] = '\0';
 
 	Parse(pData, "\n");
 
@@ -136,17 +137,8 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 			if(strlen(pTail->szSection)==0 && strlen(pTail->szDesc)==0)
 			{
 				nCount++;
-				if(nCount==1 && !strHeader.empty())
-				{
-					strSection.assign(strHeader.c_str(), 1, strHeader.length());
-					strcpy(pTail->szSection, strSection.c_str());
-					strHeader = "";
-				}
-				else
-				{
-					strcpy(pTail->szSection, kDefaultName);
-					strcpy(pTail->szDesc, kDefaultDesc);
-				}
+				strcpy(pTail->szSection, kDefaultName);
+				strcpy(pTail->szDesc, kDefaultDesc);
 			}
 			if(!pTail->pItem)
 			{
@@ -165,8 +157,10 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 			StringTokenizer strItem = StringTokenizer(strTemp, " ");
 			std::string strAddr = strItem.nextToken();
 			std::string strDomain = strItem.nextToken();
+			std::string strDesc = strItem.nextToken();
 			strcpy(pItem->szAddr, strAddr.c_str());
 			strcpy(pItem->szDomain, strDomain.c_str());
+			strcpy(pItem->szDesc, strDesc.c_str());
 		}
 
 		strSection = "";

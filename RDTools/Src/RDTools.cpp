@@ -260,9 +260,12 @@ BOOL InitPath()
 	swprintf(g_szSnapShot, L"%s\\img", g_szModule);
 	swprintf(g_szCoderPath, L"%s\\coder", g_szModule);
 	swprintf(g_szCoderBackupPath, L"%s\\backup", g_szCoderPath);
+	swprintf(g_szHostsPath, L"%s\\hosts", g_szModule);
 	swprintf(g_szPanelsXml, L"%s\\%s", g_szResPath, kPanelsXml);
 	if(!PathFileExists(g_szLogPath))
 		SHCreateDirectoryEx(NULL, g_szLogPath, NULL);
+	if(!PathFileExists(g_szHostsPath))
+		SHCreateDirectoryEx(NULL, g_szHostsPath, NULL);
 	
 	return TRUE;
 }
@@ -341,8 +344,8 @@ BOOL AssocLangIDs()
 {
 ASSOC_BEGIN()
 	// MSG
-	ASSOC_LANG(MSG_ERR, kMsgErr, LS_MSG)	
 	ASSOC_LANG(MSG_ERR, kMsgErr, LS_MSG)
+	ASSOC_LANG(MSG_SUCCESS, kMsgSuccess, LS_MSG)
 	ASSOC_LANG(MSG_WARNING, kMsgWarning, LS_MSG)
 	ASSOC_LANG(MSG_LOADING, kLoading, LS_MSG)
 	ASSOC_LANG(MSG_BUSY, kBusy, LS_MSG)
@@ -364,6 +367,7 @@ ASSOC_BEGIN()
 	ASSOC_LANG(MSG_DELETE_SOLUTION, kDeleteSolution, LS_MSG)
 	ASSOC_LANG(MSG_INVALID_NAME, kInvalidName, LS_MSG)
 	ASSOC_LANG(MSG_DEBUG_TEXT, kDebugText, LS_MSG)
+	ASSOC_LANG(MSG_DONE, kDone, LS_MSG)
 ASSOC_END()
 
 	return TRUE;

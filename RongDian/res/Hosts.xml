@@ -8,47 +8,50 @@
 			<Control width="3" />
 			<Edit name="host_path_edit" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
 			<Control width="3" />
-			<Button name="host_open" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Button name="host_open" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
-			<Button name="host_backup" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Button name="host_backup" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />
-			<Button name="host_new_group" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-			<Control width="3" />
-		</HorizontalLayout>
+		</HorizontalLayout> <!--host文件路径-->
 		<Control height="1" />
 		<!--host配置，以组为单位-->
-		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE0E0E0"  vscrollbar="true" autovscroll="true" inset="4,4,4,4">
-			<Control height="5" />
-			<!--
-			<VerticalLayout name="host_group1" minwidth="460" >
-				--组标题--
-				<HorizontalLayout name="host_group1_titie" height="25">
-					<Control width="5" />
-					<Button name="host_group1_hide_content" width="25" height="25" normalimage="file='default\arrow_up.png' dest='3,3,20,20'" tooltip="收起"/>
-					<Edit name="host_group1_title_edit" minwidth="150" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="默认组的组名" bkimage="file='default\buttom_border_#999999.png'"/>
+		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE0E0E0" inset="4,4,4,4" >
+			<!-- 分组节点测试 --
+			<VerticalLayout name="host_group1" minheight="34" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >
+				<HorizontalLayout height="26" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >
+					<Button name="host_group_state" width="24" height="24" normalimage="file='default\arrow_up.png' dest='2,2,20,20'" tooltip="Unflod Group"/>
+					<Edit name="host_group_title_edit" minwidth="150" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="New Group" bkimage="file='default\host_group_back.png'"/>
 					<Control />
-					<Button name="host_group1_new_binding" width="25" height="25" normalimage="file='default\add.png' dest='3,3,19,19'" tooltip="添加绑定"/>
-					<Button name="host_group1_modify" width="25" height="25" normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存组名"/>
-					<Button name="host_group1_delete" width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除该组"/>
+					<Button name="host_group_new_row" width="24" height="24" normalimage="file='default\add.png' dest='2,2,20,20'" tooltip="Bind"/>
+					<Button name="host_group_save" width="24" height="24" normalimage="file='default\save.png' dest='2,2,20,20'" tooltip="Save Group"/>
+					<Button name="host_group_delete" width="24" height="24" normalimage="file='default\delete.png' dest='2,2,20,20'" tooltip="Del Group"/>
 				</HorizontalLayout>
-				<Control height="5" />
-				--组内容，可隐藏-
-				<VerticalLayout name="host_group1_content" height="25">
-					<HorizontalLayout name="host_group1_row1" >
-						<CheckBox name="host_group1_row1_checkbox" width="25" height="25" selectedimage="file='default\checkbox_yes.png' dest='3,3,19,19'" normalimage="file='default\checkbox_no.png'  dest='3,3,19,19'"/>
+				<VerticalLayout name="host_group1_items" bordersize="1" bordercolor="FFFF0000" inset="2,2,2,2" visible="true" >
+					<HorizontalLayout name="host_group1_item1" height="24" bordersize="1" bordercolor="FF00FF00" inset="2,2,2,2" >
+						<CheckBox name="host_group1_item1_checkbox" width="22" height="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
 						<Control width="2" />
-						<Edit name="host_group1_row1_ip_edit" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="192.168.0.0"/>
+						<Edit name="host_group1_item1_ip_edit" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="192.168.0.0" />
 						<Control width="8" />
-						<Edit name="host_group1_row1_domain_edit" width="160" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
+						<Edit name="host_group1_item1_domain_edit" width="160" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="www.baidu.com"/>
 						<Control width="8" />
-						<Edit name="host_group1_row1_desc_edit" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0"/>
-						<Control />
-						<Button name="host_group1_row1_save" width="25" height="25"  normalimage="file='default\save.png' dest='3,3,19,19'" tooltip="保存"/>
-						<Button name="host_group1_row1_delete" width="25" height="25" normalimage="file='default\delete.png' dest='3,3,19,19'" tooltip="删除"/>
+						<Edit name="host_group1_item1_desc_edit" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="baidu"/>
+						<Control width="5" />
+						<Button name="host_group1_item1_save" width="22" height="22"  normalimage="file='default\save.png' dest='2,2,20,20'" tooltip="Save"/>
+						<Button name="host_group1_item1_delete" width="22" height="22" normalimage="file='default\delete.png' dest='2,2,20,20'" tooltip="Delete"/>
 					</HorizontalLayout>
 				</VerticalLayout>
-			</VerticalLayout>
-		-->
+			</VerticalLayout> <!-- 分组节点测试 -->
+			<Control />
 		</VerticalLayout>
+		<Control height="1" />
+		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control />
+			<Button name="host_new_group" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="3" />
+			<Button name="host_load" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="3" />
+			<Button name="host_save" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="3" />
+		</HorizontalLayout> <!--host文件路径-->
 	</VerticalLayout>
 </Window>

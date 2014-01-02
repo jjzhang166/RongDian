@@ -75,6 +75,7 @@ const wchar_t* const kDescAbout						= L"desc_about";
 
 // MSG
 const wchar_t* const kMsgErr						= L"msg_err";
+const wchar_t* const kMsgSuccess					= L"msg_success";
 const wchar_t* const kMsgWarning					= L"msg_warning";
 const wchar_t* const kLoading						= L"msg_loading";
 const wchar_t* const kBusy							= L"msg_busy";
@@ -96,6 +97,7 @@ const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
+const wchar_t* const kDone							= L"done";
 
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
@@ -129,6 +131,7 @@ typedef enum _tagMSG_ID {
 	// Msg Section
 	MSG_ERR = 30,
 	MSG_WARNING,
+	MSG_SUCCESS,
 	MSG_LOADING,
 	MSG_BUSY,
 	MSG_PLUGIN_ERR,
@@ -149,6 +152,7 @@ typedef enum _tagMSG_ID {
 	MSG_DELETE_SOLUTION,
 	MSG_INVALID_NAME,
 	MSG_DEBUG_TEXT,
+	MSG_DONE,
 	// End
 	MSG_END = 200
 } MSG_ID;

@@ -229,6 +229,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\HostsHelper.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\IPConfig.cpp"
 					>
 				</File>
@@ -348,6 +352,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\Hosts.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\HostsHelper.h"
 					>
 				</File>
 				<File
@@ -676,6 +684,18 @@
 				</File>
 				<File
 					RelativePath="..\thirdparty\SlimXml\Src\XmlSchema.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="StringTokenizer"
+				>
+				<File
+					RelativePath="..\thirdparty\stringtokenizer\StringTokenizer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\thirdparty\stringtokenizer\StringTokenizer.h"
 					>
 				</File>
 			</Filter>

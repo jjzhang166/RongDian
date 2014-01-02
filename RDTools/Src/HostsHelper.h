@@ -4,7 +4,8 @@
 typedef struct _tagHOSTS_ITEM
 {
 	char szAddr[64];
-	char szDomain[1204];
+	char szDomain[256];
+	char szDesc[1024];
 	_tagHOSTS_ITEM *pNext;
 } HOSTS_ITEM, *PHOSTS_ITEM, *LPHOSTS_ITEM;
 
@@ -37,7 +38,7 @@ public:
 	bool Save();
 	bool SaveAs(const char* lpszPath);
 
-private:
+public:
 	std::string strHeader;
 	LPHOSTS_INFO pHosts;
 	int nCount;
