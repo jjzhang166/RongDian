@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="PCRETest"
-	ProjectGUID="{794E9E83-81B3-46D6-9AF8-DA334EF431CB}"
-	RootNamespace="PCRETest"
+	Name="jsoncpp"
+	ProjectGUID="{B7193C98-9FD0-4924-AD48-EB1C86FD3B37}"
+	RootNamespace="jsoncpp"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,13 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\thirdparty;..\..\thirdparty\pcre;..\..\Common"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories=".\"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -59,23 +59,13 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine=""
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName)d.exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\RongDian\bin"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
-				SubSystem="1"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -87,9 +77,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -97,7 +84,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -120,12 +107,11 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\thirdparty;..\..\thirdparty\pcre;..\..\Common"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories=".\"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
-				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
+				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
@@ -137,25 +123,13 @@
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
-				CommandLine=""
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).exe"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\RongDian\bin"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -167,9 +141,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -178,46 +149,82 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Src"
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<Filter
-				Name="Source Files"
-				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-				UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			<File
+				RelativePath=".\lib\json_reader.cpp"
 				>
-				<File
-					RelativePath=".\Src\PCRETest.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Header Files"
+			</File>
+			<File
+				RelativePath=".\lib\json_value.cpp"
 				>
-			</Filter>
+			</File>
+			<File
+				RelativePath=".\lib\json_writer.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\json\autolink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\features.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\forwards.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\json.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lib\json_batchallocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\lib\json_internalarray.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\lib\json_internalmap.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\lib\json_valueiterator.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\json\reader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\value.h"
+				>
+			</File>
+			<File
+				RelativePath=".\json\writer.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\Src\PCRETest.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\Src\resource.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Common"
-			>
-			<File
-				RelativePath="..\..\common\StrUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\common\StrUtil.h"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

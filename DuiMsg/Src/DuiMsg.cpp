@@ -289,7 +289,7 @@ SET_CONTROL_END()
 					HFONT hOldFont = NULL;
 					iFont = pText->GetFont();
 					hOldFont = (HFONT)::SelectObject(hDC, m_PaintManager.GetFont(iFont));
-					::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // 计算文本矩形大小，动态调整消息框大小
+					::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // 璁＄畻鏂囨湰鐭╁舰澶у皬锛屽姩鎬佽皟鏁存秷鎭澶у皬
 					if(hOldFont)
 						::SelectObject(hDC, hOldFont);
 				}

@@ -1,4 +1,4 @@
-// SnapShot.cpp : ¶¨ÒåÓ¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
+// SnapShot.cpp : å®šä¹‰åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
 //
 #pragma warning(push)
 #pragma warning(disable:4996)
@@ -85,8 +85,8 @@ const int				PREVIEW_HEIGHT		= 100;
 
 typedef enum _tagSNAPSHOT_MODE
 {
-	SNAPSHOT_FULLSCREEN = 0, // Æô¶¯²ÎÊı: SnapShot.exe -m f
-	SNAPSHOT_MAGNIFIER  // Æô¶¯²ÎÊı: SnapShot.exe -m m(Ä¬ÈÏ·½Ê½)
+	SNAPSHOT_FULLSCREEN = 0, // å¯åŠ¨å‚æ•°: SnapShot.exe -m f
+	SNAPSHOT_MAGNIFIER  // å¯åŠ¨å‚æ•°: SnapShot.exe -m m(é»˜è®¤æ–¹å¼)
 } SNAPSHOT_MODE, *PSNAPSHOT_MODE, *LPSNAPSHOT_MODE;
 
 class WinInfo
@@ -163,7 +163,7 @@ private:
 	RECT		rtRect;
 };
 
-// È«¾Ö±äÁ¿:
+// å…¨å±€å˜é‡:
 Options				g_OptOptions;
 Parser				g_OptParser;
 HINSTANCE			g_hInst = NULL;
@@ -465,7 +465,7 @@ void DrawTooltip(HWND hWnd, HDC hDC, Point ptOffset, LPCWSTR lpszText)
 	if(!hScreen)
 		return;
 	::GetClientRect(hScreen, &rtClient);
-	FontFamily fontFamily(L"ËÎÌå");
+	FontFamily fontFamily(L"å®‹ä½“");
 	Gdiplus::Font font(&fontFamily, 14, FontStyleRegular, UnitPixel);
 	POINT ptMouse = {0, 0};
 	if(g_nSnapShotMode==SNAPSHOT_FULLSCREEN)
@@ -616,9 +616,9 @@ LRESULT OnCreate(HWND hWnd, UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	//LPCREATESTRUCT lpCreateStruct = (LPCREATESTRUCT)lParam;
 
-	// Vista/Win7£¬ÓÉÓÚUACµÄÏŞÖÆ£¬µÍÈ¨ÏŞ½ø³Ì²»ÄÜÏò¸ßÈ¨ÏŞ½ø³Ì·¢ËÍÏûÏ¢
-	// Èç¹ûÎÒÃÇÏëÈİĞíÒ»¸öÏûÏ¢¿ÉÒÔ·¢ËÍ¸ø½Ï¸ßÌØÈ¨µÈ¼¶µÄ½ø³Ì
-	// ÎÒÃÇ¿ÉÒÔÔÚ½Ï¸ßÌØÈ¨µÈ¼¶µÄ½ø³ÌÖĞµ÷ÓÃChangeWindowMessageFilter(VistaÒÔÉÏµÄAPI)º¯Êı£¬ÒÔMSGFLT_ADD×÷Îª²ÎÊı½«ÏûÏ¢Ìí¼Ó½øÏûÏ¢¹ıÂËÆ÷µÄ°×Ãûµ¥¡£
+	// Vista/Win7ï¼Œç”±äºUACçš„é™åˆ¶ï¼Œä½æƒé™è¿›ç¨‹ä¸èƒ½å‘é«˜æƒé™è¿›ç¨‹å‘é€æ¶ˆæ¯
+	// å¦‚æœæˆ‘ä»¬æƒ³å®¹è®¸ä¸€ä¸ªæ¶ˆæ¯å¯ä»¥å‘é€ç»™è¾ƒé«˜ç‰¹æƒç­‰çº§çš„è¿›ç¨‹
+	// æˆ‘ä»¬å¯ä»¥åœ¨è¾ƒé«˜ç‰¹æƒç­‰çº§çš„è¿›ç¨‹ä¸­è°ƒç”¨ChangeWindowMessageFilter(Vistaä»¥ä¸Šçš„API)å‡½æ•°ï¼Œä»¥MSGFLT_ADDä½œä¸ºå‚æ•°å°†æ¶ˆæ¯æ·»åŠ è¿›æ¶ˆæ¯è¿‡æ»¤å™¨çš„ç™½åå•ã€‚
 	PFNChangeWindowMessageFilter pfnChangeWindowMessageFilter = NULL;
 	HMODULE hModule = LoadLibrary(L"user32.dll");
 	if(hModule)
@@ -1153,13 +1153,13 @@ int OptParse(int nArgc, TCHAR* lpszArgv[])
 //
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpCmdLine*/, int nCmdShow)
 {
-	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
+	// å†…å­˜è·Ÿè¸ªè°ƒè¯•
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(192);
 #endif
 
-	// ½âÎöÆô¶¯²ÎÊı
+	// è§£æå¯åŠ¨å‚æ•°
 	int nCount = 0;
 	LPWSTR* lpszArgs = CommandLineToArgvW(GetCommandLine(), &nCount);
 	OptParse(nCount, lpszArgs);
@@ -1200,9 +1200,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*l
 	else if(wcslen(szMode) && _wcsicmp(szMode, L"f")==0)
 		g_nSnapShotMode = SNAPSHOT_FULLSCREEN;
 	else
-		g_nSnapShotMode = SNAPSHOT_FULLSCREEN;
+		g_nSnapShotMode = SNAPSHOT_MAGNIFIER;
 
-	g_hInst = hInstance; // ½«ÊµÀı¾ä±ú´æ´¢ÔÚÈ«¾Ö±äÁ¿ÖĞ
+	g_hInst = hInstance; // å°†å®ä¾‹å¥æŸ„å­˜å‚¨åœ¨å…¨å±€å˜é‡ä¸­
 
 	GdiplusStartupInput gdipluStartupInput;
 	GdiplusStartup(&g_ulGdiToken, &gdipluStartupInput, NULL);

@@ -1,4 +1,6 @@
 #pragma once
+#include <WinSock2.h>  
+#include <WS2tcpip.h>
 #include <windows.h>
 #include <Iphlpapi.h>
 
@@ -9,12 +11,12 @@
 #include <assert.h>
 
 typedef LONG (CALLBACK *LPFNAdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
-typedef LONG (CALLBACK *LPFNAdapterNameCallBack)(LPVOID lParam, LPCWSTR lpszName, int nIndex);
+typedef LONG (CALLBACK *LPFNAdapterFriendlyNameAndStateCallBack)(LPVOID lParam, LPCWSTR lpszName,BOOL connectState, int nIndex);
 
 namespace AdapterUtil
 {
 BOOL LoadAdapters(LPFNAdapterInfoCallBack lpCallBack, WPARAM wParam, LPARAM lParam);
-BOOL GetName(LPFNAdapterNameCallBack lpCallBack, LPVOID lpParam);
+BOOL GetFriendlyName(LPFNAdapterFriendlyNameAndStateCallBack lpCallBack, LPVOID lpParam);
 BOOL GetClsid(PIP_ADAPTER_INFO pAdapter, LPSTR lpszClsid);
 BOOL GetType(PIP_ADAPTER_INFO pAdapter, LPSTR lpszType);
 BOOL GetDesc(PIP_ADAPTER_INFO pAdapter, LPSTR lpszDesc);
@@ -89,13 +91,13 @@ public:
 	CAdapterCfgObj(IWbemClassObject *pWbemObject, IWbemServices *pServices);
 	~CAdapterCfgObj();
 
-	// ÉèÖÃIPµØÖ·¡¢×ÓÍøÑÚÂë
+	// è®¾ç½®IPåœ°å€ã€å­ç½‘æ©ç 
 	HRESULT SetAddr(LPCWSTR lpszAddr, LPCWSTR lpszMask, LONG *plRet = NULL);
-	// ÉèÖÃÍø¹Ø
+	// è®¾ç½®ç½‘å…³
 	HRESULT SetGateway(LPCWSTR lpszGateway, LONG *plRet = NULL);
-	// ÉèÖÃDNS
+	// è®¾ç½®DNS
 	HRESULT SetDns(LPBYTE lpszDns, int nCount, LONG *plRet = NULL);
-	// ×Ô¶¯»ñÈ¡IP¡¢DNSÄ£Ê½
+	// è‡ªåŠ¨è·å–IPã€DNSæ¨¡å¼
 	HRESULT EnableDHCP(LONG *plRet = NULL);
 	
 private:
