@@ -41,12 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\thirdparty\jsoncpp"
+				AdditionalIncludeDirectories="..\..\TidyLib;..\..\TidyLib\JsonTidyLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -61,12 +62,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ProjectName)d.exe"
+				OutputFile="..\..\RongDian\bin\$(ProjectName)d.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="..\..\RongDian\bin"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				SubSystem="1"
 				TargetMachine="1"
 			/>
@@ -119,11 +121,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\..\TidyLib;..\..\TidyLib\JsonTidyLib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				ProgramDataBaseFileName="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -137,9 +141,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ProjectName).exe"
+				OutputFile="..\..\RongDian\bin\$(ProjectName).exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\RongDian\bin"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

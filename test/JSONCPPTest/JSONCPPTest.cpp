@@ -5,11 +5,11 @@
 #include <cassert>
 using namespace std;
 
-#include "json/json.h"
+#include <JsonTidyLib/json.h>
 #ifdef _DEBUG
-#pragma comment(lib, "../../RongDian/bin/jsoncppd.lib")
+#pragma comment(lib, "../../RongDian/bin/JsonTidyLibd.lib")
 #else
-#pragma comment(lib, "../../RongDian/bin/jsoncpp.lib")
+#pragma comment(lib, "../../RongDian/bin/JsonTidyLib.lib")
 #endif
 
 int main()
@@ -18,8 +18,8 @@ int main()
 	ifs.open("testjson.json");
 	assert(ifs.is_open());*/
 	string json = "{ \"version_name\":\"1.0.0.1\", \"version_code\":2 }";
-	Json::Reader reader;
-	Json::Value root;
+	JsonTidyLib::Reader reader;
+	JsonTidyLib::Value root;
 	if (!reader.parse(json,root))
 	{
 		return -1;

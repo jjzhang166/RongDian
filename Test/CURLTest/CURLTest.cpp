@@ -1,13 +1,23 @@
 #include <Windows.h>
+#include <string>
 #include <iostream>
-#include "curl/curl.h"
+
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "wldap32.lib")
+
+#define CURL_STATICLIB
+#define BUILDING_LIBCURL
+#define HTTP_ONLY
+
+#include <curl/curl.h>
+
 #ifdef _DEBUG
-#pragma comment(lib, "../../RongDian/bin/libcurld.lib")
+#pragma comment(lib, "../../RongDian/bin/curld.lib")
 #else
-#pragma comment(lib, "../../RongDian/bin/libcurl.lib")
+#pragma comment(lib, "../../RongDian/bin/curl.lib")
 #endif
 
 size_t callbackFunc(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -69,7 +79,7 @@ void multiThreadFunc()
 	int running_handle_count;
 	while (CURLM_CALL_MULTI_PERFORM == curl_multi_perform(multi_handle, &running_handle_count))
 	{
-		cout << running_handle_count << endl;
+		std::cout << running_handle_count << std::endl;
 	}
 	while (running_handle_count)
 	{
@@ -90,14 +100,14 @@ void multiThreadFunc()
 		int return_code = select(max_fd + 1, &fd_read, &fd_write, &fd_except, &tv);
 		if (SOCKET_ERROR == return_code)
 		{
-			cerr << "select error." << endl;
+			std::cerr << "select error." << std::endl;
 			break;
 		}
 		else
 		{
 			while (CURLM_CALL_MULTI_PERFORM == curl_multi_perform(multi_handle, &running_handle_count))
 			{
-				cout << running_handle_count << endl;
+				std::cout << running_handle_count << std::endl;
 			}
 		}
 	}
