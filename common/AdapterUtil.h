@@ -11,7 +11,7 @@
 #include <assert.h>
 
 typedef LONG (CALLBACK *LPFNAdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
-typedef LONG (CALLBACK *LPFNAdapterFriendlyNameAndStateCallBack)(LPVOID lParam, LPCWSTR lpszName,BOOL connectState, int nIndex);
+typedef LONG (CALLBACK *LPFNAdapterFriendlyNameAndStateCallBack)(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex);
 
 namespace AdapterUtil
 {

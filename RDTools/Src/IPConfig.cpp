@@ -396,7 +396,7 @@ BOOL CIPConfig::LoadAdapters()
 		if(pAdapterInfo)
 			bRet = TRUE;
 	}
-	AdapterUtil::GetName(AdaptersNameCallBack, (LPVOID)&lstAdaptersInfo);
+	AdapterUtil::GetFriendlyName(AdaptersNameCallBack, (LPVOID)&lstAdaptersInfo);
 	free(pAdapterHeader);
 	return bRet;
 }
@@ -787,7 +787,7 @@ LONG CALLBACK CIPConfig::AdapterInfoCallBack(WPARAM /*wParam*/, LPARAM /*lParam*
 	return 0;
 }
 
-LONG CALLBACK CIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, int nIndex)
+LONG CALLBACK CIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex)
 {
 	list<LPADAPTER_INFO> *plstAdapters = (list<LPADAPTER_INFO> *)lParam;
 	if(!plstAdapters)

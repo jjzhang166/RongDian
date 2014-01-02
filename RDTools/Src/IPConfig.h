@@ -29,7 +29,7 @@ RD_DECLARE_BEGIN(IPConfig)
 	RD_DECLARE_MEMBER(static DWORD WINAPI, ExeCMDThreadFunc)(void * pParams);
 
 	RD_DECLARE_MEMBER(static LONG CALLBACK, AdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
-	RD_DECLARE_MEMBER(static LONG CALLBACK, AdaptersNameCallBack)(LPVOID lParam, LPCWSTR lpszName, int nIndex);
+	RD_DECLARE_MEMBER(static LONG CALLBACK, AdaptersNameCallBack)(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex);
 
 public:
 	RD_DECLARE_MEMBER(CComboUI *, m_pSolutionList);
