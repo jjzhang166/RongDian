@@ -174,12 +174,13 @@ BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	FIND_CONTROL_BY_ID(m_pHostGroupContainerLayout, CVerticalLayoutUI, pManager, kHostGroupContainer)
 
 	wchar_t szPath[1024] = {0};
+	char szPathA[1024] = {0};
 	GetSystemDirectory(szPath, _countof(szPath));
 	PathAppend(szPath, L"drivers\\etc\\hosts");
 	if(m_pHostPathEdit)
 		m_pHostPathEdit->SetText(szPath);
-
-	if(!HostsHelper.Load())
+	StrUtil::w2a(szPath, szPathA);
+	if(!HostsHelper.Load(szPathA))
 	{
 		LOG4CPLUS_ERROR(g_Logger, L"Hosts File Load Fialed.");
 	}
@@ -488,9 +489,9 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 			break;
 		}
 		LOG4CPLUS_INFO_FMT(g_Logger, L"CHosts::InitHosts Create Group %s.", szSection);
+		pItem = pGroup->pItem;
 		for(int j=0; j<pGroup->nCount; j++)
 		{
-			pItem = pGroup->pItem;
 			assert(pItem!=NULL);
 			StrUtil::a2w(pItem->szAddr, szAddr);
 			StrUtil::a2w(pItem->szDomain, szDomain);
