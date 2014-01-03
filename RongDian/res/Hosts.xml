@@ -15,7 +15,7 @@
 		</HorizontalLayout> <!--host文件路径-->
 		<Control height="1" />
 		<!--host配置，以组为单位-->
-		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE0E0E0" inset="4,4,4,4" vscrollbar="true" >
+		<VerticalLayout name="host_group_container"  bordersize="1" bordercolor="FFE000E0" inset="4,4,4,4" vscrollbar="true" >
 			<!-- 分组节点测试 --
 			<VerticalLayout name="host_group1" minheight="34" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >
 				<HorizontalLayout height="26" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >

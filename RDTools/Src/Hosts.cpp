@@ -246,7 +246,7 @@ CControlUI* CHosts::OnCreateControl(CPaintManagerUI* pManager, LPCTSTR pstrClass
 	}
 	else if (wcsicmp(pstrClass, kHostGroupDescStateUI)==0)
 	{
-		pControl = new CButtonUI();
+		pControl = new CCheckBoxUI();
 		nSubType = HOSTS_GROUP_DESC_STATE;
 	}
 	else if (wcsicmp(pstrClass, kHostGroupDescEditUI)==0)
@@ -428,6 +428,10 @@ void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 		if(lpszUserData)
 		{
 			CControlUI *pControl = NULL;
+			LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
+			wchar_t szIndex[64] = {0};
+			assert(wcslen(pszIndex)>=2);
+			wcscpy(szIndex, &pszIndex[1]);
 			FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
 			if(pControl)
 			{
@@ -435,6 +439,7 @@ void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 					pControl->SetVisible(false);
 				else
 					pControl->SetVisible();
+				AdjustGroupHeight(pManager, szIndex);
 			}
 		}
 		bHandled = TRUE;
@@ -448,10 +453,15 @@ void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 			FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
 			if(pControl)
 			{
+				LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
+				wchar_t szIndex[64] = {0};
+				assert(wcslen(pszIndex)>=2);
+				wcscpy(szIndex, &pszIndex[1]);
 				if(pControl->IsVisible())
 					pControl->SetVisible(false);
 				else
 					pControl->SetVisible();
+				AdjustGroupHeight(pManager, szIndex);
 			}
 		}
 		bHandled = TRUE;
@@ -506,6 +516,7 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 			memset(szItemDesc, 0, sizeof(szItemDesc));
 			pItem = pItem->pNext;
 		}
+		AdjustGroupHeight(pManager, szGroupId, TRUE);
 		memset(szSection, 0, sizeof(szSection));
 		memset(szGroupDesc, 0, sizeof(szGroupDesc));
 		pGroup = pGroup->pNext;
@@ -594,7 +605,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	if(pSubControl)
 	{
 		pSubControl->SetName(szDescState);
-		pSubControl->SetUserData(szDescEdit);
+		pSubControl->SetUserData(szDescEdit); // 保存描述编辑框id，用于快速定位编辑框控件，以便于进行显示隐藏
 	}
 	pSubControl = pGroupLayout->DescEditCtrl();
 	if(pSubControl)
@@ -607,7 +618,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	if(pSubControl)
 	{
 		pSubControl->SetName(szState);
-		pSubControl->SetUserData(szItems);
+		pSubControl->SetUserData(szItems); // 保存HostsItems容器id，用于快速定位HostsItems容器，以便于进行显示隐藏
 	}
 	pSubControl = pGroupLayout->NameCtrl();
 	if(pSubControl)
@@ -618,18 +629,24 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	}
 	pSubControl = pGroupLayout->NewCtrl();
 	if(pSubControl)
+	{
 		pSubControl->SetName(szNew);
+		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于新增节点后，重新调整分组高度
+	}
 	pSubControl = pGroupLayout->SaveCtrl();
 	if(pSubControl)
 		pSubControl->SetName(szSave);
 	pSubControl = pGroupLayout->DelCtrl();
 	if(pSubControl)
+	{
 		pSubControl->SetName(szDel);
+		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
+	}
 	pSubControl = pGroupLayout->ItemsLayout();
 	if(pSubControl)
 	{
 		pSubControl->SetName(szItems);
-		pSubControl->SetUserData(L"0"); // for Hosts Item's Index
+		pSubControl->SetUserData(L"0"); // 保存HostsItems子节点索引起始值，用于HostsItem节点id命名
 	}
 	pManager->UpdateControls(pGroupLayout);
 #ifdef _DEBUG
@@ -725,7 +742,10 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 		pSubControl->SetName(szSave);
 	pSubControl = pItemLayout->DelCtrl();
 	if(pSubControl)
+	{
 		pSubControl->SetName(szDel);
+		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
+	}
 	pManager->UpdateControls(pItemLayout);
 #ifdef _DEBUG
 	pItemLayout = NULL;
@@ -752,5 +772,55 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 #endif
 	bRet = TRUE;
 
+	return bRet;
+}
+
+BOOL CHosts::AdjustGroupHeight(CPaintManagerUI* pManager, const wchar_t* pszGroupId, BOOL bInit /*= FALSE*/)
+{
+	BOOL bRet = FALSE;
+	CChildLayoutUI *pChildLayout = NULL;
+	CRichEditUI *pDescEdit = NULL;
+	CVerticalLayoutUI *pHostsItems = NULL;
+	wchar_t szChildLayout[64] = {0}, szDescEdit[64] = {0}, szHostsItems[64] = {0};
+	swprintf(szChildLayout, L"child_host_group_%s", pszGroupId);
+	swprintf(szDescEdit, L"host_group_desc_edit_%s", pszGroupId);
+	swprintf(szHostsItems, L"host_group_items_%s", pszGroupId);
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, szChildLayout);
+	FIND_CONTROL_BY_ID(pDescEdit, CRichEditUI, pManager, szDescEdit);
+	FIND_CONTROL_BY_ID(pHostsItems, CVerticalLayoutUI, pManager, szHostsItems);
+	if(!pChildLayout)
+		return bRet;
+	CHostGroupLayoutUI *pGroupLayout = (CHostGroupLayoutUI *)pChildLayout->GetItemAt(0);
+	assert(pGroupLayout!=NULL);
+	assert(pDescEdit!=NULL);
+	assert(pHostsItems!=NULL);
+	int nCount = pHostsItems->GetCount();
+	RECT rtInset = pGroupLayout->GetInset();
+	int nBorderSize = pGroupLayout->GetBorderSize();
+	int nMinHeight = pGroupLayout->GetMinHeight() + (rtInset.bottom + rtInset.top) + nBorderSize;
+	rtInset = pDescEdit->GetInset();
+	nBorderSize = pDescEdit->GetBorderSize();
+	int nEditHeight = pDescEdit->GetFixedHeight() + (rtInset.bottom + rtInset.top) + nBorderSize;
+	int nItemHeight = _wtoi(pGroupLayout->GetUserData());
+	if(nItemHeight==0)
+		nItemHeight = 24;
+	rtInset = pHostsItems->GetInset();
+	nBorderSize = pHostsItems->GetBorderSize();
+	nItemHeight = nCount * nItemHeight + (rtInset.bottom - rtInset.top) + nBorderSize;
+	int nHeight = nMinHeight;
+	if(bInit)
+	{
+		nHeight += nItemHeight;
+	}
+	else
+	{
+		if(pDescEdit->IsVisible())
+			nHeight += nEditHeight;
+		if(pHostsItems->IsVisible())
+			nHeight += nItemHeight;
+	}
+	pGroupLayout->SetFixedHeight(nHeight);
+	pChildLayout->SetFixedHeight(pGroupLayout->GetFixedHeight());
+	bRet = TRUE;
 	return bRet;
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-	<HostGroupLayout name="host_group_x" minheight="34" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >
+	<HostGroupLayout name="host_group_x" minheight="46" bordersize="1" bordercolor="FFE0E0E0" inset="2,2,2,2" userdata="24" >
 		<!--分组节点-->
-		<HorizontalLayout height="26" bordersize="1" bordercolor="FF0000E0" inset="2,2,2,2" >
+		<HorizontalLayout height="26" bordersize="1" bordercolor="FFE0E0E0" inset="2,2,2,2" >
 			<HostGroupState name="host_group_state_x" width="24" height="24" selectedimage="file='default\arrow_down.png' dest='2,2,18,18'" normalimage="file='default\arrow_up.png' dest='2,2,18,18'" inset="2,2,2,2" tooltip=""/>
 			<HostGroupName name="host_group_name_x" minwidth="150" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" text="New Group" bkimage="file='default\host_group_back.png'"/>
 			<Control />
@@ -11,14 +11,13 @@
 			<HostGroupDel name="host_group_del_x" width="24" normalimage="file='default\delete.png' dest='2,2,20,20'" tooltip=""/>
 		</HorizontalLayout>
 		<!--组内容，可隐藏-->
-		<HorizontalLayout height="18">
-			<HostGroupDescTopic name="host_desc_topic_x" text="Desc" width="120" />
+		<HorizontalLayout height="18" bordersize="1" bordercolor="FFE0E0E0" >
+			<HostGroupDescTopic name="host_group_desc_topic_x" text="Desc" width="120" />
 			<Control />
-			<HostGroupDescState name="host_desc_state_x" width="24" selectedimage="file='default\arrow_down.png' dest='2,2,16,16'" normalimage="file='default\arrow_up.png' dest='2,2,16,16'" tooltip=""/>
+			<HostGroupDescState name="host_group_desc_state_x" width="20" selectedimage="file='default\arrow_up.png' dest='2,2,16,16'" normalimage="file='default\arrow_down.png' dest='2,2,16,16'" tooltip=""/>
 		</HorizontalLayout>
-		<HostGroupDescEdit name="host_desc_edit_x" font="2" height="60" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" hscrollbar="true" vscrollbar="true" padding="2,2,2,2" text="" visible="false" />
-		<Control height="3" />
-		<HostGroupItemsLayout name="host_group_items_x" bordersize="1" bordercolor="FFFF0000" inset="2,2,2,2" visible="true" >
+		<HostGroupDescEdit name="host_group_desc_edit_x" font="0" height="72" bkcolor="FFE0E0E0" nativebkcolor="FFE0E0E0" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true" inset="2,2,2,2" text="" visible="false" />
+		<HostGroupItemsLayout name="host_group_items_x" bordersize="1" bordercolor="FFE0E0E0" inset="2,2,2,2" visible="true" >
 		</HostGroupItemsLayout>
 	</HostGroupLayout>
 </Window>

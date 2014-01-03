@@ -19,6 +19,8 @@ RD_DECLARE_BEGIN(Hosts)
 	RD_DECLARE_MEMBER(BOOL, CreateGroup)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, const wchar_t* /*pszGroupName*/, const wchar_t* pszDesc = NULL);
 	RD_DECLARE_MEMBER(BOOL, CreateItem)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, const wchar_t* /*pszAddr*/, const wchar_t* /*pszDomain*/, const wchar_t* pszDesc = NULL);
 
+	RD_DECLARE_MEMBER(BOOL, AdjustGroupHeight)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, BOOL bInit = FALSE);
+
 public:
 	RD_DECLARE_MEMBER(CEditUI*, m_pHostPathEdit);
 	RD_DECLARE_MEMBER(CVerticalLayoutUI*, m_pHostGroupContainerLayout);

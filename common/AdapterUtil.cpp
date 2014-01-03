@@ -49,25 +49,26 @@ BOOL AdapterUtil::GetFriendlyName(LPFNAdapterFriendlyNameAndStateCallBack lpCall
 	}
 	free(plfTable);*/
 
-
 	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
-	ULONG outBufLen = 0;  
+	ULONG ulSize = 0;  
 	DWORD dwRetVal = 0;
-	GetAdaptersAddresses(AF_UNSPEC,0, NULL, pAddresses,&outBufLen);
-	pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
-	if ((dwRetVal = GetAdaptersAddresses(AF_INET,GAA_FLAG_SKIP_ANYCAST,NULL,pAddresses,&outBufLen)) == NO_ERROR) 
+	GetAdaptersAddresses(AF_UNSPEC, 0, NULL, pAddresses, &ulSize);
+	pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(ulSize);
+	assert(pAddresses!=NULL);
+	if ((dwRetVal = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST, NULL, pAddresses, &ulSize)) == NO_ERROR) 
 	{
-		while (pAddresses)
+		PIP_ADAPTER_ADDRESSES pAddrItem = pAddresses;
+		while (pAddrItem) 
 		{
-			int active = (pAddresses->OperStatus==IfOperStatusUp)?TRUE:FALSE;
+			int bActive = (pAddrItem->OperStatus==IfOperStatusUp) ? TRUE : FALSE;
 			if(lpCallBack)
-				lpCallBack(lpParam, pAddresses->FriendlyName,active, pAddresses->IfIndex);
-			pAddresses = pAddresses->Next;  
+				lpCallBack(lpParam, pAddrItem->FriendlyName, bActive, pAddrItem->IfIndex);
+			pAddrItem = pAddrItem->Next; // 不能直接使用pAddresses，改变pAddresses地址，会使pAddresses原来申请的内存地址丢失，导致资源泄露 - 2014-01-04
 		}
-
 	}
 	else
 	{
+		free(pAddresses);
 		return FALSE;
 	}
 	free(pAddresses);
