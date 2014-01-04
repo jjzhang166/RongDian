@@ -16,7 +16,7 @@ public:
 	virtual void OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
 	virtual void OnTextChanged(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
 	virtual LPCWSTR GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/) { return L""; };
-	virtual BOOL IsCanQuit(HWND /*hWnd*/) = 0;
+	virtual BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/) = 0;
 	virtual void OnQuit() = 0;
 
 	virtual LRESULT HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) { return 0; };
@@ -41,7 +41,7 @@ typedef struct _tagTOOLS_INFO
 		C##tool(); \
 		virtual ~C##tool() { }; \
 	public: \
-		BOOL IsCanQuit(HWND hWnd); \
+		BOOL IsCanQuit(HWND hWnd, CPaintManagerUI* pManager); \
 		void OnQuit(); \
 		BOOL OnInit(WPARAM wParam, LPARAM lParam); \
 		BOOL SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang); \
@@ -106,7 +106,7 @@ typedef struct _tagTOOLS_INFO
 		return TRUE; \
 	} 
 
-#define RD_ISCAN_QUIT(h, r) \
+#define RD_ISCAN_QUIT(h, manager, r) \
 	{ \
 		r = TRUE; \
 		list<LPTOOLS_INFO>::iterator iter; \
@@ -119,7 +119,7 @@ typedef struct _tagTOOLS_INFO
 				r = FALSE; \
 				break; \
 			} \
-			r = tool->lpClass->IsCanQuit(h); \
+			r = tool->lpClass->IsCanQuit(h, manager); \
 			if(!r) \
 				break; \
 		} \

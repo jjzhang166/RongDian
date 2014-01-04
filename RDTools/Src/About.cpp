@@ -15,7 +15,7 @@ CAbout::CAbout()
 
 }
 
-BOOL CAbout::IsCanQuit(HWND /*hWnd*/)
+BOOL CAbout::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }

@@ -6,6 +6,7 @@ RD_DECLARE_BEGIN(ColorPicker)
 	RD_DECLARE_MEMBER(void, OnClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	RD_DECLARE_MEMBER(void, OnItemActive) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	RD_DECLARE_MEMBER(void, OnItemClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	RD_DECLARE_MEMBER(void, OnTextChanged) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	RD_DECLARE_MEMBER(void, OnItemSelected) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	RD_DECLARE_MEMBER(LPCWSTR, GetItemText) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/);
 	RD_DECLARE_MEMBER(LRESULT, OnCopyData) (WPARAM /*wParam*/, LPARAM /*lParam*/);

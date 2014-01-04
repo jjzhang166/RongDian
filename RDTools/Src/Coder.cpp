@@ -52,7 +52,7 @@ CCoder::CCoder()
 	hConvertThread = NULL;
 }
 
-BOOL CCoder::IsCanQuit(HWND hWnd)
+BOOL CCoder::IsCanQuit(HWND hWnd, CPaintManagerUI* /*pManager*/)
 {
 	if(hConvertThread)
 	{

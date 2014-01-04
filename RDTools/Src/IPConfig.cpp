@@ -90,7 +90,7 @@ CIPConfig::CIPConfig()
 	m_pCmdInfo = NULL;
 }
 
-BOOL CIPConfig::IsCanQuit(HWND /*hWnd*/)
+BOOL CIPConfig::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }

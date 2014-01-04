@@ -283,7 +283,7 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	else if(sCtrlName == kCloseBtn)
 	{
 		BOOL bIsCanQuit = FALSE;
-		RD_ISCAN_QUIT(m_hWnd, bIsCanQuit)
+		RD_ISCAN_QUIT(m_hWnd, (&m_PaintManager), bIsCanQuit)
 		if(!bIsCanQuit)
 		{
 			return;
@@ -541,7 +541,7 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 		if(stricmp(szVersion, szRDVersion))
 		{
 			OutputDebugStringW(L"Find New Version\n");
-#pragma message("版本更新待完善：CMainFrame::OnParseUpdateRespone需添加更新对话框的弹出代码.")
+#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
 		}
 	}
 	return 0;

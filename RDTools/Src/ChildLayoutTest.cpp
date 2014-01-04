@@ -15,7 +15,7 @@ CChildLayoutTest::CChildLayoutTest()
 
 }
 
-BOOL CChildLayoutTest::IsCanQuit(HWND /*hWnd*/)
+BOOL CChildLayoutTest::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }

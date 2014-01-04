@@ -26,7 +26,7 @@ CFinder::CFinder()
 	pFinderPathEdit = NULL;
 }
 
-BOOL CFinder::IsCanQuit(HWND /*hWnd*/)
+BOOL CFinder::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }

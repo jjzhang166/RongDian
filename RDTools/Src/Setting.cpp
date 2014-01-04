@@ -6,7 +6,7 @@ CSetting::CSetting()
 
 }
 
-BOOL CSetting::IsCanQuit(HWND /*hWnd*/)
+BOOL CSetting::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }

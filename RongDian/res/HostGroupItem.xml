@@ -3,11 +3,11 @@
 	<HostItemLayout name="host_item_x_y" height="24" bordersize="1" bordercolor="FF00FF00" inset="2,2,2,2" >
 		<HostItemState name="host_item_state_x_y" width="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
 		<Control width="2" />
-		<HostItemAddr name="host_item_addr_x_y" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="192.168.1.1" />
+		<HostItemAddr name="host_item_addr_x_y" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" />
 		<Control width="8" />
-		<HostItemDomain name="host_item_domain_x_y" width="160" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="baidu.com"/>
+		<HostItemDomain name="host_item_domain_x_y" width="160" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text=""/>
 		<Control width="8" />
-		<HostItemDesc name="host_item_desc_x_y" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="baidu"/>
+		<HostItemDesc name="host_item_desc_x_y" minwidth="250" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text=""/>
 		<Control width="5" />
 		<HostItemSave name="host_item_save_x_y" width="22" normalimage="file='default\save.png' dest='2,2,20,20'" tooltip="" visible="false" />
 		<HostItemDel name="host_item_del_x_y" width="22" normalimage="file='default\delete.png' dest='2,2,20,20'" tooltip=""/>

@@ -18,22 +18,6 @@ const wchar_t* const kHostGroupContainer = L"host_group_container";
 //xml路径
 const wchar_t* const kHostGroupXmlPath = L"HostGroup.xml";
 const wchar_t* const kHostGroupItemXmlPath = L"HostGroupItem.xml";
-//动态控件名
-const wchar_t* const kHostGroup = L"host_group";
-const wchar_t* const kHostGroupVisibleContentBtn = L"host_group_visible_content";
-const wchar_t* const kHostGroupTitleEdit = L"host_group_title_edit";
-const wchar_t* const kHostGroupNewRowBtn = L"host_group_new_row";
-const wchar_t* const kHostGroupSaveBtn = L"host_group_save";
-const wchar_t* const kHostGroupDeleteBtn = L"host_group_delete";
-const wchar_t* const kHostGroupRowsVLayout = L"host_group_rows";
-
-const wchar_t* const kHostRowVLayout = L"host_row";
-const wchar_t* const kHostRowActiveCB = L"host_row_active_cb";
-const wchar_t* const kHostRowIPEdit = L"host_row_ip_edit";
-const wchar_t* const kHostRowDomainEdit = L"host_row_domain_edit";
-const wchar_t* const kHostRowDescEdit = L"host_row_desc_edit";
-const wchar_t* const kHostRowSaveBtn = L"host_row_save";
-
 
 const wchar_t* const kHostDownArrowImage = L"default\\arrow_down.png";
 const wchar_t* const kHostUpArrowImage = L"default\\arrow_up.png";
@@ -56,6 +40,29 @@ const wchar_t* const kHostItemDomainUI = L"HostItemDomain";
 const wchar_t* const kHostItemDescUI = L"HostItemDesc";
 const wchar_t* const kHostItemSaveUI = L"HostItemSave";
 const wchar_t* const kHostItemDelUI = L"HostItemDel";
+
+const wchar_t* const kChildHostGroupPrefix = L"child_host_group_";
+const wchar_t* const kHostGroupPrefix = L"host_group_";
+const wchar_t* const kHostGroupDescTopicPrefix = L"host_group_desc_topic_";
+const wchar_t* const kHostGroupDescStatePrefix = L"host_group_desc_state_";
+const wchar_t* const kHostGroupDescEditPrefix = L"host_group_desc_edit_";
+const wchar_t* const kHostGroupStatePrefix = L"host_group_state_";
+const wchar_t* const kHostGroupNamePrefix = L"host_group_name_";
+const wchar_t* const kHostGroupNewPrefix = L"host_group_new_";
+const wchar_t* const kHostGroupSavePrefix = L"host_group_save_";
+const wchar_t* const kHostGroupDelPrefix = L"host_group_del_";
+const wchar_t* const kHostGroupItemsPrefix = L"host_group_items_";
+
+const wchar_t* const kChildHostItemPrefix = L"child_host_item_";
+const wchar_t* const kHostItemPrefix = L"host_item_";
+const wchar_t* const kHostItemStatePrefix = L"host_item_state_";
+const wchar_t* const kHostItemAddrPrefix = L"host_item_addr_";
+const wchar_t* const kHostItemDomainPrefix = L"host_item_domain_";
+const wchar_t* const kHostItemDescPrefix = L"host_item_desc_";
+const wchar_t* const kHostItemSavePrefix = L"host_item_save_";
+const wchar_t* const kHostItemDelPrefix = L"host_item_del_";
+
+const wchar_t* const kHostSectionPrefix = L"Hosts Group ";
 
 //
 class CHostGroupLayoutUI : public CVerticalLayoutUI
@@ -150,19 +157,23 @@ private:
 //
 CHosts::CHosts()
 {
-	m_groupIndex = 0;
-	m_rowIndex = 0;
 	m_pHostGroupContainerLayout = NULL;
+	bModified = FALSE;
 }
 
-BOOL CHosts::IsCanQuit(HWND /*hWnd*/)
+BOOL CHosts::IsCanQuit(HWND hWnd, CPaintManagerUI* pManager)
 {
+//#pragma message("CHosts::IsCanQuit － 检测数据是否有更新，保存数据到hosts文件")
+	if(bModified)
+	{
+#pragma message("CHosts::IsCanQuit － 数据有更新，但为保存，提示用户是否保存当前修改")
+		//SaveHostsFile(hWnd, pManager);
+	}
 	return TRUE;
 }
 
 void CHosts::OnQuit()
 {
-
 }
 
 BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
@@ -409,69 +420,89 @@ void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName==kHostOpenBtn)
 	{
-		OpenHostsFile(hWnd);
+		OpenHostsFile(hWnd, pManager);
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kHostBackupBtn)
 	{
-		BackupHostsFile(hWnd);
+		BackupHostsFile(hWnd, pManager);
 		bHandled = TRUE;
 	}
 	else if(sCtrlName==kHostNewGroupBtn)
 	{
-		CreateGroup(NULL, NULL, NULL);
+		NewHostsGroup(hWnd, pManager);
 		bHandled = TRUE;
 	}
-	else if(wcsstr(sCtrlName.GetData(), L"host_group_state")!=NULL)
+	else if(sCtrlName==kHostLoadBtn)
 	{
-		LPCWSTR lpszUserData = msg.pSender->GetUserData();
-		if(lpszUserData)
-		{
-			CControlUI *pControl = NULL;
-			LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
-			wchar_t szIndex[64] = {0};
-			assert(wcslen(pszIndex)>=2);
-			wcscpy(szIndex, &pszIndex[1]);
-			FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
-			if(pControl)
-			{
-				if(pControl->IsVisible())
-					pControl->SetVisible(false);
-				else
-					pControl->SetVisible();
-				AdjustGroupHeight(pManager, szIndex);
-			}
-		}
+		LoadHostsFile(hWnd, pManager);
 		bHandled = TRUE;
 	}
-	else if(wcsstr(sCtrlName.GetData(), L"host_group_desc_state")!=NULL)
+	else if(sCtrlName==kHostSaveBtn)
 	{
-		LPCWSTR lpszUserData = msg.pSender->GetUserData();
-		if(lpszUserData)
-		{
-			CControlUI *pControl = NULL;
-			FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
-			if(pControl)
-			{
-				LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
-				wchar_t szIndex[64] = {0};
-				assert(wcslen(pszIndex)>=2);
-				wcscpy(szIndex, &pszIndex[1]);
-				if(pControl->IsVisible())
-					pControl->SetVisible(false);
-				else
-					pControl->SetVisible();
-				AdjustGroupHeight(pManager, szIndex);
-			}
-		}
+		SaveHostsFile(hWnd, pManager);
+		bHandled = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupStatePrefix)!=NULL)
+	{
+		ShowHostItems(msg.pSender, pManager);
+		bHandled = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupDescStatePrefix)!=NULL)
+	{
+		ShowHostDesc(msg.pSender, pManager);
+		bHandled = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupNewPrefix)!=NULL)
+	{
+		NewHostItem(msg.pSender, pManager);
+		bHandled = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupDelPrefix)!=NULL)
+	{
+		DelHostGroup(msg.pSender, pManager);
+		bHandled = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostItemDelPrefix)!=NULL)
+	{
+		DelHostItem(msg.pSender, pManager);
 		bHandled = TRUE;
 	}
 }
 
-void CHosts::OnItemSelect(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg)
+void CHosts::OnTextChanged(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
-	CComboUI* pCombo = (CComboUI*)msg.pSender;
-	CDuiString sItemName = pCombo->GetName();
+	CDuiString sCtrlName = msg.pSender->GetName();
+	if(wcsstr(sCtrlName.GetData(), kHostGroupNamePrefix)!=NULL)
+	{
+		UpdateHostGroupName(msg.pSender, pManager);
+		bHandled = TRUE;
+		bModified = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupDescEditPrefix)!=NULL) // not active for DuiLib's richedit
+	{
+		UpdateHostGroupDesc(msg.pSender, pManager);
+		bHandled = TRUE;
+		bModified = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostItemAddrPrefix)!=NULL)
+	{
+		UpdateHostItemAddr(msg.pSender, pManager);
+		bHandled = TRUE;
+		bModified = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostItemDomainPrefix)!=NULL)
+	{
+		UpdateHostItemDomain(msg.pSender, pManager);
+		bHandled = TRUE;
+		bModified = TRUE;
+	}
+	else if(wcsstr(sCtrlName.GetData(), kHostItemDescPrefix)!=NULL)
+	{
+		UpdateHostItemDesc(msg.pSender, pManager);
+		bHandled = TRUE;
+		bModified = TRUE;
+	}
 }
 
 BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
@@ -487,12 +518,13 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 		LOG4CPLUS_ERROR(g_Logger, L"CHosts::InitHosts - Can't Find Group Container Layout.");
 		return bRet;
 	}
+	m_pHostGroupContainerLayout->SetUserData(L"0"); // 分组id起始值，用于HostsGroup分组id命名
 	for(int i=0; i<HostsHelper.nCount; i++)
 	{
 		assert(pGroup!=NULL);
-		swprintf(szGroupId, L"%d", i);
 		StrUtil::a2w(pGroup->szSection, szSection);
 		StrUtil::a2w(pGroup->szDesc, szGroupDesc);
+		StrUtil::a2w(pGroup->szId, szGroupId);
 		if(!CreateGroup(pManager, szGroupId, szSection, szGroupDesc))
 		{
 			LOG4CPLUS_ERROR_FMT(g_Logger, L"CHosts::InitHosts Create Group %s Failed.", szSection);
@@ -521,11 +553,11 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 		memset(szGroupDesc, 0, sizeof(szGroupDesc));
 		pGroup = pGroup->pNext;
 	}
-	//m_pHostGroupContainerLayout->EstimateSize()
+	bRet = TRUE;
 	return bRet;
 }
 
-BOOL CHosts::OpenHostsFile(HWND hWnd)
+BOOL CHosts::OpenHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 {
 	BOOL bRet = FALSE;
 	if(!m_pHostPathEdit)
@@ -536,7 +568,7 @@ BOOL CHosts::OpenHostsFile(HWND hWnd)
 	return bRet;
 }
 
-BOOL CHosts::BackupHostsFile(HWND hWnd)
+BOOL CHosts::BackupHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 {
 	BOOL bRet = FALSE;
 	if(!m_pHostPathEdit)
@@ -558,10 +590,325 @@ BOOL CHosts::BackupHostsFile(HWND hWnd)
 	return bRet;
 }
 
-BOOL CHosts::CreateNewHosts(HWND hWnd)
+BOOL CHosts::NewHostsGroup(HWND hWnd, CPaintManagerUI* pManager)
 {
 	BOOL bRet = FALSE;
+	CDuiString sNewGroupIndex = m_pHostGroupContainerLayout->GetUserData();
+	wchar_t szGroupName[64] = {0};
+	char szGroupNameA[64] = {0};
+	swprintf(szGroupName, L"%s%s", kHostSectionPrefix, sNewGroupIndex.GetData());
+	StrUtil::w2a(szGroupName, szGroupNameA);
+	if(!HostsHelper.AddSection(szGroupNameA))
+	{
+#pragma message("CHosts::NewHostsGroup - 添加分组数据失败，需添加提示信息")
+		return bRet;
+	}
+	bRet = CreateGroup(pManager, sNewGroupIndex.GetData(), NULL);
+	if(!bRet)
+	{
+#pragma message("CHosts::NewHostsGroup - 添加分组到UI失败，需添加提示信息")
+		return bRet;
+	}
+	bModified = TRUE;
 	return bRet;
+}
+
+BOOL CHosts::LoadHostsFile(HWND hWnd, CPaintManagerUI* pManager)
+{
+	BOOL bRet = FALSE;
+	if(bModified)
+	{
+#pragma message("CHosts::LoadHostsFile － 当前hosts被更新但为保存，提示用户是否保存当前修改")
+	}
+//#pragma message("Hosts加载：CHosts::LoadHostsFile － 加载hosts文件数据到RDTools")
+	wchar_t szPath[1024] = {0};
+	char szPathA[1024] ={0};
+	bRet = SHHelper::SelectFile(hWnd, szPath, L"All(*.*)\0*.*\0\0");
+	if(!bRet)
+		return bRet;
+	StrUtil::w2a(szPath, szPathA);
+	assert(m_pHostGroupContainerLayout!=NULL);
+	if(!HostsHelper.Load(szPathA))
+	{
+#pragma message("CHosts::LoadHostsFile - 添加加载hosts文件错误提示")
+		return FALSE;
+	}
+	m_pHostGroupContainerLayout->RemoveAll();
+	CControlUI *pBlank = new CControlUI();
+	assert(pBlank!=NULL);
+	pBlank->SetFixedHeight(1);
+	m_pHostGroupContainerLayout->Add(pBlank);
+	bRet = InitHosts(pManager);
+	if(!bRet)
+	{
+#pragma message("CHosts::LoadHostsFile - 添加初始化hosts文件错误提示")
+		return bRet;
+	}
+	if(m_pHostPathEdit)
+		m_pHostPathEdit->SetText(szPath);
+	bRet = TRUE;
+	bModified = FALSE; // 重新加载hosts文件，重置修改标识
+	return bRet;
+}
+
+BOOL CHosts::SaveHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
+{
+	BOOL bRet = FALSE;
+//#pragma message("CHosts::SaveHostsFile － 保存hosts数据到文件")
+	assert(m_pHostPathEdit!=NULL);
+	CDuiString strPath = m_pHostPathEdit->GetText();
+	char szPathA[1024];
+	StrUtil::w2a(strPath.GetData(), szPathA);
+	if(!HostsHelper.SaveAs(szPathA))
+	{
+#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件失败，需添加提示信息")
+	}
+	else
+	{
+#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件完成，需添加提示信息")
+		bRet = TRUE;
+		bModified = FALSE;
+	}
+	return bRet;
+}
+
+BOOL CHosts::ShowHostItems(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString sCtrlName = pSender->GetName();
+	LPCWSTR lpszUserData = pSender->GetUserData();
+	if(lpszUserData)
+	{
+		CControlUI *pControl = NULL;
+		LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
+		wchar_t szIndex[64] = {0};
+		assert(wcslen(pszIndex)>=2);
+		wcscpy(szIndex, &pszIndex[1]);
+		FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
+		if(pControl)
+		{
+			if(pControl->IsVisible())
+				pControl->SetVisible(false);
+			else
+				pControl->SetVisible();
+			AdjustGroupHeight(pManager, szIndex);
+		}
+	}
+	return TRUE;
+}
+
+BOOL CHosts::ShowHostDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString sCtrlName = pSender->GetName();
+	LPCWSTR lpszUserData = pSender->GetUserData();
+	if(lpszUserData)
+	{
+		CControlUI *pControl = NULL;
+		FIND_CONTROL_BY_ID(pControl, CControlUI, pManager, lpszUserData);
+		if(pControl)
+		{
+			LPCWSTR pszIndex = wcsrchr(sCtrlName.GetData(), L'_');
+			wchar_t szIndex[64] = {0};
+			assert(wcslen(pszIndex)>=2);
+			wcscpy(szIndex, &pszIndex[1]);
+			if(pControl->IsVisible())
+				pControl->SetVisible(false);
+			else
+				pControl->SetVisible();
+			AdjustGroupHeight(pManager, szIndex);
+		}
+	}
+	return TRUE;
+}
+
+BOOL CHosts::NewHostItem(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	LPCWSTR lpszUserData = pSender->GetUserData();
+	CreateItem(pManager, lpszUserData, L"", L"");
+	AdjustGroupHeight(pManager, lpszUserData);
+#pragma message("CHosts::NewHostItem - 节点初始IP、Domain均为空，且需同步hosts内存数据")
+	bModified = TRUE;
+	return TRUE;
+}
+
+BOOL CHosts::DelHostGroup(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	LPCWSTR lpszUserData = pSender->GetUserData();
+	CChildLayoutUI *pChildLayout = NULL;
+	wchar_t szChildLayout[64] = {0};
+	swprintf(szChildLayout, L"%s%s", kChildHostGroupPrefix, lpszUserData);
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, szChildLayout);
+	assert(m_pHostGroupContainerLayout!=NULL);
+	assert(pChildLayout!=NULL);
+
+//#pragma message("Hosts删除分组：CHosts::DelHostGroup - 需添加同步hosts文件数据代码")
+	wchar_t szGroupNameId[64] = {0}, szGroupName[1024] = {0};
+	char szSection[1024] = {0};
+	swprintf(szGroupNameId, L"%s%s", kHostGroupNamePrefix, lpszUserData);
+	CControlUI *pGroupName = NULL;
+	FIND_CONTROL_BY_ID(pGroupName, CControlUI, pManager, szGroupNameId);
+	assert(pGroupName!=NULL);
+	wcscpy(szGroupName, pGroupName->GetText().GetData());
+	StrUtil::w2a(szGroupName, szSection);
+	HostsHelper.DelSection(szSection);
+
+	m_pHostGroupContainerLayout->Remove(pChildLayout);
+	bModified = TRUE;
+	return TRUE;
+}
+
+BOOL CHosts::DelHostItem(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString sCtrlName = pSender->GetName();
+	CDuiString sUserData = pSender->GetUserData();
+	CChildLayoutUI *pChildLayout = NULL;
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, sUserData.GetData());
+	assert(pChildLayout!=NULL);
+	LPCWSTR pszGroupId = pChildLayout->GetUserData();
+	wchar_t szItems[64] = {0};
+	swprintf(szItems, L"%s%s", kHostGroupItemsPrefix, pszGroupId);
+	CVerticalLayoutUI *pGroupItems = NULL;
+	FIND_CONTROL_BY_ID(pGroupItems, CVerticalLayoutUI, pManager, szItems);
+	assert(pGroupItems!=NULL);
+//#pragma message("Hosts删除节点：CHosts::DelHostItem - 需添加同步hosts文件数据代码")
+
+	wchar_t szGroupNameId[64] = {0}, szGroupName[1024] = {0};
+	char szSection[1024] = {0};
+	swprintf(szGroupNameId, L"%s%s", kHostGroupNamePrefix, pszGroupId);
+	CControlUI *pGroupName = NULL;
+	FIND_CONTROL_BY_ID(pGroupName, CControlUI, pManager, szGroupNameId);
+	assert(pGroupName!=NULL);
+	wcscpy(szGroupName, pGroupName->GetText().GetData());
+	StrUtil::w2a(szGroupName, szSection);
+
+	LPCWSTR pszItemIndex = wcsrchr(sUserData.GetData(), L'_');
+	wchar_t szItemIndex[64] = {0};
+	assert(wcslen(pszItemIndex)>=2);
+	wcscpy(szItemIndex, &pszItemIndex[1]);
+	wchar_t szItemDomainId[64] = {0}, szItemDomain[1024] = {0};
+	char szDomain[1024] = {0};
+	swprintf(szItemDomainId, L"%s%s_%s", kHostItemDomainPrefix, pszGroupId, szItemIndex);
+	CControlUI *pItemDomain = NULL;
+	FIND_CONTROL_BY_ID(pItemDomain, CControlUI, pManager, szItemDomainId);
+	assert(pItemDomain!=NULL);
+	wcscpy(szItemDomain, pItemDomain->GetText().GetData());
+	StrUtil::w2a(szItemDomain, szDomain);
+	HostsHelper.DelItem(szSection, szDomain);
+
+	pGroupItems->Remove(pChildLayout);
+	AdjustGroupHeight(pManager, pszGroupId);
+	bModified = TRUE;
+	return TRUE;
+}
+
+BOOL CHosts::UpdateHostGroupName(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString strId = pSender->GetUserData();
+	CDuiString strNewName = pSender->GetText();
+	char szId[64] = {0}, szNewSection[1024] = {0};
+	StrUtil::w2a(strId.GetData(), szId);
+	PHOSTS_INFO pHostInfo = HostsHelper.FindSectionById(szId);
+	assert(pHostInfo!=NULL);
+	StrUtil::w2a(strNewName.GetData(), szNewSection);
+	memset(pHostInfo->szSection, 0, sizeof(pHostInfo->szSection));
+	strcpy(pHostInfo->szSection, szNewSection);
+	return TRUE;
+}
+
+BOOL CHosts::UpdateHostGroupDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString strDesc = pSender->GetText();
+	CDuiString strGroupId = pSender->GetUserData();
+	wchar_t szName[64] = {0};
+	swprintf(szName, L"%s%s", kHostGroupNamePrefix, strGroupId.GetData());
+	CEditUI *pNameEdit = NULL;
+	FIND_CONTROL_BY_ID(pNameEdit, CEditUI, pManager, szName);
+	assert(pNameEdit!=NULL);
+	CDuiString strName = pNameEdit->GetText();
+	char szSection[1024] = {0};
+	StrUtil::w2a(strName.GetData(), szSection);
+	PHOSTS_INFO pHostInfo = HostsHelper.FindSection(szSection);
+	assert(pHostInfo!=NULL);
+	char szDesc[1024] = {0};
+	StrUtil::w2a(strDesc.GetData(), szDesc);
+	memset(pHostInfo->szDesc, 0, sizeof(pHostInfo->szDesc));
+	strncpy(pHostInfo->szDesc, szDesc, _countof(pHostInfo->szDesc)-1);
+	return TRUE;
+}
+
+BOOL CHosts::UpdateHostItemAddr(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString strText = pSender->GetText();
+	CDuiString sUserData = pSender->GetUserData();
+	if(!ValidateUtil::IsIPv4(strText.GetData()))
+	{
+#pragma message("CHosts::UpdateHostItemAddr - IP地址输入无效，提示用户")
+		return FALSE;
+	}
+	CChildLayoutUI *pChildLayout = NULL;
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, sUserData.GetData());
+	assert(pChildLayout!=NULL);
+	LPCWSTR pszGroupId = pChildLayout->GetUserData();
+	LPCWSTR pszItemIndex = wcsrchr(sUserData.GetData(), L'_');
+	wchar_t szItemIndex[64] = {0};
+	assert(wcslen(pszItemIndex)>=2);
+	wcscpy(szItemIndex, &pszItemIndex[1]);
+	char szGroupId[64] = {0}, szItemId[64] = {0};
+	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
+	sprintf(szItemId, "%s", szItemIndex);
+	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	assert(pHostsItem!=NULL);
+	memset(pHostsItem->szAddr, 0, sizeof(pHostsItem->szAddr));
+	StrUtil::w2a(strText.GetData(), pHostsItem->szAddr);
+	return TRUE;
+}
+
+BOOL CHosts::UpdateHostItemDomain(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString strText = pSender->GetText();
+	CDuiString sUserData = pSender->GetUserData();
+	if(!ValidateUtil::IsDomain(strText.GetData()))
+	{
+#pragma message("CHosts::UpdateHostItemAddr - 域名输入无效，提示用户")
+		return FALSE;
+	}
+	CChildLayoutUI *pChildLayout = NULL;
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, sUserData.GetData());
+	assert(pChildLayout!=NULL);
+	LPCWSTR pszGroupId = pChildLayout->GetUserData();
+	LPCWSTR pszItemIndex = wcsrchr(sUserData.GetData(), L'_');
+	wchar_t szItemIndex[64] = {0};
+	assert(wcslen(pszItemIndex)>=2);
+	wcscpy(szItemIndex, &pszItemIndex[1]);
+	char szGroupId[64] = {0}, szItemId[64] = {0};
+	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
+	sprintf(szItemId, "%s", szItemIndex);
+	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	assert(pHostsItem!=NULL);
+	memset(pHostsItem->szDomain, 0, sizeof(pHostsItem->szDomain));
+	StrUtil::w2a(strText.GetData(), pHostsItem->szDomain);
+	return TRUE;
+}
+
+BOOL CHosts::UpdateHostItemDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+{
+	CDuiString strText = pSender->GetText();
+	CDuiString sUserData = pSender->GetUserData();
+	CChildLayoutUI *pChildLayout = NULL;
+	FIND_CONTROL_BY_ID(pChildLayout, CChildLayoutUI, pManager, sUserData.GetData());
+	assert(pChildLayout!=NULL);
+	LPCWSTR pszGroupId = pChildLayout->GetUserData();
+	LPCWSTR pszItemIndex = wcsrchr(sUserData.GetData(), L'_');
+	wchar_t szItemIndex[64] = {0};
+	assert(wcslen(pszItemIndex)>=2);
+	wcscpy(szItemIndex, &pszItemIndex[1]);
+	char szGroupId[64] = {0}, szItemId[64] = {0};
+	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
+	sprintf(szItemId, "%s", szItemIndex);
+	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	assert(pHostsItem!=NULL);
+	memset(pHostsItem->szDesc, 0, sizeof(pHostsItem->szDesc));
+	StrUtil::w2a(strText.GetData(), pHostsItem->szDesc);
+	return TRUE;
 }
 
 BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, const wchar_t* pszGroupName, const wchar_t* pszDesc /*= NULL*/)
@@ -575,8 +922,18 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	CChildLayoutUI *pChildLayout = new CChildLayoutUI();
 	if(!pChildLayout)
 		return bRet;
+	wchar_t szGroupId[64] = {0};
+	wchar_t szGroupName[64] = {0};
+	if(pszGroupId)
+		wcscpy(szGroupId, pszGroupId);
+	else
+		wcscpy(szGroupId, m_pHostGroupContainerLayout->GetUserData());
+	if(pszGroupName)
+		wcscpy(szGroupName, pszGroupName);
+	else
+		swprintf(szGroupName, L"%s%s", kHostSectionPrefix, szGroupId);
 	wchar_t szChildLayout[64] = {0};
-	swprintf(szChildLayout, L"child_host_group_%s", pszGroupId);
+	swprintf(szChildLayout, L"%s%s", kChildHostGroupPrefix, szGroupId);
 	pChildLayout->SetName(szChildLayout);
 	pChildLayout->SetChildLayoutXML(kHostGroupXmlPath, (DuiLib::IDialogBuilderCallback *)g_pMainFrame);
 	m_pHostGroupContainerLayout->AddAt(pChildLayout, m_pHostGroupContainerLayout->GetCount() - 1);
@@ -586,16 +943,16 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	assert(pGroupLayout!=NULL);
 	wchar_t szHostGroup[64] = {0}, szDescTopic[64] = {0}, szDescState[64] = {0}, szDescEdit[64] = {0}, szState[64] = {0}, 
 		szName[64] = {0}, szNew[64] = {0}, szSave[64] = {0}, szDel[64] = {0}, szItems[64] = {0};
-	swprintf(szHostGroup, L"host_group_%s", pszGroupId);
-	swprintf(szDescTopic, L"host_group_desc_topic_%s", pszGroupId);
-	swprintf(szDescState, L"host_group_desc_state_%s", pszGroupId);
-	swprintf(szDescEdit, L"host_group_desc_edit_%s", pszGroupId);
-	swprintf(szState, L"host_group_state_%s", pszGroupId);
-	swprintf(szName, L"host_group_name_%s", pszGroupId);
-	swprintf(szNew, L"host_group_new_%s", pszGroupId);
-	swprintf(szSave, L"host_group_save_%s", pszGroupId);
-	swprintf(szDel, L"host_group_del_%s", pszGroupId);
-	swprintf(szItems, L"host_group_items_%s", pszGroupId);
+	swprintf(szHostGroup, L"%s%s", kHostGroupPrefix, szGroupId);
+	swprintf(szDescTopic, L"%s%s", kHostGroupDescTopicPrefix, szGroupId);
+	swprintf(szDescState, L"%s%s", kHostGroupDescStatePrefix, szGroupId);
+	swprintf(szDescEdit, L"%s%s", kHostGroupDescEditPrefix, szGroupId);
+	swprintf(szState, L"%s%s", kHostGroupStatePrefix, szGroupId);
+	swprintf(szName, L"%s%s", kHostGroupNamePrefix, szGroupId);
+	swprintf(szNew, L"%s%s", kHostGroupNewPrefix, szGroupId);
+	swprintf(szSave, L"%s%s", kHostGroupSavePrefix, szGroupId);
+	swprintf(szDel, L"%s%s", kHostGroupDelPrefix, szGroupId);
+	swprintf(szItems, L"%s%s", kHostGroupItemsPrefix, szGroupId);
 	pGroupLayout->SetName(szHostGroup);
 	CControlUI *pSubControl = NULL;
 	pSubControl = pGroupLayout->DescTopicCtrl();
@@ -611,8 +968,9 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	if(pSubControl)
 	{
 		pSubControl->SetName(szDescEdit);
-		if(pszGroupName)
+		if(pszDesc)
 			pSubControl->SetText(pszDesc);
+		pSubControl->SetUserData(szGroupId);
 	}
 	pSubControl = pGroupLayout->StateCtrl();
 	if(pSubControl)
@@ -624,23 +982,23 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	if(pSubControl)
 	{
 		pSubControl->SetName(szName);
-		if(pszGroupName)
-			pSubControl->SetText(pszGroupName);
+		pSubControl->SetText(szGroupName);
+		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于查找HostInfo信息，以便于修改内存数据
 	}
 	pSubControl = pGroupLayout->NewCtrl();
 	if(pSubControl)
 	{
 		pSubControl->SetName(szNew);
-		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于新增节点后，重新调整分组高度
+		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于新增节点后，重新调整分组高度
 	}
-	pSubControl = pGroupLayout->SaveCtrl();
+	pSubControl = pGroupLayout->SaveCtrl(); // 该控件目前被隐藏
 	if(pSubControl)
 		pSubControl->SetName(szSave);
 	pSubControl = pGroupLayout->DelCtrl();
 	if(pSubControl)
 	{
 		pSubControl->SetName(szDel);
-		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
+		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
 	}
 	pSubControl = pGroupLayout->ItemsLayout();
 	if(pSubControl)
@@ -648,7 +1006,13 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 		pSubControl->SetName(szItems);
 		pSubControl->SetUserData(L"0"); // 保存HostsItems子节点索引起始值，用于HostsItem节点id命名
 	}
+	int nGroupIndex = _wtoi(m_pHostGroupContainerLayout->GetUserData().GetData());
+	wchar_t szNewGroupIndex[32] = {0};
+	swprintf(szNewGroupIndex, L"%d", nGroupIndex+1);
+	m_pHostGroupContainerLayout->SetUserData(szNewGroupIndex); // Update Host Group's Index
 	pManager->UpdateControls(pGroupLayout);
+	if(pszGroupId==NULL)
+		AdjustGroupHeight(pManager, szGroupId, TRUE);
 #ifdef _DEBUG
 	pGroupLayout = NULL;
 	FIND_CONTROL_BY_ID(pGroupLayout, CHostGroupLayoutUI, pManager, szHostGroup);
@@ -680,7 +1044,7 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 {
 	BOOL bRet = FALSE;
 	wchar_t szItems[64] = {0};
-	swprintf(szItems, L"host_group_items_%s", pszGroupId);
+	swprintf(szItems, L"%s%s", kHostGroupItemsPrefix, pszGroupId);
 	CVerticalLayoutUI *pGroupItems = NULL;
 	FIND_CONTROL_BY_ID(pGroupItems, CVerticalLayoutUI, pManager, szItems);
 	assert(pGroupItems!=NULL);
@@ -689,8 +1053,9 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 	if(!pChildLayout)
 		return bRet;
 	wchar_t szChildLayout[64] = {0};
-	swprintf(szChildLayout, L"child_host_items_%s_%d", pszGroupId, nItemIndex);
+	swprintf(szChildLayout, L"%s%s_%d", kChildHostItemPrefix, pszGroupId, nItemIndex);
 	pChildLayout->SetName(szChildLayout);
+	pChildLayout->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
 	pChildLayout->SetChildLayoutXML(kHostGroupItemXmlPath, (DuiLib::IDialogBuilderCallback *)g_pMainFrame);
 	pGroupItems->AddAt(pChildLayout, pGroupItems->GetCount());
 	wchar_t szIndex[32] = {0};
@@ -704,13 +1069,13 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 
 	wchar_t szHostItem[64] = {0}, szState[64] = {0}, szAddr[64] = {0}, szDomain[64] = {0}, 
 		szDesc[64] = {0}, szSave[64] = {0}, szDel[64] = {0};
-	swprintf(szHostItem, L"host_item_%s_%d", pszGroupId, nItemIndex);
-	swprintf(szState, L"host_item_state_%s_%d", pszGroupId, nItemIndex);
-	swprintf(szAddr, L"host_item_addr_%s", pszGroupId, nItemIndex);
-	swprintf(szDomain, L"host_item_domain_%s", pszGroupId, nItemIndex);
-	swprintf(szDesc, L"host_item_desc_%s", pszGroupId, nItemIndex);
-	swprintf(szSave, L"host_item_save_%s", pszGroupId, nItemIndex);
-	swprintf(szDel, L"host_item_del_%s", pszGroupId, nItemIndex);
+	swprintf(szHostItem, L"%s%s_%d", kHostItemPrefix, pszGroupId, nItemIndex);
+	swprintf(szState, L"%s%s_%d", kHostItemStatePrefix, pszGroupId, nItemIndex);
+	swprintf(szAddr, L"%s%s_%d", kHostItemAddrPrefix, pszGroupId, nItemIndex);
+	swprintf(szDomain, L"%s%s_%d", kHostItemDomainPrefix, pszGroupId, nItemIndex);
+	swprintf(szDesc, L"%s%s_%d", kHostItemDescPrefix, pszGroupId, nItemIndex);
+	swprintf(szSave, L"%s%s_%d", kHostItemSavePrefix, pszGroupId, nItemIndex);
+	swprintf(szDel, L"%s%s_%d", kHostItemDelPrefix, pszGroupId, nItemIndex);
 	pItemLayout->SetName(szHostItem);
 	CControlUI *pSubControl = NULL;
 	pSubControl = pItemLayout->StateCtrl();
@@ -722,6 +1087,7 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 		pSubControl->SetName(szAddr);
 		if(pszAddr)
 			pSubControl->SetText(pszAddr);
+		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于找回分组id、节点id
 	}
 	pSubControl = pItemLayout->DomainCtrl();
 	if(pSubControl)
@@ -729,6 +1095,7 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 		pSubControl->SetName(szDomain);
 		if(pszDomain)
 			pSubControl->SetText(pszDomain);
+		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于找回分组id、节点id
 	}
 	pSubControl = pItemLayout->DescCtrl();
 	if(pSubControl)
@@ -736,15 +1103,16 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, const wchar_t* pszGroupId, co
 		pSubControl->SetName(szDesc);
 		if(pszDesc)
 			pSubControl->SetText(pszDesc);
+		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于找回分组id、节点id
 	}
-	pSubControl = pItemLayout->SaveCtrl();
+	pSubControl = pItemLayout->SaveCtrl(); // 该控件目前被隐藏
 	if(pSubControl)
 		pSubControl->SetName(szSave);
 	pSubControl = pItemLayout->DelCtrl();
 	if(pSubControl)
 	{
 		pSubControl->SetName(szDel);
-		pSubControl->SetUserData(pszGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
+		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于快速定位host_item_child容器，以便于删除该容器
 	}
 	pManager->UpdateControls(pItemLayout);
 #ifdef _DEBUG

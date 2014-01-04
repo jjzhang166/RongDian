@@ -1,6 +1,7 @@
 //#include "stadfx.h"
 #include "HostsHelper.h"
 
+#include <assert.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
@@ -12,40 +13,25 @@
 
 const char * const kSectionTag = "#Section";
 const char * const kCommentTag = "#Comment";
-const char * const kDefaultName = "Hosts's Item";
+const char * const kDefaultName = "Hosts's Group";
 const char * const kDefaultDesc = "Add by HostParser";
 
 CHostsHelper::CHostsHelper()
 {
 	pHosts = NULL;
 	nCount = 0;
+	nIndex = 0;
 }
 
 CHostsHelper::~CHostsHelper()
 {
-	if(pHosts)
-	{
-		LPHOSTS_INFO pHeader = pHosts;
-		LPHOSTS_ITEM pItem = NULL;
-		while(pHosts)
-		{
-			pHeader = pHosts;
-			pHosts = pHosts->pNext;
-			while(pHeader->pItem)
-			{
-				pItem = pHeader->pItem;
-				pHeader->pItem = pHeader->pItem->pNext;
-				free(pItem);
-			}
-			free(pHeader);
-		}
-	}
+	Reset();
 }
 
 bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 {
 	bool bRet = false;
-	char szSystem[1024] = {0};
+	char szSystem[2048] = {0};
 	if(pszHosts)
 	{
 		strcpy(szSystem, pszHosts);
@@ -55,6 +41,7 @@ bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 		GetSystemDirectoryA(szSystem, _countof(szSystem));
 		strcat(szSystem, "\\drivers\\etc\\hosts");
 	}
+	Reset();
 	FILE *pFile = fopen(szSystem, "r");
 	if(!pFile)
 		return bRet;
@@ -87,9 +74,12 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 	pHosts = (LPHOSTS_INFO)malloc(sizeof(HOSTS_INFO));
 	if(!pHosts)
 		return false;
+	nCount++;
 	LPHOSTS_INFO pTail = pHosts;
 	LPHOSTS_ITEM pItem = NULL;
 	memset(pTail, 0, sizeof(HOSTS_INFO));
+	sprintf(pTail->szId, "%d", nIndex);
+	nIndex++;
 	bool bHeaderEnd = false;
 	int nTokensCount = strData.countTokens();
 	for(int i = 0; i < nTokensCount; i++)
@@ -110,54 +100,58 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 		}
 
 		bHeaderEnd = true;
-		if(strSectionTag==kSectionTag || (strTemp[0] == '#' && bHeaderEnd)) // hosts item section's name
+		if(strSectionTag==kSectionTag) // hosts item section's name
 		{
 			if(strstr(strTemp.c_str(), kSectionTag))
 				strSection.assign(strTemp.c_str(), strlen(kSectionTag)+1, strTemp.length());
-			else
-				strSection.assign(strTemp.c_str(), 1, strTemp.length());
 			if(pTail->pItem)
 			{
 				pTail->pNext = (LPHOSTS_INFO)malloc(sizeof(HOSTS_INFO));
+				assert(pTail->pNext!=NULL);
 				pTail = pTail->pNext;
 				memset(pTail, 0, sizeof(HOSTS_INFO));
+				sprintf(pTail->szId, "%d", nIndex);
+				nCount++;
+				nIndex++;
 			}
-			nCount++;
 			strcpy(pTail->szSection, strSection.c_str());
 		}
 		else if(strCommentTag==kCommentTag) // host item's comment
 		{
 			strComment.assign(strTemp.c_str(), strlen(kCommentTag)+1, strTemp.length());
-			if(strlen(pTail->szSection)==0)
-				nCount++;
 			strcpy(pTail->szDesc, strComment.c_str());
 		}
 		else // hosts item
 		{
 			if(strlen(pTail->szSection)==0 && strlen(pTail->szDesc)==0)
 			{
-				nCount++;
 				strcpy(pTail->szSection, kDefaultName);
 				strcpy(pTail->szDesc, kDefaultDesc);
 			}
 			if(!pTail->pItem)
 			{
 				pTail->pItem = (LPHOSTS_ITEM)malloc(sizeof(HOSTS_ITEM));
+				assert(pTail->pItem!=NULL);
 				memset(pTail->pItem, 0, sizeof(HOSTS_ITEM));
+				sprintf(pTail->pItem->szId, "%d", pTail->nIndex);
+				pTail->nIndex++;
 				pItem = pTail->pItem;
 			}
 			else if(strlen(pItem->szAddr))
 			{
 				LPHOSTS_ITEM pNewItem = (LPHOSTS_ITEM)malloc(sizeof(HOSTS_ITEM));
+				assert(pNewItem!=NULL);
 				memset(pNewItem, 0, sizeof(HOSTS_ITEM));
+				sprintf(pNewItem->szId, "%d", pTail->nIndex);
+				pTail->nIndex++;
 				pItem->pNext = pNewItem;
 				pItem = pNewItem;
 			}
 			pTail->nCount++;
 			StringTokenizer strItem = StringTokenizer(strTemp, " ");
-			std::string strAddr = strItem.nextToken();
-			std::string strDomain = strItem.nextToken();
-			std::string strDesc = strItem.nextToken();
+			std::string strAddr = ltrim(strItem.nextToken());
+			std::string strDomain = ltrim(strItem.nextToken());
+			std::string strDesc = trim(strItem.nextToken());
 			strcpy(pItem->szAddr, strAddr.c_str());
 			strcpy(pItem->szDomain, strDomain.c_str());
 			strcpy(pItem->szDesc, strDesc.c_str());
@@ -169,6 +163,34 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 		strCommentTag = "";
 	}
 	return true;
+}
+
+bool CHostsHelper::Reset()
+{
+	bool bRet = false;
+	if(pHosts)
+	{
+		LPHOSTS_INFO pHeader = pHosts;
+		LPHOSTS_ITEM pItem = NULL;
+		while(pHosts)
+		{
+			pHeader = pHosts;
+			pHosts = pHosts->pNext;
+			while(pHeader->pItem)
+			{
+				pItem = pHeader->pItem;
+				pHeader->pItem = pHeader->pItem->pNext;
+				free(pItem);
+			}
+			free(pHeader);
+		}
+	}
+	pHosts = NULL;
+	nCount = 0;
+	nIndex = 0;
+	strHeader = "";
+	bRet = true;
+	return bRet;
 }
 
 LPHOSTS_INFO CHostsHelper::FindSection(const char* pszSection)
@@ -185,7 +207,22 @@ LPHOSTS_INFO CHostsHelper::FindSection(const char* pszSection)
 	return NULL;
 }
 
-LPHOSTS_ITEM CHostsHelper::FindItem(const char* pszSection, const char* pszAddr)
+
+LPHOSTS_INFO CHostsHelper::FindSectionById(const char* pszId)
+{
+	if(!pHosts)
+		return NULL;
+	LPHOSTS_INFO pSection =  pHosts;
+	while(pSection)
+	{
+		if(stricmp(pSection->szId, pszId)==0)
+			return pSection;
+		pSection = pSection->pNext;
+	}
+	return NULL;
+}
+
+LPHOSTS_ITEM CHostsHelper::FindItem(const char* pszSection, const char* pszDomain)
 {
 	LPHOSTS_INFO pSection = NULL;
 	LPHOSTS_ITEM pItem = NULL;
@@ -197,7 +234,7 @@ LPHOSTS_ITEM CHostsHelper::FindItem(const char* pszSection, const char* pszAddr)
 		pItem = pSection->pItem;
 		while(pItem)
 		{
-			if(stricmp(pItem->szAddr, pszAddr)==0)
+			if(stricmp(pItem->szDomain, pszDomain)==0)
 				return pItem;
 			pItem = pItem->pNext;
 		}
@@ -207,7 +244,38 @@ LPHOSTS_ITEM CHostsHelper::FindItem(const char* pszSection, const char* pszAddr)
 		pSection = pHosts;
 		while(pSection)
 		{
-			pItem = FindItem(pSection->szSection, pszAddr);
+			pItem = FindItem(pSection->szSection, pszDomain);
+			if(pItem)
+				return pItem;
+			pSection = pSection->pNext;
+		}
+	}
+	return NULL;
+}
+
+LPHOSTS_ITEM CHostsHelper::FindItemById(const char* pSid, const char* pszId)
+{
+	LPHOSTS_INFO pSection = NULL;
+	LPHOSTS_ITEM pItem = NULL;
+	if(pSid)
+	{
+		pSection = FindSectionById(pSid);
+		if(!pSection)
+			return NULL;
+		pItem = pSection->pItem;
+		while(pItem)
+		{
+			if(stricmp(pItem->szId, pszId)==0)
+				return pItem;
+			pItem = pItem->pNext;
+		}
+	}
+	else
+	{
+		pSection = pHosts;
+		while(pSection)
+		{
+			pItem = FindItemById(pSection->szId, pszId);
 			if(pItem)
 				return pItem;
 			pSection = pSection->pNext;
@@ -224,8 +292,7 @@ bool CHostsHelper::AddItem(const char* pszSection, const char* pszAddr, const ch
 		pSection = FindSection(pszSection);
 		if(!pSection)
 		{
-			if(!AddSection(pszSection))
-				return false;
+			return false;
 		}
 		LPHOSTS_ITEM pItem = pSection->pItem;
 		while(pItem)
@@ -239,6 +306,8 @@ bool CHostsHelper::AddItem(const char* pszSection, const char* pszAddr, const ch
 		memset(pNewItem, 0, sizeof(HOSTS_ITEM));
 		strcpy(pNewItem->szAddr, pszAddr);
 		strcpy(pNewItem->szDomain, pszDomain);
+		sprintf(pNewItem->szId, "%d", pSection->nIndex);
+		pSection->nIndex++;
 		pItem->pNext = pNewItem;
 		return true;
 	}
@@ -254,8 +323,14 @@ bool CHostsHelper::AddItem(const char* pszSection, const char* pszAddr, const ch
 bool CHostsHelper::AddSection(const char* pszSection)
 {
 	LPHOSTS_INFO pSection = NULL;
+	if(!pszSection)
+		return false;
 	pSection = (LPHOSTS_INFO)malloc(sizeof(HOSTS_INFO));
+	if(!pSection)
+		return false;
 	memset(pSection, 0, sizeof(HOSTS_INFO));
+	sprintf(pSection->szId, "%d", nIndex);
+	nIndex++;
 	if(!pHosts)
 	{
 		pHosts = pSection;
@@ -267,17 +342,23 @@ bool CHostsHelper::AddSection(const char* pszSection)
 		{
 			if(pTail->pNext)
 				pTail = pTail->pNext;
+			else
+				break;
 		}
 		pTail->pNext = pSection;
 	}
+	strcpy(pSection->szSection, pszSection);
+	nCount++;
 	return true;
 }
 
-bool CHostsHelper::DelItem(const char* pszSection, const char* pszAddr)
+bool CHostsHelper::DelItem(const char* pszSection, const char* pszDomain)
 {
 	LPHOSTS_INFO pSection = NULL;
 	LPHOSTS_ITEM pItem = NULL, pPrev = NULL;
 	bool bRet = false;
+	if(!pszDomain || strlen(pszDomain)==0)
+		return bRet;
 	if(pszSection)
 	{
 		pSection = FindSection(pszSection);
@@ -286,7 +367,7 @@ bool CHostsHelper::DelItem(const char* pszSection, const char* pszAddr)
 		pItem = pSection->pItem;
 		while(pItem)
 		{
-			if(stricmp(pItem->szAddr, pszAddr)==0)
+			if(stricmp(pItem->szDomain, pszDomain)==0)
 			{
 				bRet = true;
 				break;
@@ -311,7 +392,7 @@ bool CHostsHelper::DelItem(const char* pszSection, const char* pszAddr)
 		pSection = pHosts;
 		while(pSection)
 		{
-			bRet = DelItem(pSection->szSection, pszAddr);
+			bRet = DelItem(pSection->szSection, pszDomain);
 			if(bRet)
 				return true;
 			pSection = pSection->pNext;
@@ -354,6 +435,7 @@ bool CHostsHelper::DelSection(const char* pszSection)
 			free(pTemp);
 		}
 		free(pSection);
+		nCount --;
 		return true;
 	}
 	return false;
@@ -397,8 +479,11 @@ bool CHostsHelper::Build(std::string &strContent)
 {
 	LPHOSTS_INFO pSection = pHosts;
 	LPHOSTS_ITEM pItem = NULL;
-	strContent = strHeader;
-	strContent += "\n";
+	if(!strHeader.empty())
+	{
+		strContent = strHeader;
+		strContent += "\n";
+	}
 	while(pSection)
 	{
 		if(strlen(pSection->szSection))
@@ -421,6 +506,8 @@ bool CHostsHelper::Build(std::string &strContent)
 			strContent += pItem->szAddr;
 			strContent += " ";
 			strContent += pItem->szDomain;
+			strContent += " ";
+			strContent += pItem->szDesc;
 			strContent += "\n";
 			pItem = pItem->pNext;
 		}
@@ -460,5 +547,35 @@ bool CHostsHelper::SaveAs(const char* lpszPath)
 	fwrite(strContent.c_str(), 1, strContent.length(), pFile);
 	fclose(pFile);
 	return true;
+}
+
+const std::string CHostsHelper::trim(const std::string istring)
+{
+	std::string::size_type first = istring.find_first_not_of(" \n\t\r\0xb");
+	if (first == std::string::npos) {
+		return std::string();
+	}
+	else {
+		std::string::size_type last = istring.find_last_not_of(" \n\t\r\0xb");
+		return istring.substr( first, last - first + 1);
+	}
+}
+
+const std::string CHostsHelper::ltrim(const std::string istring)
+{
+	std::string::size_type first = istring.find_first_not_of(" \n\t\r\0xb");
+	if (first == std::string::npos) {
+		return std::string();
+	}
+	else {
+		return istring.substr( first );
+	}
+}
+
+
+const std::string CHostsHelper::rtrim(const std::string istring)
+{
+	std::string::size_type last = istring.find_last_not_of(" \n\t\r\0xb"); /// must succeed
+	return istring.substr( 0, last + 1);
 }
 #pragma warning(pop)

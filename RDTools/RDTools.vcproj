@@ -452,14 +452,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\common\Formatter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\common\Formatter.h"
-				>
-			</File>
-			<File
 				RelativePath="..\common\ILangUI.cpp"
 				>
 			</File>
@@ -473,14 +465,6 @@
 			</File>
 			<File
 				RelativePath="..\common\ISkinUI.h"
-				>
-			</File>
-			<File
-				RelativePath="..\common\JSONFormatter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\common\JSONFormatter.h"
 				>
 			</File>
 			<File
@@ -605,14 +589,6 @@
 			</File>
 			<File
 				RelativePath="..\common\ValidateUtil.h"
-				>
-			</File>
-			<File
-				RelativePath="..\common\XMLFormatter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\common\XMLFormatter.h"
 				>
 			</File>
 		</Filter>

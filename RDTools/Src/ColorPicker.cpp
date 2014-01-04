@@ -56,7 +56,7 @@ CColorPicker::CColorPicker()
 	bIsCapturing = FALSE;
 }
 
-BOOL CColorPicker::IsCanQuit(HWND /*hWnd*/)
+BOOL CColorPicker::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }
@@ -214,6 +214,23 @@ void CColorPicker::OnItemClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNo
 		}
 		SetColorPicker(colCurColor, FALSE);
 		bHandled = TRUE;
+	}
+}
+
+void CColorPicker::OnTextChanged(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
+{
+	if(pPickerColor && msg.pSender==pPickerColor)
+	{
+		bHandled = TRUE;
+		DWORD dwColor = 0;
+		CDuiString strColor = msg.pSender->GetText();
+		if(ColorUtil::StrToRGB(strColor, dwColor))
+		{
+			ColorUtil::AdjustColor(dwColor, colCurColor);
+			SetColorPicker(colCurColor, TRUE, FALSE);
+			if(pPickerPreview)
+				pPickerPreview->SetBkColor(dwColor);
+		}
 	}
 }
 

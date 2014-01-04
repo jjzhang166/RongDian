@@ -219,7 +219,7 @@ int EscapeSQLite(CDuiString strKeyWord)
 
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 {
-#pragma message("RD消息框注意项：调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
+#pragma message("RDMsgBox消息框注意项：调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
 	int nRet = MB_OK;
 	wchar_t szErr[1024], szTitle[1024];
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
@@ -442,7 +442,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// 内存跟踪调试
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(4890);
+	//_CrtSetBreakAlloc(7218);
 #endif
 
 	g_hInstance = hInstance;

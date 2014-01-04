@@ -37,7 +37,7 @@ CTidy::CTidy()
 	strCurTabName.Format(L"%s0", kTidyTab);
 }
 
-BOOL CTidy::IsCanQuit(HWND /*hWnd*/)
+BOOL CTidy::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
 {
 	return TRUE;
 }
