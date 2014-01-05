@@ -53,6 +53,7 @@ public:
 	BOOL			ShowTabs(BOOL bShow);
 	BOOL			OnActiveApp();
 	BOOL			OnAppQuit();
+	BOOL			PopupUpdateFrame(const char *pszUrl, const char *pszLog);
 
 	BOOL			ShowLoading();
 	void			CancelLoading();
@@ -71,4 +72,5 @@ public:
 	char *pszUpdateResponeData;
 	unsigned long ulUpdateResponeDataSize;
 	BOOL bRunning;
+	CUpdateFrame *pUpdateFrame;
 };

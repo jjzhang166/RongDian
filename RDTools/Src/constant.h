@@ -32,6 +32,7 @@ const wchar_t* const kDefaultLangIni				= L"lang_en.ini"; // 语言文件
 
 // XML文件
 const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // 主窗体
+const wchar_t* const kUpdateFrameXml				= L"UpdateFrame.xml"; // 更新窗体
 const wchar_t* const kPanelsXml						= L"Panels.xml";
 const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; // 
 
@@ -46,6 +47,7 @@ const wchar_t* const LS_LANG						= L"Lang";
 const wchar_t* const LS_SKIN						= L"Skin";
 const wchar_t* const LS_IPSETS						= L"IPSets";
 const wchar_t* const LS_MAINFRAME					= L"MainFrame";
+const wchar_t* const LS_UPDATEFRAME					= L"UpdateFrame";
 const wchar_t* const LS_SYSTRAY						= L"SysTray";
 const wchar_t* const LS_ABOUTPANEL					= L"AboutPanel";
 const wchar_t* const LS_PICKERPANEL					= L"PickerPanel";
@@ -103,6 +105,7 @@ const wchar_t* const kDone							= L"done";
 const wchar_t* const kCreateHostGroupErr			= L"create_host_group_err";
 const wchar_t* const kLoadHostErr					= L"load_host_err";
 const wchar_t* const kHostSaveMsg					= L"host_save_msg";
+const wchar_t* const kNewVersionMsg					= L"new_version_msg";
 
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
@@ -163,6 +166,7 @@ typedef enum _tagMSG_ID {
 	MSG_CREATE_HOST_GROUP_ERR,
 	MSG_LOAD_HOST_ERR,
 	MSG_HOST_SAVE_MSG,
+	MSG_NEW_VERSION_MSG,
 	// End
 	MSG_END = 200
 } MSG_ID;

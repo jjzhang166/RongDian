@@ -11,6 +11,7 @@ const wchar_t* const kUserSignature				= L"RongDianTools_User";
 
 // Frame Class
 const wchar_t* const kRDToolsClass				= L"RDTools_Class";
+const wchar_t* const kRDUpdateClass				= L"RDUpdate_Class";
 const wchar_t* const kRDToolsTray_Class			= L"RDTrayIcon_Class";
 const wchar_t* const kRDToolsStaticClass		= L"RDTools_Static_Class";
 const wchar_t* const kSnapShotClass				= L"SnapShot_Class";
@@ -31,7 +32,8 @@ typedef BOOL (WINAPI *PFNChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
 #define WM_ZOOMIN_MOVE_LEFT			WM_USER + 110 // 放大镜左移1个像素
 #define WM_ZOOMIN_MOVE_RIGHT		WM_USER + 111 // 放大镜右移1个像素
 #define WM_CMD_COMPLETE				WM_USER + 112 // cmd命令成功执行结束
-#define WM_UPDATE_RESPONE			WM_USER + 113 // 
+#define WM_UPDATE_RESPONE			WM_USER + 113 // 版本检测查询返回消息
+#define WM_UPDATE_PROGRESS			WM_USER + 114 // 新版本下载进度更新消息
 
 typedef struct _tagSNAPSHOT_INFO
 {

@@ -54,7 +54,7 @@ static size_t CheckVersionCallBack(char *ptr, size_t size, size_t nmemb, void *u
 	return ulSize;
 }
 
-LONG __cdecl CheckVersion(HWND /*hInvoker*/, const char* pszUrl, char* pszRespone, unsigned long* pnSize)
+LONG __cdecl RDCheckVersion(HWND /*hInvoker*/, const char* pszUrl, char* pszRespone, unsigned long* pnSize)
 {
 	if(!pszUrl)
 		return -1;
@@ -75,6 +75,11 @@ LONG __cdecl CheckVersion(HWND /*hInvoker*/, const char* pszUrl, char* pszRespon
 		*pnSize = stResponeInfo.ulSeek;
 	if(pszRespone)
 		memcpy(pszRespone, stResponeInfo.pszData, stResponeInfo.ulSeek);
+	return 0;
+}
+
+LONG __cdecl RDDownLoad(HWND hInvoker, const char* pszUrl, char* pszSavePath, int nMsg)
+{
 	return 0;
 }
 

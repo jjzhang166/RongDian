@@ -14,5 +14,7 @@ typedef struct _tagRESPONE_INFO
 	char *pszData; // »º³åÇø
 } RESPONE_INFO, *PRESPONE_INFO, *LPRESPONE_INFO;
 
-NET_EXPORT LONG __cdecl CheckVersion(HWND hInvoker, const char* pszUrl, char* pszRespone, unsigned long* pnSize);
+NET_EXPORT LONG __cdecl RDCheckVersion(HWND hInvoker, const char* pszUrl, char* pszRespone, unsigned long* pnSize);
+
+NET_EXPORT LONG __cdecl RDDownLoad(HWND hInvoker, const char* pszUrl, char* pszSavePath, int nMsg);
 

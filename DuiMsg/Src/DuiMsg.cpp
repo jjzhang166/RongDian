@@ -63,8 +63,8 @@ const wchar_t* const kMsgLoading = L"msg_loading";
 
 const int MIN_WIDTH				= 240;
 const int MIN_HEIGHT			= 160;
-const int POPUP_WIDTH			= 360;
-const int POPUP_HEIGHT			= 240;
+const int POPUP_WIDTH			= 300;
+const int POPUP_HEIGHT			= 200;
 
 const int MAX_TRANSPRANT		= 250;
 const int SOLID_TIMER			= 5000;
@@ -98,7 +98,7 @@ public:
 		memset(szCaption, 0, sizeof(szCaption));
 
 		nType = MB_OK;
-		nRet = IDOK;
+		nRet = MB_OK;
 		pFirstBtn = NULL;
 		pSecondBtn = NULL;
 		pSecondBlank = NULL;
@@ -106,6 +106,7 @@ public:
 		bPopup = FALSE;
 		hParent = NULL;
 		bTransparent = FALSE;
+		bMouseActive = FALSE;
 	};
 	virtual ~CDuiMsg()
 	{
@@ -231,7 +232,8 @@ SET_CONTROL_END()
 	void OnFinalMessage(HWND hWnd)
 	{
 		WindowImplBase::OnFinalMessage(hWnd);
-		delete this;
+		if(nType==MB_LOADING)
+			delete this;;
 	}
 	void InitWindow()
 	{
@@ -426,7 +428,7 @@ SET_CONTROL_END()
 		int nTop = rect.bottom - POPUP_HEIGHT - BLANK_WIDTH;
 		SetWindowPos(m_hWnd, HWND_TOPMOST, nLeft, nTop, POPUP_WIDTH, POPUP_HEIGHT, SWP_SHOWWINDOW);
 
-		UINT nRet = 0;
+		//UINT nRet = 0;
 		MSG msg = { 0 };
 		while( ::IsWindow(m_hWnd) && ::GetMessage(&msg, NULL, 0, 0) )
 		{
@@ -445,13 +447,15 @@ SET_CONTROL_END()
 	{
 		if(bPopup)
 			PostMessage(WM_NCLBUTTONDOWN, HTCAPTION, lParam);
+		bMouseActive = TRUE;
 		bTransparent = FALSE;
 		bHandled = FALSE;
 		return 0;
 	}
-	LRESULT OnMouseHover(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		bTransparent = FALSE;
+		bMouseActive = TRUE;
 		if(g_uAlpha<MAX_TRANSPRANT)
 		{
 			KillTimer(m_hWnd, TRANSPRANT_TIMER);
@@ -461,16 +465,14 @@ SET_CONTROL_END()
 		bHandled = FALSE;
 		return 0;
 	}
-	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
-	{
-		bHandled = FALSE;
-		return 0;
-	}
 	LRESULT OnMouseLeave(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		bTransparent = TRUE;
-		KillTimer(m_hWnd, SOLID_TIMER);
-		SetTimer(m_hWnd, TRANSPRANT_TIMER, 200, 0);
+		if(!bMouseActive)
+		{
+			bTransparent = TRUE;
+			KillTimer(m_hWnd, SOLID_TIMER);
+			SetTimer(m_hWnd, TRANSPRANT_TIMER, 200, 0);
+		}
 		bHandled = FALSE;
 		return 0;
 	}
@@ -580,6 +582,7 @@ public:
 	BOOL bPopup;
 	HWND hParent;
 	BOOL bTransparent;
+	BOOL bMouseActive;
 };
 
 DWORD WINAPI StartMenuMsgBox(LPVOID lpParam)
@@ -641,11 +644,9 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 			return -1;
 		}
 	}
-	CDuiMsg *pMsg = new CDuiMsg();
-	if(!pMsg)
-		return -1;
-	pMsg->hParent = hWnd;
-	pMsg->SetIcon(g_szIconName);
+	CDuiMsg msg;
+	msg.hParent = hWnd;
+	msg.SetIcon(g_szIconName);
 	wchar_t szText[1024];
 	if(lpszCaption)
 		wcscpy(szText, lpszCaption);
@@ -653,8 +654,8 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 		Utility::GetINIStr(g_pLangMan->GetLangName(), LS_MSG, kMsgErr, szText);
 	else
 		LoadString(g_hMsgInst, IDS_MSG_ERR, szText, _countof(szText));
-	pMsg->SetCaption(szText);
-	if(!pMsg->SetText(lpszText))
+	msg.SetCaption(szText);
+	if(!msg.SetText(lpszText))
 		return -1;
 	
 	int nTemp = 0;
@@ -662,38 +663,40 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 	{
 		nTemp = uType & 0x0000000FL;
 		if(nTemp==MB_RETRYCANCEL)
-			pMsg->nType = MB_RETRYCANCEL;
+			msg.nType = MB_RETRYCANCEL;
 		else if(nTemp==MB_YESNO)
-			pMsg->nType = MB_YESNO;
+			msg.nType = MB_YESNO;
 		else if(nTemp==MB_OKCANCEL)
-			pMsg->nType = MB_OKCANCEL;
+			msg.nType = MB_OKCANCEL;
 		else
-			pMsg->nType = MB_OK;
+			msg.nType = MB_OK;
 	}
 	else
 	{
-		pMsg->nType = uType;
-		pMsg->bPopup = TRUE;
+		msg.nType = uType;
+		msg.bPopup = TRUE;
 	}
 	if(uType & MB_MENU)
 	{
-		DWORD dwThread = 0;
-		HANDLE hThread = CreateThread(NULL, 0, StartMenuMsgBox, (LPVOID)pMsg, 0, &dwThread);
-		CloseHandle(hThread);
+		//DWORD dwThread = 0;
+		//HANDLE hThread = CreateThread(NULL, 0, StartMenuMsgBox, (LPVOID)pMsg, 0, &dwThread);
+		//CloseHandle(hThread);
+//#pragma message("DuiMsgBox - 消息框待解决点")
+		assert(uType & MB_MENU);
 		return 0;
 	}
-	if(!pMsg->bPopup)
+	if(!msg.bPopup)
 	{
-		pMsg->Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
-		pMsg->CenterWindow();
-		pMsg->ShowModal();
+		msg.Create(hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 0, 0);
+		msg.CenterWindow();
+		msg.ShowModal();
 	}
 	else
 	{
-		pMsg->Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
-		pMsg->PopupWindow();
+		msg.Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, 0, 0, 0, 0);
+		msg.PopupWindow();
 	}
-	int nRet = pMsg->nRet;
+	int nRet = msg.nRet;
 
 	return nRet;
 }
@@ -703,7 +706,7 @@ int __stdcall DuiMenuMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UI
 	return DuiMsgBox(hWnd, lpszText, lpszCaption, uType | MB_MENU);
 }
 
-int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption)
+int __stdcall DuiPopupBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption)
 {
 	return DuiMsgBox(hWnd, lpszText, lpszCaption, MB_POPUP);
 }

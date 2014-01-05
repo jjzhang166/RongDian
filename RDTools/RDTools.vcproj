@@ -304,6 +304,10 @@
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Src\UpdateFrame.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Header Files"
@@ -404,6 +408,10 @@
 				</File>
 				<File
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\UpdateFrame.h"
 					>
 				</File>
 			</Filter>

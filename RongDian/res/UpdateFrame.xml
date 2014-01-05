@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="240,160" sizebox="2,2,2,2" caption="0,0,0,30" roundcorner="4,4,6,6" alpha="250" >
+<Window size="300,200" sizebox="2,2,2,2" caption="0,0,0,30" roundcorner="4,4,6,6" alpha="250" >
 	<Font name="微软雅黑" size="10" bold="false" default="true"/>
 	<Font name="微软雅黑" size="12" bold="false"/>
 	<!-- frame_container -->
@@ -18,30 +18,25 @@
 	   		</HorizontalLayout><!-- System's Button -->
 	 	</HorizontalLayout><!-- frame_title_contaner -->
 		<!-- frame_contents -->
-		<HorizontalLayout name="frame_text_container" inset="2,2,2,2" >
-			<Text name="frame_text" font="1" />
+		<HorizontalLayout name="frame_log" inset="2,2,2,2" >
+			<Control width="5" />
+			<Text name="update_log" text="" />
+			<Control width="5" />
 	 	</HorizontalLayout><!-- frame_contents -->
-		<VerticalLayout name="frame_gif_container" visible="false" >
-			<Control />
-			<HorizontalLayout height="48" >
-				<Control />
-				<Gif name="frame_loading" gif="default\loading.gif" height="48" width="48" />
-				<Control />
-			</HorizontalLayout>
-			<HorizontalLayout >
-				<Control />
-				<Text name="frame_loading_text" font="1" />
-				<Control />
-			</HorizontalLayout>
-			<Control />
-		</VerticalLayout>
+		<HorizontalLayout name="frame_progress" height="22" inset="2,2,2,2" >
+			<Control width="10" />
+			<Label name="update_progress_text" width="60" text="" />
+			<Control width="3" />
+			<Progress name="update_progress" bkimage="file='default\process_bg.png'" foreimage="file='default\process_fg.png'" max="100" min="0" value="0" text="0%" />
+			<Control width="10" />
+	 	</HorizontalLayout><!-- frame_contents -->
 		<!-- frame_footer -->
 		<HorizontalLayout name="frame_footer" height="23" >
 			<Control />
-			<Button name="first_btn" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-			<Control name="second_blank" visible="false" />
-			<Button name="second_btn" visible="false" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-			<Control />
+			<Button name="update_ok" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
+			<Button name="update_cancel" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="5" />
 		</HorizontalLayout> <!-- frame_footer -->
 		<Control height="5" />
 	</VerticalLayout> <!-- frame_container -->

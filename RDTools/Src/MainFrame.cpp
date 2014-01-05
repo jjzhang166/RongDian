@@ -84,6 +84,7 @@ CMainFrame::CMainFrame()
 	pszUpdateResponeData = NULL;
 	ulUpdateResponeDataSize = 0;
 	bRunning = FALSE;
+	pUpdateFrame = NULL;
 }
 
 CMainFrame::~CMainFrame()
@@ -345,9 +346,10 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 	}
 	else if(sCtrlName == kMenuHelp)
 	{
-		if(!lpLoader)
-			DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
+		//if(!lpLoader)
+		//	DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
 		//DuiMenuMsgBox(m_hWnd, NULL, NULL, MB_OK);
+		PopupUpdateFrame(NULL, NULL);
 	}
 	else if(sCtrlName == kMenuShow)
 	{
@@ -417,11 +419,10 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	switch(uMsg)
 	{
 	case WM_ICON_NOTIFY:
-		lRes = OnTrayNotification(uMsg, wParam, lParam);
+		return OnTrayNotification(uMsg, wParam, lParam);
 		break;
 	case WM_UPDATE_RESPONE:
-		lRes = OnParseUpdateRespone(uMsg, wParam, lParam);
-		break;
+		return OnParseUpdateRespone(uMsg, wParam, lParam);
 	}
 	RD_ON_CUSTOM_MSG(uMsg, wParam, lParam);
 	return 0;
@@ -541,7 +542,9 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 		if(stricmp(szVersion, szRDVersion))
 		{
 			OutputDebugStringW(L"Find New Version\n");
-#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
+//#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
+			//RDPopupBox(m_hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING);
+			PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
 		}
 	}
 	return 0;
@@ -868,6 +871,21 @@ BOOL CMainFrame::OnAppQuit()
 	return TRUE;
 }
 
+BOOL CMainFrame::PopupUpdateFrame(const char *pszUrl, const char *pszLog)
+{
+	if(!pUpdateFrame)
+	{
+		pUpdateFrame = new CUpdateFrame();
+		pUpdateFrame->Create(m_hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW, 0, 0, 0, 0);
+		pUpdateFrame->SetIcon(IDI_RDTOOLS);
+		pUpdateFrame->SetUpdateInfo(pszUrl, pszLog);
+	}
+	pUpdateFrame->CenterWindow();
+	::ShowWindow(pUpdateFrame->GetHWND(), SW_SHOW);
+	SetForegroundWindow(pUpdateFrame->GetHWND());
+	return TRUE;
+}
+
 BOOL CMainFrame::ShowLoading()
 {
 	if(!pLoadindFrame || !pFrameContainer)
@@ -910,7 +928,7 @@ unsigned int CMainFrame::UpdateCheckThread(LPVOID lpData)
 		return 0;
 	char szData[MAX_RESPONE_SIZE] = {0};
 	unsigned long ulSize = 0;
-	if(0==CheckVersion(pThis->m_hWnd, kCheckVersionUrl, szData, &ulSize) && pThis->bRunning)
+	if(0==RDCheckVersion(pThis->m_hWnd, kCheckVersionUrl, szData, &ulSize) && pThis->bRunning)
 	{
 		pThis->pszUpdateResponeData = new char[MAX_RESPONE_SIZE];
 		assert(NULL!=pThis->pszUpdateResponeData);

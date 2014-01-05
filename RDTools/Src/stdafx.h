@@ -113,6 +113,7 @@ BOOL				IsImageFile(LPCWSTR lpszFileName);
 BOOL				IsCanTidy(LPCWSTR lpszLang);
 int					EscapeSQLite(CDuiString strKeyWord);
 int					RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
+int					RDPopupBox(HWND hWnd, int nTextId, int nCaptionId);
 
 BOOL				ShowLoading();
 void				CancelLoading();
@@ -143,6 +144,7 @@ void				CancelLoading();
 #include "ITools.h"
 #include "SystemTraySDK.h"
 #include "TidyHelper.h"
+#include "UpdateFrame.h"
 #include "MainFrame.h"
 
 extern HANDLE					g_hUserSignature;

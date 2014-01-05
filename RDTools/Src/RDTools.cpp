@@ -228,6 +228,17 @@ int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 	return nRet;
 }
 
+int RDPopupBox(HWND hWnd, int nTextId, int nCaptionId)
+{
+#pragma message("RDPopupBox消息框注意项：此函数没有调用意义，无事件响应")
+	int nRet = MB_OK;
+	wchar_t szErr[1024], szTitle[1024];
+	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
+	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nTextId), GET_ASSOC_ID(g_LangIDs, nTextId), szErr);
+	nRet = DuiPopupBox(hWnd, szErr, szTitle);
+	return nRet;
+}
+
 BOOL ShowLoading()
 {
 	if(g_pMainFrame)
@@ -373,6 +384,7 @@ ASSOC_BEGIN()
 	ASSOC_LANG(MSG_CREATE_HOST_GROUP_ERR, kCreateHostGroupErr, LS_MSG)
 	ASSOC_LANG(MSG_LOAD_HOST_ERR, kLoadHostErr, LS_MSG)
 	ASSOC_LANG(MSG_HOST_SAVE_MSG, kHostSaveMsg, LS_MSG)
+	ASSOC_LANG(MSG_NEW_VERSION_MSG, kNewVersionMsg, LS_MSG)
 ASSOC_END()
 
 	return TRUE;
@@ -519,7 +531,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	g_pMainFrame->Create(NULL, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, 0, 0, 0, 0, 0);
 	g_pMainFrame->SetIcon(IDI_RDTOOLS);
 	g_pMainFrame->CenterWindow();
-	::ShowWindow(*g_pMainFrame, SW_SHOW);
+	::ShowWindow(g_pMainFrame->GetHWND(), SW_SHOW);
 
 	CPaintManagerUI::MessageLoop();
 	CPaintManagerUI::Term();

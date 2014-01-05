@@ -24,7 +24,7 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 
 int __stdcall DuiMenuMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT uType);
 
-int __stdcall DuiPopupMsg(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption);
+int __stdcall DuiPopupBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption);
 
 int __stdcall DuiShowLoading(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszLoadImg, LPVOID *ppParam);
 
