@@ -76,6 +76,7 @@ const wchar_t* const kDescAbout						= L"desc_about";
 // MSG
 const wchar_t* const kMsgErr						= L"msg_err";
 const wchar_t* const kMsgSuccess					= L"msg_success";
+const wchar_t* const kMsgFailed						= L"msg_failed";
 const wchar_t* const kMsgWarning					= L"msg_warning";
 const wchar_t* const kLoading						= L"msg_loading";
 const wchar_t* const kBusy							= L"msg_busy";
@@ -91,6 +92,7 @@ const wchar_t* const kInvalidPathErr				= L"invalid_path_err";
 const wchar_t* const kInvalidFinderErr				= L"invalid_finder_err";
 const wchar_t* const kInvalidFormatterErr			= L"invalid_formatter_err";
 const wchar_t* const kInvalidIPErr					= L"invalid_ipv4_err";
+const wchar_t* const kInvalidDomainErr				= L"invalid_domain_err";
 const wchar_t* const kInvalidMaskErr				= L"invalid_subnet_mask_err";
 const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
 const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
@@ -98,6 +100,9 @@ const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
 const wchar_t* const kDone							= L"done";
+const wchar_t* const kCreateHostGroupErr			= L"create_host_group_err";
+const wchar_t* const kLoadHostErr					= L"load_host_err";
+const wchar_t* const kHostSaveMsg					= L"host_save_msg";
 
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
@@ -132,6 +137,7 @@ typedef enum _tagMSG_ID {
 	MSG_ERR = 30,
 	MSG_WARNING,
 	MSG_SUCCESS,
+	MSG_FAILED,
 	MSG_LOADING,
 	MSG_BUSY,
 	MSG_PLUGIN_ERR,
@@ -146,6 +152,7 @@ typedef enum _tagMSG_ID {
 	MSG_FINDER_ERR,
 	MSG_FORMATTER_ERR,
 	MSG_IPV4_ERR,
+	MSG_DOMAIN_ERR,
 	MSG_MASK_ERR,
 	MSG_GATEWAY_ERR,
 	MSG_DNS_ERR,
@@ -153,6 +160,9 @@ typedef enum _tagMSG_ID {
 	MSG_INVALID_NAME,
 	MSG_DEBUG_TEXT,
 	MSG_DONE,
+	MSG_CREATE_HOST_GROUP_ERR,
+	MSG_LOAD_HOST_ERR,
+	MSG_HOST_SAVE_MSG,
 	// End
 	MSG_END = 200
 } MSG_ID;

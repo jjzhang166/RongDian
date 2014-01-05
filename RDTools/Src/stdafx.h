@@ -34,8 +34,6 @@ using namespace std;
 // 以下是第三方库类文件的引用
 //////////////////////////////////////////////////////////////////////////
 
-#define PCRE_STATIC // 静态库编译选项
-
 #include <OptParse/optparse.h>
 #include <md5/md5.h>
 
@@ -45,10 +43,8 @@ using namespace std;
 #include <log4cplus/layout.h>
 #include <log4cplus/loggingmacros.h>
 
-#include <pcre/pcre.h>
 #include <UCD/ucdetector.h>
 #include <libiconv/Src/include/iconv.h>
-#include <SQLite/sqlite3.h>
 #include <SlimXml/Src/SlimXml.h>
 #include <StringTokenizer/StringTokenizer.h>
 #include <GifLib/lib/gif_lib_private.h>
@@ -76,6 +72,7 @@ using namespace DuiLib;
 // Link Lib
 #ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/log4cplusd.lib")
+#pragma comment(lib, "../RongDian/bin/pcred.lib")
 #pragma comment(lib, "../RongDian/bin/pcred.lib")
 #pragma comment(lib, "../RongDian/bin/UCDd.lib")
 #pragma comment(lib, "../RongDian/bin/libiconvd.lib")
@@ -127,12 +124,12 @@ void				CancelLoading();
 #include <StrUtil.h>
 #include <Util.h>
 #include <ColorUtil.h>
-#include <ValidateUtil.h>
 #include <SHHelper.h>
 #include <ILangUI.h>
 #include <ISkinUI.h>
 #include <AdapterUtil.h>
 #include <SQLiteUtil.h>
+#include <PCREUtil.h>
 #include <ConfigTable.h>
 #include <CharSetTable.h>
 #include <AddrTable.h>

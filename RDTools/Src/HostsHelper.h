@@ -36,6 +36,7 @@ public:
 	LPHOSTS_ITEM FindItem(const char* pszSection, const char* pszDomain);
 	LPHOSTS_ITEM FindItemById(const char* pSid, const char* pszId);
 	bool AddItem(const char* pszSection, const char* pszAddr, const char* pszDomain);
+	bool AddItemById(const char* pszSid, const char* pszAddr, const char* pszDomain);
 	bool AddSection(const char* pszSection);
 	bool DelItem(const char* pszSection, const char* pszDomain);
 	bool DelSection(const char* pszSection);

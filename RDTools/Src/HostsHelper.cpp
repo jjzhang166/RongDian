@@ -299,6 +299,8 @@ bool CHostsHelper::AddItem(const char* pszSection, const char* pszAddr, const ch
 		{
 			if(pItem->pNext)
 				pItem = pItem->pNext;
+			else
+				break;
 		}
 		LPHOSTS_ITEM pNewItem = (LPHOSTS_ITEM)malloc(sizeof(HOSTS_ITEM));
 		if(!pNewItem)
@@ -318,6 +320,37 @@ bool CHostsHelper::AddItem(const char* pszSection, const char* pszAddr, const ch
 	}
 
 	return false;
+}
+
+bool CHostsHelper::AddItemById(const char* pszSid, const char* pszAddr, const char* pszDomain)
+{
+	LPHOSTS_INFO pSection = NULL;
+	if(!pszSid)
+		return false;
+
+	pSection = FindSectionById(pszSid);
+	if(!pSection)
+	{
+		return false;
+	}
+	LPHOSTS_ITEM pItem = pSection->pItem;
+	while(pItem)
+	{
+		if(pItem->pNext)
+			pItem = pItem->pNext;
+		else
+			break;
+	}
+	LPHOSTS_ITEM pNewItem = (LPHOSTS_ITEM)malloc(sizeof(HOSTS_ITEM));
+	if(!pNewItem)
+		return false;
+	memset(pNewItem, 0, sizeof(HOSTS_ITEM));
+	strcpy(pNewItem->szAddr, pszAddr);
+	strcpy(pNewItem->szDomain, pszDomain);
+	sprintf(pNewItem->szId, "%d", pSection->nIndex);
+	pSection->nIndex++;
+	pItem->pNext = pNewItem;
+	return true;
 }
 
 bool CHostsHelper::AddSection(const char* pszSection)

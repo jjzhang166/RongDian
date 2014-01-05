@@ -15,6 +15,8 @@ const wchar_t* const kHostSaveTip = L"host_save_tip";
 const wchar_t* const kHostNewGroupBtn = L"host_new_group";
 const wchar_t* const kHostNewGroupTip = L"host_new_group_tip";
 const wchar_t* const kHostGroupContainer = L"host_group_container";
+const wchar_t* const kHostTipText = L"host_tip_text";
+
 //xml路径
 const wchar_t* const kHostGroupXmlPath = L"HostGroup.xml";
 const wchar_t* const kHostGroupItemXmlPath = L"HostGroupItem.xml";
@@ -157,7 +159,9 @@ private:
 //
 CHosts::CHosts()
 {
+	m_pHostPathEdit = NULL;
 	m_pHostGroupContainerLayout = NULL;
+	m_pHostTipText = NULL;
 	bModified = FALSE;
 }
 
@@ -166,8 +170,9 @@ BOOL CHosts::IsCanQuit(HWND hWnd, CPaintManagerUI* pManager)
 //#pragma message("CHosts::IsCanQuit － 检测数据是否有更新，保存数据到hosts文件")
 	if(bModified)
 	{
-#pragma message("CHosts::IsCanQuit － 数据有更新，但为保存，提示用户是否保存当前修改")
-		//SaveHostsFile(hWnd, pManager);
+//#pragma message("CHosts::IsCanQuit － 数据有更新，但为保存，提示用户是否保存当前修改")
+		if(RDMsgBox(hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING, MB_YESNO)==IDYES)
+			SaveHostsFile(hWnd, pManager);
 	}
 	return TRUE;
 }
@@ -183,6 +188,7 @@ BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 		return FALSE;
 	FIND_CONTROL_BY_ID(m_pHostPathEdit, CEditUI, pManager, kHostPathEdit)
 	FIND_CONTROL_BY_ID(m_pHostGroupContainerLayout, CVerticalLayoutUI, pManager, kHostGroupContainer)
+	FIND_CONTROL_BY_ID(m_pHostTipText, CLabelUI, pManager, kHostTipText)
 
 	wchar_t szPath[1024] = {0};
 	char szPathA[1024] = {0};
@@ -445,61 +451,62 @@ void CHosts::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL&
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostGroupStatePrefix)!=NULL)
 	{
-		ShowHostItems(msg.pSender, pManager);
+		ShowHostItems(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostGroupDescStatePrefix)!=NULL)
 	{
-		ShowHostDesc(msg.pSender, pManager);
+		ShowHostDesc(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostGroupNewPrefix)!=NULL)
 	{
-		NewHostItem(msg.pSender, pManager);
+		NewHostItem(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostGroupDelPrefix)!=NULL)
 	{
-		DelHostGroup(msg.pSender, pManager);
+		DelHostGroup(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostItemDelPrefix)!=NULL)
 	{
-		DelHostItem(msg.pSender, pManager);
+		DelHostItem(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 	}
 }
 
-void CHosts::OnTextChanged(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
+void CHosts::OnTextChanged(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(wcsstr(sCtrlName.GetData(), kHostGroupNamePrefix)!=NULL)
 	{
-		UpdateHostGroupName(msg.pSender, pManager);
+		UpdateHostGroupName(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 		bModified = TRUE;
 	}
-	else if(wcsstr(sCtrlName.GetData(), kHostGroupDescEditPrefix)!=NULL) // not active for DuiLib's richedit
+	else if(wcsstr(sCtrlName.GetData(), kHostGroupDescEditPrefix)!=NULL)
 	{
-		UpdateHostGroupDesc(msg.pSender, pManager);
+#pragma message("CHosts::OnTextChanged - Duilib richedit 无响应，待解决")
+		UpdateHostGroupDesc(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 		bModified = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostItemAddrPrefix)!=NULL)
 	{
-		UpdateHostItemAddr(msg.pSender, pManager);
+		UpdateHostItemAddr(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 		bModified = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostItemDomainPrefix)!=NULL)
 	{
-		UpdateHostItemDomain(msg.pSender, pManager);
+		UpdateHostItemDomain(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 		bModified = TRUE;
 	}
 	else if(wcsstr(sCtrlName.GetData(), kHostItemDescPrefix)!=NULL)
 	{
-		UpdateHostItemDesc(msg.pSender, pManager);
+		UpdateHostItemDesc(hWnd, pManager, msg.pSender);
 		bHandled = TRUE;
 		bModified = TRUE;
 	}
@@ -600,13 +607,15 @@ BOOL CHosts::NewHostsGroup(HWND hWnd, CPaintManagerUI* pManager)
 	StrUtil::w2a(szGroupName, szGroupNameA);
 	if(!HostsHelper.AddSection(szGroupNameA))
 	{
-#pragma message("CHosts::NewHostsGroup - 添加分组数据失败，需添加提示信息")
+//#pragma message("CHosts::NewHostsGroup - 添加分组数据失败，需添加提示信息")
+		RDMsgBox(hWnd, MSG_CREATE_HOST_GROUP_ERR, MSG_ERR, MB_OK);
 		return bRet;
 	}
 	bRet = CreateGroup(pManager, sNewGroupIndex.GetData(), NULL);
 	if(!bRet)
 	{
-#pragma message("CHosts::NewHostsGroup - 添加分组到UI失败，需添加提示信息")
+//#pragma message("CHosts::NewHostsGroup - 添加分组到UI失败，需添加提示信息")
+		RDMsgBox(hWnd, MSG_CREATE_HOST_GROUP_ERR, MSG_ERR, MB_OK);
 		return bRet;
 	}
 	bModified = TRUE;
@@ -618,7 +627,9 @@ BOOL CHosts::LoadHostsFile(HWND hWnd, CPaintManagerUI* pManager)
 	BOOL bRet = FALSE;
 	if(bModified)
 	{
-#pragma message("CHosts::LoadHostsFile － 当前hosts被更新但为保存，提示用户是否保存当前修改")
+//#pragma message("CHosts::LoadHostsFile － 当前hosts被更新但为保存，提示用户是否保存当前修改")
+		if(RDMsgBox(hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING, MB_YESNO)==IDYES)
+			SaveHostsFile(hWnd, pManager);
 	}
 //#pragma message("Hosts加载：CHosts::LoadHostsFile － 加载hosts文件数据到RDTools")
 	wchar_t szPath[1024] = {0};
@@ -630,7 +641,8 @@ BOOL CHosts::LoadHostsFile(HWND hWnd, CPaintManagerUI* pManager)
 	assert(m_pHostGroupContainerLayout!=NULL);
 	if(!HostsHelper.Load(szPathA))
 	{
-#pragma message("CHosts::LoadHostsFile - 添加加载hosts文件错误提示")
+//#pragma message("CHosts::LoadHostsFile - 添加加载hosts文件错误提示")
+		RDMsgBox(hWnd, MSG_LOAD_HOST_ERR, MSG_ERR, MB_OK);
 		return FALSE;
 	}
 	m_pHostGroupContainerLayout->RemoveAll();
@@ -641,7 +653,8 @@ BOOL CHosts::LoadHostsFile(HWND hWnd, CPaintManagerUI* pManager)
 	bRet = InitHosts(pManager);
 	if(!bRet)
 	{
-#pragma message("CHosts::LoadHostsFile - 添加初始化hosts文件错误提示")
+//#pragma message("CHosts::LoadHostsFile - 添加初始化hosts文件错误提示")
+		RDMsgBox(hWnd, MSG_LOAD_HOST_ERR, MSG_ERR, MB_OK);
 		return bRet;
 	}
 	if(m_pHostPathEdit)
@@ -661,18 +674,20 @@ BOOL CHosts::SaveHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 	StrUtil::w2a(strPath.GetData(), szPathA);
 	if(!HostsHelper.SaveAs(szPathA))
 	{
-#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件失败，需添加提示信息")
+//#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件失败，需添加提示信息")
+		RDMsgBox(hWnd, MSG_DONE, MSG_FAILED, MB_OK);
 	}
 	else
 	{
-#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件完成，需添加提示信息")
+//#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件完成，需添加提示信息")
+		RDMsgBox(hWnd, MSG_DONE, MSG_SUCCESS, MB_OK);
 		bRet = TRUE;
 		bModified = FALSE;
 	}
 	return bRet;
 }
 
-BOOL CHosts::ShowHostItems(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::ShowHostItems(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString sCtrlName = pSender->GetName();
 	LPCWSTR lpszUserData = pSender->GetUserData();
@@ -696,7 +711,7 @@ BOOL CHosts::ShowHostItems(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::ShowHostDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::ShowHostDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString sCtrlName = pSender->GetName();
 	LPCWSTR lpszUserData = pSender->GetUserData();
@@ -720,17 +735,20 @@ BOOL CHosts::ShowHostDesc(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::NewHostItem(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::NewHostItem(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	LPCWSTR lpszUserData = pSender->GetUserData();
 	CreateItem(pManager, lpszUserData, L"", L"");
+//#pragma message("CHosts::NewHostItem - 节点初始IP、Domain均为空，且需同步hosts内存数据")
+	char szGroupId[64] = {0};
+	StrUtil::w2a(lpszUserData, szGroupId);
+	HostsHelper.AddItemById(szGroupId, "", "");
 	AdjustGroupHeight(pManager, lpszUserData);
-#pragma message("CHosts::NewHostItem - 节点初始IP、Domain均为空，且需同步hosts内存数据")
 	bModified = TRUE;
 	return TRUE;
 }
 
-BOOL CHosts::DelHostGroup(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::DelHostGroup(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	LPCWSTR lpszUserData = pSender->GetUserData();
 	CChildLayoutUI *pChildLayout = NULL;
@@ -756,7 +774,7 @@ BOOL CHosts::DelHostGroup(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::DelHostItem(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::DelHostItem(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString sCtrlName = pSender->GetName();
 	CDuiString sUserData = pSender->GetUserData();
@@ -800,7 +818,7 @@ BOOL CHosts::DelHostItem(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::UpdateHostGroupName(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::UpdateHostGroupName(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString strId = pSender->GetUserData();
 	CDuiString strNewName = pSender->GetText();
@@ -814,7 +832,7 @@ BOOL CHosts::UpdateHostGroupName(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::UpdateHostGroupDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::UpdateHostGroupDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString strDesc = pSender->GetText();
 	CDuiString strGroupId = pSender->GetUserData();
@@ -835,13 +853,21 @@ BOOL CHosts::UpdateHostGroupDesc(CControlUI* pSender, CPaintManagerUI* pManager)
 	return TRUE;
 }
 
-BOOL CHosts::UpdateHostItemAddr(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::UpdateHostItemAddr(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
+	BOOL bRet = FALSE;
 	CDuiString strText = pSender->GetText();
 	CDuiString sUserData = pSender->GetUserData();
-	if(!ValidateUtil::IsIPv4(strText.GetData()))
+	bRet = PCREUtil::IsIPv4(strText.GetData());
+	if(!bRet)
 	{
-#pragma message("CHosts::UpdateHostItemAddr - IP地址输入无效，提示用户")
+//#pragma message("CHosts::UpdateHostItemAddr - IP地址输入无效，提示用户")
+		//RDMsgBox(hWnd, MSG_IPV4_ERR, MSG_ERR, MB_OK);
+		wchar_t szErr[1024] = {0};
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_IPV4_ERR), GET_ASSOC_ID(g_LangIDs, MSG_IPV4_ERR), szErr);
+		m_pHostTipText->SetText(szErr);
+		m_pHostTipText->SetVisible();
+		pSender->SetFocus();
 		return FALSE;
 	}
 	CChildLayoutUI *pChildLayout = NULL;
@@ -854,21 +880,31 @@ BOOL CHosts::UpdateHostItemAddr(CControlUI* pSender, CPaintManagerUI* pManager)
 	wcscpy(szItemIndex, &pszItemIndex[1]);
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
-	sprintf(szItemId, "%s", szItemIndex);
+	sprintf(szItemId, "%d", _wtoi(szItemIndex));
 	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szAddr, 0, sizeof(pHostsItem->szAddr));
 	StrUtil::w2a(strText.GetData(), pHostsItem->szAddr);
+	if(m_pHostTipText->IsVisible())
+		m_pHostTipText->SetVisible(false);
 	return TRUE;
 }
 
-BOOL CHosts::UpdateHostItemDomain(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::UpdateHostItemDomain(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
+	BOOL bRet = FALSE;
 	CDuiString strText = pSender->GetText();
 	CDuiString sUserData = pSender->GetUserData();
-	if(!ValidateUtil::IsDomain(strText.GetData()))
+	bRet = PCREUtil::IsIPv4(strText.GetData());
+	if(!bRet)
 	{
-#pragma message("CHosts::UpdateHostItemAddr - 域名输入无效，提示用户")
+//#pragma message("CHosts::UpdateHostItemAddr - 域名输入无效，提示用户")
+		//RDMsgBox(hWnd, MSG_DOMAIN_ERR, MSG_ERR, MB_OK);
+		wchar_t szErr[1024] = {0};
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_DOMAIN_ERR), GET_ASSOC_ID(g_LangIDs, MSG_DOMAIN_ERR), szErr);
+		m_pHostTipText->SetText(szErr);
+		m_pHostTipText->SetVisible();
+		pSender->SetFocus();
 		return FALSE;
 	}
 	CChildLayoutUI *pChildLayout = NULL;
@@ -881,15 +917,17 @@ BOOL CHosts::UpdateHostItemDomain(CControlUI* pSender, CPaintManagerUI* pManager
 	wcscpy(szItemIndex, &pszItemIndex[1]);
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
-	sprintf(szItemId, "%s", szItemIndex);
+	sprintf(szItemId, "%d", _wtoi(szItemIndex));
 	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szDomain, 0, sizeof(pHostsItem->szDomain));
 	StrUtil::w2a(strText.GetData(), pHostsItem->szDomain);
+	if(m_pHostTipText->IsVisible())
+		m_pHostTipText->SetVisible(false);
 	return TRUE;
 }
 
-BOOL CHosts::UpdateHostItemDesc(CControlUI* pSender, CPaintManagerUI* pManager)
+BOOL CHosts::UpdateHostItemDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSender)
 {
 	CDuiString strText = pSender->GetText();
 	CDuiString sUserData = pSender->GetUserData();
@@ -903,7 +941,7 @@ BOOL CHosts::UpdateHostItemDesc(CControlUI* pSender, CPaintManagerUI* pManager)
 	wcscpy(szItemIndex, &pszItemIndex[1]);
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
-	sprintf(szItemId, "%s", szItemIndex);
+	sprintf(szItemId, "%d", _wtoi(szItemIndex));
 	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szDesc, 0, sizeof(pHostsItem->szDesc));

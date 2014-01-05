@@ -1,11 +1,11 @@
 #pragma once
-#include "stdafx.h"
-#include <Windows.h>
-#include <list>
 
-using namespace std;
+#include <Windows.h>
+
 namespace PCREUtil
 {
-	bool IsMatch(const char* lpszPattern, const char* lpszText);
-	bool find(const char* lpszPattern,char* lpszText,list<char*>* result);
+	BOOL IsIPv4(LPCWSTR lpszIP);
+	BOOL IsMask(LPCWSTR lpszMask);
+	BOOL IsDomain(LPCWSTR lpszDomain);
+	BOOL IsMatch(LPCSTR lpszPattern, LPCWSTR lpszText);
 }

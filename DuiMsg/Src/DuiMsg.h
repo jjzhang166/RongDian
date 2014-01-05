@@ -4,15 +4,15 @@
 //#define USE_ZIPRES
 
 #ifndef MB_POPUP
-#define MB_POPUP 0xFFFFFFFFL
+#define MB_POPUP 0xF0000000L
 #endif
 
 #ifndef MB_LOADING
-#define MB_LOADING 0x0FFFFFFFL
+#define MB_LOADING 0x0F000000L
 #endif
 
 #ifndef MB_MENU
-#define MB_MENU 0x00FFFFFFL
+#define MB_MENU 0x00F00000L
 #endif
 
 const wchar_t* const kDuiMsgPopupClass = L"DuiMsgPopup_Class";

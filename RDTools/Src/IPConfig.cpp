@@ -810,71 +810,69 @@ LONG CALLBACK CIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, B
 
 BOOL CIPConfig::CheckFormValid(HWND hWnd)
 {
-	//wchar_t msgTitle[100];
-	//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"msg_warn", msgTitle);
-
+	BOOL bRet = FALSE;
+	CDuiString strText;
 	if(!m_pIpAutoCheckBox->IsSelected())
 	{
 		//ÅÐ¶Ïip
-		LPCTSTR ip = m_pIPEdit->GetText().GetData();
-		BOOL isIp = ValidateUtil::IsIPv4(ip);
-		if(isIp==FALSE)
+		strText = m_pIPEdit->GetText();
+		bRet = PCREUtil::IsIPv4(strText.GetData());
+		if(!bRet)
 		{
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_ipv4_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			RDMsgBox(hWnd, MSG_IPV4_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
-			return FALSE;
+			return bRet;
 		}
 		//ÅÐ¶Ï×ÓÍøÑÚÂë
-		LPCTSTR mask = m_pMaskEdit->GetText().GetData();
-		BOOL isMask = ValidateUtil::IsMask(mask);
-		if(isMask==FALSE)
+		strText = m_pMaskEdit->GetText();
+		bRet = PCREUtil::IsMask(strText.GetData());
+		if(!bRet)
 		{
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_subnet_mask_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			RDMsgBox(hWnd, MSG_MASK_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
-			return FALSE;
+			return bRet;
 		}
 		//ÅÐ¶ÏÍø¹Ø
-		LPCTSTR gateway = m_pGatewayEdit->GetText().GetData();
-		BOOL isGateway = ValidateUtil::IsIPv4(gateway);
-		if(isGateway==FALSE)
+		strText = m_pGatewayEdit->GetText();
+		bRet = PCREUtil::IsIPv4(strText.GetData());
+		if(!bRet)
 		{
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_gateway_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			RDMsgBox(hWnd, MSG_GATEWAY_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
-			return FALSE;
+			return bRet;
 		}
 	}
 	//dns
 	if (!m_pDnsAutoCheckBox->IsSelected())
 	{
-		LPCTSTR dns1 = m_pDns1Edit->GetText().GetData();
-		BOOL isDns1 = ValidateUtil::IsIPv4(dns1);
-		if(isDns1==FALSE)
+		strText = m_pDns1Edit->GetText();
+		bRet = PCREUtil::IsIPv4(strText.GetData());
+		if(!bRet)
 		{
 			//wchar_t text[100];
 			//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 			//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 			RDMsgBox(hWnd, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
-			return FALSE;
+			return bRet;
 		}
 		if(!m_pDns2Edit->GetText().IsEmpty())
 		{
-			LPCTSTR dns2 = m_pDns2Edit->GetText().GetData();
-			BOOL isDns2 = ValidateUtil::IsIPv4(dns2);
-			if(isDns2==FALSE)
+			strText = m_pDns2Edit->GetText();
+			bRet = PCREUtil::IsIPv4(strText.GetData());
+			if(!bRet)
 			{
 				//wchar_t text[100];
 				//Utility::GetINIStr(g_pLangManager->GetLangName(), LS_MSG, L"invalid_dns_err", text);
 				//MessageBoxW(NULL,text,msgTitle,MB_OK|MB_ICONWARNING);
 				RDMsgBox(hWnd, MSG_DNS_ERR, MSG_WARNING, MB_OK | MB_ICONINFORMATION);
-				return FALSE;
+				return bRet;
 			}
-
 		}
 	}
 	return TRUE;

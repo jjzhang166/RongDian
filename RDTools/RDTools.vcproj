@@ -472,6 +472,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\common\PCREUtil.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\common\PCREUtil.h"
+				>
+			</File>
+			<File
 				RelativePath="..\common\SHHelper.cpp"
 				>
 				<FileConfiguration
@@ -573,22 +589,6 @@
 			</File>
 			<File
 				RelativePath="..\common\Util.h"
-				>
-			</File>
-			<File
-				RelativePath="..\common\ValidateUtil.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\common\ValidateUtil.h"
 				>
 			</File>
 		</Filter>
