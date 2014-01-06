@@ -17,9 +17,10 @@
 #define HAVE__STRTOI64 1
 
 #define PCRE_STATIC 1
+#define COMPILE_PCRE16
 
-#define SUPPORT_PCRE8 1
-/* #undef SUPPORT_PCRE16 */
+/* #undef SUPPORT_PCRE8 */
+#define SUPPORT_PCRE16 1
 /* #undef SUPPORT_PCRE32 */
 /* #undef SUPPORT_JIT */
 #define SUPPORT_PCREGREP_JIT 1
