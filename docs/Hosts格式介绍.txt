@@ -1,0 +1,27 @@
+例子：
+
+#Section:gleasy本地
+#Comment:本地hosts配置
+#127.0.0.1 web.gleasy.com # gleasy平台
+#127.0.0.1 qiye.gleasy.com #
+192.168.0.11 svn.dev.gleasy.com #
+#Section:gleasy测试环境
+#Comment:转向gleasy测试环境的hosts配置
+183.129.228.221 repo.dev.gleasy.com #
+#183.129.228.207 svn.dev.gleasy.com # (暂时不用)测试端的svn服务器，使用11的代替
+##Section:gleasy
+#Comment:
+192.168.0.10 person.dev.gleasy.cn #
+
+规则介绍：
+组名：#Section:***
+组描述：#Comment:***
+激活绑定：127.0.0.1 www.baidu.com #绑定描述
+暂停绑定：#127.0.0.1 www.baidu.com #绑定描述
+
+基本处理逻辑：
+一、逐行分析，查找【#Section】或者有效绑定
+1、如果首先查找到的是有效绑定，则默认生成一个组【Hosts's Group】及其描述【Host's Group Desc】，并将该绑定归于该组；
+2、如果首先查找到的是【#Section】，则继续查找，并将随后查找到的绑定归于该组（激活或暂停状态），直到碰到第二个【#Section】；
+二、如果没有找到【#Section】或者有效绑定，则生成一个默认的组及其描述；
+三、循环直到文档结束。

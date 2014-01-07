@@ -1,0 +1,7 @@
+检测URL：http://www.rongdian.net/rdol.php?type=3
+返回内容：
+{
+	"version":"2.0.0.1", 
+	"url":"http://www.rongdian.net/"，
+	"log":"1、更新了***；2、更新了***"
+}
