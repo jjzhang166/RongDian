@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window >
+	<VerticalLayout name="panel_settings" inset="4,4,4,4" bkcolor="FFE0E0E0" >
+		<VerticalLayout height="44" bordersize="1" bordercolor="FFE0E0E0" >
+			<HorizontalLayout height="22" >
+				<Control width="20" />
+				<Label text="Langs" width="80" />
+				<Control width="10" />
+				<Label bkcolor="FF669934" padding="0,11,0,10" />
+				<Control width="20" />
+			</HorizontalLayout>
+			<HorizontalLayout height="22" >
+				<Control width="20" />
+				<Button name="settings_langs" width="80" text="English" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Control />
+			</HorizontalLayout>
+		</VerticalLayout>
+		<VerticalLayout height="68" bordersize="1" bordercolor="FFE0E0E0" >
+			<HorizontalLayout height="22" >
+				<Control width="20" />
+				<Label text="Background" width="80" />
+				<Control width="10" />
+				<Label bkcolor="FF669934" padding="0,11,0,10" />
+				<Control width="20" />
+			</HorizontalLayout>
+			<HorizontalLayout height="22" >
+				<Control width="30" />
+				<Label text="Color：" width="42" />
+				<Control width="3" />
+				<Edit minwidth="250" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8"/>
+				<Control width="30" />
+			</HorizontalLayout>
+			<Control width="2" />
+			<HorizontalLayout height="22" >
+				<Control width="30" />
+				<Label text="Path：" width="42" />
+				<Control width="3" />
+				<Edit minwidth="250" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8"/>
+				<Control width="3" />
+				<Button name="coder_path_open" width="24" bkimage="file='default\folderx24.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
+				<Control width="30" />
+			</HorizontalLayout>
+		</VerticalLayout>
+		<Control />
+		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
+			<Control />
+			<Button name="settings_apply" width="80" text="Apply" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			<Control width="3" />
+		</HorizontalLayout> <!--host文件路径-->
+	</VerticalLayout>
+</Window>

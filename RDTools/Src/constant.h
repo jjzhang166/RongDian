@@ -342,3 +342,4 @@ typedef struct _tagCMD_EXE_INFO
 	LPWSTR	lpszCommand;
 	LPVOID	lpLoader;
 } CMD_EXE_INFO, *PCMD_EXE_INFO, *LPCMD_EXE_INFO;
+
