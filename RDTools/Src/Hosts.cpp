@@ -1209,7 +1209,7 @@ BOOL CHosts::AdjustGroupHeight(CPaintManagerUI* pManager, const wchar_t* pszGrou
 	int nEditHeight = pDescEdit->GetFixedHeight() + (rtInset.bottom + rtInset.top) + nBorderSize;
 	int nItemHeight = _wtoi(pGroupLayout->GetUserData());
 	if(nItemHeight==0)
-		nItemHeight = 24;
+		nItemHeight = 26;
 	rtInset = pHostsItems->GetInset();
 	nBorderSize = pHostsItems->GetBorderSize();
 	nItemHeight = nCount * nItemHeight + (rtInset.bottom - rtInset.top) + nBorderSize;

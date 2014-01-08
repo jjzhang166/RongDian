@@ -147,6 +147,7 @@ void				CancelLoading();
 #include "UpdateFrame.h"
 #include "MainFrame.h"
 
+extern RD_SETTINGS				g_rdSettings;
 extern HANDLE					g_hUserSignature;
 extern HANDLE					g_hAdminSignature;
 extern BOOL						g_bActiveRunAsAdminThread;

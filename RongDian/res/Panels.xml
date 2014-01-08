@@ -48,4 +48,12 @@
 		<name>Hosts</name>
 		<desc>Host Admin Panel</desc>
 	</Plugin>
+	<Plugin>
+		<layout>layout_settings</layout>
+		<xml>Settings.xml</xml>
+		<tab>tab_settings</tab>
+		<panel>panel_settings</panel>
+		<name>Settings</name>
+		<desc>Settings Panel</desc>
+	</Plugin>
 </Root>

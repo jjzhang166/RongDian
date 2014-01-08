@@ -7,8 +7,10 @@
 
 BOOL PCREUtil::IsIPv4(LPCWSTR lpszText)
 {
-#pragma message("PCREUtil::IsDomain - 正则表达式 - 检测IP地址是否有效 - 127.256.0.1返回TRUE")
-	return IsMatch(L"^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?).){4}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$", lpszText);
+//#pragma message("PCREUtil::IsIPv4 - 正则表达式 - 检测IP地址是否有效 - 127.256.0.1返回TRUE")
+#pragma message("PCREUtil::IsIPv4 - 待测试 - 来源 - <<Regular Expressions Cookbook>> - 第7章")
+	return IsMatch(L"^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?).){3}(25[0-4]\\d|25[0-5]|[01]?\\d\\d?)$", lpszText);
+	//return IsMatch(L"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", lpszText);
 }
 
 BOOL PCREUtil::IsMask(LPCWSTR lpszText)
@@ -18,8 +20,9 @@ BOOL PCREUtil::IsMask(LPCWSTR lpszText)
 
 BOOL PCREUtil::IsDomain(LPCWSTR lpszText)
 {
-#pragma message("PCREUtil::IsDomain - 正则表达式 - 此正则表达式有问题")
-	return IsMatch(L"^([A-Z0-9][A-Z0-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?/?/i", lpszText);
+//#pragma message("PCREUtil::IsDomain - 正则表达式 - 此正则表达式有问题")
+#pragma message("PCREUtil::IsDomain - 待测试 - 来源 - <<Regular Expressions Cookbook>> - 第7章")
+	return IsMatch(L"^([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$", lpszText);
 }
 
 BOOL PCREUtil::IsMatch(LPCWSTR lpszPattern, LPCWSTR lpszText)
