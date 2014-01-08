@@ -35,11 +35,11 @@ RD_DECLARE_BEGIN(Hosts)
 	RD_DECLARE_MEMBER(BOOL, AdjustGroupHeight)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, BOOL bInit = FALSE);
 
 public:
-	RD_DECLARE_MEMBER(CEditUI*, m_pHostPathEdit);
-	RD_DECLARE_MEMBER(CVerticalLayoutUI*, m_pHostGroupContainerLayout);
-	RD_DECLARE_MEMBER(CLabelUI*, m_pHostTipText);
-	RD_DECLARE_MEMBER(CHostsHelper, HostsHelper);
-	RD_DECLARE_MEMBER(BOOL, bModified);
+	CEditUI*			m_pHostPathEdit;
+	CVerticalLayoutUI*  m_pHostGroupContainerLayout;
+	CLabelUI*			m_pHostTipText;
+	CHostsHelper		HostsHelper;
+	BOOL				bModified;
 RD_DECLARE_END()
 // CHosts
 //////////////////////////////////////////////////////////////////////////

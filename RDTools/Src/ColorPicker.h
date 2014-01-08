@@ -21,22 +21,22 @@ RD_DECLARE_BEGIN(ColorPicker)
 	RD_DECLARE_MEMBER(void, OnZoomInUpdate) (COLORREF clrColor, POINT ptCursor, BOOL bRecord);
 
 public:
-	RD_DECLARE_MEMBER(COLORREF, colCurColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerPreview);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerArrow);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerSnapShot);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerPos);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerClass);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerText);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerHtmlColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerRGBColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerHexColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerHSLColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerDelphiColor);
-	RD_DECLARE_MEMBER(CControlUI *, pPickerHSVColor);
-	RD_DECLARE_MEMBER(CListUI *, pColorList);
-	RD_DECLARE_MEMBER(BOOL *, bIsCapturing);
+	COLORREF colCurColor;
+	CControlUI * pPickerPreview;
+	CControlUI * pPickerArrow;
+	CControlUI * pPickerSnapShot;
+	CControlUI * pPickerPos;
+	CControlUI * pPickerClass;
+	CControlUI * pPickerText;
+	CControlUI * pPickerColor;
+	CControlUI * pPickerHtmlColor;
+	CControlUI * pPickerRGBColor;
+	CControlUI * pPickerHexColor;
+	CControlUI * pPickerHSLColor;
+	CControlUI * pPickerDelphiColor;
+	CControlUI * pPickerHSVColor;
+	CListUI * pColorList;
+	BOOL * bIsCapturing;
 RD_DECLARE_END()
 // CColorPicker
 //////////////////////////////////////////////////////////////////////////

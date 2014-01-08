@@ -32,32 +32,32 @@ RD_DECLARE_BEGIN(IPConfig)
 	RD_DECLARE_MEMBER(static LONG CALLBACK, AdaptersNameCallBack)(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex);
 
 public:
-	RD_DECLARE_MEMBER(CComboUI *, m_pSolutionList);
-	RD_DECLARE_MEMBER(CComboUI *, m_pAdapterList);
-	RD_DECLARE_MEMBER(CCheckBoxUI *, m_pIpAutoCheckBox);
-	RD_DECLARE_MEMBER(CCheckBoxUI *, m_pIpManualCheckBox);
-	RD_DECLARE_MEMBER(CCheckBoxUI *, m_pDnsAutoCheckBox);
-	RD_DECLARE_MEMBER(CCheckBoxUI *, m_pDnsManualCheckBox);
-	RD_DECLARE_MEMBER(CEditUI *, m_pNameEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pIPEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pMaskEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pGatewayEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pDns1Edit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pDns2Edit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentAdapterTypeEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentDescEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentDhcpEnabledEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentIPEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentMaskEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentGatewayEdit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentDns1Edit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pCurrentDns2Edit);
-	RD_DECLARE_MEMBER(CEditUI *, m_pMacEdit);
+	CComboUI * m_pSolutionList;
+	CComboUI * m_pAdapterList;
+	CCheckBoxUI * m_pIpAutoCheckBox;
+	CCheckBoxUI * m_pIpManualCheckBox;
+	CCheckBoxUI * m_pDnsAutoCheckBox;
+	CCheckBoxUI * m_pDnsManualCheckBox;
+	CEditUI * m_pNameEdit;
+	CEditUI * m_pIPEdit;
+	CEditUI * m_pMaskEdit;
+	CEditUI * m_pGatewayEdit;
+	CEditUI * m_pDns1Edit;
+	CEditUI * m_pDns2Edit;
+	CEditUI * m_pCurrentAdapterTypeEdit;
+	CEditUI * m_pCurrentDescEdit;
+	CEditUI * m_pCurrentDhcpEnabledEdit;
+	CEditUI * m_pCurrentIPEdit;
+	CEditUI * m_pCurrentMaskEdit;
+	CEditUI * m_pCurrentGatewayEdit;
+	CEditUI * m_pCurrentDns1Edit;
+	CEditUI * m_pCurrentDns2Edit;
+	CEditUI * m_pMacEdit;
 
-	RD_DECLARE_MEMBER(list<LPIPCONFIG_INFO>, lstIpConfigInfo);
-	RD_DECLARE_MEMBER(list<LPADAPTER_INFO>, lstAdaptersInfo);
-	RD_DECLARE_MEMBER(PCMD_EXE_INFO, m_pCmdInfo);
-	RD_DECLARE_MEMBER(LPVOID, m_lpLoader);
+	list<LPIPCONFIG_INFO> lstIpConfigInfo;
+	list<LPADAPTER_INFO> lstAdaptersInfo;
+	PCMD_EXE_INFO m_pCmdInfo;
+	LPVOID m_lpLoader;
 RD_DECLARE_END()
 // CIPConfig
 //////////////////////////////////////////////////////////////////////////

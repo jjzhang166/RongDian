@@ -14,10 +14,10 @@ RD_DECLARE_BEGIN(Tidy)
 	RD_DECLARE_MEMBER(BOOL, OnTidyBatch) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
 
 public:
-	RD_DECLARE_MEMBER(CHorizontalLayoutUI *, pTidyTab);
-	RD_DECLARE_MEMBER(CVerticalLayoutUI *, pTidyPanels);
-	RD_DECLARE_MEMBER(int, nNewTabIndex);
-	RD_DECLARE_MEMBER(CDuiString, strCurTabName);
+	CHorizontalLayoutUI *	pTidyTab;
+	CVerticalLayoutUI *		pTidyPanels;
+	int						nNewTabIndex;
+	CDuiString				strCurTabName;
 RD_DECLARE_END()
 // CTidy
 //////////////////////////////////////////////////////////////////////////

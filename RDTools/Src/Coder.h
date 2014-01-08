@@ -26,24 +26,24 @@ RD_DECLARE_BEGIN(Coder)
 	RD_DECLARE_MEMBER(static DWORD WINAPI, ConvertThread) (LPVOID lpVoid);
 
 public:
-	RD_DECLARE_MEMBER(CListUI *, pCoderList);
-	RD_DECLARE_MEMBER(CComboUI *, pCoderComboFrom);
-	RD_DECLARE_MEMBER(CComboUI *, pCoderComboTo);
-	RD_DECLARE_MEMBER(CButtonUI *, pCoderBackupCheck);
-	RD_DECLARE_MEMBER(CButtonUI *, pCoderNoBOM);
-	RD_DECLARE_MEMBER(CEditUI *, pCoderBackupEdit);
-	RD_DECLARE_MEMBER(vector<LPCODER_INFO>, lstCoderInfo);
-	RD_DECLARE_MEMBER(BOOL, bCoderBackup);
-	RD_DECLARE_MEMBER(BOOL, bWithBom);
-	RD_DECLARE_MEMBER(BOOL, bWorking);
-	RD_DECLARE_MEMBER(BOOL, bQuitThread);
-	RD_DECLARE_MEMBER(wchar_t, szHandleText[1024]);
-	RD_DECLARE_MEMBER(wchar_t, szHandleErrText[1024]);
-	RD_DECLARE_MEMBER(wchar_t, szNoHandleText[1024]);
-	RD_DECLARE_MEMBER(DWORD, dwHightLightColor);
-	RD_DECLARE_MEMBER(DWORD, dwGrayColor);
-	RD_DECLARE_MEMBER(list<LPCHARSET_INFO>, lstCharSetsInfo);
-	RD_DECLARE_MEMBER(HANDLE, hConvertThread);
+	CListUI * pCoderList;
+	CComboUI * pCoderComboFrom;
+	CComboUI * pCoderComboTo;
+	CButtonUI * pCoderBackupCheck;
+	CButtonUI * pCoderNoBOM;
+	CEditUI * pCoderBackupEdit;
+	vector<LPCODER_INFO> lstCoderInfo;
+	BOOL bCoderBackup;
+	BOOL bWithBom;
+	BOOL bWorking;
+	BOOL bQuitThread;
+	wchar_t szHandleText[1024];
+	wchar_t szHandleErrText[1024];
+	wchar_t szNoHandleText[1024];
+	DWORD dwHightLightColor;
+	DWORD dwGrayColor;
+	list<LPCHARSET_INFO> lstCharSetsInfo;
+	HANDLE hConvertThread;
 RD_DECLARE_END()
 // CCoder
 //////////////////////////////////////////////////////////////////////////
