@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
-	<HostItemLayout name="host_item_x_y" height="26" bordersize="1" bordercolor="FF00FF00" inset="1,1,1,1" >
+	<HostItemLayout name="host_item_x_y" height="26" bordersize="1" bordercolor="FFE0E0E0">
 		<HostItemState name="host_item_state_x_y" width="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
 		<Control width="2" />
 		<HostItemAddr name="host_item_addr_x_y" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" />

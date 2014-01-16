@@ -4,6 +4,7 @@
 typedef struct _tagHOSTS_ITEM
 {
 	char szId[64]; // hosts item内部唯一标识
+	bool bActive;
 	char szAddr[64];
 	char szDomain[256];
 	char szDesc[1024];
@@ -39,11 +40,13 @@ public:
 	bool AddItemById(const char* pszSid, const char* pszAddr, const char* pszDomain);
 	bool AddSection(const char* pszSection);
 	bool DelItem(const char* pszSection, const char* pszDomain);
+	bool DelItemById(const char* pSid, const char* pszId);
 	bool DelSection(const char* pszSection);
-	bool ModifyItem(const char* pszSection, const char* pszAddr, const char* pszDomain);
+	bool ModifyItem(const char* pszSection, const bool check,const char* pszAddr, const char* pszDomain);
 	bool Build(std::string &strContent);
 	bool Save();
 	bool SaveAs(const char* lpszPath);
+	bool isItem(const std::string strItem);
 
 private:
 	const std::string trim(const std::string istring);
@@ -51,8 +54,9 @@ private:
 	const std::string rtrim(const std::string istring);
 
 public:
-	std::string strHeader;
-	LPHOSTS_INFO pHosts;
-	int nCount; // host info个数
-	int nIndex; // host info索引，用于唯一标识info节点，该字段只增加，不减少
+	std::string m_strHeader;
+	LPHOSTS_INFO m_pHosts;
+	int m_nCount; // host info个数
+	int m_nIndex; // host info索引，用于唯一标识info节点，该字段只增加，不减少
+	bool m_isUtf8;
 };

@@ -6,6 +6,7 @@
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
 
+#include "..\common\StrUtil.h"
 #include "..\thirdparty\StringTokenizer\StringTokenizer.h"
 
 #pragma warning(push)
@@ -18,9 +19,10 @@ const char * const kDefaultDesc = "Add by HostParser";
 
 CHostsHelper::CHostsHelper()
 {
-	pHosts = NULL;
-	nCount = 0;
-	nIndex = 0;
+	m_pHosts = NULL;
+	m_nCount = 0;
+	m_nIndex = 0;
+	m_isUtf8 = false;
 }
 
 CHostsHelper::~CHostsHelper()
@@ -67,19 +69,29 @@ bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 
 bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 {
-	StringTokenizer strData = StringTokenizer(pszStr, pszDelim);
+	char* szContent = new char[strlen(pszStr)+1];
+	memset(szContent,0,strlen(pszStr)+1);
+	strcpy_s(szContent,strlen(pszStr)+1,pszStr);
+	int utf8Type = StrUtil::is_utf8(pszStr);
+	if(utf8Type==UTF8_BOM||utf8Type==UTF8_NOBOM)
+	{
+		m_isUtf8 = true;
+		delete[] szContent;
+		szContent = StrUtil::u82a(pszStr);
+	}
+	StringTokenizer strData = StringTokenizer(szContent, pszDelim);
 	std::string strTemp = "";
 	std::string strSection, strComment;
 	std::string strSectionTag, strCommentTag;
-	pHosts = (LPHOSTS_INFO)malloc(sizeof(HOSTS_INFO));
-	if(!pHosts)
+	m_pHosts = (LPHOSTS_INFO)malloc(sizeof(HOSTS_INFO));
+	if(!m_pHosts)
 		return false;
-	nCount++;
-	LPHOSTS_INFO pTail = pHosts;
+	m_nCount++;
+	LPHOSTS_INFO pTail = m_pHosts;
 	LPHOSTS_ITEM pItem = NULL;
 	memset(pTail, 0, sizeof(HOSTS_INFO));
-	sprintf(pTail->szId, "%d", nIndex);
-	nIndex++;
+	sprintf(pTail->szId, "%d", m_nIndex);
+	m_nIndex++;
 	bool bHeaderEnd = false;
 	int nTokensCount = strData.countTokens();
 	for(int i = 0; i < nTokensCount; i++)
@@ -87,12 +99,12 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 		strTemp = strData.nextToken();
 		strSectionTag.assign(strTemp.c_str(), strlen(kSectionTag));
 		strCommentTag.assign(strTemp.c_str(), strlen(kCommentTag));
-		if(strTemp[0] == '#' && !bHeaderEnd)
+		if(strTemp[0] == '#' && !bHeaderEnd && !isItem(strTemp))
 		{
 			if(strSectionTag!=kSectionTag) // hosts's Coment
 			{
-				strHeader += strTemp;
-				strHeader += "\n";
+				m_strHeader += strTemp;
+				m_strHeader += "\n";
 				strSectionTag = "";
 				strCommentTag = "";
 				continue;
@@ -100,7 +112,7 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 		}
 
 		bHeaderEnd = true;
-		if(strSectionTag==kSectionTag) // hosts item section's name
+		if(strSectionTag==kSectionTag) // hosts group section's name
 		{
 			if(strstr(strTemp.c_str(), kSectionTag))
 				strSection.assign(strTemp.c_str(), strlen(kSectionTag)+1, strTemp.length());
@@ -110,19 +122,23 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 				assert(pTail->pNext!=NULL);
 				pTail = pTail->pNext;
 				memset(pTail, 0, sizeof(HOSTS_INFO));
-				sprintf(pTail->szId, "%d", nIndex);
-				nCount++;
-				nIndex++;
+				sprintf(pTail->szId, "%d", m_nIndex);
+				m_nCount++;
+				m_nIndex++;
 			}
 			strcpy(pTail->szSection, strSection.c_str());
 		}
-		else if(strCommentTag==kCommentTag) // host item's comment
+		else if(strCommentTag==kCommentTag) // host group's comment
 		{
 			strComment.assign(strTemp.c_str(), strlen(kCommentTag)+1, strTemp.length());
 			strcpy(pTail->szDesc, strComment.c_str());
 		}
 		else // hosts item
 		{
+			if (!isItem(strTemp))
+			{
+				continue;
+			}
 			if(strlen(pTail->szSection)==0 && strlen(pTail->szDesc)==0)
 			{
 				strcpy(pTail->szSection, kDefaultName);
@@ -148,13 +164,33 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 				pItem = pNewItem;
 			}
 			pTail->nCount++;
+
 			StringTokenizer strItem = StringTokenizer(strTemp, " ");
-			std::string strAddr = ltrim(strItem.nextToken());
-			std::string strDomain = ltrim(strItem.nextToken());
-			std::string strDesc = trim(strItem.nextToken());
-			strcpy(pItem->szAddr, strAddr.c_str());
-			strcpy(pItem->szDomain, strDomain.c_str());
-			strcpy(pItem->szDesc, strDesc.c_str());
+			std::string strAddrPart = ltrim(strItem.nextToken());
+			std::string strDomainPart = ltrim(strItem.nextToken());
+			std::string strDescPart = ltrim(strItem.remainingString());
+			if (strAddrPart[0]=='#')
+			{
+				pItem->bActive = false;
+				std::string strAddr = strAddrPart.substr(1,strAddrPart.length()-1);
+				strcpy(pItem->szAddr, strAddr.c_str());
+			}
+			else
+			{
+				pItem->bActive = true;
+				strcpy(pItem->szAddr, strAddrPart.c_str());
+			}
+			strcpy(pItem->szDomain, strDomainPart.c_str());
+			if (strDescPart[0]=='#')
+			{
+				std::string strDesc = strDescPart.substr(1,strDescPart.length()-1);
+				strcpy(pItem->szDesc, strDesc.c_str());
+			}
+			else
+			{
+				strcpy(pItem->szDesc, strDescPart.c_str());
+			}
+			
 		}
 
 		strSection = "";
@@ -162,20 +198,22 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 		strSectionTag = "";
 		strCommentTag = "";
 	}
+	
+	delete[] szContent;
 	return true;
 }
 
 bool CHostsHelper::Reset()
 {
 	bool bRet = false;
-	if(pHosts)
+	if(m_pHosts)
 	{
-		LPHOSTS_INFO pHeader = pHosts;
+		LPHOSTS_INFO pHeader = m_pHosts;
 		LPHOSTS_ITEM pItem = NULL;
-		while(pHosts)
+		while(m_pHosts)
 		{
-			pHeader = pHosts;
-			pHosts = pHosts->pNext;
+			pHeader = m_pHosts;
+			m_pHosts = m_pHosts->pNext;
 			while(pHeader->pItem)
 			{
 				pItem = pHeader->pItem;
@@ -185,19 +223,19 @@ bool CHostsHelper::Reset()
 			free(pHeader);
 		}
 	}
-	pHosts = NULL;
-	nCount = 0;
-	nIndex = 0;
-	strHeader = "";
+	m_pHosts = NULL;
+	m_nCount = 0;
+	m_nIndex = 0;
+	m_strHeader = "";
 	bRet = true;
 	return bRet;
 }
 
 LPHOSTS_INFO CHostsHelper::FindSection(const char* pszSection)
 {
-	if(!pHosts)
+	if(!m_pHosts)
 		return NULL;
-	LPHOSTS_INFO pSection =  pHosts;
+	LPHOSTS_INFO pSection =  m_pHosts;
 	while(pSection)
 	{
 		if(stricmp(pSection->szSection, pszSection)==0)
@@ -210,9 +248,9 @@ LPHOSTS_INFO CHostsHelper::FindSection(const char* pszSection)
 
 LPHOSTS_INFO CHostsHelper::FindSectionById(const char* pszId)
 {
-	if(!pHosts)
+	if(!m_pHosts)
 		return NULL;
-	LPHOSTS_INFO pSection =  pHosts;
+	LPHOSTS_INFO pSection =  m_pHosts;
 	while(pSection)
 	{
 		if(stricmp(pSection->szId, pszId)==0)
@@ -241,7 +279,7 @@ LPHOSTS_ITEM CHostsHelper::FindItem(const char* pszSection, const char* pszDomai
 	}
 	else
 	{
-		pSection = pHosts;
+		pSection = m_pHosts;
 		while(pSection)
 		{
 			pItem = FindItem(pSection->szSection, pszDomain);
@@ -272,7 +310,7 @@ LPHOSTS_ITEM CHostsHelper::FindItemById(const char* pSid, const char* pszId)
 	}
 	else
 	{
-		pSection = pHosts;
+		pSection = m_pHosts;
 		while(pSection)
 		{
 			pItem = FindItemById(pSection->szId, pszId);
@@ -349,7 +387,16 @@ bool CHostsHelper::AddItemById(const char* pszSid, const char* pszAddr, const ch
 	strcpy(pNewItem->szDomain, pszDomain);
 	sprintf(pNewItem->szId, "%d", pSection->nIndex);
 	pSection->nIndex++;
-	pItem->pNext = pNewItem;
+	if(pItem)
+	{
+		pItem->pNext = pNewItem;
+	}
+	else
+	{
+		pSection->pItem = pNewItem;
+	}
+	
+	
 	return true;
 }
 
@@ -362,15 +409,15 @@ bool CHostsHelper::AddSection(const char* pszSection)
 	if(!pSection)
 		return false;
 	memset(pSection, 0, sizeof(HOSTS_INFO));
-	sprintf(pSection->szId, "%d", nIndex);
-	nIndex++;
-	if(!pHosts)
+	sprintf(pSection->szId, "%d", m_nIndex);
+	m_nIndex++;
+	if(!m_pHosts)
 	{
-		pHosts = pSection;
+		m_pHosts = pSection;
 	}
 	else
 	{
-		LPHOSTS_INFO pTail = pHosts;
+		LPHOSTS_INFO pTail = m_pHosts;
 		while(pTail)
 		{
 			if(pTail->pNext)
@@ -381,7 +428,7 @@ bool CHostsHelper::AddSection(const char* pszSection)
 		pTail->pNext = pSection;
 	}
 	strcpy(pSection->szSection, pszSection);
-	nCount++;
+	m_nCount++;
 	return true;
 }
 
@@ -422,7 +469,7 @@ bool CHostsHelper::DelItem(const char* pszSection, const char* pszDomain)
 	}
 	else
 	{
-		pSection = pHosts;
+		pSection = m_pHosts;
 		while(pSection)
 		{
 			bRet = DelItem(pSection->szSection, pszDomain);
@@ -434,13 +481,56 @@ bool CHostsHelper::DelItem(const char* pszSection, const char* pszDomain)
 	return false;
 }
 
+bool CHostsHelper::DelItemById(const char* pSid, const char* pszId)
+{
+	LPHOSTS_INFO pSection = NULL;
+	LPHOSTS_ITEM pItem = NULL, pPrev = NULL;
+	if(pSid)
+	{
+		pSection = FindSectionById(pSid);
+		if(!pSection)
+			return false;
+		pItem = pSection->pItem;
+		while(pItem)
+		{
+			if(stricmp(pItem->szId, pszId)==0)
+			{
+				break;
+			}
+			pPrev = pItem;
+			pItem = pItem->pNext;
+		}
+		if(pItem)
+		{
+			if(!pPrev)
+				pSection->pItem = pSection->pItem->pNext;
+			else
+				pPrev->pNext = pItem->pNext;
+			pSection->nCount --;
+			free(pItem);
+			return true;
+		}
+	}
+	else
+	{
+		pSection = m_pHosts;
+		while(pSection)
+		{
+			if(DelItemById(pSection->szId, pszId))
+				return true;
+			pSection = pSection->pNext;
+		}
+	}
+	return false;
+}
+
 bool CHostsHelper::DelSection(const char* pszSection)
 {
-	if(!pHosts)
+	if(!m_pHosts)
 		return false;
 	bool bRet = false;
 	LPHOSTS_INFO pPrev = NULL;
-	LPHOSTS_INFO pSection =  pHosts;
+	LPHOSTS_INFO pSection =  m_pHosts;
 	while(pSection)
 	{
 		if(stricmp(pSection->szSection, pszSection)==0)
@@ -456,7 +546,7 @@ bool CHostsHelper::DelSection(const char* pszSection)
 	if(pSection)
 	{
 		if(!pPrev)
-			pHosts = pHosts->pNext;
+			m_pHosts = m_pHosts->pNext;
 		else
 			pPrev->pNext = pSection->pNext;
 		LPHOSTS_ITEM pItem = pSection->pItem;
@@ -468,13 +558,13 @@ bool CHostsHelper::DelSection(const char* pszSection)
 			free(pTemp);
 		}
 		free(pSection);
-		nCount --;
+		m_nCount --;
 		return true;
 	}
 	return false;
 }
 
-bool CHostsHelper::ModifyItem(const char* pszSection, const char* pszAddr, const char* pszDomain)
+bool CHostsHelper::ModifyItem(const char* pszSection,const bool check, const char* pszAddr, const char* pszDomain)
 {
 	LPHOSTS_INFO pSection = NULL;
 	LPHOSTS_ITEM pItem = NULL;
@@ -497,10 +587,10 @@ bool CHostsHelper::ModifyItem(const char* pszSection, const char* pszAddr, const
 	}
 	else
 	{
-		pSection = pHosts;
+		pSection = m_pHosts;
 		while(pSection)
 		{
-			if(ModifyItem(pSection->szSection, pszAddr, pszDomain))
+			if(ModifyItem(pSection->szSection, check, pszAddr, pszDomain))
 				return true;
 			pSection = pSection->pNext;
 		}
@@ -510,11 +600,11 @@ bool CHostsHelper::ModifyItem(const char* pszSection, const char* pszAddr, const
 
 bool CHostsHelper::Build(std::string &strContent)
 {
-	LPHOSTS_INFO pSection = pHosts;
+	LPHOSTS_INFO pSection = m_pHosts;
 	LPHOSTS_ITEM pItem = NULL;
-	if(!strHeader.empty())
+	if(!m_strHeader.empty())
 	{
-		strContent = strHeader;
+		strContent = m_strHeader;
 		strContent += "\n";
 	}
 	while(pSection)
@@ -536,6 +626,8 @@ bool CHostsHelper::Build(std::string &strContent)
 		pItem = pSection->pItem;
 		while(pItem)
 		{
+			if (!pItem->bActive)
+				strContent += "#";
 			strContent += pItem->szAddr;
 			strContent += " ";
 			strContent += pItem->szDomain;
@@ -547,12 +639,19 @@ bool CHostsHelper::Build(std::string &strContent)
 		strContent += "\n";
 		pSection = pSection->pNext;
 	}
+	if(m_isUtf8)
+	{
+		const char* uStr = strContent.c_str();
+		char* u8Str = StrUtil::a2u8(uStr);
+		strContent = u8Str;
+		delete[] u8Str;
+	}
 	return true;
 }
 
 bool CHostsHelper::Save()
 {
-	if(!pHosts)
+	if(!m_pHosts)
 		return false;
 	std::string strContent;
 	Build(strContent);
@@ -610,5 +709,25 @@ const std::string CHostsHelper::rtrim(const std::string istring)
 {
 	std::string::size_type last = istring.find_last_not_of(" \n\t\r\0xb"); /// must succeed
 	return istring.substr( 0, last + 1);
+}
+
+bool CHostsHelper::isItem(const std::string strItem)
+{
+	StringTokenizer itemToken = StringTokenizer(strItem, " ");
+	std::string strAddrPart = ltrim(itemToken.nextToken());
+	std::string strDomainPart = ltrim(itemToken.nextToken());
+	if (strAddrPart[0]=='#')
+	{
+		strAddrPart = strAddrPart.substr(1,strAddrPart.length()-1);
+	}
+	if(strAddrPart.length()<7)
+	{
+		return false;
+	}
+	if(strDomainPart.length()<5)
+	{
+		return false;
+	}
+	return true;
 }
 #pragma warning(pop)

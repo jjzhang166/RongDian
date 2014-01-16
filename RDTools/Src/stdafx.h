@@ -73,7 +73,6 @@ using namespace DuiLib;
 #ifdef _DEBUG
 #pragma comment(lib, "../RongDian/bin/log4cplusd.lib")
 #pragma comment(lib, "../RongDian/bin/pcred.lib")
-#pragma comment(lib, "../RongDian/bin/pcred.lib")
 #pragma comment(lib, "../RongDian/bin/UCDd.lib")
 #pragma comment(lib, "../RongDian/bin/libiconvd.lib")
 #pragma comment(lib, "../RongDian/bin/SQLite.lib")

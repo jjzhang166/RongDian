@@ -23,6 +23,7 @@ RD_DECLARE_BEGIN(Hosts)
 	RD_DECLARE_MEMBER(BOOL, NewHostItem) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 	RD_DECLARE_MEMBER(BOOL, DelHostGroup) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 	RD_DECLARE_MEMBER(BOOL, DelHostItem) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
+	RD_DECLARE_MEMBER(BOOL, ToggleHostItem) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 	RD_DECLARE_MEMBER(BOOL, UpdateHostGroupName) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 	RD_DECLARE_MEMBER(BOOL, UpdateHostGroupDesc) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 	RD_DECLARE_MEMBER(BOOL, UpdateHostItemAddr) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
@@ -30,7 +31,7 @@ RD_DECLARE_BEGIN(Hosts)
 	RD_DECLARE_MEMBER(BOOL, UpdateHostItemDesc) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pSender*/);
 
 	RD_DECLARE_MEMBER(BOOL, CreateGroup)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, const wchar_t* /*pszGroupName*/, const wchar_t* pszDesc = NULL);
-	RD_DECLARE_MEMBER(BOOL, CreateItem)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, const wchar_t* /*pszAddr*/, const wchar_t* /*pszDomain*/, const wchar_t* pszDesc = NULL);
+	RD_DECLARE_MEMBER(BOOL, CreateItem)(CPaintManagerUI* /*pManager*/, bool active,const wchar_t* /*pszGroupId*/, const wchar_t* /*pszAddr*/, const wchar_t* /*pszDomain*/, const wchar_t* pszDesc = NULL);
 
 	RD_DECLARE_MEMBER(BOOL, AdjustGroupHeight)(CPaintManagerUI* /*pManager*/, const wchar_t* /*pszGroupId*/, BOOL bInit = FALSE);
 
@@ -39,7 +40,7 @@ public:
 	CVerticalLayoutUI*  m_pHostGroupContainerLayout;
 	CLabelUI*			m_pHostTipText;
 	CHostsHelper		HostsHelper;
-	BOOL				bModified;
+	BOOL				m_bModified;
 RD_DECLARE_END()
 // CHosts
 //////////////////////////////////////////////////////////////////////////
