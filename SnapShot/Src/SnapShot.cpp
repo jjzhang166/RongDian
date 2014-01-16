@@ -85,8 +85,8 @@ const int				PREVIEW_HEIGHT		= 100;
 
 typedef enum _tagSNAPSHOT_MODE
 {
-	SNAPSHOT_FULLSCREEN = 0, // 鍚姩鍙傛暟: SnapShot.exe -m f
-	SNAPSHOT_MAGNIFIER  // 鍚姩鍙傛暟: SnapShot.exe -m m(榛樿鏂瑰紡)
+	SNAPSHOT_FULLSCREEN = 0, // 启动参数: SnapShot.exe -m f
+	SNAPSHOT_MAGNIFIER  // 启动参数: SnapShot.exe -m m(默认方式)
 } SNAPSHOT_MODE, *PSNAPSHOT_MODE, *LPSNAPSHOT_MODE;
 
 class WinInfo
