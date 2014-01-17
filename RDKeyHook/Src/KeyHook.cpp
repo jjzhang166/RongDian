@@ -12,13 +12,13 @@ HWND		g_hInvoker = NULL;
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	/*
-	åœ¨win32ä¸­ï¼ŒwParamæ˜¯æ™®é€šé”®(å­—æ¯ã€æ•°å­—ä¹‹ç±»çš„)
-	lParamæ˜¯ç”¨æ¥åˆ¤æ–­æ˜¯å¦æŒ‰ä¸‹äº†altã€ctrlç­‰é”®,å…·ä½“å¯çœ‹msdnæ–‡æ¡£ä¸­çš„WM_KEYDOWN
+	ÔÚwin32ÖÐ£¬wParamÊÇÆÕÍ¨¼ü(×ÖÄ¸¡¢Êý×ÖÖ®ÀàµÄ)
+	lParamÊÇÓÃÀ´ÅÐ¶ÏÊÇ·ñ°´ÏÂÁËalt¡¢ctrlµÈ¼ü,¾ßÌå¿É¿´msdnÎÄµµÖÐµÄWM_KEYDOWN
 
-	åœ¨é’©å­é‡Œé¢ï¼Œæœ‰æ‰€ä¸åŒï¼Œç›¸å…³ä¿¡æ¯éƒ½å­˜åœ¨KBDLLHOOKSTRUCTè¿™ä¸ªç»“æž„æé‡Œé¢
-	é’©å­æ¶ˆæ¯å¤„ç†å‡½æ•°çš„wParamå°±æ˜¯æ¶ˆæ¯å€¼(WM_KEYDOWN)
-	vkCodeç›¸å½“äºŽwParam
-	flagsç›¸å½“äºŽlParam
+	ÔÚ¹³×ÓÀïÃæ£¬ÓÐËù²»Í¬£¬Ïà¹ØÐÅÏ¢¶¼´æÔÚKBDLLHOOKSTRUCTÕâ¸ö½á¹¹ÌáÀïÃæ
+	¹³×ÓÏûÏ¢´¦Àíº¯ÊýµÄwParam¾ÍÊÇÏûÏ¢Öµ(WM_KEYDOWN)
+	vkCodeÏàµ±ÓÚwParam
+	flagsÏàµ±ÓÚlParam
 	*/
 	if(nCode == HC_ACTION)
 	{
@@ -76,7 +76,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 				data.lpData = NULL;
 				::SendMessage(g_hInvoker, WM_COPYDATA, 0, (LPARAM)(LPVOID)&data);
 			}
-			//alt+c å–è‰²
+			//alt+c È¡É«
 			else if((pKeyStruct->flags&LLKHF_ALTDOWN)&&(pKeyStruct->vkCode=='c'||pKeyStruct->vkCode=='C')){
 				COPYDATASTRUCT data;
 				data.dwData = WM_ZOOMIN_COLOR_MSG;

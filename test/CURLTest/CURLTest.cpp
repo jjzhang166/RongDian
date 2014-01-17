@@ -26,25 +26,25 @@ size_t callbackFunc(char *ptr, size_t size, size_t nmemb, void *userdata)
     strcat((char*)userdata,ptr);
     printf("%d\n", nmemb);
     printf("=========================\n");
-    return size * nmemb;     //å¿…é¡»è¿”å›è¿™ä¸ªå¤§å°, å¦åˆ™åªå›è°ƒä¸€æ¬¡
+    return size * nmemb;     //±ØĞë·µ»ØÕâ¸ö´óĞ¡, ·ñÔòÖ»»Øµ÷Ò»´Î
  }
 
 
 /**
-* é˜»å¡è°ƒç”¨
+* ×èÈûµ÷ÓÃ
 */
  void singleThreadFunc()
  {
     CURL *curl = curl_easy_init();
     
-    curl_easy_setopt(curl, CURLOPT_URL, "www.baidu.com"); //è®¾ç½®ä¸‹è½½çš„URI
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20);        //è®¾ç½®è¶…æ—¶
-    //curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);        //å±è”½å…¶å®ƒä¿¡å·
-    //curl_easy_setopt(curl, CURLOPT_HEADER, 1);          //ä¸‹è½½æ•°æ®åŒ…æ‹¬HTTPå¤´éƒ¨
+    curl_easy_setopt(curl, CURLOPT_URL, "www.baidu.com"); //ÉèÖÃÏÂÔØµÄURI
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20);        //ÉèÖÃ³¬Ê±
+    //curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);        //ÆÁ±ÎÆäËüĞÅºÅ
+    //curl_easy_setopt(curl, CURLOPT_HEADER, 1);          //ÏÂÔØÊı¾İ°üÀ¨HTTPÍ·²¿
     curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 1);
     
     char buffer[57000] = {0x0};
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFunc); //è®¾ç½®ä¸‹è½½æ•°æ®çš„å›è°ƒå‡½æ•°
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFunc); //ÉèÖÃÏÂÔØÊı¾İµÄ»Øµ÷º¯Êı
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, buffer);  
 
     curl_easy_perform(curl);
@@ -56,24 +56,24 @@ size_t callbackFunc(char *ptr, size_t size, size_t nmemb, void *userdata)
  }
 
 /**
-* å¤šçº¿ç¨‹
+* ¶àÏß³Ì
 */
 void multiThreadFunc()
 {
 	
 	CURLM *multi_handle = curl_multi_init();
 
-	//è®¾ç½®easy handle
+	//ÉèÖÃeasy handle
 	CURL *easy_handle = curl_easy_init();
 	curl_easy_setopt(easy_handle, CURLOPT_URL, "www.rongdian.net/rdol.php?type=3");
-	curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 20);        //è®¾ç½®è¶…æ—¶
-	curl_easy_setopt(easy_handle, CURLOPT_HEADER, 1);          //ä¸‹è½½æ•°æ®åŒ…æ‹¬HTTPå¤´éƒ¨
+	curl_easy_setopt(easy_handle, CURLOPT_TIMEOUT, 20);        //ÉèÖÃ³¬Ê±
+	curl_easy_setopt(easy_handle, CURLOPT_HEADER, 1);          //ÏÂÔØÊı¾İ°üÀ¨HTTPÍ·²¿
 
 	char buffer[5000] = {0};
 	curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, callbackFunc);
 	curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, buffer);
 
-	// æ·»åŠ åˆ°multi stack
+	// Ìí¼Óµ½multi stack
 	curl_multi_add_handle(multi_handle, easy_handle);
 
 	int running_handle_count;

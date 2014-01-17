@@ -291,7 +291,7 @@ SET_CONTROL_END()
 					HFONT hOldFont = NULL;
 					iFont = pText->GetFont();
 					hOldFont = (HFONT)::SelectObject(hDC, m_PaintManager.GetFont(iFont));
-					::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // è®¡ç®—æ–‡æœ¬çŸ©å½¢å¤§å°ï¼ŒåŠ¨æ€è°ƒæ•´æ¶ˆæ¯æ¡†å¤§å°
+					::DrawText(hDC, lpszContent, wcslen(lpszContent), &rcContent, DT_CALCRECT | DT_LEFT | DT_TOP); // ¼ÆËãÎÄ±¾¾ØĞÎ´óĞ¡£¬¶¯Ì¬µ÷ÕûÏûÏ¢¿ò´óĞ¡
 					if(hOldFont)
 						::SelectObject(hDC, hOldFont);
 				}
@@ -681,7 +681,7 @@ int __stdcall DuiMsgBox(HWND hWnd, LPCWSTR lpszText, LPCWSTR lpszCaption, UINT u
 		//DWORD dwThread = 0;
 		//HANDLE hThread = CreateThread(NULL, 0, StartMenuMsgBox, (LPVOID)pMsg, 0, &dwThread);
 		//CloseHandle(hThread);
-//#pragma message("DuiMsgBox - æ¶ˆæ¯æ¡†å¾…è§£å†³ç‚¹")
+//#pragma message("DuiMsgBox - ÏûÏ¢¿ò´ı½â¾öµã")
 		assert(uType & MB_MENU);
 		return 0;
 	}

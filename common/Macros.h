@@ -2,14 +2,14 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_BEGIN
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Header(å¿…é¡»é…åˆSET_CONTROL_END()å®ä¸€èµ·ä½¿ç”¨)
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Header(±ØÐëÅäºÏSET_CONTROL_END()ºêÒ»ÆðÊ¹ÓÃ)
  * ParameterList:	man, lang, ls
- * Parameter:       man: CPaintManagerUIæŒ‡é’ˆï¼Œç¡®ä¿æ­¤å‚æ•°ä¸ºCPaintManagerUIæŒ‡é’ˆ
+ * Parameter:       man: CPaintManagerUIÖ¸Õë£¬È·±£´Ë²ÎÊýÎªCPaintManagerUIÖ¸Õë
  *						CPaintManagerUI m_PaintManager; ==> SET_CONTROL_BEGIN((&m_PaintManager), xxx, xxx)
  *						CPaintManagerUI *m_pPaintManager; ==> SET_CONTROL_BEGIN(m_pPaintManager, xxx, xxx)
- * Parameter:       lang: è¯­è¨€æ–‡ä»¶å…¨è·¯å¾„("E:\Source\XXXX\Root\lang\lang_en.ini")
- * Parameter:       ls: è¯­è¨€æ–‡ä»¶(iniæ–‡ä»¶)çš„Sectionåç§°
- * Return Value:	æ— 
+ * Parameter:       lang: ÓïÑÔÎÄ¼þÈ«Â·¾¶("E:\Source\XXXX\Root\lang\lang_en.ini")
+ * Parameter:       ls: ÓïÑÔÎÄ¼þ(iniÎÄ¼þ)µÄSectionÃû³Æ
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -23,12 +23,12 @@
 
 /*************************************************************************
  * Method:    		SET_TITLE_TEXT
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  * ParameterList:	hwnd, id, str
- * Parameter:       hwnd: æŽ§ä»¶å¥æŸ„(åœ¨DuiLibä¸­ï¼Œä¸€èˆ¬æ˜¯æ‰€åœ¨çª—ä½“çš„çª—å£å¥æŸ„)ï¼Œç”¨äºŽè®¾ç½®æ ‡é¢˜
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Parameter:       str: æŽ§ä»¶æ–‡æœ¬
- * Return Value:	æ— 
+ * Parameter:       hwnd: ¿Ø¼þ¾ä±ú(ÔÚDuiLibÖÐ£¬Ò»°ãÊÇËùÔÚ´°ÌåµÄ´°¿Ú¾ä±ú)£¬ÓÃÓÚÉèÖÃ±êÌâ
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Parameter:       str: ¿Ø¼þÎÄ±¾
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -43,11 +43,11 @@
 
 /*************************************************************************
  * Method:    		SET_TITLE_TEXT2
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  * ParameterList:	hwnd, id
- * Parameter:       hwnd: æŽ§ä»¶å¥æŸ„(åœ¨DuiLibä¸­ï¼Œä¸€èˆ¬æ˜¯æ‰€åœ¨çª—ä½“çš„çª—å£å¥æŸ„)ï¼Œç”¨äºŽè®¾ç½®æ ‡é¢˜
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Return Value:	æ— 
+ * Parameter:       hwnd: ¿Ø¼þ¾ä±ú(ÔÚDuiLibÖÐ£¬Ò»°ãÊÇËùÔÚ´°ÌåµÄ´°¿Ú¾ä±ú)£¬ÓÃÓÚÉèÖÃ±êÌâ
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -63,17 +63,17 @@
 
 /*************************************************************************
  * Method:    		SET_TITLE_TEXT3
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  *						wchar_t szAdmin[1024] = L"(Admin)";
  *						SET_TITLE_TEXT3(m_hWnd, kFrameTitle, szAdmin)
- *							æŸ¥æ‰¾kFrameTitleæŽ§ä»¶ï¼Œä»Žè¯­è¨€æ–‡ä»¶ä¸­å–å‡ºkFrameTitleæŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬ä¿¡æ¯L"RongDian Tools"
- *							ç„¶åŽå°†L"RongDian Tools"ä¸ŽL"(Admin)"è¿›è¡Œæ‹¼æŽ¥
- *							æ‹¼æŽ¥ç»“æžœä¸ºL"RongDian Tools(Admin)"ï¼Œæœ€åŽè®¾ç½®ç»™å¯¹åº”çš„æŽ§ä»¶
+ *							²éÕÒkFrameTitle¿Ø¼þ£¬´ÓÓïÑÔÎÄ¼þÖÐÈ¡³ökFrameTitle¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾ÐÅÏ¢L"RongDian Tools"
+ *							È»ºó½«L"RongDian Tools"ÓëL"(Admin)"½øÐÐÆ´½Ó
+ *							Æ´½Ó½á¹ûÎªL"RongDian Tools(Admin)"£¬×îºóÉèÖÃ¸ø¶ÔÓ¦µÄ¿Ø¼þ
  * ParameterList:	hwnd, id, tail
- * Parameter:       hwnd: æŽ§ä»¶å¥æŸ„(åœ¨DuiLibä¸­ï¼Œä¸€èˆ¬æ˜¯æ‰€åœ¨çª—ä½“çš„çª—å£å¥æŸ„)ï¼Œç”¨äºŽè®¾ç½®æ ‡é¢˜
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Parameter:       tail: æ ¹æ®idèŽ·å–è¯­è¨€æ–‡ä»¶å¯¹åº”çš„æ–‡æœ¬åŽï¼Œå°†æ­¤å­—ç¬¦ä¸²æ‹¼æŽ¥åˆ°å°¾éƒ¨
- * Return Value:	æ— 
+ * Parameter:       hwnd: ¿Ø¼þ¾ä±ú(ÔÚDuiLibÖÐ£¬Ò»°ãÊÇËùÔÚ´°ÌåµÄ´°¿Ú¾ä±ú)£¬ÓÃÓÚÉèÖÃ±êÌâ
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Parameter:       tail: ¸ù¾Ýid»ñÈ¡ÓïÑÔÎÄ¼þ¶ÔÓ¦µÄÎÄ±¾ºó£¬½«´Ë×Ö·û´®Æ´½Óµ½Î²²¿
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -90,11 +90,11 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TEXT
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  * ParameterList:	id, str
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Parameter:       str: æŽ§ä»¶æ–‡æœ¬
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Parameter:       str: ¿Ø¼þÎÄ±¾
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -106,10 +106,10 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TEXT2
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  * ParameterList:	id
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -122,16 +122,16 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TEXT3
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
  *						wchar_t szVer[1024] = L"1.0.0.1";
  *						SET_CONTROL_TEXT3(kAboutVer, szAppVer)
- *							æŸ¥æ‰¾kAboutVeræŽ§ä»¶ï¼Œä»Žè¯­è¨€æ–‡ä»¶ä¸­å–å‡ºkAboutVeræŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬ä¿¡æ¯L"Version:"
- *							ç„¶åŽå°†L"Version:"ä¸ŽL"1.0.0.1"è¿›è¡Œæ‹¼æŽ¥
- *							æ‹¼æŽ¥ç»“æžœä¸ºL"Version:1.0.0.1"ï¼Œæœ€åŽè®¾ç½®ç»™å¯¹åº”çš„æŽ§ä»¶
+ *							²éÕÒkAboutVer¿Ø¼þ£¬´ÓÓïÑÔÎÄ¼þÖÐÈ¡³ökAboutVer¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾ÐÅÏ¢L"Version:"
+ *							È»ºó½«L"Version:"ÓëL"1.0.0.1"½øÐÐÆ´½Ó
+ *							Æ´½Ó½á¹ûÎªL"Version:1.0.0.1"£¬×îºóÉèÖÃ¸ø¶ÔÓ¦µÄ¿Ø¼þ
  * ParameterList:	id, tail
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æ–‡æœ¬å¯¹åº”çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æ–‡æœ¬idä¸€è‡´
- * Parameter:       tail: æ ¹æ®idèŽ·å–è¯­è¨€æ–‡ä»¶å¯¹åº”çš„æ–‡æœ¬åŽï¼Œå°†æ­¤å­—ç¬¦ä¸²æ‹¼æŽ¥åˆ°å°¾éƒ¨
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÎÄ±¾¶ÔÓ¦µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÎÄ±¾idÒ»ÖÂ
+ * Parameter:       tail: ¸ù¾Ýid»ñÈ¡ÓïÑÔÎÄ¼þ¶ÔÓ¦µÄÎÄ±¾ºó£¬½«´Ë×Ö·û´®Æ´½Óµ½Î²²¿
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -147,13 +147,13 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TEXT4
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬å® -- Item
- *						è‹¥å·¥ç¨‹ä¸­æ²¡æœ‰æŒ‡å®šiniè¯­è¨€æ–‡ä»¶ï¼Œåˆ™å°è¯•ä»Žrcèµ„æºæ–‡ä»¶ä¸­èŽ·å–å¯¹åº”çš„æ–‡æœ¬ä¿¡æ¯
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾ºê -- Item
+ *						Èô¹¤³ÌÖÐÃ»ÓÐÖ¸¶¨iniÓïÑÔÎÄ¼þ£¬Ôò³¢ÊÔ´Órc×ÊÔ´ÎÄ¼þÖÐ»ñÈ¡¶ÔÓ¦µÄÎÄ±¾ÐÅÏ¢
  * ParameterList:	id, iid, nid
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)
- * Parameter:		iid: è¯­è¨€æ–‡ä»¶(iniæ–‡ä»¶)ä¸­æ–‡æœ¬å¯¹åº”çš„id
- * Parameter:		nid: èµ„æºæ–‡ä»¶(rcæ–‡ä»¶)ä¸­æ–‡æœ¬å¯¹åº”çš„id
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)
+ * Parameter:		iid: ÓïÑÔÎÄ¼þ(iniÎÄ¼þ)ÖÐÎÄ±¾¶ÔÓ¦µÄid
+ * Parameter:		nid: ×ÊÔ´ÎÄ¼þ(rcÎÄ¼þ)ÖÐÎÄ±¾¶ÔÓ¦µÄid
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -172,11 +172,11 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TIP
- * Description:		è®¾ç½®æŽ§ä»¶æç¤ºä¿¡æ¯å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÌáÊ¾ÐÅÏ¢ºê -- Item
  * ParameterList:	id, str
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æç¤ºä¿¡æ¯çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æç¤ºä¿¡æ¯idä¸€è‡´
- * Parameter:       str: æç¤ºä¿¡æ¯
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÌáÊ¾ÐÅÏ¢µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÌáÊ¾ÐÅÏ¢idÒ»ÖÂ
+ * Parameter:       str: ÌáÊ¾ÐÅÏ¢
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -188,10 +188,10 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TIP2
- * Description:		è®¾ç½®æŽ§ä»¶æç¤ºä¿¡æ¯å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÌáÊ¾ÐÅÏ¢ºê -- Item
  * ParameterList:	id
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æç¤ºä¿¡æ¯çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æç¤ºä¿¡æ¯idä¸€è‡´
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÌáÊ¾ÐÅÏ¢µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÌáÊ¾ÐÅÏ¢idÒ»ÖÂ
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -204,11 +204,11 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_TEXT_AND_TIP
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬åŠæç¤ºä¿¡æ¯å® -- Item
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾¼°ÌáÊ¾ÐÅÏ¢ºê -- Item
  * ParameterList:	id, tip_id
- * Parameter:       id: æŽ§ä»¶id(åœ¨xmlå¸ƒå±€æ–‡ä»¶ä¸­æŒ‡å®š)åŠè¯­è¨€æ–‡ä»¶ä¸­æç¤ºä¿¡æ¯çš„idï¼Œè¦æ±‚æŽ§ä»¶idä¸Žiniæ–‡ä»¶ä¸­æŽ§ä»¶å¯¹åº”çš„æç¤ºä¿¡æ¯idä¸€è‡´
- * Parameter:       tip_id: è¯­è¨€æ–‡ä»¶ä¸­æç¤ºä¿¡æ¯çš„id
- * Return Value:	æ— 
+ * Parameter:       id: ¿Ø¼þid(ÔÚxml²¼¾ÖÎÄ¼þÖÐÖ¸¶¨)¼°ÓïÑÔÎÄ¼þÖÐÌáÊ¾ÐÅÏ¢µÄid£¬ÒªÇó¿Ø¼þidÓëiniÎÄ¼þÖÐ¿Ø¼þ¶ÔÓ¦µÄÌáÊ¾ÐÅÏ¢idÒ»ÖÂ
+ * Parameter:       tip_id: ÓïÑÔÎÄ¼þÖÐÌáÊ¾ÐÅÏ¢µÄid
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -223,9 +223,9 @@
 
 /*************************************************************************
  * Method:    		SET_CONTROL_END
- * Description:		è®¾ç½®æŽ§ä»¶æ–‡æœ¬åŠæç¤ºä¿¡æ¯å® -- Tail(å¿…é¡»é…åˆSET_CONTROL_BEGIN()å®ä¸€èµ·ä½¿ç”¨)
- * ParameterList:	æ— 
- * Return Value:	æ— 
+ * Description:		ÉèÖÃ¿Ø¼þÎÄ±¾¼°ÌáÊ¾ÐÅÏ¢ºê -- Tail(±ØÐëÅäºÏSET_CONTROL_BEGIN()ºêÒ»ÆðÊ¹ÓÃ)
+ * ParameterList:	ÎÞ
+ * Return Value:	ÎÞ
  * Date:        	13:09:01 16:42:56
  * Author:			LIng
  * CopyRight:		
@@ -233,6 +233,20 @@
 #define SET_CONTROL_END() \
 	}
 
+/*************************************************************************
+ * Method:    		SET_CONTROL_TIP3
+ * Description:		ÉèÖÃ¿Ø¼þÌáÊ¾ÐÅÏ¢ºê
+ * ParameterList:	control section id str
+ * Return Value:	ÎÞ
+ * CopyRight:		
+ ************************************************************************/
+#define SET_CONTROL_TIP3(section,control,id) \
+{\
+	wchar_t tip[50] = {0}; \
+	Utility::GetINIStr(g_pLangManager->GetLangName(),section,id,tip); \
+	control->SetToolTip(tip);\
+}
+			
 //////////////////////////////////////////////////////////////////////////
 #define FIND_CONTROL_BY_ID(ctl, cls, man, id) \
 	assert(man!=NULL);\

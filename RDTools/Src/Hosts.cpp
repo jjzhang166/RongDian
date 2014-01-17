@@ -16,6 +16,13 @@ const wchar_t* const kHostNewGroupBtn = L"host_new_group";
 const wchar_t* const kHostNewGroupTip = L"host_new_group_tip";
 const wchar_t* const kHostGroupContainer = L"host_group_container";
 const wchar_t* const kHostTipText = L"host_tip_text";
+const wchar_t* const kHostNewItemTip = L"host_new_item_tip";
+const wchar_t* const kHostItemDeleteTip = L"host_item_delete_tip";
+const wchar_t* const kHostGroupDeleteTip = L"host_group_delete_tip";
+const wchar_t* const kHostGroupDescShowTip = L"host_group_desc_show_tip";
+const wchar_t* const kHostGroupDescHideTip = L"host_group_desc_hide_tip";
+const wchar_t* const kHostItemsShowTip = L"host_items_show_tip";
+const wchar_t* const kHostItemsHideTip = L"host_items_hide_tip";
 
 //xml路径
 const wchar_t* const kHostGroupXmlPath = L"HostGroup.xml";
@@ -726,9 +733,15 @@ BOOL CHosts::ShowHostItems(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSe
 		if(pControl)
 		{
 			if(pControl->IsVisible())
+			{
 				pControl->SetVisible(false);
+				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostItemsShowTip)
+			}
 			else
+			{
 				pControl->SetVisible();
+				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostItemsHideTip)
+			}
 			AdjustGroupHeight(pManager, szIndex);
 		}
 	}
@@ -750,9 +763,15 @@ BOOL CHosts::ShowHostDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSen
 			assert(wcslen(pszIndex)>=2);
 			wcscpy(szIndex, &pszIndex[1]);
 			if(pControl->IsVisible())
+			{
 				pControl->SetVisible(false);
+				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostGroupDescShowTip)
+			}
 			else
+			{
 				pControl->SetVisible();
+				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostGroupDescHideTip);
+			}
 			AdjustGroupHeight(pManager, szIndex);
 		}
 	}
@@ -1039,6 +1058,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szDescState);
 		pSubControl->SetUserData(szDescEdit); // 保存描述编辑框id，用于快速定位编辑框控件，以便于进行显示隐藏
+		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDescShowTip)
 	}
 	pSubControl = pGroupLayout->DescEditCtrl();
 	if(pSubControl)
@@ -1053,6 +1073,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szState);
 		pSubControl->SetUserData(szItems); // 保存HostsItems容器id，用于快速定位HostsItems容器，以便于进行显示隐藏
+		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemsHideTip)
 	}
 	pSubControl = pGroupLayout->NameCtrl();
 	if(pSubControl)
@@ -1066,6 +1087,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szNew);
 		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于新增节点后，重新调整分组高度
+		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostNewItemTip)
 	}
 	pSubControl = pGroupLayout->SaveCtrl(); // 该控件目前被隐藏
 	if(pSubControl)
@@ -1075,6 +1097,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szDel);
 		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
+		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDeleteTip)
 	}
 	pSubControl = pGroupLayout->ItemsLayout();
 	if(pSubControl)
@@ -1108,9 +1131,11 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	pSubControl = NULL;
 	FIND_CONTROL_BY_ID(pSubControl, CControlUI, pManager, szDel);
 	assert(pSubControl!=NULL);
+	SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDeleteTip)
 	pSubControl = NULL;
 	FIND_CONTROL_BY_ID(pSubControl, CControlUI, pManager, szItems);
 	assert(pSubControl!=NULL);
+	SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemsShowTip)
 #endif
 	bRet = TRUE;
 	return bRet;
@@ -1194,6 +1219,7 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, bool active,const wchar_t* ps
 	{
 		pSubControl->SetName(szDel);
 		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于快速定位host_item_child容器，以便于删除该容器
+		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemDeleteTip)
 	}
 	pManager->UpdateControls(pItemLayout);
 #ifdef _DEBUG
