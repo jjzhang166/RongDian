@@ -333,9 +333,11 @@ BOOL CCoder::LoadCharSet()
 	BOOL bRet = FALSE;
 	CCharSetTableDB charset(&g_SQLite);
 	if(!charset.Init())
+	{
 		bRet = InitCharSet();
-	if(!bRet)
-		return bRet;
+		if(!bRet)
+			return bRet;
+	}
 	if(!charset.Query(NULL))
 		return bRet;
 

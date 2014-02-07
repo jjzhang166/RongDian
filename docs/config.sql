@@ -25,3 +25,4 @@ CREATE TABLE config(id_ integer primary key, name_ varchar(100) unique, value_ v
 -- ----------------------------
 INSERT INTO "main"."config" VALUES (1, 'Background', 'ff32506e');
 INSERT INTO "main"."config" VALUES (2, 'Lang', 'lang_en.ini');
+INSERT INTO "main"."config" VALUES (3, 'LastVisitTab', 'tab_picker');

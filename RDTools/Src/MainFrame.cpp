@@ -216,8 +216,14 @@ void CMainFrame::InitWindow()
 
 	if(pPanelContents)
 	{
-		CDuiString strCurTab = pPanelContents->GetUserData();
-		SelectPanel(strCurTab);
+		//CDuiString strCurTab = pPanelContents->GetUserData();
+		//SelectPanel(strCurTab);
+		CONFIG_TABLE lpTable;
+		wcscpy(lpTable.szName,L"LastVisitTab");
+
+		CConfigTableDB table(&g_SQLite);
+		table.Query(&lpTable);
+		SelectPanel(table.GetResults()->szValue);
 	}
 
 	unsigned int nThread = 0;
@@ -283,6 +289,7 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	}
 	else if(sCtrlName == kCloseBtn)
 	{
+		bHandle = TRUE;
 		BOOL bIsCanQuit = FALSE;
 		RD_ISCAN_QUIT(m_hWnd, (&m_PaintManager), bIsCanQuit)
 		if(!bIsCanQuit)
@@ -303,20 +310,21 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	else if(sCtrlName==kMenuBtn)
 	{
 		bHandle = TRUE;
-		ShowLoading();
+		//ShowLoading();
 
-		//CDuiRect rect = msg.pSender->GetPos();
-		//DuiLib::CPoint point(rect.left, rect.bottom);
-		//ClientToScreen(m_hWnd, &point);
-		//CMenuUI *pMenu = new CMenuUI(m_hWnd);
-		//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
+		CDuiRect rect = msg.pSender->GetPos();
+		DuiLib::CPoint point(rect.left, rect.bottom);
+		ClientToScreen(m_hWnd, &point);
+		CMenuUI *pMenu = new CMenuUI(m_hWnd);
+		pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 	}
 	WindowImplBase::OnClick(msg);
 
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnClick)
-
 	if(!bHandle)
 		SelectPanel(sCtrlName);
+
+	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnClick)
+
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
@@ -544,7 +552,7 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 			OutputDebugStringW(L"Find New Version\n");
 //#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
 			//RDPopupBox(m_hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING);
-			PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
+			//PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
 		}
 	}
 	return 0;
@@ -656,7 +664,13 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 			break;
 		}
 	}
-	
+
+	CONFIG_TABLE lpTable;
+	wcscpy(lpTable.szName,L"LastVisitTab");
+	wcscpy(lpTable.szValue,lpszTab);
+	CConfigTableDB table(&g_SQLite);
+	table.Update(&lpTable);
+
 	return bRet;
 }
 

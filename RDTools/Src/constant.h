@@ -28,11 +28,12 @@ const wchar_t* const kConfigDB						= L"Config.db";
 
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
-const wchar_t* const kDefaultLangIni				= L"lang_en.ini"; // 语言文件
+const wchar_t* const kDefaultLangIni			= L"lang_en.ini"; // 语言文件
+const wchar_t* const kDefaultTab					= L"tab_picker"; // 默认显示的tab
 
 // XML文件
-const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // 主窗体
-const wchar_t* const kUpdateFrameXml				= L"UpdateFrame.xml"; // 更新窗体
+const wchar_t* const kMainFrameXml				= L"MainFrame.xml"; // 主窗体
+const wchar_t* const kUpdateFrameXml			= L"UpdateFrame.xml"; // 更新窗体
 const wchar_t* const kPanelsXml						= L"Panels.xml";
 const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; // 
 

@@ -24,12 +24,16 @@ BOOL CConfigTableDB::Init()
 		m_pSQLite->ExecQuery("create table config(id_ integer primary key, name_ varchar(100) unique, value_ varchar(255));");
 		char szSQL_u8[1024];
 		char szDefLang[1024] = {0};
+		char szDeftab[1024] = {0};
 		char szBack[1024];
 		StrUtil::w2a(kDefaultLangIni, szDefLang);
+		StrUtil::w2a(kDefaultTab, szDeftab);
 		sprintf(szBack, "%0x", kDefBackground);
 		sprintf(szSQL_u8, "insert into config values(null, 'Background', '%s');", szBack);
 		m_pSQLite->ExecQuery(szSQL_u8);
 		sprintf(szSQL_u8, "insert into config values(null, 'Lang', '%s');", szDefLang);
+		m_pSQLite->ExecQuery(szSQL_u8);
+		sprintf(szSQL_u8, "insert into config values(null, 'LastVisitTab', '%s');", szDeftab);
 		m_pSQLite->ExecQuery(szSQL_u8);
 	}
 	return TRUE;
@@ -111,7 +115,7 @@ BOOL CConfigTableDB::Update(LPCONFIG_TABLE lpTable)
 	CDuiString strValue = lpTable->szValue;
 	EscapeSQLite(strName);
 	EscapeSQLite(strValue);
-	swprintf(szSQL, L"update config set value_='%s' where name_=%s", strName.GetData(), strValue.GetData());
+	swprintf(szSQL, L"update config set value_='%s' where name_='%s'", strValue.GetData(), strName.GetData());
 	StrUtil::u2u8(szSQL, szSQL_u8);
 	m_pSQLite->ExecQuery(szSQL_u8);
 	return TRUE;
