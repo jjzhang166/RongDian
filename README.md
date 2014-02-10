@@ -3,9 +3,9 @@
 
 ###项目基本结构：
 
-RongDian RDTools项目二进制、资源、日志、语言、截屏、编码生成等文件存放目录
-bug 问题记录的文件夹
-common    自定义功能类的文件夹
+ RongDian RDTools项目二进制、资源、日志、语言、截屏、编码生成等文件存放目录
+ bug 问题记录的文件夹
+ common    自定义功能类的文件夹
 docs	工程的文档文件夹
 DuiMsg	基于duilib界面库的消息框静态链接库，用户代替系统MessgeBox的调用
 inc	RDTools项目公共定义，定义公共数据、接口，用于个子模块的交互
