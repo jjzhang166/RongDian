@@ -18,7 +18,7 @@
 		</HorizontalLayout>
 		<HostGroupDescEdit name="host_group_desc_edit_x" font="0" height="72" bkcolor="FFE0E0E0" nativebkcolor="FFE0E0E0" bordersize="1" bordercolor="FFE0E0E0" vscrollbar="true" inset="2,2,2,2" text="" visible="false" />
 		<HostGroupItemsLayout name="host_group_items_x" bordersize="1" bordercolor="FFE0E0E0" inset="2,2,2,2" visible="true" childpadding="3" userdata="3">
-		<Control height="30"/>
+		<Control height="3"/>
 		</HostGroupItemsLayout>
 	</HostGroupLayout>
 </Window>
