@@ -6,7 +6,9 @@
 #include <string.h>
 #include <stdio.h>
 
+
 #define PCRE_STATIC // 静态库编译选项
+#define COMPILE_PCRE16
 
 #include <pcre\pcre.h>
 #ifdef _DEBUG
@@ -23,25 +25,23 @@
 
 int _tmain()
 {
-	pcre *re;
+	pcre16 *re;
 	const char *error;
 	int erroffset;
 	int ovector[OVECCOUNT];
 	int rc;
 	//char src[] = "   <note date=\"08/08/2008\">  \n   <to>   aG  eorge   \n</to>\n<from>John</from></note>"; // 要被用来匹配的字符串
-	char pattern[] = "([\\[\\{])\\s*|([^\\{\\[\\]\\},\\n]+,*)\\s*|([\\]\\}]\\s*,*)\\s*";
+	wchar_t pattern[] = L"([\\[\\{])\\s*|([^\\{\\[\\]\\},\\n]+,*)\\s*|([\\]\\}]\\s*,*)\\s*";
 
 	//char src [] = "111 <title>Hello</title> 222<title>H3232d</title>";
 	//char pattern [] = "<title>(\\w+)</title>";
 
 	wchar_t *wsrc = L"{ \n \"people\":\n [\n{ \"firstName\": \"Brett\",\n \"lastName\":\"McLaughlin\", \n  \"email\": \"aaaa\" \n },\n { \"firstName\": \"Jason\", \"lastName\":\"Hunter\", \"email\": \"bbbb\"   \n  }, { \"firstName\": \"Elliotte\", \"lastName\":\"Harold\", \"email\": \"cccc\" } ]}";
 
-	char* src = StrUtil::w2a(wsrc);
-
-	printf("String : %s\n", src);
-	printf("Pattern: \"%s\"\n", pattern);
+	wprintf(L"String : %s\n", wsrc);
+	wprintf(L"Pattern: \"%s\"\n", pattern);
 	
-	re = pcre_compile(pattern,	// pattern,输入参数，将要被编译的字符串形式的正则表达式
+	re = pcre16_compile((PCRE_SPTR16)pattern,	// pattern,输入参数，将要被编译的字符串形式的正则表达式
 			PCRE_MULTILINE,					// options,输入参数，用来指定编译时的一些选项
 			&error,				// errptr,输出参数，用来输出错误信息
 			&erroffset,			// erroffset,输出参数，pattern中出错位置的偏移量
@@ -54,21 +54,20 @@ int _tmain()
 	}
 	printf("\nOK, has matched ...\n\n"); // 没有出错，已经匹配
 	unsigned int cur = 0;
-	while(cur<strlen(src) && (rc = pcre_exec(re, NULL, src, strlen(src), cur, PCRE_NOTEMPTY, ovector, OVECCOUNT)) >= 0)
+	while(cur<wcslen(wsrc) && (rc = pcre16_exec(re, NULL, (PCRE_SPTR16)wsrc, wcslen(wsrc), cur, PCRE_NOTEMPTY, ovector, OVECCOUNT)) >= 0)
 	{
 		for(int j=1; j<rc; j++)
 		{
-			char *substring_start = src + ovector[2*j];
+			wchar_t *substring_start = wsrc + ovector[2*j];
 			int substring_length = ovector[2*j+1] - ovector[2*j];
 			if (substring_length>0)
 			{
-				printf("%2d: %.*s=======\n", j, substring_length, substring_start);
+				wprintf(L"%2d: %.*s=======\n", j, substring_length, substring_start);
 			}
 		}
 		cur = ovector[1];
 	}
-	pcre_free(re); // 编译正则表达式re释放内存
-	delete[] src;
+	pcre16_free(re); // 编译正则表达式re释放内存
 
 	return 0;
 }
