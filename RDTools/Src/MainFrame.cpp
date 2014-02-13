@@ -222,7 +222,7 @@ void CMainFrame::InitWindow()
 		wcscpy(stTable.szName, L"LastVisitTab");
 		CConfigTableDB table(&g_SQLite);
 		table.Query(&stTable);
-		if(wcslen(stTable.szValue)==0)
+		if(wcslen(table.GetResults()->szValue)==0)
 		{
 			CDuiString strCurTab = pPanelContents->GetUserData();
 			SelectPanel(strCurTab);
