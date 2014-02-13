@@ -1271,17 +1271,23 @@ BOOL CHosts::AdjustGroupHeight(CPaintManagerUI* pManager, const wchar_t* pszGrou
 	assert(pHostsItems!=NULL);
 	int nCount = pHostsItems->GetCount();
 	RECT rtInset = pGroupLayout->GetInset();
+	RECT rtPadding = pGroupLayout->GetPadding();
+	int nChildPadding = pGroupLayout->GetChildPadding();
 	int nBorderSize = pGroupLayout->GetBorderSize();
-	int nMinHeight = pGroupLayout->GetMinHeight() + (rtInset.bottom + rtInset.top) + nBorderSize;
+	int nMinHeight = pGroupLayout->GetMinHeight() + (rtInset.bottom + rtInset.top) + (rtPadding.bottom + rtPadding.top) + nChildPadding*2 + nBorderSize*2;
 	rtInset = pDescEdit->GetInset();
+	rtPadding = pDescEdit->GetPadding();
 	nBorderSize = pDescEdit->GetBorderSize();
-	int nEditHeight = pDescEdit->GetFixedHeight() + (rtInset.bottom + rtInset.top) + nBorderSize;
+	int nEditHeight = pDescEdit->GetFixedHeight() + (rtInset.bottom + rtInset.top) + (rtPadding.bottom + rtPadding.top) + nBorderSize*2;
 	int nItemHeight = _wtoi(pGroupLayout->GetUserData());
 	if(nItemHeight==0)
 		nItemHeight = 26;
 	rtInset = pHostsItems->GetInset();
+	rtPadding = pHostsItems->GetPadding();
+	nChildPadding = pHostsItems->GetChildPadding();
 	nBorderSize = pHostsItems->GetBorderSize();
-	nItemHeight = nCount * nItemHeight + (rtInset.bottom - rtInset.top) + nBorderSize;
+	int nBlankHeight = _wtoi(pHostsItems->GetUserData());
+	nItemHeight = nCount * nItemHeight + (rtInset.bottom - rtInset.top) + (rtPadding.bottom + rtPadding.top) + nChildPadding*2 + nBorderSize*2 + nBlankHeight;
 	int nHeight = nMinHeight;
 	if(bInit)
 	{

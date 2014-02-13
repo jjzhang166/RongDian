@@ -218,14 +218,19 @@ void CMainFrame::InitWindow()
 
 	if(pPanelContents)
 	{
-		//CDuiString strCurTab = pPanelContents->GetUserData();
-		//SelectPanel(strCurTab);
-		CONFIG_TABLE lpTable;
-		wcscpy(lpTable.szName,L"LastVisitTab");
-
+		CONFIG_TABLE stTable;
+		wcscpy(stTable.szName, L"LastVisitTab");
 		CConfigTableDB table(&g_SQLite);
-		table.Query(&lpTable);
-		SelectPanel(table.GetResults()->szValue);
+		table.Query(&stTable);
+		if(wcslen(stTable.szValue)==0)
+		{
+			CDuiString strCurTab = pPanelContents->GetUserData();
+			SelectPanel(strCurTab);
+		}
+		else
+		{
+			SelectPanel(table.GetResults()->szValue);
+		}
 	}
 
 	unsigned int nThread = 0;
