@@ -308,6 +308,10 @@
 					RelativePath=".\Src\UpdateFrame.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Src\UrlEncoder.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Header Files"
@@ -412,6 +416,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\UpdateFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\UrlEncoder.h"
 					>
 				</File>
 			</Filter>
@@ -573,6 +581,14 @@
 			</File>
 			<File
 				RelativePath="..\common\TimeUtil.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\UrlEncode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\UrlEncode.h"
 				>
 			</File>
 			<File

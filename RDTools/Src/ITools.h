@@ -269,3 +269,10 @@ typedef struct _tagTOOLS_INFO
 				break; \
 		} \
 	} 
+
+#define OUT_PUT_NUMBER(Number) { \
+	wchar_t NumberChar[10]; \
+	ZeroMemory(NumberChar, 10 * sizeof(wchar_t)); \
+	wsprintfW(NumberChar, L"%d\n", Number); \
+	OutputDebugStringW(NumberChar); \
+}

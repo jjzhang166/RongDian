@@ -133,6 +133,7 @@ void				CancelLoading();
 #include <ConfigTable.h>
 #include <CharSetTable.h>
 #include <AddrTable.h>
+#include <UrlEncode.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 以下是自定义文件的引用

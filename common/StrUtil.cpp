@@ -547,4 +547,5 @@ bool StrUtil::is_wsubstr(const wchar_t* wStr,const wchar_t* wSubStr)
 	delete[] str2;
 	return f;
 }
+
 #pragma warning(pop)

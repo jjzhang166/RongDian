@@ -4,6 +4,7 @@
 
 // Panels
 #include "ColorPicker.h"
+#include "UrlEncoder.h"
 #include "Coder.h"
 #include "Finder.h"
 #include "Tidy.h"
@@ -48,6 +49,7 @@ const wchar_t* const kPanelContents = L"panel_contents";
 RD_BEGIN_TOOLS_MAP(CMainFrame)
 	RD_TOOL(CColorPicker)
 	RD_TOOL(CCoder)
+	RD_TOOL(CUrlEncoder)
 	RD_TOOL(CFinder)
 	RD_TOOL(CTidy)
 	RD_TOOL(CIPConfig)
@@ -415,6 +417,7 @@ LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COPYDATA:
 		OnCopyData(uMsg, wParam, lParam);
 		break;
+	
 	}
 
 	lRes = WindowImplBase::HandleMessage(uMsg, wParam, lParam);
@@ -431,6 +434,7 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 		break;
 	case WM_UPDATE_RESPONE:
 		return OnParseUpdateRespone(uMsg, wParam, lParam);
+		break;
 	}
 	RD_ON_CUSTOM_MSG(uMsg, wParam, lParam);
 	return 0;
@@ -476,6 +480,7 @@ LRESULT CMainFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 		data.cbData = 0;
 		data.lpData = NULL;
 		::SendMessage(hZoomIn, WM_COPYDATA, (WPARAM)(HWND)m_hWnd, (LPARAM)(LPVOID)&data);
+		return TRUE;
 	}
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
@@ -952,4 +957,28 @@ unsigned int CMainFrame::UpdateCheckThread(LPVOID lpData)
 		::PostMessage(pThis->m_hWnd, WM_UPDATE_RESPONE, 0, 0);
 	}
 	return 0;
+}
+
+LRESULT CMainFrame::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& bHandled)
+{
+	if (uMsg == WM_KEYDOWN)
+	{
+		switch (wParam)
+		{
+		case VK_ESCAPE:                     // ESC 
+			{
+				if (pPanelTabs->IsVisible())
+				{
+					ShowTabs(FALSE);
+				}
+				else
+				{
+					ShowTabs(TRUE);
+				}
+				bHandled = true;
+			}
+			break;
+		}
+	}
+	return FALSE;
 }

@@ -17,6 +17,14 @@
 		<desc>Coder Panel</desc>
 	</Plugin>
 	<Plugin>
+		<layout>layout_urlencoder</layout>
+		<xml>UrlEncoder.xml</xml>
+		<tab>tab_urlencoder</tab>
+		<panel>panel_urlencoder</panel>
+		<name>Url Encoder</name>
+		<desc>Url Encoder/Decoder Panel</desc>
+	</Plugin>
+	<Plugin>
 		<layout>layout_finder</layout>
 		<xml>Finder.xml</xml>
 		<tab>tab_finder</tab>
