@@ -10,8 +10,6 @@ public:
 
 	DUI_DECLARE_MESSAGE_MAP()
 
-	RD_DECLARE_TOOLS()
-
 public:
 	LONG SetSkin();
 	LONG SetLang(LPCWSTR lpszLang);
@@ -74,4 +72,5 @@ public:
 	unsigned long ulUpdateResponeDataSize;
 	BOOL bRunning;
 	CUpdateFrame *pUpdateFrame;
+	CPanelRegister *m_pPanelRegister;
 };

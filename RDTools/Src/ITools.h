@@ -55,10 +55,10 @@ typedef struct _tagTOOLS_INFO
 	}; 
 
 #define RD_DECLARE_TOOLS() \
-	private: \
+	public: \
 		BOOL _InitTools(); \
 		void _ReleaseTools(); \
-	private: \
+	public: \
 		list<LPTOOLS_INFO> _toolsEntries; 
 
 #define RD_BEGIN_TOOLS_MAP(cls) \

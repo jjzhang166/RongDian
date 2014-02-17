@@ -145,6 +145,7 @@ void				CancelLoading();
 #include "SystemTraySDK.h"
 #include "TidyHelper.h"
 #include "UpdateFrame.h"
+#include "PanelRegister.h"
 #include "MainFrame.h"
 
 extern HANDLE					g_hUserSignature;

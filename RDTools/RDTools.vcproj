@@ -241,6 +241,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Src\PanelRegister.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Src\PanelXml.cpp"
 					>
 				</File>
@@ -376,6 +380,10 @@
 				</File>
 				<File
 					RelativePath=".\Src\MainFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\PanelRegister.h"
 					>
 				</File>
 				<File
