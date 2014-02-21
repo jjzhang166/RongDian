@@ -631,8 +631,11 @@ bool CHostsHelper::Build(std::string &strContent)
 			strContent += pItem->szAddr;
 			strContent += " ";
 			strContent += pItem->szDomain;
-			strContent += " ";
-			strContent += pItem->szDesc;
+			if(strlen(pItem->szDesc))
+			{
+				strContent += " #";
+				strContent += pItem->szDesc;
+			}
 			strContent += "\n";
 			pItem = pItem->pNext;
 		}

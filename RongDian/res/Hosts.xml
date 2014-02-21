@@ -45,7 +45,7 @@
 		</VerticalLayout>
 		<Control height="1" />
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
-			<Label name="host_tip_text" width="160" textcolor="FFFF0000" visible="false" />
+			<Label name="host_tip_text" width="300" textcolor="FFFF0000" visible="false" />
 			<Control />
 			<Button name="host_new_group" width="80" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="3" />

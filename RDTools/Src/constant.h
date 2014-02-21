@@ -108,6 +108,8 @@ const wchar_t* const kCreateHostGroupErr			= L"create_host_group_err";
 const wchar_t* const kLoadHostErr					= L"load_host_err";
 const wchar_t* const kHostSaveMsg					= L"host_save_msg";
 const wchar_t* const kNewVersionMsg					= L"new_version_msg";
+const wchar_t* const kReplaceFiles					= L"replace_files";
+const wchar_t* const kBackedupTo					= L"backedup_to";
 
 // SysTray
 const wchar_t* const kTrayTip						= L"tray_tip";
@@ -169,6 +171,8 @@ typedef enum _tagMSG_ID {
 	MSG_LOAD_HOST_ERR,
 	MSG_HOST_SAVE_MSG,
 	MSG_NEW_VERSION_MSG,
+	MSG_REPLACE_FILES,
+	MSG_BACKEDUP_TO,
 	// End
 	MSG_END = 200
 } MSG_ID;

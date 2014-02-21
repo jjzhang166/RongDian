@@ -527,7 +527,7 @@ void CHosts::OnTextChanged(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg,
 BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 {
 	BOOL bRet = FALSE;
-	int utf8Type = 0;
+//	int utf8Type = 0;
 	wchar_t szGroupId[256] = {0};
 	wchar_t szSection[1024] = {0}, szGroupDesc[1024] = {0};
 	wchar_t szAddr[64] = {0}, szDomain[256] = {0}, szItemDesc[1024] = {0};
@@ -544,7 +544,7 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 		assert(pGroup!=NULL);
 		StrUtil::a2w(pGroup->szSection, szSection);
 		StrUtil::a2w(pGroup->szId, szGroupId);
-		utf8Type = StrUtil::is_utf8(pGroup->szDesc);
+//		utf8Type = StrUtil::is_utf8(pGroup->szDesc);
 //		if(utf8Type==UTF8_BOM||utf8Type==UTF8_NOBOM)
 //		{
 //			StrUtil::u82u(pGroup->szDesc,szGroupDesc);
@@ -566,7 +566,7 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 			assert(pItem!=NULL);
 			StrUtil::a2w(pItem->szAddr, szAddr);
 			StrUtil::a2w(pItem->szDomain, szDomain);
-			utf8Type = StrUtil::is_utf8(pItem->szDesc);
+//			utf8Type = StrUtil::is_utf8(pItem->szDesc);
 //			if(utf8Type==UTF8_BOM||utf8Type==UTF8_NOBOM)
 //			{
 //				StrUtil::u82u(pItem->szDesc, szItemDesc);
@@ -618,11 +618,17 @@ BOOL CHosts::BackupHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 		struct tm *now;
 		now = localtime(&t);
 		wchar_t szBackupPath[1024] = {0}, szHosts[64] = {0};
-		wsprintf(szHosts, L"hosts_%d%02d%02d%02d%02d%02d", now->tm_year+1900,now->tm_mon,now->tm_mday,now->tm_hour,now->tm_min,now->tm_sec);
+		wsprintf(szHosts, L"hosts_%d%02d%02d%02d%02d%02d", now->tm_year+1900,now->tm_mon+1,now->tm_mday,now->tm_hour,now->tm_min,now->tm_sec);
 		wcscpy(szBackupPath, g_szHostsPath);
 		PathAppend(szBackupPath, szHosts);
 		SHHelper::CopyFile(hWnd, lpszHostsPath, szBackupPath);
-		RDMsgBox(hWnd, MSG_DONE, MSG_SUCCESS, MB_OK);
+		//RDMsgBox(hWnd, MSG_DONE, MSG_SUCCESS, MB_OK);
+		
+		wchar_t szContent[1024], szFormat[1024], szTitle[1024];
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_SUCCESS), GET_ASSOC_ID(g_LangIDs, MSG_SUCCESS), szTitle);
+		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_BACKEDUP_TO), GET_ASSOC_ID(g_LangIDs, MSG_BACKEDUP_TO), szFormat);
+		swprintf(szContent, szFormat, szBackupPath);
+		DuiMsgBox(hWnd, szContent, szTitle, MB_OK);
 	}
 	return bRet;
 }
@@ -952,13 +958,15 @@ BOOL CHosts::UpdateHostItemDomain(HWND hWnd, CPaintManagerUI* pManager, CControl
 	BOOL bRet = FALSE;
 	CDuiString strText = pSender->GetText();
 	CDuiString sUserData = pSender->GetUserData();
-	bRet = PCREUtil::IsIPv4(strText.GetData());
+	bRet = PCREUtil::IsDomain(strText.GetData());
 	if(!bRet)
 	{
 //#pragma message("CHosts::UpdateHostItemAddr - 域名输入无效，提示用户")
 		//RDMsgBox(hWnd, MSG_DOMAIN_ERR, MSG_ERR, MB_OK);
 		wchar_t szErr[1024] = {0};
 		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_DOMAIN_ERR), GET_ASSOC_ID(g_LangIDs, MSG_DOMAIN_ERR), szErr);
+		wcscat_s(szErr,1024,L" : ");
+		wcscat_s(szErr,1024,strText.GetData());
 		m_pHostTipText->SetText(szErr);
 		m_pHostTipText->SetVisible();
 		pSender->SetFocus();

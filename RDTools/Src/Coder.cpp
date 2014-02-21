@@ -401,6 +401,10 @@ BOOL CCoder::InitCharSetCombo()
 BOOL CCoder::StartConvert(HWND hWnd)
 {
 	BOOL bRet = FALSE;
+	if(lstCoderInfo.empty())
+	{
+		return bRet;
+	}
 	if(!bQuitThread)
 	{
 		RDMsgBox(hWnd, MSG_STILL_WORKING, MSG_ERR, MB_OK);
@@ -412,6 +416,10 @@ BOOL CCoder::StartConvert(HWND hWnd)
 	if(strCoderCharSet.IsEmpty())
 	{
 		RDMsgBox(hWnd, MSG_CHARSET_ERR, MSG_ERR, MB_OK);
+		return bRet;
+	}
+	if(RDMsgBox(hWnd, MSG_REPLACE_FILES, MSG_WARNING, MB_YESNO)!=IDYES)
+	{
 		return bRet;
 	}
 	DWORD dwThread = 0;
@@ -651,48 +659,38 @@ BOOL CCoder::ConvertFile(HWND /*hWnd*/, LPCWSTR lpszPath, LPCSTR lpszFrom, LPCST
 	BOOL bRet = FALSE;
 	if(!lpszPath)
 		return bRet;
-	wchar_t szNewPath_w[1024], szBackUp[1024];
+	wchar_t szBackUp[1024];
 	LPCWSTR lpszFileName = PathFindFileName(lpszPath);
-	swprintf(szNewPath_w, L"%s\\%s", g_szCoderPath, lpszFileName);
 	swprintf(szBackUp, L"%s\\%s", g_szCoderBackupPath, lpszFileName);
 	if(bCoderBackup)
 		SHHelper::CopyFile(NULL, lpszPath, szBackUp);
 
-	char szOldPath[1024], szNewPath[1024];
+	char szPath[1024];
 	char *lpOldData = NULL, *lpNewData = NULL;
 	DWORD dwOldData = 0, dwNewData = 0;
 	size_t nRead = 0, nLeftData = 0;
-	StrUtil::w2a(lpszPath, szOldPath);
-	StrUtil::w2a(szNewPath_w, szNewPath);
-	FILE *pOldFile = fopen(szOldPath, "rb");
-	if(!pOldFile)
+	StrUtil::w2a(lpszPath, szPath);
+	FILE *pFile = fopen(szPath, "rb");
+	if(!pFile)
 		return bRet;
-	FILE *pNewFile = fopen(szNewPath, "wb");
-	if(!pNewFile)
-	{
-		fclose(pOldFile);
-		return bRet;
-	}
-	fseek(pOldFile, 0L, SEEK_END);
-	dwOldData = ftell(pOldFile);
+	fseek(pFile, 0L, SEEK_END);
+	dwOldData = ftell(pFile);
 	dwNewData = dwOldData * 8;
-	fseek(pOldFile, 0L, SEEK_SET);
-	lpOldData = (char *)malloc(dwOldData);
+	lpOldData = (char *)malloc(dwOldData+1);
 	if(!lpOldData)
 	{
-		fclose(pOldFile);
-		fclose(pNewFile);
+		fclose(pFile);
 		return bRet;
 	}
 	lpNewData = (char *)malloc(dwNewData);
 	if(!lpNewData)
 	{
 		free(lpOldData);
-		fclose(pOldFile);
-		fclose(pNewFile);
+		fclose(pFile);
 		return bRet;
 	}
 	memset(lpNewData, 0, dwNewData);
+
 	char* lpSrc = lpOldData;
 	char* lpDst = lpNewData;
 	iconv_t cd;
@@ -701,29 +699,30 @@ BOOL CCoder::ConvertFile(HWND /*hWnd*/, LPCWSTR lpszPath, LPCSTR lpszFrom, LPCST
 	{
 		free(lpOldData);
 		free(lpNewData);
-		fclose(pOldFile);
-		fclose(pNewFile);
+		fclose(pFile);
 		return bRet;
 	}
-	nRead = fread(lpOldData, 1, (size_t)dwOldData, pOldFile);
+	fseek(pFile, 0L, SEEK_SET);
+	nRead = fread(lpOldData, 1, dwOldData, pFile);
+	fclose(pFile);
+	
 	nLeftData = dwNewData;
-	fclose(pOldFile);
-	pOldFile = NULL;
 	if(nRead==dwOldData && bWorking)
 	{
 		size_t ret = iconv(cd, (const char**)&lpOldData, &nRead, (char**)&lpNewData, &nLeftData);
 		if(ret==0)
 		{
-			ret = fwrite(lpDst, 1, dwNewData-nLeftData, pNewFile);
+			FILE *pNewFile = fopen(szPath, "wt");
+			ret = fwrite(lpDst, 1, (size_t)dwNewData-nLeftData, pNewFile);
 			if(ret==dwNewData-nLeftData)
 				bRet = TRUE;
+			fclose(pNewFile);
 		}
 	}
 	//iconv's arg
 	iconv_close(cd);
 	free(lpSrc);
 	free(lpDst);
-	fclose(pNewFile);
 
 	return bRet;
 }
