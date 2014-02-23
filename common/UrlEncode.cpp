@@ -63,7 +63,7 @@ wchar_t* UrlEncode::unescape(const wchar_t* str)
 			wchar_t tmp[5]={0};
 			wsprintf(tmp,L"%c%c%c%c",str[i+2],str[i+3],str[i+4],str[i+5]);
 			long oneword = wcstol(tmp,0,16);
-			encodedStr[j]=oneword;
+			encodedStr[j]=(wchar_t)oneword;
 			i = i+5;
 		}
 		else if(str[i]=='%'&&str[i+1]!='u')
@@ -71,7 +71,7 @@ wchar_t* UrlEncode::unescape(const wchar_t* str)
 			wchar_t tmp[3]={0};
 			wsprintf(tmp,L"%c%c",str[i+1],str[i+2]);
 			long oneword = wcstol(tmp,0,16);
-			encodedStr[j]=oneword;
+			encodedStr[j]=(wchar_t)oneword;
 			i = i+2;
 		}
 		else
@@ -131,7 +131,7 @@ char* UrlEncode::url_unencode(const char* sourceText)
 			char tmp[3]={0};
 			sprintf(tmp,"%c%c",sourceText[i+1],sourceText[i+2]);
 			oneword = strtol(tmp,0,16);
-			encodedStr[j]=oneword;
+			encodedStr[j]=(char)oneword;
 			i = i+2;
 		}
 		else

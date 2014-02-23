@@ -217,6 +217,9 @@ int EscapeSQLite(CDuiString strKeyWord)
 	return 0;
 }
 
+/**
+* 根据标题id和内容id显示提示消息
+*/
 int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 {
 #pragma message("RDMsgBox消息框注意项：调用\"RDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
@@ -225,6 +228,35 @@ int RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType)
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nTextId), GET_ASSOC_ID(g_LangIDs, nTextId), szErr);
 	nRet = DuiMsgBox(hWnd, szErr, szTitle, uType);
+	return nRet;
+}
+
+
+/**
+ * 处理ini文件中类似***%s.的文本，lpszDynamicStr为直接显示文本
+ */
+int RDMsgBox(HWND hWnd, int nTextId,LPCWSTR lpszDynamicStr, int nCaptionId, UINT uType)
+{
+#pragma message("RDDMsgBox消息框注意项：调用\"RDDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
+	int nRet = MB_OK;
+	wchar_t szContent[1024], szFormat[1024], szTitle[1024];
+	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
+	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nTextId), GET_ASSOC_ID(g_LangIDs, nTextId), szFormat);
+	swprintf(szContent, szFormat, lpszDynamicStr);
+	nRet = DuiMsgBox(hWnd, szContent, szTitle, uType);
+	return nRet;
+}
+
+/**
+* 直接填充内容字符
+*/
+int RDMsgBox(HWND hWnd, LPCWSTR lpszContent,int nCaptionId, UINT uType)
+{
+#pragma message("RDDMsgBox消息框注意项：调用\"RDDMsgBox\"请确保已经调用\"AssocLangIDs\" && \"InitDuiMsg\"初始化.")
+	int nRet = MB_OK;
+	wchar_t szTitle[1024];
+	Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, nCaptionId), GET_ASSOC_ID(g_LangIDs, nCaptionId), szTitle);
+	nRet = DuiMsgBox(hWnd, lpszContent, szTitle, uType);
 	return nRet;
 }
 

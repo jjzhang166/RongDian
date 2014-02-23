@@ -112,6 +112,8 @@ BOOL				IsImageFile(LPCWSTR lpszFileName);
 BOOL				IsCanTidy(LPCWSTR lpszLang);
 int					EscapeSQLite(CDuiString strKeyWord);
 int					RDMsgBox(HWND hWnd, int nTextId, int nCaptionId, UINT uType);
+int					RDMsgBox(HWND hWnd, int nTextId,LPCWSTR lpszDynamicStr, int nCaptionId, UINT uType);
+int					RDMsgBox(HWND hWnd, LPCWSTR lpszContent,int nCaptionId, UINT uType);
 int					RDPopupBox(HWND hWnd, int nTextId, int nCaptionId);
 
 BOOL				ShowLoading();

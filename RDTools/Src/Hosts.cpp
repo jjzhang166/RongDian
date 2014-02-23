@@ -622,13 +622,7 @@ BOOL CHosts::BackupHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 		wcscpy(szBackupPath, g_szHostsPath);
 		PathAppend(szBackupPath, szHosts);
 		SHHelper::CopyFile(hWnd, lpszHostsPath, szBackupPath);
-		//RDMsgBox(hWnd, MSG_DONE, MSG_SUCCESS, MB_OK);
-		
-		wchar_t szContent[1024], szFormat[1024], szTitle[1024];
-		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_SUCCESS), GET_ASSOC_ID(g_LangIDs, MSG_SUCCESS), szTitle);
-		Utility::GetINIStr(g_pLangManager->GetLangName(), GET_ASSOC_SECTION(g_LangIDs, MSG_BACKEDUP_TO), GET_ASSOC_ID(g_LangIDs, MSG_BACKEDUP_TO), szFormat);
-		swprintf(szContent, szFormat, szBackupPath);
-		DuiMsgBox(hWnd, szContent, szTitle, MB_OK);
+		RDMsgBox(hWnd, MSG_BACKEDUP_TO,szBackupPath, MSG_SUCCESS, MB_OK);
 	}
 	return bRet;
 }
