@@ -474,18 +474,6 @@ void CIPConfig::OnSelectSolution()
 			m_pGatewayEdit->SetText(L"");
 			m_pGatewayEdit->SetEnabled(false);
 		}
-		if(m_pDnsAutoCheckBox)
-			m_pDnsAutoCheckBox->SetEnabled(true);
-		if(lpIPConfigInfo->nDnsType==DNS_AUTO_SET)
-		{
-			if(m_pDnsAutoCheckBox)
-				m_pDnsAutoCheckBox->SetCheck(true);
-		}
-		else
-		{
-			if(m_pDnsManualCheckBox)
-				m_pDnsManualCheckBox->SetCheck(true);
-		}
 	} // end of 'if(lpIPConfigInfo->nAddrType==ADDR_AUTO_SET)'
 	else
 	{
@@ -506,23 +494,35 @@ void CIPConfig::OnSelectSolution()
 			m_pGatewayEdit->SetText(lpIPConfigInfo->szGateway);
 			m_pGatewayEdit->SetEnabled(true);
 		}
+	}
+
+	if (lpIPConfigInfo->nDnsType==DNS_AUTO_SET)
+	{
 		if(m_pDnsAutoCheckBox)
+			m_pDnsAutoCheckBox->SetCheck(true);
+		if(m_pDns1Edit)
 		{
-			m_pDnsAutoCheckBox->SetCheck(false);
-			m_pDnsAutoCheckBox->SetEnabled(false);
+			m_pDns1Edit->SetEnabled(false);
 		}
+		if(m_pDns2Edit)
+		{
+			m_pDns2Edit->SetEnabled(false);
+		}
+	}
+	else
+	{
 		if(m_pDnsManualCheckBox)
 			m_pDnsManualCheckBox->SetCheck(true);
-	}
-	if(m_pDns1Edit)
-	{
-		m_pDns1Edit->SetEnabled(true);
-		m_pDns1Edit->SetText(lpIPConfigInfo->szDns1);
-	}
-	if(m_pDns2Edit)
-	{
-		m_pDns2Edit->SetEnabled(true);
-		m_pDns2Edit->SetText(lpIPConfigInfo->szDns2);
+		if(m_pDns1Edit)
+		{
+			m_pDns1Edit->SetEnabled(true);
+			m_pDns1Edit->SetText(lpIPConfigInfo->szDns1);
+		}
+		if(m_pDns2Edit)
+		{
+			m_pDns2Edit->SetEnabled(true);
+			m_pDns2Edit->SetText(lpIPConfigInfo->szDns2);
+		}
 	}
 }
 
@@ -593,11 +593,12 @@ BOOL CIPConfig::OnSaveSolution(HWND hWnd)
 {
 	CAddrTableDB table(&g_SQLite);
 	ADDR_TABLE addr;
+	BOOL isInsert = TRUE;
 	addr.nAddrType = ADDR_AUTO_SET;
 	if(m_pIpManualCheckBox && m_pIpManualCheckBox->IsSelected())
 		addr.nAddrType = ADDR_MANUAL_SET;
 	addr.nDnsType = DNS_AUTO_SET;
-	if(m_pDnsAutoCheckBox && m_pDnsAutoCheckBox->IsSelected())
+	if(m_pDnsAutoCheckBox && m_pDnsManualCheckBox->IsSelected())
 		addr.nDnsType = DNS_MANUAL_SET;
 	if(m_pNameEdit)
 		wcscpy(addr.szSolution, m_pNameEdit->GetText());
@@ -613,8 +614,12 @@ BOOL CIPConfig::OnSaveSolution(HWND hWnd)
 		wcscpy(addr.szDns2, m_pDns2Edit->GetText());
 	if(!table.Insert(&addr))
 	{
-		RDMsgBox(hWnd, MSG_INVALID_NAME, MSG_ERR, MB_OK);
-		return FALSE;
+		isInsert = FALSE;
+		if (!table.Update(&addr))
+		{
+			RDMsgBox(hWnd, MSG_FAILED, MSG_ERR, MB_OK);
+			return FALSE;
+		}
 	}
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
 	lpIPConfigInfo = new IPCONFIG_INFO();
@@ -630,10 +635,12 @@ BOOL CIPConfig::OnSaveSolution(HWND hWnd)
 	wcscpy(lpIPConfigInfo->szDns2, addr.szDns2);
 	lstIpConfigInfo.push_back(lpIPConfigInfo);
 
-	CListLabelElementUI *pItem = NULL;
-	pItem = new CListLabelElementUI();
-	pItem->SetText(lpIPConfigInfo->szSolution);
-	m_pSolutionList->AddAt(pItem, m_pSolutionList->GetCount());
+	if(isInsert){
+		CListLabelElementUI *pItem = NULL;
+		pItem = new CListLabelElementUI();
+		pItem->SetText(lpIPConfigInfo->szSolution);
+		m_pSolutionList->AddAt(pItem, m_pSolutionList->GetCount());
+	}
 
 	m_pSolutionList->SelectItem(m_pSolutionList->GetCount());
 

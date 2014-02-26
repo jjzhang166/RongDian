@@ -127,9 +127,9 @@ BOOL CAddrTableDB::Update(LPADDR_TABLE lpTable)
 	EscapeSQLite(strGateway);
 	EscapeSQLite(strDns1);
 	EscapeSQLite(strDns2);
-	swprintf(szSQL, L"update config set atype_=%d, addr_='%s', mask_='%s', gateway_='%s', dtype=%d, dns1='%s', dns2='%s' where solution_=%s", 
-		strSolution.GetData(), lpTable->nAddrType, strAddr.GetData(), strMask.GetData(), strGateway.GetData(), 
-		lpTable->nDnsType, strDns1.GetData(), strDns2.GetData());
+	swprintf(szSQL, L"update addr set atype_=%d, addr_='%s', mask_='%s', gateway_='%s', dtype_=%d, dns1_='%s', dns2_='%s' where solution_='%s'", 
+		lpTable->nAddrType, strAddr.GetData(), strMask.GetData(), strGateway.GetData(), 
+		lpTable->nDnsType, strDns1.GetData(), strDns2.GetData(), strSolution.GetData());
 	StrUtil::u2u8(szSQL, szSQL_u8);
 	m_pSQLite->ExecQuery(szSQL_u8);
 	return TRUE;
