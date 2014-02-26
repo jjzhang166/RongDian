@@ -59,9 +59,16 @@ bool CHostsHelper::Load(const char* pszHosts /*= NULL*/)
 	memset(pData, 0, dwSize);
 	fread(pData, 1, dwSize, pFile);
 	pData[dwSize] = '\0';
+	//if (pData[0]==0xEF&&pData[1]==0xBB&&pData[2]==0xBF)
+	//if (pData[0]==(char)0xEF&&pData[1]==(char)0xBB&&pData[2]==(char)0xBF)
+	if (pData[0]=='\xEF'&&pData[1]=='\xBB'&&pData[2]=='\xBF')
+	{
+		pData[0]=' ';
+		pData[1]=' ';
+		pData[2]=' ';
+	}
 
 	Parse(pData, "\n");
-
 	free(pData);
 	fclose(pFile);
 	return true;
