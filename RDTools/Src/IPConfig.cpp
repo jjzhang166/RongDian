@@ -99,23 +99,23 @@ void CIPConfig::OnQuit()
 {
 	list<LPIPCONFIG_INFO>::iterator addr_iter;
 	LPIPCONFIG_INFO lpAddrInfo = NULL;
-	for(addr_iter=lstIpConfigInfo.begin(); addr_iter!=lstIpConfigInfo.end(); )
+	for(addr_iter=m_lstIpConfigInfo.begin(); addr_iter!=m_lstIpConfigInfo.end(); )
 	{
 		lpAddrInfo = (*addr_iter);
 		addr_iter++;
 		delete lpAddrInfo;
 	}
-	lstIpConfigInfo.clear();
+	m_lstIpConfigInfo.clear();
 
 	list<LPADAPTER_INFO>::iterator adapter_iter;
 	LPADAPTER_INFO lpAdapterInfo = NULL;
-	for(adapter_iter=lstAdaptersInfo.begin(); adapter_iter!=lstAdaptersInfo.end(); )
+	for(adapter_iter=m_lstAdaptersInfo.begin(); adapter_iter!=m_lstAdaptersInfo.end(); )
 	{
 		lpAdapterInfo = (*adapter_iter);
 		adapter_iter++;
 		delete lpAdapterInfo;
 	}
-	lstAdaptersInfo.clear();
+	m_lstAdaptersInfo.clear();
 	if (m_pCmdInfo)
 	{
 		free(m_pCmdInfo);
@@ -243,16 +243,16 @@ void CIPConfig::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg
 	}
 	else if (sCtrlName == kIPConfigApplyBtn) // 应用方案
 	{
-		if(!Utility::IsAdminPrivilege())
-		{
-			DWORD dwThreadId = 0;
-			HANDLE hThread = CreateThread(NULL, 0, RunAsAdminThread, 0, 0, &dwThreadId);
-			CloseHandle(hThread);
-		}
-		else
-		{
+//		if(!Utility::IsAdminPrivilege())
+//		{
+//			DWORD dwThreadId = 0;
+//			HANDLE hThread = CreateThread(NULL, 0, RunAsAdminThread, 0, 0, &dwThreadId);
+//			CloseHandle(hThread);
+//		}
+//		else
+//		{
 			OnApplySolution(hWnd);
-		}
+//	}
 		bHandled = TRUE;
 	}
 }
@@ -306,7 +306,7 @@ BOOL CIPConfig::LoadSolutions()
 		lpIPConfigInfo->nDnsType = lpAddrTable[i].nDnsType;
 		wcscpy(lpIPConfigInfo->szDns1, lpAddrTable[i].szDns1);
 		wcscpy(lpIPConfigInfo->szDns2, lpAddrTable[i].szDns2);
-		lstIpConfigInfo.push_back(lpIPConfigInfo);
+		m_lstIpConfigInfo.push_back(lpIPConfigInfo);
 	}
 
 	bRet = TRUE;
@@ -329,7 +329,7 @@ BOOL CIPConfig::InitSolutionsList()
 	m_pSolutionList->RemoveAll();
 	list<LPIPCONFIG_INFO>::iterator iter;
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
-	for(iter=lstIpConfigInfo.begin(); iter!=lstIpConfigInfo.end(); iter++)
+	for(iter=m_lstIpConfigInfo.begin(); iter!=m_lstIpConfigInfo.end(); iter++)
 	{
 		lpIPConfigInfo = (*iter);
 		pItem = new CListLabelElementUI();
@@ -391,12 +391,12 @@ BOOL CIPConfig::LoadAdapters()
 			StrUtil::a2w(szDns[i], pAdapter->szDns[i]);
 		AdapterUtil::GetMac(pAdapterInfo, szMac);
 		StrUtil::a2w(szMac, pAdapter->szMac);
-		lstAdaptersInfo.push_back(pAdapter);
+		m_lstAdaptersInfo.push_back(pAdapter);
 		pAdapterInfo = pAdapterInfo->Next;
 		if(pAdapterInfo)
 			bRet = TRUE;
 	}
-	AdapterUtil::GetFriendlyName(AdaptersNameCallBack, (LPVOID)&lstAdaptersInfo);
+	AdapterUtil::GetFriendlyName(AdaptersNameCallBack, (LPVOID)&m_lstAdaptersInfo);
 	free(pAdapterHeader);
 	return bRet;
 }
@@ -411,7 +411,7 @@ BOOL CIPConfig::InitAdaptersList()
 	int nSelected = 0, nIndex = 0;
 	list<LPADAPTER_INFO>::iterator iter;
 	LPADAPTER_INFO lpAdapter = NULL;
-	for(iter=lstAdaptersInfo.begin(); iter!=lstAdaptersInfo.end(); iter++)
+	for(iter=m_lstAdaptersInfo.begin(); iter!=m_lstAdaptersInfo.end(); iter++)
 	{
 		lpAdapter = (*iter);
 		pItem = new CListLabelElementUI;
@@ -442,7 +442,7 @@ void CIPConfig::OnSelectSolution()
 	list<LPIPCONFIG_INFO>::iterator iter;
 	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
 	int nIndex = 0;
-	for(iter=lstIpConfigInfo.begin(); iter!=lstIpConfigInfo.end(); iter++)
+	for(iter=m_lstIpConfigInfo.begin(); iter!=m_lstIpConfigInfo.end(); iter++)
 	{
 		lpIPConfigInfo = (*iter);
 		if(nIndex==nSelected)
@@ -534,7 +534,7 @@ void CIPConfig::OnSelectAdapter()
 	list<LPADAPTER_INFO>::iterator iter;
 	LPADAPTER_INFO lpAdapter = NULL;
 	int nIndex = 0;
-	for(iter=lstAdaptersInfo.begin(); iter!=lstAdaptersInfo.end(); iter++)
+	for(iter=m_lstAdaptersInfo.begin(); iter!=m_lstAdaptersInfo.end(); iter++)
 	{
 		lpAdapter = (*iter);
 		if(nIndex==nSelected)
@@ -621,28 +621,39 @@ BOOL CIPConfig::OnSaveSolution(HWND hWnd)
 			return FALSE;
 		}
 	}
-	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
-	lpIPConfigInfo = new IPCONFIG_INFO();
-	if(!lpIPConfigInfo)
-		return FALSE;
-	lpIPConfigInfo->nAddrType = addr.nAddrType;
-	wcscpy(lpIPConfigInfo->szSolution, addr.szSolution);
-	wcscpy(lpIPConfigInfo->szAddr, addr.szAddr);
-	wcscpy(lpIPConfigInfo->szMask, addr.szMask);
-	wcscpy(lpIPConfigInfo->szGateway, addr.szGateway);
-	lpIPConfigInfo->nDnsType = addr.nDnsType;
-	wcscpy(lpIPConfigInfo->szDns1, addr.szDns1);
-	wcscpy(lpIPConfigInfo->szDns2, addr.szDns2);
-	lstIpConfigInfo.push_back(lpIPConfigInfo);
 
+	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
 	if(isInsert){
+		lpIPConfigInfo = new IPCONFIG_INFO();
+		if(!lpIPConfigInfo)
+			return FALSE;
+		lpIPConfigInfo->nAddrType = addr.nAddrType;
+		wcscpy(lpIPConfigInfo->szSolution, addr.szSolution);
+		wcscpy(lpIPConfigInfo->szAddr, addr.szAddr);
+		wcscpy(lpIPConfigInfo->szMask, addr.szMask);
+		wcscpy(lpIPConfigInfo->szGateway, addr.szGateway);
+		lpIPConfigInfo->nDnsType = addr.nDnsType;
+		wcscpy(lpIPConfigInfo->szDns1, addr.szDns1);
+		wcscpy(lpIPConfigInfo->szDns2, addr.szDns2);
+		m_lstIpConfigInfo.push_back(lpIPConfigInfo);
 		CListLabelElementUI *pItem = NULL;
 		pItem = new CListLabelElementUI();
 		pItem->SetText(lpIPConfigInfo->szSolution);
 		m_pSolutionList->AddAt(pItem, m_pSolutionList->GetCount());
+		m_pSolutionList->SelectItem(m_pSolutionList->GetCount());
 	}
-
-	m_pSolutionList->SelectItem(m_pSolutionList->GetCount());
+	else	//update
+	{
+		lpIPConfigInfo = GetCurSolution();
+		lpIPConfigInfo->nAddrType = addr.nAddrType;
+		wcscpy(lpIPConfigInfo->szSolution, addr.szSolution);
+		wcscpy(lpIPConfigInfo->szAddr, addr.szAddr);
+		wcscpy(lpIPConfigInfo->szMask, addr.szMask);
+		wcscpy(lpIPConfigInfo->szGateway, addr.szGateway);
+		lpIPConfigInfo->nDnsType = addr.nDnsType;
+		wcscpy(lpIPConfigInfo->szDns1, addr.szDns1);
+		wcscpy(lpIPConfigInfo->szDns2, addr.szDns2);
+	}
 
 	return TRUE;
 }
@@ -664,12 +675,12 @@ BOOL CIPConfig::OnDelSolution(HWND hWnd)
 		list<LPIPCONFIG_INFO>::iterator iter;
 		LPIPCONFIG_INFO lpIPConfigInfo = NULL;
 		int nIndex = 0;
-		for(iter=lstIpConfigInfo.begin(); iter!=lstIpConfigInfo.end(); iter++)
+		for(iter=m_lstIpConfigInfo.begin(); iter!=m_lstIpConfigInfo.end(); iter++)
 		{
 			lpIPConfigInfo = (*iter);
 			if(nIndex==nSelected)
 			{
-				lstIpConfigInfo.erase(iter);
+				m_lstIpConfigInfo.erase(iter);
 				delete lpIPConfigInfo;
 				break;
 			}
@@ -815,6 +826,24 @@ LONG CALLBACK CIPConfig::AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, B
 	return 0;
 }
 
+LPIPCONFIG_INFO CIPConfig::GetCurSolution()
+{
+	LPIPCONFIG_INFO lpIPConfigInfo = NULL;
+	int nSelected = m_pSolutionList->GetCurSel();
+	list<LPIPCONFIG_INFO>::iterator iter;
+	int nIndex = 0;
+	for(iter=m_lstIpConfigInfo.begin(); iter!=m_lstIpConfigInfo.end(); iter++)
+	{
+		lpIPConfigInfo = (*iter);
+		if(nIndex==nSelected)
+			break;
+		else
+			lpIPConfigInfo = NULL;
+		nIndex++;
+	}
+	return lpIPConfigInfo;
+}
+
 BOOL CIPConfig::CheckFormValid(HWND hWnd)
 {
 	BOOL bRet = FALSE;
@@ -892,7 +921,7 @@ DWORD CIPConfig::ExeCMDThreadFunc(void * pParams)
 	HWND hWnd = info->hWnd;
 
 	DuiShowLoading(hWnd, L"Loading...", L"", &info->lpLoader);
-	//Utility::ExcuteCommand(info->szCommand);
+	Utility::ExcuteCommand(info->lpszCommand);
 	Sleep(3000);
 	SendMessage(hWnd, WM_CMD_COMPLETE, NULL, NULL);
 

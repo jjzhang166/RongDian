@@ -10,6 +10,7 @@ RD_DECLARE_BEGIN(IPConfig)
 
 	RD_DECLARE_MEMBER(LPCWSTR, GetSolutionListName)();
 	RD_DECLARE_MEMBER(LPCWSTR, GetAdaptersListName)();
+	RD_DECLARE_MEMBER(LPIPCONFIG_INFO, GetCurSolution)();
 
 	RD_DECLARE_MEMBER(BOOL, LoadSolutions)();
 	RD_DECLARE_MEMBER(BOOL, InitSolutionsList)(); // 初始化方案列表
@@ -54,8 +55,8 @@ public:
 	CEditUI * m_pCurrentDns2Edit;
 	CEditUI * m_pMacEdit;
 
-	list<LPIPCONFIG_INFO> lstIpConfigInfo;
-	list<LPADAPTER_INFO> lstAdaptersInfo;
+	list<LPIPCONFIG_INFO> m_lstIpConfigInfo;
+	list<LPADAPTER_INFO> m_lstAdaptersInfo;
 	PCMD_EXE_INFO m_pCmdInfo;
 	LPVOID m_lpLoader;
 RD_DECLARE_END()
