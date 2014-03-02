@@ -217,10 +217,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\ContainerTest.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\Finder.cpp"
 					>
 				</File>
@@ -352,10 +348,6 @@
 				</File>
 				<File
 					RelativePath=".\Src\constant.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ContainerTest.h"
 					>
 				</File>
 				<File

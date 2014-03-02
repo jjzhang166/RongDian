@@ -3,7 +3,7 @@
 class CBaseTool
 {
 public:
-	CBaseTool() {};
+	CBaseTool() { memset(_TOOL_NAME, 0, sizeof(_TOOL_NAME)); };
 	virtual ~CBaseTool() {};
 
 public:
@@ -18,9 +18,14 @@ public:
 	virtual LPCWSTR GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/) { return L""; };
 	virtual BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/) = 0;
 	virtual void OnQuit() = 0;
+	virtual LPCWSTR GetName() { return _TOOL_NAME; };
+	virtual void SetName(LPCWSTR pszName) { if(!pszName) return; memset(_TOOL_NAME, 0, sizeof(_TOOL_NAME)); wcscpy(_TOOL_NAME, pszName); };
 
 	virtual LRESULT HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) { return 0; };
 	virtual LRESULT OnCopyData(WPARAM /*wParam*/, LPARAM /*lParam*/) { return 0; };
+
+private:
+	wchar_t _TOOL_NAME[1024];
 };
 
 typedef LONG (*LPFNCreateRDTool)(LPWSTR lpszTName, LPVOID *lpClass);
@@ -50,8 +55,6 @@ typedef struct _tagTOOLS_INFO
 		type method
 
 #define RD_DECLARE_END() \
-	public: \
-		wchar_t _TOOL_NAME[1024]; \
 	}; 
 
 #define RD_DECLARE_TOOLS() \
@@ -59,17 +62,17 @@ typedef struct _tagTOOLS_INFO
 		BOOL _InitTools(); \
 		void _ReleaseTools(); \
 	public: \
-		list<LPTOOLS_INFO> _toolsEntries; 
+		list<LPTOOLS_INFO> lstToolsEntries; 
 
 #define RD_BEGIN_TOOLS_MAP(cls) \
 	void cls::_ReleaseTools() \
 	{ \
 		LPTOOLS_INFO tool = NULL; \
-		if(_toolsEntries.size()) \
-		tool = (LPTOOLS_INFO)_toolsEntries.back(); \
+		if(lstToolsEntries.size()) \
+		tool = (LPTOOLS_INFO)lstToolsEntries.back(); \
 		while(tool) \
 		{ \
-			_toolsEntries.pop_back(); \
+			lstToolsEntries.pop_back(); \
 			if(tool->lpClass) \
 			{ \
 				if(tool->lpfnDestroy) \
@@ -79,8 +82,8 @@ typedef struct _tagTOOLS_INFO
 			} \
 			delete tool; \
 			tool = NULL; \
-			if(_toolsEntries.size()) \
-				tool = (LPTOOLS_INFO)_toolsEntries.back(); \
+			if(lstToolsEntries.size()) \
+				tool = (LPTOOLS_INFO)lstToolsEntries.back(); \
 		} \
 	} \
 	BOOL cls::_InitTools() \
@@ -95,9 +98,9 @@ typedef struct _tagTOOLS_INFO
 			memset(tool, 0, sizeof(TOOLS_INFO)); \
 			if(entry) \
 			{ \
-				tool->nIndex = _toolsEntries.size(); \
+				tool->nIndex = lstToolsEntries.size(); \
 				tool->lpClass = entry; \
-				_toolsEntries.push_back(tool); \
+				lstToolsEntries.push_back(tool); \
 			} \
 		} \
 	}
@@ -111,7 +114,7 @@ typedef struct _tagTOOLS_INFO
 		r = TRUE; \
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -130,7 +133,7 @@ typedef struct _tagTOOLS_INFO
 		BOOL bRet = FALSE;\
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -148,7 +151,7 @@ typedef struct _tagTOOLS_INFO
 		BOOL bRet = FALSE;\
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -166,7 +169,7 @@ typedef struct _tagTOOLS_INFO
 		CControlUI *pControl = NULL;\
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -185,7 +188,7 @@ typedef struct _tagTOOLS_INFO
 		b = FALSE; \
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -204,7 +207,7 @@ typedef struct _tagTOOLS_INFO
 		LPCWSTR lpData = L""; \
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -222,7 +225,7 @@ typedef struct _tagTOOLS_INFO
 	{ \
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -239,7 +242,7 @@ typedef struct _tagTOOLS_INFO
 		BOOL bHandle = FALSE; \
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \
@@ -257,7 +260,7 @@ typedef struct _tagTOOLS_INFO
 		BOOL bRet = FALSE;\
 		list<LPTOOLS_INFO>::iterator iter; \
 		LPTOOLS_INFO tool = NULL; \
-		for(iter=_toolsEntries.begin(); iter!=_toolsEntries.end(); iter++) \
+		for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++) \
 		{ \
 			tool = (*iter); \
 			if(!tool->lpClass) \

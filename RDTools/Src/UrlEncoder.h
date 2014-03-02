@@ -1,9 +1,19 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////
-// CUrlEnCoder
-RD_DECLARE_BEGIN(UrlEncoder)
-RD_DECLARE_MEMBER(void, OnClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+// CUrlEncoder
+class CUrlEncoder : public CBaseTool
+{
+public:
+	CUrlEncoder();
+	virtual ~CUrlEncoder() { };
+public:
+	BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/);
+	void OnQuit();
+	BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/);
+	BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/);
+
+	void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 
 public:
 	CCheckBoxUI * m_pEscapeCB;
@@ -15,6 +25,6 @@ public:
 	CButtonUI * m_pClearBtn;
 	CRichEditUI * m_pEncodingEdit;
 	CRichEditUI * m_pEncodedEdit;
-RD_DECLARE_END()
+};
 // CUrlEnCoder
 //////////////////////////////////////////////////////////////////////////

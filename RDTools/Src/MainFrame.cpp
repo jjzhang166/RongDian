@@ -75,8 +75,12 @@ CMainFrame::~CMainFrame()
 	if(pszUpdateResponeData)
 		delete pszUpdateResponeData;
 	ReleasePanels();
-	m_pPanelRegister->quit();
-	m_pPanelRegister->_ReleaseTools();
+	if(m_pPanelRegister)
+	{
+		m_pPanelRegister->OnQuit();
+		m_pPanelRegister->ReleaseTools();
+		delete m_pPanelRegister;
+	}
 	PostQuitMessage(0);
 }
 
@@ -123,8 +127,7 @@ SET_CONTROL_END()
 	// Status Bar
 	FIND_CONTROL_BY_ID(pStatusCtrl, CButtonUI, (&m_PaintManager), kFrameStatus)
 
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_LANG_MSG((&m_PaintManager), lpszLang)
+	m_pPanelRegister->SetLang(&m_PaintManager, lpszLang);
 
 	return 0;
 }
@@ -168,7 +171,7 @@ void CMainFrame::InitWindow()
 	HICON hIconSmall = ::LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_RDTOOLS));
 	::SendMessage(m_hWnd, WM_SETICON, FALSE, (LPARAM)hIconSmall);
 
-	m_pPanelRegister->_InitTools();
+	m_pPanelRegister->InitTools();
 
 	g_pSystemTray = new CSystemTray();
 	if(!g_pSystemTray)
@@ -276,7 +279,7 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		bHandle = TRUE;
 		BOOL bIsCanQuit = FALSE;
 		//RD_ISCAN_QUIT(m_hWnd, (&m_PaintManager), bIsCanQuit)
-		bIsCanQuit = m_pPanelRegister->isCanQuit(m_hWnd, (&m_PaintManager), bIsCanQuit);
+		bIsCanQuit = m_pPanelRegister->IsCanQuit(m_hWnd, &m_PaintManager);
 		if(!bIsCanQuit)
 		{
 			return;
@@ -308,30 +311,25 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	if(!bHandle)
 		SelectPanel(sCtrlName);
 
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnClick)
-
+	m_pPanelRegister->OnClick(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemActive)
+	m_pPanelRegister->OnItemActive(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnItemClick(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemClick)
+	m_pPanelRegister->OnItemClick(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnItemSelected(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnItemSelected)
+	m_pPanelRegister->OnItemSelected(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnMenuSelect(TNotifyUI& msg)
@@ -366,8 +364,7 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 void CMainFrame::OnTextChanged(TNotifyUI& msg)
 {
 	BOOL bHandle = FALSE;
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COMMON_MSG(m_hWnd, (&m_PaintManager), msg, bHandle, OnTextChanged)
+	m_pPanelRegister->OnTextChanged(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnFinalMessage(HWND hWnd)
@@ -389,9 +386,7 @@ CControlUI* CMainFrame::CreateControl(LPCTSTR pstrClass, CControlUI *pParent)
 			return pControl;
 	}
 
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_CREATE_CONTROL_MSG(&m_PaintManager, pstrClass, pParent)
-
+	pControl = m_pPanelRegister->OnCreateControl(&m_PaintManager, pstrClass, pParent);
 	return pControl;
 }
 
@@ -406,14 +401,13 @@ LRESULT CMainFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COPYDATA:
 		OnCopyData(uMsg, wParam, lParam);
 		break;
-	
 	}
 
 	lRes = WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 	return lRes;
 }
 
-LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT lRes = 0;
 	switch(uMsg)
@@ -425,8 +419,7 @@ LRESULT CMainFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 		return OnParseUpdateRespone(uMsg, wParam, lParam);
 		break;
 	}
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_CUSTOM_MSG(uMsg, wParam, lParam);
+	m_pPanelRegister->HandleCustomMessage(uMsg, wParam, lParam, bHandled);
 	return 0;
 }
 
@@ -498,8 +491,7 @@ LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
 		::SetForegroundWindow(m_hWnd);
 		return TRUE;
 	}
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_COPYDATA_MSG(wParam, lParam);
+	m_pPanelRegister->OnCopyData(wParam, lParam);
 	return 0;
 }
 
@@ -598,8 +590,7 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 
 LPCWSTR CMainFrame::GetItemText(CControlUI* pControl, int iIndex, int iSubItem)
 {
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_ITEMTEXT_MSG(m_hWnd, &m_PaintManager, pControl, iIndex, iSubItem);
+	return m_pPanelRegister->GetItemText(m_hWnd, &m_PaintManager, pControl, iIndex, iSubItem);
 }
 
 BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
@@ -724,10 +715,10 @@ BOOL CMainFrame::InitPanels()
 				lpfnDestroyRDTool(pToolClass);
 				continue;
 			}
-			pTool->nIndex = m_pPanelRegister->_toolsEntries.size();
+			pTool->nIndex = m_pPanelRegister->lstToolsEntries.size();
 			pTool->lpClass = pToolClass;
 			pTool->lpfnDestroy = lpfnDestroyRDTool;
-			m_pPanelRegister->_toolsEntries.push_back(pTool);
+			m_pPanelRegister->lstToolsEntries.push_back(pTool);
 		}
 	}
 
@@ -744,8 +735,7 @@ BOOL CMainFrame::InitPanels()
 	wcscpy(panel.szDesc, szDesc);
 	AddPanel(&panel);
 
-	list<LPTOOLS_INFO> _toolsEntries = m_pPanelRegister->_toolsEntries;
-	RD_ON_INIT_MSG((WPARAM)&m_PaintManager, (LPARAM)(IListCallbackUI*)this);
+	m_pPanelRegister->OnInit((WPARAM)&m_PaintManager, (LPARAM)(IListCallbackUI*)this);
 
 	return bRet;
 }

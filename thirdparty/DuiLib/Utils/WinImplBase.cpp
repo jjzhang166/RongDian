@@ -358,6 +358,12 @@ LRESULT WindowImplBase::OnKeyDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPa
 	return 0;
 }
 
+LRESULT WindowImplBase::OnCaptureChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	return 0;
+}
+
 LRESULT WindowImplBase::OnKillFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	bHandled = FALSE;
@@ -461,6 +467,9 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_KEYDOWN:
 		lRes = OnKeyDown(uMsg, wParam, lParam, bHandled);
+		break;
+	case WM_CAPTURECHANGED:
+		lRes = OnCaptureChanged(uMsg, wParam, lParam, bHandled);
 		break;
 	case WM_KILLFOCUS:
 		lRes = OnKillFocus(uMsg, wParam, lParam, bHandled);

@@ -2,8 +2,18 @@
 
 //////////////////////////////////////////////////////////////////////////
 // CSetting
-RD_DECLARE_BEGIN(Setting)
-	RD_DECLARE_MEMBER(BOOL, Apply) ();
-RD_DECLARE_END()
+class CSetting : public CBaseTool
+{
+public:
+	CSetting();
+	virtual ~CSetting() { };
+public:
+	BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/);
+	void OnQuit();
+	BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/);
+	BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/);
+
+	BOOL Apply();
+};
 // CSetting
 //////////////////////////////////////////////////////////////////////////

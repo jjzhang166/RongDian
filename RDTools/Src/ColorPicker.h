@@ -2,23 +2,33 @@
 
 //////////////////////////////////////////////////////////////////////////
 // CColorPicker
-RD_DECLARE_BEGIN(ColorPicker)
-	RD_DECLARE_MEMBER(void, OnClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(void, OnItemActive) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(void, OnItemClick) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(void, OnTextChanged) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(void, OnItemSelected) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(LPCWSTR, GetItemText) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/);
-	RD_DECLARE_MEMBER(LRESULT, OnCopyData) (WPARAM /*wParam*/, LPARAM /*lParam*/);
+class CColorPicker : public CBaseTool
+{
+public:
+	CColorPicker();
+	virtual ~CColorPicker() { };
+public:
+	BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/);
+	void OnQuit();
+	BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/);
+	BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/);
 
-	RD_DECLARE_MEMBER(BOOL, SetColorInfo) (POINT ptCursor);
-	RD_DECLARE_MEMBER(BOOL, SetColorPicker) (DWORD dwColor, BOOL bRecord = TRUE, BOOL bAuto = TRUE);
-	RD_DECLARE_MEMBER(BOOL, OpenColorDlg) (HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, OpenZoomIn) (HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, OpenSnapShot) (HWND hWnd);
+	void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	void OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	void OnItemClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	void OnTextChanged(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	void OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	LPCWSTR GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* /*pControl*/, int /*iIndex*/, int /*iSubItem*/);
+	LRESULT OnCopyData(WPARAM /*wParam*/, LPARAM /*lParam*/);
 
-	RD_DECLARE_MEMBER(void, OnSnapShotUpdate) (COLORREF clrColor, LPCWSTR lpszPath = NULL);
-	RD_DECLARE_MEMBER(void, OnZoomInUpdate) (COLORREF clrColor, POINT ptCursor, BOOL bRecord);
+	BOOL SetColorInfo(POINT ptCursor);
+	BOOL SetColorPicker(DWORD dwColor, BOOL bRecord = TRUE, BOOL bAuto = TRUE);
+	BOOL OpenColorDlg(HWND hWnd);
+	BOOL OpenZoomIn(HWND hWnd);
+	BOOL OpenSnapShot(HWND hWnd);
+
+	void OnSnapShotUpdate(COLORREF clrColor, LPCWSTR lpszPath = NULL);
+	void OnZoomInUpdate(COLORREF clrColor, POINT ptCursor, BOOL bRecord);
 
 public:
 	COLORREF colCurColor;
@@ -37,6 +47,6 @@ public:
 	CControlUI * pPickerHSVColor;
 	CListUI * pColorList;
 	BOOL * bIsCapturing;
-RD_DECLARE_END()
+};
 // CColorPicker
 //////////////////////////////////////////////////////////////////////////

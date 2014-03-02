@@ -204,7 +204,7 @@ BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	if(m_pHostPathEdit)
 		m_pHostPathEdit->SetText(szPath);
 	StrUtil::w2a(szPath, szPathA);
-	if(!HostsHelper.Load(szPathA))
+	if(!m_HostsHelper.Load(szPathA))
 	{
 		LOG4CPLUS_ERROR(g_Logger, L"Hosts File Load Fialed.");
 	}
@@ -531,7 +531,7 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 	wchar_t szGroupId[256] = {0};
 	wchar_t szSection[1024] = {0}, szGroupDesc[1024] = {0};
 	wchar_t szAddr[64] = {0}, szDomain[256] = {0}, szItemDesc[1024] = {0};
-	LPHOSTS_INFO pGroup = HostsHelper.m_pHosts;
+	LPHOSTS_INFO pGroup = m_HostsHelper.m_pHosts;
 	PHOSTS_ITEM pItem = NULL;
 	if(!m_pHostGroupContainerLayout)
 	{
@@ -539,7 +539,7 @@ BOOL CHosts::InitHosts(CPaintManagerUI* pManager)
 		return bRet;
 	}
 	m_pHostGroupContainerLayout->SetUserData(L"0"); // 分组id起始值，用于HostsGroup分组id命名
-	for(int i=0; i<HostsHelper.m_nCount; i++)
+	for(int i=0; i<m_HostsHelper.m_nCount; i++)
 	{
 		assert(pGroup!=NULL);
 		StrUtil::a2w(pGroup->szSection, szSection);
@@ -635,7 +635,7 @@ BOOL CHosts::NewHostsGroup(HWND hWnd, CPaintManagerUI* pManager)
 	char szGroupNameA[64] = {0};
 	swprintf(szGroupName, L"%s%s", kHostSectionPrefix, sNewGroupIndex.GetData());
 	StrUtil::w2a(szGroupName, szGroupNameA);
-	if(!HostsHelper.AddSection(szGroupNameA))
+	if(!m_HostsHelper.AddSection(szGroupNameA))
 	{
 //#pragma message("CHosts::NewHostsGroup - 添加分组数据失败，需添加提示信息")
 		RDMsgBox(hWnd, MSG_CREATE_HOST_GROUP_ERR, MSG_ERR, MB_OK);
@@ -670,7 +670,7 @@ BOOL CHosts::LoadHostsFile(HWND hWnd, CPaintManagerUI* pManager)
 		return bRet;
 	StrUtil::w2a(szPath, szPathA);
 	assert(m_pHostGroupContainerLayout!=NULL);
-	if(!HostsHelper.Load(szPathA))
+	if(!m_HostsHelper.Load(szPathA))
 	{
 //#pragma message("CHosts::LoadHostsFile - 添加加载hosts文件错误提示")
 		RDMsgBox(hWnd, MSG_LOAD_HOST_ERR, MSG_ERR, MB_OK);
@@ -703,7 +703,7 @@ BOOL CHosts::SaveHostsFile(HWND hWnd, CPaintManagerUI* /*pManager*/)
 	CDuiString strPath = m_pHostPathEdit->GetText();
 	char szPathA[1024];
 	StrUtil::w2a(strPath.GetData(), szPathA);
-	if(!HostsHelper.SaveAs(szPathA))
+	if(!m_HostsHelper.SaveAs(szPathA))
 	{
 //#pragma message("CHosts::SaveHostsFile - 保存数据到hosts文件失败，需添加提示信息")
 		RDMsgBox(hWnd, MSG_DONE, MSG_FAILED, MB_OK);
@@ -785,7 +785,7 @@ BOOL CHosts::NewHostItem(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSend
 //#pragma message("CHosts::NewHostItem - 节点初始IP、Domain均为空，且需同步hosts内存数据")
 	char szGroupId[64] = {0};
 	StrUtil::w2a(lpszUserData, szGroupId);
-	HostsHelper.AddItemById(szGroupId, "", "");
+	m_HostsHelper.AddItemById(szGroupId, "", "");
 	AdjustGroupHeight(pManager, lpszUserData);
 	m_bModified = TRUE;
 	return TRUE;
@@ -810,7 +810,7 @@ BOOL CHosts::DelHostGroup(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSen
 	assert(pGroupName!=NULL);
 	wcscpy(szGroupName, pGroupName->GetText().GetData());
 	StrUtil::w2a(szGroupName, szSection);
-	HostsHelper.DelSection(szSection);
+	m_HostsHelper.DelSection(szSection);
 
 	m_pHostGroupContainerLayout->Remove(pChildLayout);
 	m_bModified = TRUE;
@@ -839,7 +839,7 @@ BOOL CHosts::DelHostItem(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSend
 
 	char* szGroupId = StrUtil::w2a(pszGroupId);
 	char* szIndex = StrUtil::w2a(szItemIndex);
-	BOOL bRet = HostsHelper.DelItemById(szGroupId, szIndex);
+	BOOL bRet = m_HostsHelper.DelItemById(szGroupId, szIndex);
 	delete[] szGroupId;
 	delete[] szIndex;
 	
@@ -866,7 +866,7 @@ BOOL CHosts::ToggleHostItem(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pS
 
 	char* szGroupId = StrUtil::w2a(pszGroupId);
 	char* szIndex = StrUtil::w2a(szItemIndex);
-	LPHOSTS_ITEM item = HostsHelper.FindItemById(szGroupId,szIndex);
+	LPHOSTS_ITEM item = m_HostsHelper.FindItemById(szGroupId,szIndex);
 	delete[] szGroupId;
 	delete[] szIndex;
 	
@@ -881,7 +881,7 @@ BOOL CHosts::UpdateHostGroupName(HWND hWnd, CPaintManagerUI* pManager, CControlU
 	CDuiString strNewName = pSender->GetText();
 	char szId[64] = {0}, szNewSection[1024] = {0};
 	StrUtil::w2a(strId.GetData(), szId);
-	PHOSTS_INFO pHostInfo = HostsHelper.FindSectionById(szId);
+	PHOSTS_INFO pHostInfo = m_HostsHelper.FindSectionById(szId);
 	assert(pHostInfo!=NULL);
 	StrUtil::w2a(strNewName.GetData(), szNewSection);
 	memset(pHostInfo->szSection, 0, sizeof(pHostInfo->szSection));
@@ -901,7 +901,7 @@ BOOL CHosts::UpdateHostGroupDesc(HWND hWnd, CPaintManagerUI* pManager, CControlU
 	CDuiString strName = pNameEdit->GetText();
 	char szSection[1024] = {0};
 	StrUtil::w2a(strName.GetData(), szSection);
-	PHOSTS_INFO pHostInfo = HostsHelper.FindSection(szSection);
+	PHOSTS_INFO pHostInfo = m_HostsHelper.FindSection(szSection);
 	assert(pHostInfo!=NULL);
 	char szDesc[1024] = {0};
 	StrUtil::w2a(strDesc.GetData(), szDesc);
@@ -938,7 +938,7 @@ BOOL CHosts::UpdateHostItemAddr(HWND hWnd, CPaintManagerUI* pManager, CControlUI
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
 	sprintf(szItemId, "%d", _wtoi(szItemIndex));
-	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	PHOSTS_ITEM pHostsItem = m_HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szAddr, 0, sizeof(pHostsItem->szAddr));
 	StrUtil::w2a(strText.GetData(), pHostsItem->szAddr);
@@ -977,7 +977,7 @@ BOOL CHosts::UpdateHostItemDomain(HWND hWnd, CPaintManagerUI* pManager, CControl
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
 	sprintf(szItemId, "%d", _wtoi(szItemIndex));
-	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	PHOSTS_ITEM pHostsItem = m_HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szDomain, 0, sizeof(pHostsItem->szDomain));
 	StrUtil::w2a(strText.GetData(), pHostsItem->szDomain);
@@ -1001,7 +1001,7 @@ BOOL CHosts::UpdateHostItemDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI
 	char szGroupId[64] = {0}, szItemId[64] = {0};
 	sprintf(szGroupId, "%d", _wtoi(pszGroupId));
 	sprintf(szItemId, "%d", _wtoi(szItemIndex));
-	PHOSTS_ITEM pHostsItem = HostsHelper.FindItemById(szGroupId, szItemId);
+	PHOSTS_ITEM pHostsItem = m_HostsHelper.FindItemById(szGroupId, szItemId);
 	assert(pHostsItem!=NULL);
 	memset(pHostsItem->szDesc, 0, sizeof(pHostsItem->szDesc));
 	StrUtil::w2a(strText.GetData(), pHostsItem->szDesc);

@@ -75,6 +75,13 @@ LRESULT CMenuUI::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
+LRESULT CMenuUI::OnCaptureChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
+{
+	if( m_hWnd != (HWND) lParam )
+		PostMessage(WM_CLOSE);
+	return 0;
+}
+
 //
 LRESULT CMenuUI::OnKillFocus(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {

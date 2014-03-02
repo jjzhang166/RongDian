@@ -493,7 +493,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(7218);
+	//_CrtSetBreakAlloc(12158);
 #endif
 
 	g_hInstance = hInstance;
@@ -582,6 +582,15 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 
 	CLangManager::Release();
 	CSkinManager::Release();
+
+	int nWaitCount = 0;
+	int nTaskCount = RDTaskCount();
+	while(nTaskCount && nWaitCount<=3)
+	{
+		Sleep(2000);
+		nWaitCount++;
+		nTaskCount = RDTaskCount();
+	}
 
 	if(g_hUserSignature)
 	{

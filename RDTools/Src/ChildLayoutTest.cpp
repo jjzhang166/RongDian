@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "ChildLayoutTest.h"
-#include "ContainerTest.h"
 
 const wchar_t* const kChildLayoutTest = L"childlayouttest_test";
 const wchar_t* const kChildLayoutContainer = L"childlayouttest_container";
@@ -10,6 +9,26 @@ const wchar_t* const kSubButton = L"SubButton";
 const wchar_t* const kSubLabel = L"SubLabel";
 const wchar_t* const kSubEdit = L"SubEdit";
 
+//////////////////////////////////////////////////////////////////////////
+CContainerTest::CContainerTest()
+{
+	pSubButton = NULL;
+	pSubLabel = NULL;
+	pSubEdit = NULL;
+}
+
+CContainerTest::~CContainerTest()
+{
+
+}
+
+LPCTSTR CContainerTest::GetClass() const
+{
+	return _T("TestContainerUI");
+}
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
 CChildLayoutTest::CChildLayoutTest()
 {
 

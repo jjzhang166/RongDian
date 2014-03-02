@@ -2,35 +2,45 @@
 
 //////////////////////////////////////////////////////////////////////////
 // CIPConfig
-RD_DECLARE_BEGIN(IPConfig)
-	RD_DECLARE_MEMBER(void, OnClick)(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
-	RD_DECLARE_MEMBER(void, OnItemSelected) (HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+class CIPConfig : public CBaseTool
+{
+public:
+	CIPConfig();
+	virtual ~CIPConfig() { };
+public:
+	BOOL IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/);
+	void OnQuit();
+	BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/);
+	BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/);
 
-	RD_DECLARE_MEMBER(LRESULT, HandleCustomMessage) (UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
+	void OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 
-	RD_DECLARE_MEMBER(LPCWSTR, GetSolutionListName)();
-	RD_DECLARE_MEMBER(LPCWSTR, GetAdaptersListName)();
-	RD_DECLARE_MEMBER(LPIPCONFIG_INFO, GetCurSolution)();
+	LRESULT HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
-	RD_DECLARE_MEMBER(BOOL, LoadSolutions)();
-	RD_DECLARE_MEMBER(BOOL, InitSolutionsList)(); // 初始化方案列表
-	RD_DECLARE_MEMBER(BOOL, LoadAdapters)();
-	RD_DECLARE_MEMBER(BOOL, InitAdaptersList)(); // 初始化适配器列表
-	RD_DECLARE_MEMBER(void, OnSelectSolution)();
-	RD_DECLARE_MEMBER(void, OnSelectAdapter)();
+	LPCWSTR GetSolutionListName();
+	LPCWSTR GetAdaptersListName();
+	LPIPCONFIG_INFO GetCurSolution();
 
-	RD_DECLARE_MEMBER(BOOL, OnNewSolution)();
-	RD_DECLARE_MEMBER(BOOL, OnSaveSolution)(HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, OnDelSolution)(HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, OnApplySolution)(HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, ResetSolution)();
-	RD_DECLARE_MEMBER(BOOL, CheckFormValid)(HWND hWnd);
-	RD_DECLARE_MEMBER(BOOL, ExeCMDComplete)();
-	//RD_DECLARE_MEMBER(static unsigned __stdcall, ExeCMDThreadFunc)(void * pParams);
-	RD_DECLARE_MEMBER(static DWORD WINAPI, ExeCMDThreadFunc)(void * pParams);
+	BOOL LoadSolutions();
+	BOOL InitSolutionsList(); // 初始化方案列表
+	BOOL LoadAdapters();
+	BOOL InitAdaptersList(); // 初始化适配器列表
+	void OnSelectSolution();
+	void OnSelectAdapter();
 
-	RD_DECLARE_MEMBER(static LONG CALLBACK, AdapterInfoCallBack)(WPARAM wParam, LPARAM lParam);
-	RD_DECLARE_MEMBER(static LONG CALLBACK, AdaptersNameCallBack)(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex);
+	BOOL OnNewSolution();
+	BOOL OnSaveSolution(HWND hWnd);
+	BOOL OnDelSolution(HWND hWnd);
+	BOOL OnApplySolution(HWND hWnd);
+	BOOL ResetSolution();
+	BOOL CheckFormValid(HWND hWnd);
+	BOOL ExeCMDComplete();
+	//static unsigned __stdcall ExeCMDThreadFunc(void * pParams);
+	static DWORD WINAPI ExeCMDThreadFunc(void * pParams);
+
+	static LONG CALLBACK AdapterInfoCallBack(WPARAM wParam, LPARAM lParam);
+	static LONG CALLBACK AdaptersNameCallBack(LPVOID lParam, LPCWSTR lpszName, BOOL bConnect, int nIndex);
 
 public:
 	CComboUI * m_pSolutionList;
