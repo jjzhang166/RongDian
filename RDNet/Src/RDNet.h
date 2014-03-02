@@ -18,3 +18,5 @@ NET_EXPORT LONG __cdecl RDCheckVersion(HWND hInvoker, const char* pszUrl, char* 
 
 NET_EXPORT LONG __cdecl RDDownLoad(HWND hInvoker, const char* pszUrl, char* pszSavePath, int nMsg);
 
+NET_EXPORT LONG __cdecl RDTaskCount();
+

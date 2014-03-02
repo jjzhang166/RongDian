@@ -27,6 +27,7 @@ using namespace std;
 const int		MAX_RESPONE_SIZE = 4096;
 
 HINSTANCE g_hInst = NULL;
+volatile LONG g_lNetTasks = 0; // 维护当前正在执行的任务数，防止退出时有任务正在执行，导致curl未能正常退出，导致内存泄露
 
 static size_t CheckVersionCallBack(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
@@ -58,6 +59,7 @@ LONG __cdecl RDCheckVersion(HWND /*hInvoker*/, const char* pszUrl, char* pszResp
 {
 	if(!pszUrl)
 		return -1;
+	InterlockedIncrement(&g_lNetTasks);
 	char szData[MAX_RESPONE_SIZE] = {0};
 	RESPONE_INFO stResponeInfo;
 	stResponeInfo.pszData = szData;
@@ -75,17 +77,27 @@ LONG __cdecl RDCheckVersion(HWND /*hInvoker*/, const char* pszUrl, char* pszResp
 		*pnSize = stResponeInfo.ulSeek;
 	if(pszRespone)
 		memcpy(pszRespone, stResponeInfo.pszData, stResponeInfo.ulSeek);
+	InterlockedDecrement(&g_lNetTasks);
 	return 0;
 }
 
 LONG __cdecl RDDownLoad(HWND hInvoker, const char* pszUrl, char* pszSavePath, int nMsg)
 {
+	InterlockedIncrement(&g_lNetTasks);
+	InterlockedDecrement(&g_lNetTasks);
 	return 0;
+}
+
+LONG __cdecl RDTaskCount()
+{
+	return g_lNetTasks;
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, ULONG dwReason, LPVOID /*lpReserved*/)
 {
 	if(dwReason==DLL_PROCESS_ATTACH)
+	{
 		g_hInst = (HINSTANCE)hModule;
+	}
 	return TRUE;
 }
