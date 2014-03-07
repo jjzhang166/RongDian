@@ -23,16 +23,16 @@ CPanelRegister::~CPanelRegister()
 
 BOOL CPanelRegister::InitTools()
 {
-	RD_TOOL(CColorPicker)
-	RD_TOOL(CCoder)
-	RD_TOOL(CUrlEncoder)
-	RD_TOOL(CFinder)
-	RD_TOOL(CTidy)
-	RD_TOOL(CIPConfig)
-	RD_TOOL(CHosts)
+	RD_TOOL(L"plugin_picker",CColorPicker)
+	RD_TOOL(L"plugin_coder",CCoder)
+	RD_TOOL(L"plugin_urlencoder",CUrlEncoder)
+	RD_TOOL(L"plugin_finder",CFinder)
+	RD_TOOL(L"plugin_tidy",CTidy)
+	RD_TOOL(L"plugin_ipconfig",CIPConfig)
+	RD_TOOL(L"plugin_hosts",CHosts)
 	//RD_TOOL(CChildLayoutTest)
-	RD_TOOL(CSetting)
-	RD_TOOL(CAbout)
+	RD_TOOL(L"plugin_setttings",CSetting)
+	RD_TOOL(L"plugin_about",CAbout)
 	return TRUE;
 }
 
@@ -89,7 +89,7 @@ BOOL CPanelRegister::SetLang(CPaintManagerUI* pPaintManger, LPCWSTR lpszLang)
 		{
 			break;
 		}
-		bRet = tool->lpClass->SetLang(pPaintManger, lpszLang);
+		bRet = tool->lpClass->SetLang(pPaintManger, lpszLang ,tool->szName);
 		if(!bRet)
 			break;
 	}

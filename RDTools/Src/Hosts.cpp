@@ -215,11 +215,12 @@ BOOL CHosts::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CHosts::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CHosts::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_HOSTADMINPANEL)
+	wcscpy(m_pLangSection,lpszLangSection);
+SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
 	SET_CONTROL_TEXT2(kHostPathText)
 	SET_CONTROL_TEXT_AND_TIP(kHostOpenBtn, kHostOpenTip)
 	SET_CONTROL_TEXT_AND_TIP(kHostBackupBtn, kHostBackupTip)
@@ -735,12 +736,12 @@ BOOL CHosts::ShowHostItems(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSe
 			if(pControl->IsVisible())
 			{
 				pControl->SetVisible(false);
-				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostItemsShowTip)
+				SET_CONTROL_TIP3(m_pLangSection,pSender,kHostItemsShowTip)
 			}
 			else
 			{
 				pControl->SetVisible();
-				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostItemsHideTip)
+				SET_CONTROL_TIP3(m_pLangSection,pSender,kHostItemsHideTip)
 			}
 			AdjustGroupHeight(pManager, szIndex);
 		}
@@ -765,12 +766,12 @@ BOOL CHosts::ShowHostDesc(HWND hWnd, CPaintManagerUI* pManager, CControlUI* pSen
 			if(pControl->IsVisible())
 			{
 				pControl->SetVisible(false);
-				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostGroupDescShowTip)
+				SET_CONTROL_TIP3(m_pLangSection,pSender,kHostGroupDescShowTip)
 			}
 			else
 			{
 				pControl->SetVisible();
-				SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSender,kHostGroupDescHideTip);
+				SET_CONTROL_TIP3(m_pLangSection,pSender,kHostGroupDescHideTip);
 			}
 			AdjustGroupHeight(pManager, szIndex);
 		}
@@ -1060,7 +1061,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szDescState);
 		pSubControl->SetUserData(szDescEdit); // 保存描述编辑框id，用于快速定位编辑框控件，以便于进行显示隐藏
-		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDescShowTip)
+		SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostGroupDescShowTip)
 	}
 	pSubControl = pGroupLayout->DescEditCtrl();
 	if(pSubControl)
@@ -1075,7 +1076,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szState);
 		pSubControl->SetUserData(szItems); // 保存HostsItems容器id，用于快速定位HostsItems容器，以便于进行显示隐藏
-		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemsHideTip)
+		SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostItemsHideTip)
 	}
 	pSubControl = pGroupLayout->NameCtrl();
 	if(pSubControl)
@@ -1089,7 +1090,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szNew);
 		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于新增节点后，重新调整分组高度
-		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostNewItemTip)
+		SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostNewItemTip)
 	}
 	pSubControl = pGroupLayout->SaveCtrl(); // 该控件目前被隐藏
 	if(pSubControl)
@@ -1099,7 +1100,7 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	{
 		pSubControl->SetName(szDel);
 		pSubControl->SetUserData(szGroupId); // 保存HostsGroup分组id，用于快速定位HostsGroup容器，以便于删除节点后，重新调整分组高度
-		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDeleteTip)
+		SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostGroupDeleteTip)
 	}
 	pSubControl = pGroupLayout->ItemsLayout();
 	if(pSubControl)
@@ -1133,11 +1134,11 @@ BOOL CHosts::CreateGroup(CPaintManagerUI* pManager, const wchar_t* pszGroupId, c
 	pSubControl = NULL;
 	FIND_CONTROL_BY_ID(pSubControl, CControlUI, pManager, szDel);
 	assert(pSubControl!=NULL);
-	SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostGroupDeleteTip)
+	SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostGroupDeleteTip)
 	pSubControl = NULL;
 	FIND_CONTROL_BY_ID(pSubControl, CControlUI, pManager, szItems);
 	assert(pSubControl!=NULL);
-	SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemsShowTip)
+	SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostItemsShowTip)
 #endif
 	bRet = TRUE;
 	return bRet;
@@ -1221,7 +1222,7 @@ BOOL CHosts::CreateItem(CPaintManagerUI* pManager, bool active,const wchar_t* ps
 	{
 		pSubControl->SetName(szDel);
 		pSubControl->SetUserData(szChildLayout); // 保存host_item_child容器id，用于快速定位host_item_child容器，以便于删除该容器
-		SET_CONTROL_TIP3(LS_HOSTADMINPANEL,pSubControl,kHostItemDeleteTip)
+		SET_CONTROL_TIP3(m_pLangSection,pSubControl,kHostItemDeleteTip)
 	}
 	pManager->UpdateControls(pItemLayout);
 #ifdef _DEBUG

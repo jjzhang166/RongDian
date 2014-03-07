@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<VerticalLayout name="panel_settings" inset="4,4,4,4" bkcolor="FFE0E0E0" >
-		<VerticalLayout height="44" bordersize="1" bordercolor="FFE0E0E0" >
+		<VerticalLayout height="22" bordersize="1" bordercolor="FFE0E0E0" >
 			<HorizontalLayout height="22" >
 				<Control width="20" />
-				<Label text="Langs" width="80" />
+				<Label text="Language:" width="80" />
 				<Control width="10" />
-				<Label bkcolor="FF669934" padding="0,11,0,10" />
+				<Combo name="settings_langs" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
+				</Combo>
 				<Control width="20" />
-			</HorizontalLayout>
-			<HorizontalLayout height="22" >
-				<Control width="20" />
-				<Button name="settings_langs" width="80" text="English" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-				<Control />
 			</HorizontalLayout>
 		</VerticalLayout>
 		<VerticalLayout height="68" bordersize="1" bordercolor="FFE0E0E0" >

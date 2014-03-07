@@ -9,7 +9,7 @@ RDTools面板使用统一方式定义，所有面板类统一继承于CBaseTool
 		BOOL IsCanQuit(HWND hWnd);
 		void OnQuit();
 		BOOL OnInit(WPARAM wParam, LPARAM lParam);
-		BOOL SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang);
+		BOOL SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang,LPCWSTR lpszLangSection);
 以上四个成员方法是子面板类必须实现的，其中
 IsCanQuit是主面板退出时，由主面板主动调用，查询当前子面板是否可以退出，只有当所有子面板都返回TRUE时，主面板才可以退出
 OnQuit是用于资源释放，由于目前子面板的管理方式较为特殊，子面板实例使用全局定义，所以子面板的析构函数可能会比主窗体的析构慢(也就是主窗口已经执行完自己的析构函数了，但是由于子面板实例为全局定义，此时子面板的析构函数可能还没有调用，而子面板的资源却又从属与主窗体的)，因此，为了释放子面板的资源，这里增加一个接口，由主窗体资源释放时主动调用，主动清理子面板所申请的资源
@@ -31,18 +31,21 @@ OnCopyData：对应WM_COPYDATA消息事件
 例：
 定义一个Test子面板类：见Test.h、Test.cpp两个文件
 
-添加到主窗体
-在MainFrame.cpp中，
+一、添加到主窗体
+在PanelRegister.cpp中，
 添加子面板头文件引用
 #include "Test.h"
 
 然后查找
 RD_BEGIN_TOOLS_MAP(CMainFrame)
-	RD_TOOL(L"ColorPicker", ColorPicker) // 对应CColorPicker类
+	RD_TOOL(L"plugin_picker", ColorPicker) // 对应CColorPicker类
 	...
-	RD_TOOL(L"Test", Test) // 第一个参数为子面板的描述名(目前还没使用)，第二个参数为子面板类名，跟使用RD_DECLARE_BEGIN(Test)宏声明子面板类时的参数一致
-	RD_TOOL(L"About", About) // 对应CAbout类
+	RD_TOOL(L"plugin_test", Test) // 第一个参数为子面板的描述名，第二个参数为子面板类名，跟使用RD_DECLARE_BEGIN(Test)宏声明子面板类时的参数一致
+	RD_TOOL(L"plugin_about", About) // 对应CAbout类
 RD_END_TOOLS_MAP()
 在这两个宏中间添加子面板关联
+
+二、添加导航栏tab
+
 
 添加顺序为主窗口进行消息分发时的先后顺序

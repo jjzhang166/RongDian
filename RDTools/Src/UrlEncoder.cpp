@@ -41,11 +41,11 @@ BOOL CUrlEncoder::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CUrlEncoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CUrlEncoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
-	SET_CONTROL_BEGIN(pManager, lpszLang, LS_URLENCODERPANEL)
+	SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 		SET_CONTROL_TEXT2(kUrlEncoderEscapeCB)
 		SET_CONTROL_TEXT2(kUrlEncoderGb2312CB)
 		SET_CONTROL_TEXT2(kUrlEncoderUtf8CB)

@@ -672,7 +672,6 @@ BOOL CMainFrame::InitPanels()
 	wcscpy(panel.szLayout, kLayoutPicker);
 	wcscpy(panel.szXml, kXmlPicker);
 	wcscpy(panel.szTab, kTabPicker);
-	wcscpy(panel.szPanel, kPanelPicker);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kNamePicker, szName);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_PICKERPANEL, kDescPicker, szDesc);
 	wcscpy(panel.szName, szName);
@@ -728,7 +727,6 @@ BOOL CMainFrame::InitPanels()
 	wcscpy(panel.szLayout, kLayoutAbout);
 	wcscpy(panel.szXml, kXmlAbout);
 	wcscpy(panel.szTab, kTabAbout);
-	wcscpy(panel.szPanel, kPanelAbout);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_ABOUTPANEL, kNameAbout, szName);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_ABOUTPANEL, kDescAbout, szDesc);
 	wcscpy(panel.szName, szName);

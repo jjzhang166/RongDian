@@ -57,7 +57,7 @@ BOOL CTidy::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CTidy::SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/)
+BOOL CTidy::SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/, LPCWSTR /*lpszLangSection*/)
 {
 	return TRUE;
 }

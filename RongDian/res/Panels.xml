@@ -3,65 +3,41 @@
 	<Plugin>
 		<layout>layout_picker</layout>
 		<xml>Picker.xml</xml>
-		<tab>tab_picker</tab>
-		<panel>panel_picker</panel>
-		<name>Color Picker</name>
-		<desc>Color Picker Panel</desc>
+		<tab>plugin_picker</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_coder</layout>
 		<xml>Coder.xml</xml>
-		<tab>tab_coder</tab>
-		<panel>panel_coder</panel>
-		<name>Coder</name>
-		<desc>Coder Panel</desc>
+		<tab>plugin_coder</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_urlencoder</layout>
 		<xml>UrlEncoder.xml</xml>
-		<tab>tab_urlencoder</tab>
-		<panel>panel_urlencoder</panel>
-		<name>Url Encoder</name>
-		<desc>Url Encoder/Decoder Panel</desc>
+		<tab>plugin_urlencoder</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_finder</layout>
 		<xml>Finder.xml</xml>
-		<tab>tab_finder</tab>
-		<panel>panel_finder</panel>
-		<name>File Finder</name>
-		<desc>File Finder Panel</desc>
+		<tab>plugin_finder</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>
-		<tab>tab_tidy</tab>
-		<panel>panel_tidy</panel>
-		<name>Tidy</name>
-		<desc>Code Tidy Panel</desc>
+		<tab>plugin_tidy</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_ipconfig</layout>
 		<xml>IpConfig.xml</xml>
-		<tab>tab_ipconfig</tab>
-		<panel>panel_ipconfig</panel>
-		<name>IPConfig</name>
-		<desc>IP Config Panel</desc>
+		<tab>plugin_ipconfig</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_hosts</layout>
 		<xml>Hosts.xml</xml>
-		<tab>tab_hosts</tab>
-		<panel>panel_hosts</panel>
-		<name>Hosts</name>
-		<desc>Host Admin Panel</desc>
+		<tab>plugin_hosts</tab>
 	</Plugin>
 	<Plugin>
 		<layout>layout_settings</layout>
 		<xml>Settings.xml</xml>
-		<tab>tab_settings</tab>
-		<panel>panel_settings</panel>
-		<name>Settings</name>
-		<desc>Settings Panel</desc>
+		<tab>plugin_settings</tab>
 	</Plugin>
 </Root>

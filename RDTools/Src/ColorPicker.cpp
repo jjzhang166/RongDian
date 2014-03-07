@@ -89,11 +89,11 @@ BOOL CColorPicker::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CColorPicker::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CColorPicker::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager || !lpszLang)
 		return FALSE;
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_PICKERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 	// Topic
 	SET_CONTROL_TEXT2(kPickerTopic1)
 	// Picker Color

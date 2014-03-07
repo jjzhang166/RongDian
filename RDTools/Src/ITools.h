@@ -8,7 +8,7 @@ public:
 
 public:
 	virtual BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/) = 0;
-	virtual BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/)  = 0;
+	virtual BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/, LPCWSTR /*lpszLangSection*/)  = 0;
 	virtual CControlUI* OnCreateControl(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszClass*/, CControlUI* /*pParent*/) { return NULL; };
 	virtual void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
 	virtual void OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& bHandled) { bHandled = FALSE; };
@@ -26,6 +26,8 @@ public:
 
 private:
 	wchar_t _TOOL_NAME[1024];
+protected:
+	wchar_t m_pLangSection[1024];
 };
 
 typedef LONG (*LPFNCreateRDTool)(LPWSTR lpszTName, LPVOID *lpClass);
@@ -89,7 +91,7 @@ typedef struct _tagTOOLS_INFO
 	BOOL cls::_InitTools() \
 	{ 
 
-#define RD_TOOL(x) \
+#define RD_TOOL(n,x) \
 	{ \
 		x *entry = new x(); \
 		LPTOOLS_INFO tool = new TOOLS_INFO(); \
@@ -99,6 +101,7 @@ typedef struct _tagTOOLS_INFO
 			if(entry) \
 			{ \
 				tool->nIndex = lstToolsEntries.size(); \
+				wcscpy(tool->szName,n);\
 				tool->lpClass = entry; \
 				lstToolsEntries.push_back(tool); \
 			} \

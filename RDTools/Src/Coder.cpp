@@ -111,7 +111,7 @@ BOOL CCoder::OnInit(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-BOOL CCoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CCoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
@@ -122,7 +122,7 @@ BOOL CCoder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
 	Utility::GetINIStr(lpszLang, LS_MSG, kHandleErrText, szHandleErrText);
 	Utility::GetINIStr(lpszLang, LS_MSG, kNoHandleText, szNoHandleText);
 
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_CODERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 	SET_CONTROL_TEXT2(kCoderListText)
 	SET_CONTROL_TEXT2(kCoderHeaderPath)
 	SET_CONTROL_TEXT2(kCoderHeaderEncoding)

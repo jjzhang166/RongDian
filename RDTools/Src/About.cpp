@@ -30,11 +30,11 @@ BOOL CAbout::OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CAbout::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CAbout::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_ABOUTPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 	SET_CONTROL_TEXT(kAboutName, g_szAppName)
 	SET_CONTROL_TEXT3(kAboutVer, g_szAppVer)
 	SET_CONTROL_TEXT3(kAboutMail, kAuthorMail)

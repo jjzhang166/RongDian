@@ -51,11 +51,11 @@ BOOL CFinder::OnInit(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-BOOL CFinder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CFinder::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_FINDERPANEL)
+SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 	SET_CONTROL_TEXT2(kFinderNameText)
 	SET_CONTROL_TEXT2(kFinderContentText)
 	SET_CONTROL_TEXT2(kFinderPathText)

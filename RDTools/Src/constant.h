@@ -29,7 +29,7 @@ const wchar_t* const kConfigDB						= L"Config.db";
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
 const wchar_t* const kDefaultLangIni			= L"lang_en.ini"; // 语言文件
-const wchar_t* const kDefaultTab					= L"tab_picker"; // 默认显示的tab
+const wchar_t* const kDefaultTab					= L"plugin_picker"; // 默认显示的tab
 
 // XML文件
 const wchar_t* const kMainFrameXml				= L"MainFrame.xml"; // 主窗体
@@ -43,39 +43,33 @@ const wchar_t* const kImageArrow					= L"ZoomIn.png";
 const wchar_t* const kImageCross					= L"Cross.png";
 
 // Lang Section
-const wchar_t* const LS_SETTINGS					= L"Settings";
+const wchar_t* const LS_SETTINGS					= L"plugin_settings";
 const wchar_t* const LS_LANG						= L"Lang";
 const wchar_t* const LS_SKIN						= L"Skin";
 const wchar_t* const LS_IPSETS						= L"IPSets";
 const wchar_t* const LS_MAINFRAME					= L"MainFrame";
 const wchar_t* const LS_UPDATEFRAME					= L"UpdateFrame";
 const wchar_t* const LS_SYSTRAY						= L"SysTray";
-const wchar_t* const LS_ABOUTPANEL					= L"AboutPanel";
-const wchar_t* const LS_PICKERPANEL					= L"PickerPanel";
-const wchar_t* const LS_CODERPANEL					= L"CoderPanel";
-const wchar_t* const LS_FINDERPANEL					= L"FinderPanel";
-const wchar_t* const LS_FORMATTERPANEL				= L"FormatterPanel";
-const wchar_t* const LS_IPCHANGERPANEL				= L"IPChangerPanel";
-const wchar_t* const LS_HOSTADMINPANEL				= L"HostAdminPanel";
-const wchar_t* const LS_URLENCODERPANEL				= L"UrlEncoderPanel";
+const wchar_t* const LS_ABOUTPANEL					= L"plugin_about";
+const wchar_t* const LS_PICKERPANEL					= L"plugin_picker";
 const wchar_t* const LS_MSG							= L"Msg";
 const wchar_t* const LS_DUIMSG						= L"DuiMsg";
 
 // Color Picker Panel(default's Panel)
 const wchar_t* const kLayoutPicker					= L"layout_picker";
 const wchar_t* const kXmlPicker						= L"Picker.xml";
-const wchar_t* const kTabPicker						= L"tab_picker";
-const wchar_t* const kPanelPicker					= L"panel_picker";
-const wchar_t* const kNamePicker					= L"name_picker";
-const wchar_t* const kDescPicker					= L"desc_picker";
+const wchar_t* const kTabPicker						= L"plugin_picker";
+const wchar_t* const kPanelPicker					= L"plugin_picker";
+const wchar_t* const kNamePicker					= L"plugin_picker_name";
+const wchar_t* const kDescPicker					= L"plugin_picker_desc";
 
 // About Panel(default's Panel)
 const wchar_t* const kLayoutAbout					= L"layout_about";
 const wchar_t* const kXmlAbout						= L"About.xml";
-const wchar_t* const kTabAbout						= L"tab_about";
-const wchar_t* const kPanelAbout					= L"panel_about";
-const wchar_t* const kNameAbout						= L"name_about";
-const wchar_t* const kDescAbout						= L"desc_about";
+const wchar_t* const kTabAbout						= L"plugin_about";
+const wchar_t* const kPanelAbout					= L"plugin_about";
+const wchar_t* const kNameAbout						= L"plugin_about_name";
+const wchar_t* const kDescAbout						= L"plugin_about_desc";
 
 // MSG
 const wchar_t* const kMsgErr						= L"msg_err";

@@ -159,12 +159,12 @@ BOOL CIPConfig::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	return TRUE;
 }
 
-BOOL CIPConfig::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang)
+BOOL CIPConfig::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
 	if(!pManager)
 		return FALSE;
-
-SET_CONTROL_BEGIN(pManager, lpszLang, LS_IPCHANGERPANEL)
+	wcscpy(m_pLangSection,lpszLangSection);
+SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
 	SET_CONTROL_TEXT2(kIPConfigSettingListText)
 	SET_CONTROL_TEXT2(kIPConfigNameText)
 	SET_CONTROL_TEXT2(kIPConfigAutoSetIPCheckBox)
@@ -759,7 +759,7 @@ BOOL CIPConfig::OnApplySolution(HWND hWnd)
 BOOL CIPConfig::ResetSolution()
 {
 	wchar_t szNewSolution[1024] = {0};
-	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_IPCHANGERPANEL, kIPConfigNewSolution, szNewSolution);
+	Utility::GetINIStr(g_pLangManager->GetLangName(), m_pLangSection, kIPConfigNewSolution, szNewSolution);
 	if(m_pNameEdit)
 		m_pNameEdit->SetText(szNewSolution);
 	if(m_pIpAutoCheckBox)

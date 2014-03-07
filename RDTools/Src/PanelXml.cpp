@@ -25,6 +25,8 @@ BOOL CPanelXml::LoadPanels(LPCWSTR lpszRoot, list<LPMAIN_PANEL> &lstPanels)
 	XmlNode *pRoot = xmlDoc.findChild(L"Root");
 	if(!pRoot)
 		return bRet;
+	wchar_t szTabNameKey[256],szTabName[256];
+	wchar_t szTabDescKey[1024],szTabDesc[1024];
 	NodeIterator iter;
 	LPCWSTR lpszLayout = NULL, lpszXml = NULL, lpszTab = NULL, 
 		lpszPanel = NULL, lpszName = NULL, lpszDesc = NULL, lpszDll = NULL;
@@ -40,18 +42,12 @@ BOOL CPanelXml::LoadPanels(LPCWSTR lpszRoot, list<LPMAIN_PANEL> &lstPanels)
 		pLayout = pPlugin->findChild(L"layout");
 		pXml = pPlugin->findChild(L"xml");
 		pTab = pPlugin->findChild(L"tab");
-		pPanel = pPlugin->findChild(L"panel");
-		pName = pPlugin->findChild(L"name");
-		pDesc = pPlugin->findChild(L"desc");
 		pDll = pPlugin->findChild(L"dll");
-		if(pLayout && pXml && pTab && pPanel && pName && pDesc)
+		if(pLayout && pXml && pTab)
 		{
 			lpszLayout = pLayout->getString();
 			lpszXml = pXml->getString();
 			lpszTab = pTab->getString();
-			lpszPanel = pPanel->getString();
-			lpszName = pName->getString();
-			lpszDesc = pDesc->getString();
 			if(pDll)
 				lpszDll = pDll->getString();
 			swprintf(szPath, L"%s\\%s", lpszRoot, lpszXml);
@@ -64,9 +60,13 @@ BOOL CPanelXml::LoadPanels(LPCWSTR lpszRoot, list<LPMAIN_PANEL> &lstPanels)
 					wcscpy(lpPanelInfo->szLayout, lpszLayout);
 					wcscpy(lpPanelInfo->szXml, lpszXml);
 					wcscpy(lpPanelInfo->szTab, lpszTab);
-					wcscpy(lpPanelInfo->szPanel, lpszPanel);
-					wcscpy(lpPanelInfo->szName, lpszName);
-					wcscpy(lpPanelInfo->szDesc, lpszDesc);
+					wsprintf(szTabNameKey,L"%s_name",lpPanelInfo->szTab);
+					wsprintf(szTabDescKey,L"%s_desc",lpPanelInfo->szTab);
+					//wcscpy(lpPanelInfo->szPanel, lpszPanel);
+					Utility::GetINIStr(g_pLangManager->GetLangName(), lpszTab, szTabNameKey, szTabName);
+					Utility::GetINIStr(g_pLangManager->GetLangName(), lpszTab, szTabDescKey, szTabDesc);
+					wcscpy(lpPanelInfo->szName, szTabName);
+					wcscpy(lpPanelInfo->szDesc, szTabDesc);
 					if(lpszDll)
 						wcscpy(lpPanelInfo->szDll, lpszDll);
 					else
