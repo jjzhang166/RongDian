@@ -51,14 +51,6 @@ public:
 	BOOL DoTidy(UINT nLang, const char *pTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut = NULL);
 
 private:
-	BOOL TidyCpp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyCs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyJava(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
 	BOOL TidyHtml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
 	BOOL TidyXml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyPhp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyJs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyCss(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidyJson(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
-	BOOL TidySql(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut);
 };

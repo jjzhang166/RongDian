@@ -1,6 +1,22 @@
 #include "stdafx.h"
 #include "TidyHelper.h"
 
+#define DO_TIDY(nLang,CTidyObject,suffix,pszTextIn, pszTextOut, pszMsgOut)\
+{\
+	string strTextOut, strMsgOut;\
+	char szOption[1024] = {0};\
+	strcpy(szOption, g_TidyInfo[nLang].szOption);\
+	if(suffix!=NULL)\
+	{\
+		strcat(szOption, suffix);\
+	}\
+	CTidyObject tidy;\
+	BOOL bRet = tidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);\
+	*pszTextOut = StrUtil::a2w(strTextOut.c_str());\
+	if(!strMsgOut.empty())\
+		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());\
+	return bRet;\
+}
 //////////////////////////////////////////////////////////////////////////
 //
 AsTidy::AsTidy()
@@ -98,15 +114,9 @@ bool HtmlTidy::Format(const char* pszTextIn, const char *pszOptions, string &str
 
 void HtmlTidy::SetTidyConfig(TidyDoc tdoc)
 {
-	tstring strTidy;
-	if (TIDY_HTML == m_nHtmlXml)
-	{
-		strTidy = g_TidyInfo[TIDY_HTML].szName;
-	}
-	else
-	{
-		strTidy = g_TidyInfo[TIDY_HTML].szName;
-	}
+	wchar_t szOption[128];
+	StrUtil::a2w(g_TidyInfo[m_nHtmlXml].szOption,szOption);
+	tstring strTidy = szOption;
 
 	int lenTidy = strTidy.length();
 	if (lenTidy <= 0 || strTidy[0] != '-')
@@ -534,69 +544,37 @@ BOOL CTidyHelper::DoTidy(UINT nLang, const char *pTextIn, wchar_t **pszTextOut, 
 {
 	switch(nLang)
 	{
-	case TIDY_CPP:
-		return TidyCpp(pTextIn, pszTextOut, pszMsgOut);
 	case TIDY_CS:
-		return TidyCs(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,AsTidy,"--mode=cs",pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_JAVA:
-		return TidyJava(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,AsTidy,"--mode=java",pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_HTML:
-		return TidyHtml(pTextIn, pszTextOut, pszMsgOut);
+		TidyHtml(pTextIn, pszTextOut, pszMsgOut);
+		break;
 	case TIDY_XML:
-		return TidyXml(pTextIn, pszTextOut, pszMsgOut);
+		TidyXml(pTextIn, pszTextOut, pszMsgOut);
+		break;
 	case TIDY_PHP:
-		return TidyPhp(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,PhpTidyLib::PhpTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_JAVASCRIPT:
-		return TidyJs(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,JsTidyLib::JsTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_CSS:
-		return TidyCss(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,CssTidyLib::CssTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_JSON:
-		return TidyJson(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,JsonTidyLib::JsonTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
+		break;
 	case TIDY_SQL:
-		return TidySql(pTextIn, pszTextOut, pszMsgOut);
+		DO_TIDY(nLang,SqlTidyLib::SqlTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
+		break;
+	default:
+		DO_TIDY(nLang,AsTidy,NULL,pTextIn, pszTextOut, pszMsgOut)
 	}
 	return FALSE;
-}
-
-BOOL CTidyHelper::TidyCpp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_CPP].szOption);
-	AsTidy cppTidy;
-	BOOL bRet = cppTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyCs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_CS].szOption);
-	strcat(szOption, "--mode=cs");
-	AsTidy csTidy;
-	BOOL bRet = csTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyJava(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_JAVA].szOption);
-	strcat(szOption, "--mode=java");
-	AsTidy javaTidy;
-	BOOL bRet = javaTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
 }
 
 BOOL CTidyHelper::TidyHtml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
@@ -619,71 +597,6 @@ BOOL CTidyHelper::TidyXml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	strcpy(szOption, g_TidyInfo[TIDY_XML].szOption);
 	HtmlTidy xmlTidy(TIDY_XML);
 	BOOL bRet = xmlTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyPhp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_PHP].szOption);
-	PhpTidyLib::PhpTidy phpTidy;
-	BOOL bRet = phpTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyJs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_JAVASCRIPT].szOption);
-	JsTidyLib::JsTidy jsTidy;
-	BOOL bRet = jsTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyCss(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_CSS].szOption);
-	CssTidyLib::CssTidy cssTidy;
-	BOOL bRet = cssTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidyJson(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_JSON].szOption);
-	JsonTidyLib::JsonTidy jsonTidy;
-	BOOL bRet = jsonTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
-	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(!strMsgOut.empty())
-		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
-	return bRet;
-}
-
-BOOL CTidyHelper::TidySql(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **pszMsgOut)
-{
-	string strTextOut, strMsgOut;
-	char szOption[1024] = {0};
-	strcpy(szOption, g_TidyInfo[TIDY_SQL].szOption);
-	SqlTidyLib::SqlTidy sqlTidy;
-	BOOL bRet = sqlTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
 	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());

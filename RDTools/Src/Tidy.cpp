@@ -104,15 +104,18 @@ BOOL CTidy::InitLangs()
 {
 	for (int i=0;i<MAX_TIDY_LANG-1;i++)
 	{
-		char aIndex[3];
-		wchar_t wIndex[3];
-		wchar_t* name = g_TidyInfo[i].szName;
-		itoa(g_TidyInfo[i].uID,aIndex,10);
-		StrUtil::a2w(aIndex,wIndex);
-		CListLabelElementUI* pItem = new CListLabelElementUI();
-		pItem->SetText(name);
-		pItem->SetUserData(wIndex);
-		m_pLangsCombo->Add(pItem);
+		if(strlen(g_TidyInfo[i].szOption)>0)
+		{
+			char aIndex[3];
+			wchar_t wIndex[3];
+			wchar_t* name = g_TidyInfo[i].szName;
+			itoa(g_TidyInfo[i].uID,aIndex,10);
+			StrUtil::a2w(aIndex,wIndex);
+			CListLabelElementUI* pItem = new CListLabelElementUI();
+			pItem->SetText(name);
+			pItem->SetUserData(wIndex);
+			m_pLangsCombo->Add(pItem);
+		}
 	}
 	if (m_pLangsCombo->GetCount()>0)
 	{
