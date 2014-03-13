@@ -309,9 +309,10 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 	WindowImplBase::OnClick(msg);
 
 	if(!bHandle)
-		SelectPanel(sCtrlName);
+		bHandle = SelectPanel(sCtrlName);
+	if(!bHandle)
+		m_pPanelRegister->OnClick(m_hWnd, &m_PaintManager, msg, bHandle);
 
-	m_pPanelRegister->OnClick(m_hWnd, &m_PaintManager, msg, bHandle);
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
@@ -653,11 +654,15 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 		}
 	}
 
-	CONFIG_TABLE lpTable;
-	wcscpy(lpTable.szName,L"LastVisitTab");
-	wcscpy(lpTable.szValue,lpszTab);
-	CConfigTableDB table(&g_SQLite);
-	table.Update(&lpTable);
+	//selected one tab ,update config table
+	if (bRet)
+	{
+		CONFIG_TABLE lpTable;
+		wcscpy(lpTable.szName,L"LastVisitTab");
+		wcscpy(lpTable.szValue,lpszTab);
+		CConfigTableDB table(&g_SQLite);
+		table.Update(&lpTable);
+	}
 
 	return bRet;
 }

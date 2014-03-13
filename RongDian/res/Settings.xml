@@ -11,6 +11,8 @@
 				<Control width="20" />
 			</HorizontalLayout>
 		</VerticalLayout>
+		
+		<!--
 		<VerticalLayout height="68" bordersize="1" bordercolor="FFE0E0E0" >
 			<HorizontalLayout height="22" >
 				<Control width="20" />
@@ -36,7 +38,7 @@
 				<Button name="coder_path_open" width="24" bkimage="file='default\folderx24.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 				<Control width="30" />
 			</HorizontalLayout>
-		</VerticalLayout>
+		</VerticalLayout>-->
 		<Control />
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
 			<Control />

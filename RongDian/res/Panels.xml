@@ -15,11 +15,13 @@
 		<xml>UrlEncoder.xml</xml>
 		<tab>plugin_urlencoder</tab>
 	</Plugin>
+	<!--
 	<Plugin>
 		<layout>layout_finder</layout>
 		<xml>Finder.xml</xml>
 		<tab>plugin_finder</tab>
 	</Plugin>
+	-->
 	<Plugin>
 		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>

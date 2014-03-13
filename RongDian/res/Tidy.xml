@@ -24,7 +24,7 @@
 		</HorizontalLayout>
 		-->
 		<Control height="1" />
-			<RichEdit name="tidy_editor" bordersize="1" bordercolor="#FF999999"  bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" hscrollbar="true" vscrollbar="true"/>
+			<RichEdit name="tidy_editor" bordersize="1" bordercolor="#FF999999"  bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" hscrollbar="true" vscrollbar="true" inset="4,4,4,4" />
 			<HorizontalLayout name="tidy_tab" height="22" userdata="tidy_tab0" >
 				<Control />
 				<Button name="tidy_format" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />

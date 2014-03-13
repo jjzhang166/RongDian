@@ -9,6 +9,13 @@ const wchar_t* const kCopyRight						= L"CopyRight 2013 RongDian.net";
 // Update Url
 const char*	   const kCheckVersionUrl				= "http://www.rongdian.net/rdol.php?type=3";
 
+// language files
+#ifdef _DEBUG
+const wchar_t* const kLangFile						= L"..\\RongDian\\lang\\lang_*.ini";
+#else
+const wchar_t* const kLangFile						= L"..\\lang\\lang_*.ini";
+#endif
+
 // SnapShot.exe
 #ifdef _DEBUG
 const wchar_t* const kSnapShotExec					= L"SnapShotd.exe";

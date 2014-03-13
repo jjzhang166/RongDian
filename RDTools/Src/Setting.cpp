@@ -39,9 +39,8 @@ BOOL CSetting::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpsz
 
 BOOL CSetting::initLangs()
 {
-	wchar_t szFolder[1024] = L"..\\RongDian\\lang\\lang_*.ini";
 	WIN32_FIND_DATAW findFileData = {0};
-	HANDLE hFind = ::FindFirstFileW(szFolder, &findFileData);
+	HANDLE hFind = ::FindFirstFileW(kLangFile, &findFileData);
 	if(INVALID_HANDLE_VALUE == hFind)
 		return FALSE;
 	BOOL bFolder = FALSE;
@@ -102,7 +101,7 @@ void CSetting::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOO
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if(sCtrlName==kSettingsApply)
 	{
-		Apply(hWnd);
+		bHandled = Apply(hWnd);
 	}
 }
 
