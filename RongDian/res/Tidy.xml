@@ -5,19 +5,14 @@
 	<VerticalLayout name="panel_tidy" inset="4,4,4,4" >
 		<Label height="1" bkcolor="#FF669934" />
 		<HorizontalLayout name="tidy_toolbar" height="36" >
-			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
-			<Control width="1" />
-			<Button name="tidy_format" width="36" bkimage="file='default\run.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
-			<Control width="1" />
-			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
-			<Control width="1" />
-			<Button name="tidy_language" width="36" bkimage="file='default\language.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" mouse="true" tooltip="" />
-			<Control width="1" />
-			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
-			<Control />
-			<Label width="1" bkcolor="#FF669934" bkcolor2="#FFEEEEEE" />
+			<Control width="5" />
+				<Label name="tidy_languges" width="80" />
+				<Control width="3" />
+				<Combo name="tidy_languges_combo" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
+				</Combo>
 		</HorizontalLayout>
 		<Label height="1" bkcolor="#FF669934" />
+		<!--
 		<HorizontalLayout name="tidy_tab" height="22" userdata="tidy_tab0" >
 			<Label width="1" bkcolor="#FFEEEEEE" bkcolor2="#FFFFE07B" />
 			<TidyHotTabButton name="tidy_tab0" text="NewFile" userdata="tidy_edit0" />
@@ -27,8 +22,12 @@
 			<Control />
 			<Label width="1" bkcolor="#FFEEEEEE" bkcolor2="#FFFFE07B" />
 		</HorizontalLayout>
-		<VerticalLayout name="tidy_panels" bordersize="1" bordercolor="#FFFFE07B" bkcolor="0xDDC8C8C8" userdata="tab_tidy" >
-			<RichEdit name="tidy_edit0" font="2" hscrollbar="true" vscrollbar="true" visible="true" padding="2,2,2,2" />
-		</VerticalLayout>
+		-->
+		<Control height="1" />
+			<RichEdit name="tidy_editor" bordersize="1" bordercolor="#FF999999"  bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8" hscrollbar="true" vscrollbar="true"/>
+			<HorizontalLayout name="tidy_tab" height="22" userdata="tidy_tab0" >
+				<Control />
+				<Button name="tidy_format" width="70" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+			</HorizontalLayout>
 	</VerticalLayout>
 </Window>

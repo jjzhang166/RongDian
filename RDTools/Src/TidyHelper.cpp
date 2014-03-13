@@ -65,6 +65,7 @@ bool HtmlTidy::Format(const char* pszTextIn, const char *pszOptions, string &str
 	InitTidyDefault(tdoc);
 	SetTidyConfig(tdoc);
 
+	ok = tidyOptSetBool( tdoc, TidyXhtmlOut, yes );  // Convert to XHTML
 	if ( ok )
 		rc = tidySetErrorBuffer(tdoc, &errbuf);      // Capture diagnostics
 	if ( rc >= 0 )
@@ -73,12 +74,12 @@ bool HtmlTidy::Format(const char* pszTextIn, const char *pszOptions, string &str
 		rc = tidyCleanAndRepair(tdoc);               // Tidy it up!
 	if ( rc >= 0 )
 		rc = tidyRunDiagnostics(tdoc);               // Kvetch
-	//if ( rc > 1 )                                    // If error, force output.
-	//	rc = ( tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1 );
+	if ( rc > 1 )                                    // If error, force output.
+		rc = ( tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1 );
 	if ( rc >= 0 )
 		rc = tidySaveBuffer(tdoc, &output);          // Pretty Print
 
-	if ( rc >= 0 )
+	if ( rc >= 0 && output.bp!=NULL)
 	{		
 		strOut = reinterpret_cast< char const* >(output.bp);
 	}
@@ -565,7 +566,7 @@ BOOL CTidyHelper::TidyCpp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	AsTidy cppTidy;
 	BOOL bRet = cppTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -579,7 +580,7 @@ BOOL CTidyHelper::TidyCs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **
 	AsTidy csTidy;
 	BOOL bRet = csTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -593,7 +594,7 @@ BOOL CTidyHelper::TidyJava(const char *pszTextIn, wchar_t **pszTextOut, wchar_t 
 	AsTidy javaTidy;
 	BOOL bRet = javaTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -606,7 +607,7 @@ BOOL CTidyHelper::TidyHtml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t 
 	HtmlTidy htmlTidy(TIDY_HTML);
 	BOOL bRet = htmlTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -619,7 +620,7 @@ BOOL CTidyHelper::TidyXml(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	HtmlTidy xmlTidy(TIDY_XML);
 	BOOL bRet = xmlTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -632,7 +633,7 @@ BOOL CTidyHelper::TidyPhp(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	PhpTidyLib::PhpTidy phpTidy;
 	BOOL bRet = phpTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -645,7 +646,7 @@ BOOL CTidyHelper::TidyJs(const char *pszTextIn, wchar_t **pszTextOut, wchar_t **
 	JsTidyLib::JsTidy jsTidy;
 	BOOL bRet = jsTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -658,7 +659,7 @@ BOOL CTidyHelper::TidyCss(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	CssTidyLib::CssTidy cssTidy;
 	BOOL bRet = cssTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -671,7 +672,7 @@ BOOL CTidyHelper::TidyJson(const char *pszTextIn, wchar_t **pszTextOut, wchar_t 
 	JsonTidyLib::JsonTidy jsonTidy;
 	BOOL bRet = jsonTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }
@@ -684,7 +685,7 @@ BOOL CTidyHelper::TidySql(const char *pszTextIn, wchar_t **pszTextOut, wchar_t *
 	SqlTidyLib::SqlTidy sqlTidy;
 	BOOL bRet = sqlTidy.Format(pszTextIn, szOption, strTextOut, strMsgOut);
 	*pszTextOut = StrUtil::a2w(strTextOut.c_str());
-	if(*pszMsgOut)
+	if(!strMsgOut.empty())
 		*pszMsgOut = StrUtil::a2w(strMsgOut.c_str());
 	return bRet;
 }

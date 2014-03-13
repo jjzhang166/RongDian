@@ -30,7 +30,7 @@
 		<xml>IpConfig.xml</xml>
 		<tab>plugin_ipconfig</tab>
 	</Plugin>
-	<Plugin>
+		<Plugin>
 		<layout>layout_hosts</layout>
 		<xml>Hosts.xml</xml>
 		<tab>plugin_hosts</tab>

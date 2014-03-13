@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+using namespace std;
 
 enum UTF8_TYPE
 {
@@ -53,5 +55,6 @@ int strtrim(char *str, int len);
 
 bool is_wsubstr(const wchar_t* wStr,const wchar_t* wSubStr);
 
+bool replace_all(char *str, const char old_value, const char new_value);
 }
 

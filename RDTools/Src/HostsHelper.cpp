@@ -104,6 +104,8 @@ bool CHostsHelper::Parse(const char* pszStr, const char* pszDelim)
 	for(int i = 0; i < nTokensCount; i++)
 	{
 		strTemp = strData.nextToken();
+		char* tmp = const_cast<char*>(strTemp.c_str());
+		StrUtil::replace_all(tmp,'\t',' ');
 		strSectionTag.assign(strTemp.c_str(), strlen(kSectionTag));
 		strCommentTag.assign(strTemp.c_str(), strlen(kCommentTag));
 		if(strTemp[0] == '#' && !bHeaderEnd && !isItem(strTemp))

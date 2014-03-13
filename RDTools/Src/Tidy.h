@@ -13,21 +13,15 @@ public:
 	BOOL OnInit(WPARAM /*wParam*/, LPARAM /*lParam*/);
 	BOOL SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/, LPCWSTR /*lpszLangSection*/);
 
-	CControlUI* OnCreateControl(CPaintManagerUI* /*pManager*/, LPCTSTR /*pstrClass*/, CControlUI* /*pParent*/);
 	void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	void OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 
-	BOOL OnNewTab(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
-	BOOL OnSelTab(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
-	BOOL OnTidyNormal(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
-	BOOL OnTidySel(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
-	BOOL OnTidyBatch(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/);
+	BOOL InitLangs();	// init programming lanuages combo
+	BOOL OnTidyFormat();
 
 public:
-	CHorizontalLayoutUI *	pTidyTab;
-	CVerticalLayoutUI *		pTidyPanels;
-	int						nNewTabIndex;
-	CDuiString				strCurTabName;
+	CComboUI*								m_pLangsCombo;
+	CRichEditUI* 						m_pEditor;
 };
 // CTidy
 //////////////////////////////////////////////////////////////////////////

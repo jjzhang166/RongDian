@@ -29,12 +29,15 @@ const wchar_t* const kTidyTabButton = L"TidyTabButton";
 const wchar_t* const kTidyHotTabButton = L"TidyHotTabButton";
 const wchar_t* const kTidyNew = L"tidy_new";
 
+//
+const wchar_t* const kTidyLanguges = L"tidy_languges";
+const wchar_t* const kTidyLangsCombo = L"tidy_languges_combo";
+const wchar_t* const kTidyEditor = L"tidy_editor";
+
 CTidy::CTidy()
 {
-	pTidyTab = NULL;
-	pTidyPanels = NULL;
-	nNewTabIndex = 1;
-	strCurTabName.Format(L"%s0", kTidyTab);
+	m_pLangsCombo = NULL;
+	m_pEditor = NULL;
 }
 
 BOOL CTidy::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
@@ -52,70 +55,30 @@ BOOL CTidy::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
 		return FALSE;
-	FIND_CONTROL_BY_ID(pTidyTab, CHorizontalLayoutUI, pManager, kTidyTab)
-	FIND_CONTROL_BY_ID(pTidyPanels, CVerticalLayoutUI, pManager, kTidyPanels)
+	FIND_CONTROL_BY_ID(m_pLangsCombo, CComboUI, pManager, kTidyLangsCombo)
+	FIND_CONTROL_BY_ID(m_pEditor, CRichEditUI, pManager, kTidyEditor)
+
+	InitLangs();
 	return TRUE;
 }
 
-BOOL CTidy::SetLang(CPaintManagerUI* /*pManager*/, LPCWSTR /*lpszLang*/, LPCWSTR /*lpszLangSection*/)
+BOOL CTidy::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
+	SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
+		// Topic
+		SET_CONTROL_TEXT2(kTidyLanguges)
+		SET_CONTROL_TEXT2(kTidyFormat)
+	SET_CONTROL_END()
 	return TRUE;
-}
-
-CControlUI* CTidy::OnCreateControl(CPaintManagerUI* pManager, LPCTSTR pstrClass, CControlUI* /*pParent*/)
-{
-	CControlUI* pControl = NULL;
-	if(!pManager)
-		return pControl;
-	if(wcsicmp(pstrClass, kTidyTabButton)==0)
-	{
-		pControl = new CButtonUI();
-		LPCTSTR pDefaultAttributes = pManager->GetDefaultAttributeList(kTidyTabButton);
-		if(pDefaultAttributes && pControl)
-			pControl->ApplyAttributeList(pDefaultAttributes);
-		if(pControl)
-			return pControl;
-	}
-	else if(wcsicmp(pstrClass, kTidyHotTabButton)==0)
-	{
-		pControl = new CButtonUI();
-		LPCTSTR pDefaultAttributes = pManager->GetDefaultAttributeList(kTidyHotTabButton);
-		if(pDefaultAttributes && pControl)
-			pControl->ApplyAttributeList(pDefaultAttributes);
-		if(pControl)
-			return pControl;
-	}
-	return pControl;
 }
 
 void CTidy::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	bHandled = FALSE;
 	CDuiString sCtrlName = msg.pSender->GetName();
-	if(sCtrlName == kTidyNew) // 新建标签
+	if(sCtrlName==kTidyFormat)
 	{
-		bHandled = TRUE;
-		OnNewTab(hWnd, pManager, msg);
-	}
-	else if(wcsstr(sCtrlName.GetData(), kTidyTab))
-	{
-		bHandled = TRUE;
-		OnSelTab(hWnd, pManager, msg);
-	}
-	else if(sCtrlName==kTidyFormat)
-	{
-		bHandled = TRUE;
-		OnTidyNormal(hWnd, pManager, msg);
-	}
-	else if(sCtrlName==kTidyFormatSel)
-	{
-		bHandled = TRUE;
-		OnTidySel(hWnd, pManager, msg);
-	}
-	else if(sCtrlName==kTidyFormatBatch)
-	{
-		bHandled = TRUE;
-		OnTidyBatch(hWnd, pManager, msg);
+		bHandled = OnTidyFormat();
 	}
 }
 
@@ -137,113 +100,58 @@ void CTidy::OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI
 	}
 }
 
-BOOL CTidy::OnNewTab(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& /*msg*/)
+BOOL CTidy::InitLangs()
 {
-	if(!pTidyTab || !pTidyPanels)
-		return FALSE;
-	LPCTSTR pHotAttributes = pManager->GetDefaultAttributeList(kTidyHotTabButton);
-	LPCTSTR pNormalAttributes = pManager->GetDefaultAttributeList(kTidyTabButton);
-	CDuiString sSelTabName = pTidyTab->GetUserData();
-	CButtonUI *pSelTab = NULL;
-	FIND_CONTROL_BY_ID(pSelTab, CButtonUI, pManager, sSelTabName.GetData())
-	if(pSelTab)
+	for (int i=0;i<MAX_TIDY_LANG-1;i++)
 	{
-		pSelTab->ApplyAttributeList(pNormalAttributes);
-		CDuiString sSelEdit = pSelTab->GetUserData();
-		CRichEditUI *pSelEdit = NULL;
-		FIND_CONTROL_BY_ID(pSelEdit, CRichEditUI, pManager, sSelEdit.GetData())
-		if(pSelEdit)
-			pSelEdit->SetVisible(false);
+		char aIndex[3];
+		wchar_t wIndex[3];
+		wchar_t* name = g_TidyInfo[i].szName;
+		itoa(g_TidyInfo[i].uID,aIndex,10);
+		StrUtil::a2w(aIndex,wIndex);
+		CListLabelElementUI* pItem = new CListLabelElementUI();
+		pItem->SetText(name);
+		pItem->SetUserData(wIndex);
+		m_pLangsCombo->Add(pItem);
 	}
-	int nCount = pTidyTab->GetCount();
-	CControlUI *pNewTabBlank = new CControlUI();
-	pNewTabBlank->SetFixedWidth(1);
-	const int nFixControlCount = 3; // 标签兰尾部固定控件个数
-	pTidyTab->AddAt(pNewTabBlank, nCount-nFixControlCount - 1); // - 1，控件索引值从0开始
-	CButtonUI *pNewTab = new CButtonUI();
-	wchar_t szNewTab[1024] = {0}, szNewText[1024] = {0}, szNewEdit[1024] = {0};
-	swprintf(szNewTab, L"tidy_tab%d", nNewTabIndex);
-	swprintf(szNewText, L"NewFile%d", nNewTabIndex);
-	swprintf(szNewEdit, L"tidy_edit%d", nNewTabIndex);
-	nNewTabIndex++;
-	pNewTab->SetName(szNewTab);
-	pNewTab->SetText(szNewText);
-	pNewTab->SetUserData(szNewEdit);
-	if(pHotAttributes && pNewTab)
-		pNewTab->ApplyAttributeList(pHotAttributes);
-	pTidyTab->AddAt(pNewTab, nCount-4);
-	pTidyTab->SetUserData(szNewTab);
-	CRichEditUI *pNewEdit = new CRichEditUI();
-	pNewEdit->SetName(szNewEdit);
-	pNewEdit->SetText(szNewEdit);
-	pTidyPanels->Add(pNewEdit);
-	strCurTabName = szNewTab;
-	return TRUE;
-}
-
-BOOL CTidy::OnSelTab(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& msg)
-{
-	CDuiString sCtrlName = msg.pSender->GetName();
-	if(sCtrlName != strCurTabName)
+	if (m_pLangsCombo->GetCount()>0)
 	{
-		strCurTabName = sCtrlName;
-		LPCTSTR pHotAttributes = pManager->GetDefaultAttributeList(kTidyHotTabButton);
-		LPCTSTR pNormalAttributes = pManager->GetDefaultAttributeList(kTidyTabButton);
-		CDuiString sSelTabName = pTidyTab->GetUserData();
-		CButtonUI *pSelTab = NULL;
-		FIND_CONTROL_BY_ID(pSelTab, CButtonUI, pManager, sSelTabName.GetData())
-		if(!pSelTab)
-			return FALSE;
-		pSelTab->ApplyAttributeList(pNormalAttributes);
-		CDuiString sSelEdit = pSelTab->GetUserData();
-		CRichEditUI *pSelEdit = NULL;
-		FIND_CONTROL_BY_ID(pSelEdit, CRichEditUI, pManager, sSelEdit.GetData())
-		if(pSelEdit)
-			pSelEdit->SetVisible(false);
-		pTidyTab->SetUserData(sCtrlName);
-		msg.pSender->ApplyAttributeList(pHotAttributes);
-		CDuiString sActiveEdit = msg.pSender->GetUserData();
-		CRichEditUI *pActiveEdit = NULL;
-		FIND_CONTROL_BY_ID(pActiveEdit, CRichEditUI, pManager, sActiveEdit.GetData())
-		if(pActiveEdit)
-			pActiveEdit->SetVisible(true);
+		m_pLangsCombo->SelectItem(0);
 	}
 	return TRUE;
 }
 
-BOOL CTidy::OnTidyNormal(HWND /*hWnd*/, CPaintManagerUI* pManager, TNotifyUI& msg)
+BOOL CTidy::OnTidyFormat()
 {
-	CDuiString sSelTabName = pTidyTab->GetUserData();
-	CButtonUI *pSelTab = NULL;
-	FIND_CONTROL_BY_ID(pSelTab, CButtonUI, pManager, sSelTabName.GetData())
-	if(!pSelTab)
+	int curSel = m_pLangsCombo->GetCurSel();
+	if (curSel<0)
+	{
 		return FALSE;
-	CDuiString sSelEdit = pSelTab->GetUserData();
-	CRichEditUI *pSelEdit = NULL;
-	FIND_CONTROL_BY_ID(pSelEdit, CRichEditUI, pManager, sSelEdit.GetData())
-	if(!pSelEdit)
-		return FALSE;
-	CDuiString sContent = pSelEdit->GetText();
+	}
+	char aUID[4];
+	CListLabelElementUI* pItem = (CListLabelElementUI*)m_pLangsCombo->GetItemAt(curSel);
+	LPCTSTR wUID = pItem->GetUserData().GetData();
+	StrUtil::w2a(wUID,aUID);
+	int uid = atoi(aUID);
+	CDuiString sContent = m_pEditor->GetText();
+	if (sContent.IsEmpty())
+	{
+		return TRUE;
+	}
 	LPCSTR psContentA = StrUtil::w2a(sContent.GetData());
 	LPWSTR pszTextOut = NULL, pszMsgOut = NULL;
 	CTidyHelper tidy;
-	tidy.DoTidy(TIDY_CPP, psContentA, &pszTextOut, &pszMsgOut);
-	if(pszTextOut)
+	tidy.DoTidy(uid, psContentA, &pszTextOut, &pszMsgOut);
+	if(pszTextOut && wcslen(pszTextOut)>0)
 	{
-		pSelEdit->SetText(pszTextOut);
+		m_pEditor->SetText(pszTextOut);
 		delete pszTextOut;
+	}
+	else
+	{
+		m_pEditor->SetText(pszMsgOut);
 	}
 	if(pszMsgOut)
 		delete pszMsgOut;
 	return TRUE;
-}
-
-BOOL CTidy::OnTidySel(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/)
-{
-	return FALSE;
-}
-
-BOOL CTidy::OnTidyBatch(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/)
-{
-	return FALSE;
 }

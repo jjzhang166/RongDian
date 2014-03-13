@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\db;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
+				AdditionalIncludeDirectories=".\;.\Src;..\common;..\db;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -193,14 +193,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\AddrTable.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\CharSetTable.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\ChildLayoutTest.cpp"
 					>
 				</File>
@@ -210,10 +202,6 @@
 				</File>
 				<File
 					RelativePath=".\Src\ColorPicker.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ConfigTable.cpp"
 					>
 				</File>
 				<File
@@ -327,10 +315,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\CharSetTable.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\ChildLayoutTest.h"
 					>
 				</File>
@@ -340,10 +324,6 @@
 				</File>
 				<File
 					RelativePath=".\Src\ColorPicker.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ConfigTable.h"
 					>
 				</File>
 				<File
@@ -528,22 +508,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\common\SQLiteUtil.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\common\SQLiteUtil.h"
-				>
-			</File>
-			<File
 				RelativePath="..\common\StrUtil.cpp"
 				>
 				<FileConfiguration
@@ -723,6 +687,46 @@
 			>
 			<File
 				RelativePath="..\inc\RongDian.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="db"
+			>
+			<File
+				RelativePath="..\db\AddrTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\db\AddrTable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\db\charset.sql"
+				>
+			</File>
+			<File
+				RelativePath="..\db\CharSetTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\db\CharSetTable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\db\ConfigTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\db\ConfigTable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\db\SQLiteUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\db\SQLiteUtil.h"
 				>
 			</File>
 		</Filter>
