@@ -30,14 +30,14 @@ CUpdateFrame::CUpdateFrame()
 	hWorkingThread = NULL;
 	pUpdateLog = NULL;
 	pProgress = NULL;
-	memset(szUrl, 0, sizeof(szUrl));
-	pszLog = NULL;
+	memset(m_szUrl, 0, sizeof(m_szUrl));
+	m_pszLog = NULL;
 }
 
 CUpdateFrame::~CUpdateFrame()
 {
-	if(pszLog)
-		delete pszLog;
+	if(m_pszLog)
+		delete m_pszLog;
 }
 
 LONG CUpdateFrame::SetSkin()
@@ -90,8 +90,8 @@ void CUpdateFrame::InitWindow()
 	g_pLangManager->AddFrame(this);
 	SetLang(g_pLangManager->GetLangName());
 
-	if(pszLog)
-		pUpdateLog->SetText(pszLog);
+	if(m_pszLog)
+		pUpdateLog->SetText(m_pszLog);
 
 #ifdef _DEBUG
 	assert(pUpdateLog!=NULL);
@@ -165,7 +165,9 @@ LRESULT CUpdateFrame::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 
 LRESULT CUpdateFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	return __super::OnClose(uMsg, wParam, lParam, bHandled);
+	//return __super::OnClose(uMsg, wParam, lParam, bHandled);
+	ShowWindow(SW_HIDE);
+	return TRUE;
 }
 
 LRESULT CUpdateFrame::UpdateProgress(INT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
@@ -184,14 +186,15 @@ LRESULT CUpdateFrame::UpdateProgress(INT /*uMsg*/, WPARAM wParam, LPARAM /*lPara
 
 void CUpdateFrame::SetUpdateInfo(const char *pszUrl, const char *pszText)
 {
-	assert(pszUrl!=NULL);
-	//assert(pszText!=NULL);
-	memset(szUrl, 0, sizeof(szUrl));
-	strcpy(szUrl, pszUrl);
+	if(pszUrl)
+	{
+		memset(m_szUrl, 0, sizeof(m_szUrl));
+		strcpy(m_szUrl, pszUrl);
+	}
 	if(pszText)
 	{
-		pszLog = StrUtil::a2w(pszText);
-		assert(pszLog!=NULL);
+		m_pszLog = StrUtil::a2w(pszText);
+		assert(m_pszLog!=NULL);
 	}
 }
 

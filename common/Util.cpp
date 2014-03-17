@@ -196,7 +196,7 @@ BOOL Utility::OpenUrl(HWND hWnd, LPCWSTR lpszUrl)
 BOOL Utility::OpenMail(HWND hWnd, LPCWSTR lpszMail)
 {
 	wchar_t szMailText[1024];
-	swprintf(szMailText, L"mailto:%", lpszMail);
+	swprintf(szMailText, L"mailto:%s", lpszMail);
 	ShellExecuteW(hWnd, L"open", szMailText, NULL, NULL, SW_SHOW);
 	return TRUE;
 }

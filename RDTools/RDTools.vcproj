@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\db;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src"
+				AdditionalIncludeDirectories=".\;.\Src;.\Src\db;.\Src\plugins;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\;.\Src;..\common;..\db;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src;"
+				AdditionalIncludeDirectories=".\;.\Src;.\Src\db;.\Src\plugins;..\common;..\inc;..\DuiMsg\src;..\RDFinder\src;..\thirdparty;..\thirdparty\Log4cplus\include;..\TidyLib;..\RDNet\src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -197,30 +197,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\Coder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ColorPicker.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\Finder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\Hosts.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\HostsHelper.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IPConfig.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\MainFrame.cpp"
 					>
 				</File>
@@ -234,10 +210,6 @@
 				</File>
 				<File
 					RelativePath=".\Src\RDTools.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\Setting.cpp"
 					>
 				</File>
 				<File
@@ -265,39 +237,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\Tidy.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\TidyHelper.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Src\UpdateFrame.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\UrlEncoder.cpp"
 					>
 				</File>
 			</Filter>
@@ -319,31 +263,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\Coder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\ColorPicker.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\constant.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\Finder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\Hosts.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\HostsHelper.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\IPConfig.h"
 					>
 				</File>
 				<File
@@ -371,10 +291,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\Setting.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\stdafx.h"
 					>
 				</File>
@@ -383,23 +299,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\Tidy.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\TidyHelper.h"
-					>
-				</File>
-				<File
 					RelativePath="..\thirdparty\DuiLib\Control\UIMenu.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Src\UpdateFrame.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\UrlEncoder.h"
 					>
 				</File>
 			</Filter>
@@ -694,39 +598,123 @@
 			Name="db"
 			>
 			<File
-				RelativePath="..\db\AddrTable.cpp"
+				RelativePath=".\Src\db\AddrTable.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\db\AddrTable.h"
+				RelativePath=".\Src\db\AddrTable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\db\charset.sql"
+				RelativePath=".\Src\db\charset.sql"
 				>
 			</File>
 			<File
-				RelativePath="..\db\CharSetTable.cpp"
+				RelativePath=".\Src\db\CharSetTable.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\db\CharSetTable.h"
+				RelativePath=".\Src\db\CharSetTable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\db\ConfigTable.cpp"
+				RelativePath=".\Src\db\ConfigTable.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\db\ConfigTable.h"
+				RelativePath=".\Src\db\ConfigTable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\db\SQLiteUtil.cpp"
+				RelativePath=".\Src\db\SQLiteUtil.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\db\SQLiteUtil.h"
+				RelativePath=".\Src\db\SQLiteUtil.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="plugins"
+			>
+			<File
+				RelativePath=".\Src\plugins\Coder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Coder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\ColorPicker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\ColorPicker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Finder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Finder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Hosts.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Hosts.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\HostsHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\HostsHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\IPConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\IPConfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Setting.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Setting.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Tidy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\Tidy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\TidyHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\TidyHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\UrlEncoder.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\plugins\UrlEncoder.h"
 				>
 			</File>
 		</Filter>

@@ -42,6 +42,6 @@ public:
 	HANDLE hWorkingThread;
 	CTextUI *pUpdateLog;
 	CProgressUI *pProgress;
-	char szUrl[1024];
-	wchar_t *pszLog;
+	char m_szUrl[1024];
+	wchar_t *m_pszLog;
 };

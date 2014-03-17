@@ -1,5 +1,5 @@
 #pragma once
-#include "../thirdparty/Sqlite/sqlite3.h"
+#include "../../thirdparty/Sqlite/sqlite3.h"
 
 #include <cstdio>
 #include <cstring>

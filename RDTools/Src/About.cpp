@@ -37,8 +37,8 @@ BOOL CAbout::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLa
 SET_CONTROL_BEGIN(pManager, lpszLang, lpszLangSection)
 	SET_CONTROL_TEXT(kAboutName, g_szAppName)
 	SET_CONTROL_TEXT3(kAboutVer, g_szAppVer)
-	SET_CONTROL_TEXT3(kAboutMail, kAuthorMail)
-	SET_CONTROL_TIP(kAboutMail, kAuthorMail)
+	//SET_CONTROL_TEXT3(kAboutMail, kAuthorMail)
+	//SET_CONTROL_TIP(kAboutMail, kAuthorMail)
 	SET_CONTROL_TEXT3(kAboutUrl, kAuthorUrl)
 	SET_CONTROL_TIP(kAboutUrl, kAuthorUrl)
 	SET_CONTROL_TEXT(kAboutCopyRight, kCopyRight)
@@ -50,10 +50,10 @@ SET_CONTROL_END()
 void CAbout::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
-	if(sCtrlName == kAboutMail)
+	if(StrUtil::is_wsubstr(sCtrlName.GetData(),kAboutMail))
 	{
 		bHandled = TRUE;
-		Utility::OpenMail(hWnd, kAuthorMail);
+		Utility::OpenMail(hWnd, msg.pSender->GetText().GetData());
 	}
 	else if(sCtrlName == kAboutUrl)
 	{

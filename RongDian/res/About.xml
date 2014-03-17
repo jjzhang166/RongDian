@@ -20,7 +20,12 @@
 		</HorizontalLayout>
 		<HorizontalLayout height="22" >
 			<Control />
-			<Button name="about_mail" text="" font="2" textcolor="0xFF14100E" align="center" />
+			<Button name="about_mail" text="Mail:mosights@gmail.com" tooltip="mail to mosights@gmail.com" font="2" textcolor="0xFF14100E" align="center" />
+			<Control />
+		</HorizontalLayout>
+		<HorizontalLayout height="22" >
+			<Control />
+			<Button name="about_mail_1" text="multiarrow@qq.com" tooltip="mail to multiarrow@qq.com" font="2" textcolor="0xFF14100E" align="center" />
 			<Control />
 		</HorizontalLayout>
 		<HorizontalLayout height="22" >

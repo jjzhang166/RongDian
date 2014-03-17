@@ -40,7 +40,7 @@ IDI_RDTOOLS             ICON                    "RDTools.ico"
 // Sql
 //
 
-IDC_CHARSET_SQL			SQL                    "..\db\charset.sql"
+IDC_CHARSET_SQL			SQL                    ".\Src\db\charset.sql"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////

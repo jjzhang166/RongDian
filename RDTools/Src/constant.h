@@ -1,11 +1,11 @@
 #pragma once
 
 // Mail
-const wchar_t* const kAuthorMail					= L"XXX@gmail.com";
+const wchar_t* const kAuthorMail					= L"multiarrow@qq.com";
 // Url
 const wchar_t* const kAuthorUrl						= L"http://www.rongdian.net";
 // CopyRight
-const wchar_t* const kCopyRight						= L"CopyRight 2013 RongDian.net";
+const wchar_t* const kCopyRight						= L"CopyRight 2014 RongDian.net";
 // Update Url
 const char*	   const kCheckVersionUrl				= "http://www.rongdian.net/rdol.php?type=3";
 
