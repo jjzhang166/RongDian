@@ -3,10 +3,14 @@
 
 const wchar_t* const kSettingsLangs = L"settings_langs";
 const wchar_t* const kSettingsApply = L"settings_apply";
+const wchar_t* const kSettingsCheckVersion = L"settings_check_version";
+const wchar_t* const kSettingsCheckVersionCB = L"settings_check_version_cb";
 
 CSetting::CSetting()
 {
 	m_pLangsCombo = NULL;
+	m_pCheckVersionCheckbox = NULL;
+	m_pCheckVersionLabel = NULL;
 }
 
 BOOL CSetting::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
@@ -27,17 +31,26 @@ BOOL CSetting::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 		return FALSE;
 
 	FIND_CONTROL_BY_ID(m_pLangsCombo, CComboUI, pManager, kSettingsLangs)
+	FIND_CONTROL_BY_ID(m_pCheckVersionCheckbox, CCheckBoxUI, pManager, kSettingsCheckVersionCB)
+	FIND_CONTROL_BY_ID(m_pCheckVersionLabel, CLabelUI, pManager, kSettingsCheckVersion)
 	
-	initLangs();
+	InitLangs();
+	InitCheckVersion();
 	return TRUE;
 }
 
 BOOL CSetting::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpszLangSection)
 {
+	if(!pManager)
+		return FALSE;
+	wcscpy(m_pLangSection,lpszLangSection);
+	SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
+		SET_CONTROL_TEXT2(kSettingsCheckVersion)
+	SET_CONTROL_END()
 	return TRUE;
 }
 
-BOOL CSetting::initLangs()
+BOOL CSetting::InitLangs()
 {
 	WIN32_FIND_DATAW findFileData = {0};
 	HANDLE hFind = ::FindFirstFileW(kLangFile, &findFileData);
@@ -75,7 +88,7 @@ BOOL CSetting::initLangs()
 		wchar_t lang[256];
 		CConfigTableDB table(&g_SQLite);
 		CONFIG_TABLE config;
-		wcscpy(config.szName, L"Lang");
+		wcscpy(config.szName, tConfigLang);
 		if(table.Query(&config) && table.GetRows())
 		{
 			LPCONFIG_TABLE lpConfigTable = table.GetResults();
@@ -96,6 +109,37 @@ BOOL CSetting::initLangs()
 	return TRUE;
 }
 
+BOOL CSetting::InitCheckVersion()
+{
+	BOOL bExist = TRUE;
+	CONFIG_TABLE stTable;
+	wcscpy(stTable.szName, tConfigCheckVersion);
+	CConfigTableDB table(&g_SQLite);
+	table.Query(&stTable);
+	if(wcslen(table.GetResults()->szValue)==0)
+	{
+		bExist = FALSE;
+		CConfigTableDB table(&g_SQLite);
+		CONFIG_TABLE config;
+		wcscpy(config.szName, tConfigCheckVersion);
+		wcscpy(config.szValue, L"1");
+		table.Insert(&config);
+	}
+	
+	if(!bExist)
+	{
+		table.Query(&stTable);
+	}
+	if(wcsicmp(table.GetResults()->szValue,L"0")==0)
+	{
+		m_pCheckVersionCheckbox->Selected(false);
+	}
+	else
+	{
+		m_pCheckVersionCheckbox->Selected(true);
+	}
+	return TRUE;
+}
 void CSetting::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
@@ -108,16 +152,35 @@ void CSetting::OnClick(HWND hWnd, CPaintManagerUI* pManager, TNotifyUI& msg, BOO
 BOOL CSetting::Apply(HWND hWnd)
 {
 	BOOL ret = TRUE;
+	CConfigTableDB table(&g_SQLite);
+	CONFIG_TABLE config;
+		
 	//set language
 	if (m_pLangsCombo->GetCount()>0)
 	{
 		int curSel = m_pLangsCombo->GetCurSel();
 		CListLabelElementUI* item = (CListLabelElementUI*)m_pLangsCombo->GetItemAt(curSel);
 		LPCTSTR lang = item->GetUserData().GetData();
-		CConfigTableDB table(&g_SQLite);
-		CONFIG_TABLE config;
-		wcscpy(config.szName, L"Lang");
+		wcscpy(config.szName, tConfigLang);
 		wcscpy(config.szValue, lang);
+		if(!table.Update(&config))
+		{
+			ret = FALSE;
+		}
+	}
+	if(m_pCheckVersionCheckbox->IsSelected())
+	{
+		wcscpy(config.szName, tConfigCheckVersion);
+		wcscpy(config.szValue, L"1");
+		if(!table.Update(&config))
+		{
+			ret = FALSE;
+		}
+	}
+	else
+	{
+		wcscpy(config.szName, tConfigCheckVersion);
+		wcscpy(config.szValue, L"0");
 		if(!table.Update(&config))
 		{
 			ret = FALSE;

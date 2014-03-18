@@ -23,7 +23,7 @@
 			<Text name="update_log" text="" />
 			<Control width="5" />
 	 	</HorizontalLayout><!-- frame_contents -->
-		<HorizontalLayout name="frame_progress" height="22" inset="2,2,2,2" >
+		<HorizontalLayout name="frame_progress" height="22" inset="2,2,2,2" visible="false">
 			<Control width="10" />
 			<Label name="update_progress_text" width="60" text="" />
 			<Control width="3" />
@@ -33,8 +33,8 @@
 		<!-- frame_footer -->
 		<HorizontalLayout name="frame_footer" height="23" >
 			<Control />
-			<Button name="update_ok" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
-			<Control width="5" />
+			<Button name="update_ok" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" visible="false"/>
+			<Control width="5"/>
 			<Button name="update_cancel" width="60" text="" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
 			<Control width="5" />
 		</HorizontalLayout> <!-- frame_footer -->

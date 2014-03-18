@@ -213,10 +213,18 @@ void CMainFrame::InitWindow()
 		}
 	}
 
-	unsigned int nThread = 0;
-	HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
-	if(hThread)
-		CloseHandle(hThread);
+	//check version
+	CONFIG_TABLE stTable;
+	wcscpy(stTable.szName, tConfigCheckVersion);
+	CConfigTableDB table(&g_SQLite);
+	table.Query(&stTable);
+	if(wcslen(table.GetResults()->szValue)>0&&wcsicmp(table.GetResults()->szValue,L"1")==0)
+	{
+		unsigned int nThread = 0;
+		HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+		if(hThread)
+			CloseHandle(hThread);
+	}
 }
 
 CDuiString CMainFrame::GetSkinFile()
@@ -345,7 +353,13 @@ void CMainFrame::OnMenuSelect(TNotifyUI& msg)
 		//if(!lpLoader)
 		//	DuiShowLoading(m_hWnd, L"Test...", NULL, &lpLoader);
 		//DuiMenuMsgBox(m_hWnd, NULL, NULL, MB_OK);
-		PopupUpdateFrame(NULL, NULL);
+		//PopupUpdateFrame(NULL, NULL);
+		
+		unsigned int nThread = 0;
+		HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+		if(hThread)
+			CloseHandle(hThread);
+		
 	}
 	else if(sCtrlName == kMenuShow)
 	{
@@ -541,7 +555,7 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 			OutputDebugStringW(L"Find New Version\n");
 //#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
 			//RDPopupBox(m_hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING);
-			//PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
+			PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
 		}
 	}
 	return 0;

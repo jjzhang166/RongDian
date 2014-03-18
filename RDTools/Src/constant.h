@@ -9,6 +9,11 @@ const wchar_t* const kCopyRight						= L"CopyRight 2014 RongDian.net";
 // Update Url
 const char*	   const kCheckVersionUrl				= "http://www.rongdian.net/rdol.php?type=3";
 
+//table column constance
+const wchar_t* const tConfigLang 					= L"Lang";
+const wchar_t* const tConfigCheckVersion 	= L"CheckVersion";
+const wchar_t* const tConfigLastVisitTab 	= L"LastVisitTab";
+
 // language files
 #ifdef _DEBUG
 const wchar_t* const kLangFile						= L"..\\RongDian\\lang\\lang_*.ini";

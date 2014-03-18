@@ -12,15 +12,20 @@
 			</HorizontalLayout>
 		</VerticalLayout>
 		
-		<!--
 		<VerticalLayout height="68" bordersize="1" bordercolor="FFE0E0E0" >
 			<HorizontalLayout height="22" >
-				<Control width="20" />
-				<Label text="Background" width="80" />
 				<Control width="10" />
 				<Label bkcolor="FF669934" padding="0,11,0,10" />
 				<Control width="20" />
 			</HorizontalLayout>
+		  <HorizontalLayout height="22" >
+				<Control width="105" />
+				<CheckBox name="settings_check_version_cb" width="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
+				<Label name="settings_check_version"/>
+				<Control />
+			</HorizontalLayout>
+			<Control width="2" />
+			<!--
 			<HorizontalLayout height="22" >
 				<Control width="30" />
 				<Label text="Color：" width="42" />
@@ -38,7 +43,9 @@
 				<Button name="coder_path_open" width="24" bkimage="file='default\folderx24.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
 				<Control width="30" />
 			</HorizontalLayout>
-		</VerticalLayout>-->
+			-->
+			
+		</VerticalLayout>
 		<Control />
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
 			<Control />

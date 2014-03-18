@@ -31,7 +31,7 @@ BOOL CPanelRegister::InitTools()
 	RD_TOOL(L"plugin_ipconfig",CIPConfig)
 	RD_TOOL(L"plugin_hosts",CHosts)
 	//RD_TOOL(CChildLayoutTest)
-	RD_TOOL(L"plugin_setttings",CSetting)
+	RD_TOOL(L"plugin_settings",CSetting)
 	RD_TOOL(L"plugin_about",CAbout)
 	return TRUE;
 }
