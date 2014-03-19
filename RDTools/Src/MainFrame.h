@@ -71,6 +71,7 @@ public:
 	char *pszUpdateResponeData;
 	unsigned long ulUpdateResponeDataSize;
 	BOOL bRunning;
+	BOOL m_bFirstCheckVersion;
 	CUpdateFrame *pUpdateFrame;
 	CPanelRegister *m_pPanelRegister;
 };

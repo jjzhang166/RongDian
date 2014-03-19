@@ -61,6 +61,7 @@ CMainFrame::CMainFrame()
 	pszUpdateResponeData = NULL;
 	ulUpdateResponeDataSize = 0;
 	bRunning = FALSE;
+	m_bFirstCheckVersion = TRUE;
 	pUpdateFrame = NULL;
 	m_pPanelRegister = new CPanelRegister;
 }
@@ -492,7 +493,7 @@ LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
 		{
 			if(g_pSystemTray)
 			{
-				::SetWindowLong(GetHWND(), GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | ~WS_EX_TOOLWINDOW);
+				::SetWindowLong(GetHWND(), GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TOOLWINDOW);
 				g_pSystemTray->MaximiseFromTray(m_hWnd);
 				return 0;
 			}
@@ -543,10 +544,12 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 	char szRDVersion[64] = {0};
 	if (pszUpdateResponeData && reader.parse(pszUpdateResponeData, root)&&root["version"].type()!=JsonTidyLib::nullValue)
 	{
+		BOOL showPopup = TRUE;
 		strcpy(szVersion, root["version"].asString().c_str());
 		strcpy(szUrl, root["url"].asString().c_str());
 		wchar_t szPath[1024] = {0};
 		wchar_t szRDVersionW[64];
+		char szLog[1024];
 		GetModuleFileName(NULL, szPath, sizeof(szPath));
 		Utility::GetVersion(szPath, szRDVersionW);
 		StrUtil::w2a(szRDVersionW, szRDVersion);
@@ -555,9 +558,39 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 			OutputDebugStringW(L"Find New Version\n");
 //#pragma message("CMainFrame::OnParseUpdateRespone - 版本更新待完善，需添加更新对话框的弹出代码.")
 			//RDPopupBox(m_hWnd, MSG_HOST_SAVE_MSG, MSG_WARNING);
-			PopupUpdateFrame(root["url"].asString().c_str(), root["log"].asString().c_str());
+				
+			char aTmpLog[1024];
+			wchar_t wTmpLog[1024];
+			char fTmpLog[1024];
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_UPDATEFRAME, L"update_new_version", wTmpLog);
+			StrUtil::w2a(wTmpLog,aTmpLog);
+			
+			sprintf(fTmpLog,aTmpLog,szVersion);
+			strcpy(szLog,fTmpLog);
+			strcat(szLog,"\r\n");
+			strcat(szLog,root["log"].asString().c_str());
+			
+			PopupUpdateFrame(root["url"].asString().c_str(), szLog);
+		}
+		else if(!m_bFirstCheckVersion)
+		{
+			OutputDebugStringW(L"This version is latest\n");
+			char sTmpLog[1024];
+			wchar_t szTmpLog[1024];
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_UPDATEFRAME, L"update_latest_version", szTmpLog);
+			StrUtil::w2a(szTmpLog,sTmpLog);
+			strcpy(szLog,sTmpLog);
+		}
+		else 
+		{
+			showPopup = FALSE;
+		}
+		if(showPopup)
+		{
+			PopupUpdateFrame(root["url"].asString().c_str(), szLog);
 		}
 	}
+	m_bFirstCheckVersion = FALSE;
 	return 0;
 }
 
@@ -897,8 +930,8 @@ BOOL CMainFrame::PopupUpdateFrame(const char *pszUrl, const char *pszLog)
 		pUpdateFrame = new CUpdateFrame();
 		pUpdateFrame->Create(m_hWnd, L"", UI_WNDSTYLE_FRAME | UI_CLASSSTYLE_DIALOG, WS_EX_TOOLWINDOW, 0, 0, 0, 0);
 		pUpdateFrame->SetIcon(IDI_RDTOOLS);
-		pUpdateFrame->SetUpdateInfo(pszUrl, pszLog);
 	}
+	pUpdateFrame->SetUpdateInfo(pszUrl, pszLog);
 	pUpdateFrame->CenterWindow();
 	::ShowWindow(pUpdateFrame->GetHWND(), SW_SHOW);
 	SetForegroundWindow(pUpdateFrame->GetHWND());
