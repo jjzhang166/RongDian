@@ -563,23 +563,22 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 			wchar_t wTmpLog[1024];
 			char fTmpLog[1024];
 			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_UPDATEFRAME, L"update_new_version", wTmpLog);
-			StrUtil::w2a(wTmpLog,aTmpLog);
+			StrUtil::u2u8(wTmpLog,aTmpLog);
 			
 			sprintf(fTmpLog,aTmpLog,szVersion);
 			strcpy(szLog,fTmpLog);
 			strcat(szLog,"\r\n");
 			strcat(szLog,root["log"].asString().c_str());
 			
-			PopupUpdateFrame(root["url"].asString().c_str(), szLog);
 		}
 		else if(!m_bFirstCheckVersion)
 		{
 			OutputDebugStringW(L"This version is latest\n");
-			char sTmpLog[1024];
-			wchar_t szTmpLog[1024];
-			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_UPDATEFRAME, L"update_latest_version", szTmpLog);
-			StrUtil::w2a(szTmpLog,sTmpLog);
-			strcpy(szLog,sTmpLog);
+			char aTmpLog[1024];
+			wchar_t wTmpLog[1024];
+			Utility::GetINIStr(g_pLangManager->GetLangName(), LS_UPDATEFRAME, L"update_latest_version", wTmpLog);
+			StrUtil::u2u8(wTmpLog,aTmpLog);
+			strcpy(szLog,aTmpLog);
 		}
 		else 
 		{
