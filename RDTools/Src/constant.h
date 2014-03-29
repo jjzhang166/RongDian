@@ -63,20 +63,11 @@ const wchar_t* const LS_MAINFRAME					= L"MainFrame";
 const wchar_t* const LS_UPDATEFRAME					= L"UpdateFrame";
 const wchar_t* const LS_SYSTRAY						= L"SysTray";
 const wchar_t* const LS_ABOUTPANEL					= L"plugin_about";
-const wchar_t* const LS_PICKERPANEL					= L"plugin_picker";
 const wchar_t* const LS_MSG							= L"Msg";
 const wchar_t* const LS_DUIMSG						= L"DuiMsg";
 
-// Color Picker Panel(default's Panel)
-const wchar_t* const kLayoutPicker					= L"layout_picker";
-const wchar_t* const kXmlPicker						= L"Picker.xml";
-const wchar_t* const kTabPicker						= L"plugin_picker";
-const wchar_t* const kPanelPicker					= L"plugin_picker";
-const wchar_t* const kNamePicker					= L"plugin_picker_name";
-const wchar_t* const kDescPicker					= L"plugin_picker_desc";
-
 // About Panel(default's Panel)
-const wchar_t* const kLayoutAbout					= L"layout_about";
+const wchar_t* const kLayoutAbout					= L"plugin_about_layout";
 const wchar_t* const kXmlAbout						= L"About.xml";
 const wchar_t* const kTabAbout						= L"plugin_about";
 const wchar_t* const kPanelAbout					= L"plugin_about";
@@ -201,6 +192,17 @@ typedef struct _tagMAIN_PANEL
 	wchar_t szName[STRING_LENGTH];
 	wchar_t szDesc[STRING_LENGTH];
 	wchar_t szDll[STRING_LENGTH*2];
+	list<_tagMAIN_PANEL*> childs;
+	_tagMAIN_PANEL()
+	{
+		memset(szLayout,0,sizeof(szLayout));
+		memset(szXml,0,sizeof(szXml));
+		memset(szTab,0,sizeof(szTab));
+		memset(szPanel,0,sizeof(szPanel));
+		memset(szName,0,sizeof(szName));
+		memset(szDesc,0,sizeof(szDesc));
+		memset(szDll,0,sizeof(szDll));
+	}
 } MAIN_PANEL, *PMAIN_PANEL, *LPMAIN_PANEL;
 
 typedef struct _tagSKIN_INFO

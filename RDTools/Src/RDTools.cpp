@@ -493,7 +493,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(12158);
+	//_CrtSetBreakAlloc(1434);
 #endif
 
 	g_hInstance = hInstance;

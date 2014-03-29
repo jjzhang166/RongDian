@@ -1,5 +1,5 @@
 #pragma once
-
+class CPanelXml;
 class CMainFrame : public WindowImplBase,
 	public ILangUI, public ISkinUI,
 	public IListCallbackUI
@@ -48,6 +48,7 @@ public:
 	BOOL			InitPanels();
 	BOOL			AddPanel(LPMAIN_PANEL lpPanelInfo);
 	BOOL			CreatePanels();
+	BOOL			CreatePanel(LPMAIN_PANEL lpPanelInfo,CTreeNodeUI* pParentNode);
 	BOOL			ReleasePanels();
 	BOOL			ShowTabs(BOOL bShow);
 	BOOL			OnActiveApp();
@@ -59,12 +60,15 @@ public:
 
 	static unsigned int __stdcall UpdateCheckThread(LPVOID lpData);
 
+private:
+	BOOL 			ReleasePanel(LPMAIN_PANEL &lpPanelInfo);
+	
 public:
 	CDuiString builder_xml_;
 	CDuiString resource_dir_;
 	CContainerUI *pFrameContainer;
-	CContainerUI *pPanelTabs;
-	CContainerUI *pPanelContents;
+	CTreeViewUI *m_pPanelTabs;
+	CContainerUI *m_pPanelContents;
 	CVerticalLayoutUI *pLoadindFrame;
 	CControlUI *pStatusCtrl;
 	LPVOID lpLoader;
@@ -74,4 +78,7 @@ public:
 	BOOL m_bFirstCheckVersion;
 	CUpdateFrame *pUpdateFrame;
 	CPanelRegister *m_pPanelRegister;
+	CPanelXml *m_pPanelXml;
+	wchar_t m_szSelectedNode[128];	// selected menu node
+	wchar_t m_szVisiblePanel[128];
 };
