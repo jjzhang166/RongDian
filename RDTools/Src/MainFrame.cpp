@@ -510,6 +510,7 @@ LRESULT CMainFrame::OnTrayNotification(UINT /*uMsg*/, WPARAM wParam, LPARAM lPar
 			POINT point;
 			GetCursorPos(&point);
 			CMenuUI *pMenu = new CMenuUI(m_hWnd);
+			pMenu->SetAlign(eMenuAlignment_Left | eMenuAlignment_Bottom);
 			pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 		}
 		else
