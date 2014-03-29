@@ -220,19 +220,19 @@ protected:                                                                \
 //////////////BEGIN控件名称宏定义//////////////////////////////////////////////////
 ///
 
-#define	 DUI_CTR_GIF                            (_T("Gif"))
+#define	 DUI_CTR_GIF                             (_T("Gif"))
 
 #define  DUI_CTR_EDIT                            (_T("Edit"))
 #define	 DUI_CTR_ICON                            (_T("Icon"))
 #define  DUI_CTR_LIST                            (_T("List"))
 #define  DUI_CTR_TEXT                            (_T("Text"))
+#define  DUI_CTR_MENU                            (_T("Menu"))
 
 #define  DUI_CTR_COMBO                           (_T("Combo"))
 #define  DUI_CTR_LABEL                           (_T("Label"))
-#define  DUI_CTR_FLASH							(_T("Flash"))
+#define  DUI_CTR_FLASH							 (_T("Flash"))
 
 #define  DUI_CTR_BUTTON                          (_T("Button"))
-#define  DUI_CTR_FADEBUTTON                      (_T("FadeButton"))
 #define  DUI_CTR_OPTION                          (_T("Option"))
 #define  DUI_CTR_SLIDER                          (_T("Slider"))
 
@@ -255,6 +255,7 @@ protected:                                                                \
 #define  DUI_CTR_LISTHEADER                      (_T("ListHeader"))
 #define  DUI_CTR_TILELAYOUT                      (_T("TileLayout"))
 #define  DUI_CTR_WEBBROWSER                      (_T("WebBrowser"))
+#define  DUI_CTR_FADEBUTTON                      (_T("FadeButton"))
 
 #define  DUI_CTR_CHILDLAYOUT                     (_T("ChildLayout"))
 #define  DUI_CTR_LISTELEMENT                     (_T("ListElement"))

@@ -344,7 +344,8 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				if( _tcscmp(pstrClass, DUI_CTR_EDIT) == 0 )                   pControl = new CEditUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_ICON) == 0 )              pControl = new CUIIconImage;
                 else if( _tcscmp(pstrClass, DUI_CTR_LIST) == 0 )              pControl = new CListUI;
-                else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )              pControl = new CTextUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )              pControl = new CTextUI;
+				//else if( _tcscmp(pstrClass, DUI_CTR_MENU) == 0 )              pControl = new CMenuUI;
                 break;
             case 5:
                 if( _tcscmp(pstrClass, DUI_CTR_COMBO) == 0 )                  pControl = new CComboUI;

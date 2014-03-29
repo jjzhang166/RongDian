@@ -364,6 +364,18 @@ LRESULT WindowImplBase::OnCaptureChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	return 0;
 }
 
+LRESULT WindowImplBase::OnWindowPosChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT WindowImplBase::OnWindowPosChanging(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	return 0;
+}
+
 LRESULT WindowImplBase::OnKillFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	bHandled = FALSE;
@@ -470,6 +482,12 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CAPTURECHANGED:
 		lRes = OnCaptureChanged(uMsg, wParam, lParam, bHandled);
+		break;
+	case WM_WINDOWPOSCHANGED:
+		lRes = OnWindowPosChanged(uMsg, wParam, lParam, bHandled);
+		break;
+	case WM_WINDOWPOSCHANGING:
+		lRes = OnWindowPosChanging(uMsg, wParam, lParam, bHandled);
 		break;
 	case WM_KILLFOCUS:
 		lRes = OnKillFocus(uMsg, wParam, lParam, bHandled);
