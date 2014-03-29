@@ -15,9 +15,12 @@ public:
 	
 	void OnClick(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyUI& /*msg*/, BOOL& /*bHandled*/);
 	BOOL Apply(HWND hWnd);
-	BOOL initLangs();
+	BOOL InitLangs();
+	BOOL InitCheckVersion();
 public:
 	CComboUI * m_pLangsCombo;
+	CCheckBoxUI * m_pCheckVersionCheckbox;
+	CLabelUI * m_pCheckVersionLabel;
 };
 // CSetting
 //////////////////////////////////////////////////////////////////////////

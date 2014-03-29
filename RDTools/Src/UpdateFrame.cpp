@@ -92,13 +92,14 @@ void CUpdateFrame::InitWindow()
 
 	if(m_pszLog)
 		pUpdateLog->SetText(m_pszLog);
-
+/*
 #ifdef _DEBUG
 	assert(pUpdateLog!=NULL);
 	wchar_t szLog[1024] = L"1、调整主面板Tab背景色为动态设置\n2、简化Tidy面板功能\n3、添加版本检测API调用 －更新对话框为实现";
 	pUpdateLog->SetText(szLog);
 	pProgress->SetValue(35);
 #endif
+*/
 }
 
 CDuiString CUpdateFrame::GetSkinFile()
@@ -193,8 +194,9 @@ void CUpdateFrame::SetUpdateInfo(const char *pszUrl, const char *pszText)
 	}
 	if(pszText)
 	{
-		m_pszLog = StrUtil::a2w(pszText);
+		m_pszLog = StrUtil::u82u(pszText);
 		assert(m_pszLog!=NULL);
+		pUpdateLog->SetText(m_pszLog);
 	}
 }
 

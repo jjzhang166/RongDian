@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-16" ?>
 <Root>
 	<Plugin>
-		<layout>layout_picker</layout>
 		<xml>Picker.xml</xml>
 		<tab>plugin_picker</tab>
+		<Plugin>
+			<tab>plugin_picker2</tab>
+			<Plugin>
+				<tab>plugin_picker3</tab>
+			</Plugin>
+		</Plugin>
 	</Plugin>
+	
 	<Plugin>
-		<layout>layout_coder</layout>
-		<xml>Coder.xml</xml>
-		<tab>plugin_coder</tab>
+		<tab>cat_coder</tab>
+		<Plugin>
+			<xml>Coder.xml</xml>
+			<tab>plugin_coder</tab>
+		</Plugin>
+		<Plugin>
+			<xml>UrlEncoder.xml</xml>
+			<tab>plugin_urlencoder</tab>
+		</Plugin>	
 	</Plugin>
-	<Plugin>
-		<layout>layout_urlencoder</layout>
-		<xml>UrlEncoder.xml</xml>
-		<tab>plugin_urlencoder</tab>
-	</Plugin>
+	
 	<!--
 	<Plugin>
 		<layout>layout_finder</layout>
@@ -23,22 +31,18 @@
 	</Plugin>
 	-->
 	<Plugin>
-		<layout>layout_tidy</layout>
 		<xml>Tidy.xml</xml>
 		<tab>plugin_tidy</tab>
 	</Plugin>
 	<Plugin>
-		<layout>layout_ipconfig</layout>
 		<xml>IpConfig.xml</xml>
 		<tab>plugin_ipconfig</tab>
 	</Plugin>
 		<Plugin>
-		<layout>layout_hosts</layout>
 		<xml>Hosts.xml</xml>
 		<tab>plugin_hosts</tab>
 	</Plugin>
 	<Plugin>
-		<layout>layout_settings</layout>
 		<xml>Settings.xml</xml>
 		<tab>plugin_settings</tab>
 	</Plugin>

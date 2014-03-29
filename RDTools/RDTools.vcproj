@@ -255,10 +255,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\AddrTable.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Src\ChildLayoutTest.h"
 					>
 				</File>

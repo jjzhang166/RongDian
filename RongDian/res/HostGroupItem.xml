@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<HostItemLayout name="host_item_x_y" height="26" bordersize="1" bordercolor="FFE0E0E0">
-		<HostItemState name="host_item_state_x_y" width="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
+		<HostItemState name="host_item_state_x_y" width="22" selectedimage="file='default\checked.png' dest='5,5,21,21'" normalimage="file='default\unchecked.png' dest='5,5,21,21'"/>
 		<Control width="2" />
 		<HostItemAddr name="host_item_addr_x_y" width="110" bkcolor="#FFE0E0E0" nativebkcolor="#FFE0E0E0" text="" />
 		<Control width="8" />

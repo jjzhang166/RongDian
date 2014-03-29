@@ -559,4 +559,18 @@ bool StrUtil::replace_all(char *str, const char old_value, const char new_value)
 	}   
 	return true;
 }
+
+int StrUtil::count_char(const wchar_t *str, const char ch)
+{
+	int count = 0;
+	for(int i=0;i<wcslen(str);i++)
+	{
+		if(str[i]==ch)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 #pragma warning(pop)
