@@ -298,8 +298,8 @@ CMenuUI::CMenuUI()
 
 CMenuUI::~CMenuUI()
 {
-	//Clear();
-	//DestroyMenu();
+	Clear();
+	DestroyMenu();
 }
 
 LPCTSTR CMenuUI::GetClass() const
@@ -321,9 +321,7 @@ BOOL CMenuUI::CreatePopupMenu(BOOL bRoot /*= TRUE*/)
 {
 	m_hMenu = ::CreatePopupMenu();
 	if(m_hMenu && bRoot)
-	{
 		s_pLastMenu = this;
-	}
 	return (m_hMenu!=NULL);
 }
 
@@ -331,7 +329,9 @@ BOOL CMenuUI::DestroyMenu()
 {
 	if(!m_hMenu)
 		return FALSE;
-	return ::DestroyMenu(m_hMenu);
+	::DestroyMenu(m_hMenu);
+	m_hMenu = NULL;
+	return TRUE;
 }
 
 CMenuUI::operator HMENU() const
@@ -681,7 +681,7 @@ void CMenuUI::Init()
 			else if(pItem->m_bTitle)
 				AddTitle((CMenuTitle *)pItem);
 			else if(pItem->m_bSeparator)
-				AddSeparator();
+				AddSeparator((CMenuSeparator *)pItem);
 			else
 				AddMenu(uFlags, pItem, &accel);
 			uFlags = 0;
@@ -759,10 +759,11 @@ BOOL CMenuUI::AddMenu(UINT nFlags, CMenuItem *pItem, ACCEL *pAccel /*= 0*/)
 	return AppendMenu(nFlags, pItem->m_dwID, (LPCTSTR)pItem);
 }
 
-BOOL CMenuUI::AddSeparator(void)
+BOOL CMenuUI::AddSeparator(CMenuSeparator *pItem /*= NULL*/)
 {
 	m_bBreak = m_bBreakBar = FALSE;
-	CMenuSeparator *pItem = new CMenuSeparator();
+	if(!pItem)
+		pItem = new CMenuSeparator();
 	return AppendMenu(MF_OWNERDRAW | MF_SEPARATOR, 0, (LPCTSTR)pItem);
 }
 
@@ -1423,20 +1424,26 @@ void CMenuUI::DrawItemText(HDC hDC, RECT rtPaint, LPCWSTR pszText, COLORREF colo
 
 void CMenuUI::Clear(void)
 {
-	if(m_hMenu)
+	if(!m_hMenu)
+		return ;
+	CControlUI *pControl = NULL;
+	MENUITEMINFO info;
+	for (UINT i=0; i<m_items.GetSize(); i++)
 	{
-		UINT nCount = GetMenuItemCount();
-		for (UINT i=0; i<nCount; i++)
+		pControl = (CControlUI *)m_items.GetAt(i);
+		if(pControl)
 		{
-			MENUITEMINFO	info;
-			memset(&info, 0, sizeof(MENUITEMINFO));
-			info.cbSize = sizeof(MENUITEMINFO);
-			info.fMask = MIIM_DATA | MIIM_TYPE;
-			GetMenuItemInfo(i, &info, TRUE);
-
-			CMenuItem *pData = (CMenuItem *)info.dwItemData;
-			if((info.fType & MFT_OWNERDRAW) && pData && pData->IsMyData())
-				delete pData;
+			if(_tcscmp(pControl->GetClass(), DUI_CTR_MENU)==0)
+			{
+				memset(&info, 0, sizeof(MENUITEMINFO));
+				info.cbSize = sizeof(MENUITEMINFO);
+				info.fMask = MIIM_DATA | MIIM_TYPE;
+				GetMenuItemInfo(i, &info, TRUE);
+				CMenuItem *pData = (CMenuItem *)info.dwItemData;
+				if((info.fType & MFT_OWNERDRAW) && pData && pData->IsMyData())
+					delete pData;
+			}
+			delete pControl;
 		}
 	}
 }

@@ -140,7 +140,6 @@ CPaintManagerUI::~CPaintManagerUI()
     for( int i = 0; i < m_aDelayedCleanup.GetSize(); i++ ) delete static_cast<CControlUI*>(m_aDelayedCleanup[i]);
     for( int i = 0; i < m_aAsyncNotify.GetSize(); i++ ) delete static_cast<TNotifyUI*>(m_aAsyncNotify[i]);
     m_mNameHash.Resize(0);
-	m_mMenuHash.Resize(0);
     delete m_pRoot;
 
     ::DeleteObject(m_DefaultFontInfo.hFont);
@@ -149,6 +148,7 @@ CPaintManagerUI::~CPaintManagerUI()
     RemoveAllDefaultAttributeList();
     RemoveAllOptionGroups();
     RemoveAllTimers();
+	RemoveMenus();
 
     // Reset other parts...
     if( m_hwndTooltip != NULL ) ::DestroyWindow(m_hwndTooltip);
@@ -1230,7 +1230,7 @@ void CPaintManagerUI::RemoveAllOptionGroups()
 			delete aOptionGroup;
 		}
 	}
-	m_mOptionGroup.RemoveAll();
+	m_mOptionGroup.Resize(0);
 }
 
 void CPaintManagerUI::SetLoadMenu(bool bLoad)
@@ -1257,6 +1257,20 @@ CControlUI* CPaintManagerUI::GetMenu(LPCTSTR pStrMenuName)
 	LPVOID lp = m_mMenuHash.Find(pStrMenuName);
 	if( lp ) return static_cast<CControlUI*>(lp);
 	return NULL;
+}
+
+void CPaintManagerUI::RemoveMenus()
+{
+	CControlUI* data;
+	for( int i = 0; i< m_mMenuHash.GetSize(); i++ ) {
+		if(LPCTSTR key = m_mMenuHash.GetAt(i)) {
+			data = static_cast<CControlUI*>(m_mMenuHash.Find(key, false));
+			if (data) {
+				delete data;
+			}
+		}
+	}
+	m_mMenuHash.Resize(0);
 }
 
 void CPaintManagerUI::MessageLoop()
@@ -2013,7 +2027,7 @@ void CPaintManagerUI::RemoveAllImages()
 			}
         }
     }
-	m_mImageHash.RemoveAll();
+	m_mImageHash.Resize(0);
 }
 
 void CPaintManagerUI::ReloadAllImages()
@@ -2095,7 +2109,7 @@ void CPaintManagerUI::RemoveAllDefaultAttributeList()
 			delete pDefaultAttr;
 		}
 	}
-	m_DefaultAttrHash.RemoveAll();
+	m_DefaultAttrHash.Resize(0);
 }
 
 CControlUI* CPaintManagerUI::GetRoot() const

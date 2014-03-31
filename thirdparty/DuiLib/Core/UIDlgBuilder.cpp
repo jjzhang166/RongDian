@@ -266,7 +266,9 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
         LPCTSTR pstrClass = node.GetName();
         if( _tcscmp(pstrClass, _T("Image")) == 0 || _tcscmp(pstrClass, _T("Font")) == 0 \
             || _tcscmp(pstrClass, _T("Default")) == 0 ) continue;
-		if(_tcscmp(pstrClass, DUI_CTR_MENU) == 0 && pManager->IsLoadMenu())
+		if(_tcscmp(pstrClass, DUI_CTR_MENU) == 0 && pManager->IsLoadMenu()) // Find Menu
+			continue;
+		if(_tcscmp(pstrClass, DUI_CTR_MENU) != 0 && !pParent && bMenu)
 			continue;
 
         CControlUI* pControl = NULL;
@@ -325,7 +327,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 
 			//检索子节点及附加控件
 			if(node.HasChildren()){
-				CControlUI* pSubControl = _Parse(&node,pNode,pManager);
+				CControlUI* pSubControl = _Parse(&node,pNode,pManager,bMenu);
 				if(pSubControl && _tcscmp(pSubControl->GetClass(),_T("TreeNodeUI")) != 0)
 				{
 // 					pSubControl->SetFixedWidth(30);
@@ -484,7 +486,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 
 		// Add children
 		if( node.HasChildren() ) {
-			_Parse(&node, pControl, pManager);
+			_Parse(&node, pControl, pManager,bMenu);
 		}
 
         // Init default attributes
@@ -513,9 +515,9 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 
 		if(bMenu && !pManager->IsLoadMenu())
 		{
-			if(_tcscmp(pControl->GetClass(), DUI_CTR_MENU)==0)
+			if(_tcscmp(pControl->GetClass(), DUI_CTR_MENU)==0 && !pParent)
 			{
-				pManager->AddMenu(pControl->GetName(), pControl);
+				pManager->AddMenu(pControl->GetName(), pControl); // Only Add Root Menu, SubMenu Save in Root Menu
 				((CMenuUI *)pControl)->Init();
 			}
 		}

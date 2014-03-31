@@ -271,6 +271,7 @@ public:
 	bool IsLoadMenu();
 	bool AddMenu(LPCTSTR pStrMenuName, CControlUI* pCountrol);
 	CControlUI* GetMenu(LPCTSTR pStrMenuName);
+	void RemoveMenus();
 
     CControlUI* GetFocus() const;
     void SetFocus(CControlUI* pControl);

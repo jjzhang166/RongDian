@@ -144,7 +144,7 @@ public:
 	BOOL	AddTitle(CMenuTitle *pItem);
 	BOOL	AddSideBar(CMenuSideBar *pItem);
 	BOOL	AddMenu(UINT nFlags, CMenuItem *pItem, ACCEL *pAccel = 0);
-	BOOL	AddSeparator(void);	
+	BOOL	AddSeparator(CMenuSeparator *pItem = NULL);	
 	BOOL	AddPopup(UINT nFlags, CMenuUI *pPopup);
 	void	Break(void);	// change a column(the next item added will be in a new column)
 	void	BreakBar(void);	// change a column with a break line(same as Break, except that a break line is drawn between two columns)
