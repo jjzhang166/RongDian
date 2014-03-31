@@ -11,11 +11,11 @@
 #pragma once
 namespace DuiLib 
 {
-	class UILIB_API CUIIconImage : public CControlUI
+	class UILIB_API CIconUI : public CControlUI
 	{
 	public:
-		CUIIconImage();
-		~CUIIconImage();
+		CIconUI();
+		~CIconUI();
 
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);

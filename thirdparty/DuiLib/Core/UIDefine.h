@@ -239,6 +239,8 @@ protected:                                                                \
 #define  DUI_CTR_CONTROL                         (_T("Control"))
 #define  DUI_CTR_ACTIVEX                         (_T("ActiveX"))
 
+#define  DUI_CTR_MENUITEM						 (_T("MenuItem"))
+#define  DUI_CTR_MENUTEXT						 (_T("MenuText"))
 #define  DUI_CTR_LISTITEM                        (_T("ListItem"))
 #define  DUI_CTR_PROGRESS                        (_T("Progress"))
 #define  DUI_CTR_RICHEDIT                        (_T("RichEdit"))
@@ -248,19 +250,24 @@ protected:                                                                \
 #define  DUI_CTR_TREEVIEW                        (_T("TreeView"))
 #define  DUI_CTR_TREENODE                        (_T("TreeNode"))
 
+#define  DUI_CTR_MENUTITLE	                     (_T("MenuTitle"))
 #define  DUI_CTR_CONTAINER                       (_T("Container"))
 #define  DUI_CTR_TABLAYOUT                       (_T("TabLayout"))
 #define  DUI_CTR_SCROLLBAR                       (_T("ScrollBar"))
 
+#define  DUI_CTR_MENUBUTTON			             (_T("MenuButton"))
 #define  DUI_CTR_LISTHEADER                      (_T("ListHeader"))
 #define  DUI_CTR_TILELAYOUT                      (_T("TileLayout"))
 #define  DUI_CTR_WEBBROWSER                      (_T("WebBrowser"))
 #define  DUI_CTR_FADEBUTTON                      (_T("FadeButton"))
 
+#define  DUI_CTR_MENUSIDEBAR			         (_T("MenuSideBar"))
 #define  DUI_CTR_CHILDLAYOUT                     (_T("ChildLayout"))
 #define  DUI_CTR_LISTELEMENT                     (_T("ListElement"))
 
 #define  DUI_CTR_DIALOGLAYOUT                    (_T("DialogLayout"))
+
+#define  DUI_CTR_MENUSEPARATOR			         (_T("MenuSeparator"))
 
 #define  DUI_CTR_VERTICALLAYOUT                  (_T("VerticalLayout"))
 #define  DUI_CTR_LISTHEADERITEM                  (_T("ListHeaderItem"))

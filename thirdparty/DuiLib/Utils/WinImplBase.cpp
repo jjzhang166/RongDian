@@ -519,6 +519,12 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		lRes = OnTimer(uMsg, wParam, lParam, bHandled);
 		break;
+	case WM_DRAWITEM:
+		lRes = OnDrawItem(uMsg, wParam, lParam, bHandled);
+		break;
+	case WM_MEASUREITEM:
+		lRes = OnMeasureItem(uMsg, wParam, lParam, bHandled);
+		break;
 	default:
 		bHandled = FALSE;
 		break;
@@ -538,6 +544,36 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 LRESULT WindowImplBase::HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT WindowImplBase::OnMeasureItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+{
+	LPMEASUREITEMSTRUCT lpMeasureItem = (LPMEASUREITEMSTRUCT)lParam;
+	if(lpMeasureItem->CtlType == ODT_MENU)
+	{
+		CMenuUI *pMenu = CMenuUI::GetLastMenu();
+		if(pMenu)
+		{
+			pMenu->MeasureItem(lpMeasureItem);
+			bHandled = TRUE;
+		}
+	}
+	return 0;
+}
+
+LRESULT WindowImplBase::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	LPDRAWITEMSTRUCT lpDrawItem = (LPDRAWITEMSTRUCT)lParam;
+	if(lpDrawItem->CtlType == ODT_MENU)
+	{
+		CMenuUI *pMenu = CMenuUI::GetLastMenu();
+		if(pMenu)
+		{
+			pMenu->DrawItem(lpDrawItem);
+			bHandled = TRUE;
+		}
+	}
 	return 0;
 }
 

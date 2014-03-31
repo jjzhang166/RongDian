@@ -3,6 +3,7 @@
 	<Font name="微软雅黑" size="12" bold="false" default="true" />
 	<Font name="微软雅黑" size="14" bold="false" />
 	<Font name="微软雅黑" size="10" bold="false" />
+	<Font name="微软雅黑" size="26" bold="true" hor="false" />
 	<Default name="TabNode" value="height=&quot;35&quot; itemtextcolor=&quot;0xFFE0E0E0&quot; selitemtextcolor=&quot;0xFF405C7A&quot; itemhottextcolor=&quot;0xFF405C7A&quot; inset=&quot;10,8,0,0&quot;" />
 	<Default name="TabNodeFolder" value="width=&quot;16&quot; height=&quot;16&quot; padding=&quot;0,1,0,0&quot; normalimage=&quot;file='default\treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='default\treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='default\treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='default\treeview_a.png' source='16,0,32,16' &quot;" />
 	<Default name="TabNormalColor" value="bkcolor=&quot;#00FFFFFF&quot;" />
@@ -12,6 +13,34 @@
 	<Default name="TabSelTextColor" value="textcolor=&quot;0xFF405C7A&quot;" />
 	<Default name="VScrollBar" value="button1normalimage=&quot;file='default\scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='default\scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='default\scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='default\scrollbar.bmp' source='54,90,70,106' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='default\scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='default\scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='default\scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='default\scrollbar.bmp' source='54,108,70,124' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='default\scrollbar.bmp' source='0,126,16,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='default\scrollbar.bmp' source='18,126,34,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='default\scrollbar.bmp' source='36,126,52,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='default\scrollbar.bmp' source='54,126,70,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='default\scrollbar.bmp' source='0,144,16,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='default\scrollbar.bmp' source='18,144,34,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='default\scrollbar.bmp' source='36,144,52,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='default\scrollbar.bmp' source='54,144,70,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='default\scrollbar.bmp' source='0,162,16,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='default\scrollbar.bmp' source='18,162,34,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='default\scrollbar.bmp' source='36,162,52,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='default\scrollbar.bmp' source='54,162,70,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
 	<Default name="HScrollBar" value="button1normalimage=&quot;file='default\scrollbar.bmp' source='0,0,16,16' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='default\scrollbar.bmp' source='18,0,34,16' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='default\scrollbar.bmp' source='36,0,52,16' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='default\scrollbar.bmp' source='54,0,70,16' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='default\scrollbar.bmp' source='0,18,16,34' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='default\scrollbar.bmp' source='18,18,34,34' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='default\scrollbar.bmp' source='36,18,52,34' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='default\scrollbar.bmp' source='54,18,70,34' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='default\scrollbar.bmp' source='0,36,16,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='default\scrollbar.bmp' source='18,36,34,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='default\scrollbar.bmp' source='36,36,52,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='default\scrollbar.bmp' source='54,36,70,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='default\scrollbar.bmp' source='0,54,16,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='default\scrollbar.bmp' source='18,54,34,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='default\scrollbar.bmp' source='36,54,52,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='default\scrollbar.bmp' source='54,54,70,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='default\scrollbar.bmp' source='0,72,16,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='default\scrollbar.bmp' source='18,72,34,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='default\scrollbar.bmp' source='36,72,52,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='default\scrollbar.bmp' source='54,72,70,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
+	<!-- system_menu -->
+	<Menu name="system_menu" popup="true"
+		normalimage="file='default\menu_bk_white.png'" 
+		selimage="file='default\menu_hot_bk.png'" 
+		selimage="file='default\header_line.png'" 
+		titlecolor="0xFF0F386E" sidebarcolor="0xFF380F6E"
+		textfont="0" sidebarfont="3" titlefont="1"
+		textcolor="0xFF0F386E" disabledtextcolor="0xFF380F6E" selectedtextcolor="0xFF386E0F"
+		height="24" >
+		<MenuSideBar name="menu_sidebar" bkimage="file='default\process_fg.png'" text="SideBar" /> <!-- 菜单-SideBar -->
+		<MenuTitle name="menu_title" bkimage="file='default\list_header_bg.png'" text="TitleBar" /> <!-- 菜单-TitleBar -->
+		<MenuText name="menu_about" bkimage="file='default\menu_about.png'" text="关于" key="0x4E" vctrl="true" id="10" /> <!-- 菜单-关于 -->
+		<MenuText name="menu_update" bkimage="file='default\menu_help.png'" text="检查更新" key="0x73" id="11" enabled="false" /> <!-- 菜单-检查更新 -->
+		<MenuSeparator /> <!-- 菜单-Separator -->
+		<Menu name="menu_popup" submenu="true" id="12" text="一键登录" >
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="21" />
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="22" />
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="23" />
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="24" />
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="25" />
+			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" id="26" />
+		</Menu>
+		<MenuButton name="menu_button" bkimage="file='default\process_fg.png'" text="按钮菜单" id="14" /> <!-- 菜单-按钮菜单 -->
+		<MenuSeparator /> <!-- 菜单-Separator -->
+		<MenuText name="menu_show" text="显示主窗口" id="15" /> <!-- 菜单-显示主窗口 -->
+		<MenuSeparator /> <!-- 菜单-Separator -->
+		<MenuText name="menu_quit" bkimage="file='default\menu_quit.png'" text="退出" key="0x72" vctrl="true" vatl="true" vshift="true" id="15" /> <!-- 菜单-退出 -->
+	</Menu> <!-- system_menu -->
 	<!-- frame_container -->
 	<VerticalLayout name="frame_container" bordersize="1" borderround="2,2" colorhsl="true" inset="1,1,1,1" >
 		<!-- frame_title_contaner -->
