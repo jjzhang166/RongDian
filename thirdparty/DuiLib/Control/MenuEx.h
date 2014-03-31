@@ -166,7 +166,7 @@ public:
 	DWORD	GetSelColor3() const;
 	void	SetSelColor3(DWORD dwColor);
 	LPCTSTR	GetSelImage();
-	void	SetSelImage(LPCTSTR pStrImage);
+	void	SetSelectImage(LPCTSTR pStrImage);
 	DWORD	GetTitleColor() const;
 	void	SetTitleColor(DWORD dwColor);
 	DWORD	GetTitleColor2() const;

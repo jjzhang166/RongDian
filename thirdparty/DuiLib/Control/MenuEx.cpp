@@ -150,7 +150,7 @@ void CMenuItem::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 		m_wkey = _tcstoul(pstrValue, &pstr, 16);
 		m_fVirt |= FVIRTKEY;
 	}
-	else if( _tcscmp(pstrName, _T("id")) == 0 )
+	else if( _tcscmp(pstrName, _T("mid")) == 0 )
 	{
 		LPTSTR pstr = NULL;
 		m_dwID = _tcstoul(pstrValue, &pstr, 10);
@@ -876,7 +876,7 @@ LPCTSTR CMenuUI::GetSelImage()
 	return m_strSelectedImage.GetData();
 }
 
-void CMenuUI::SetSelImage(LPCTSTR pStrImage)
+void CMenuUI::SetSelectImage(LPCTSTR pStrImage)
 {
 	if( m_strSelectedImage == pStrImage )
 		return;
@@ -1180,9 +1180,9 @@ void CMenuUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		SetNormalImage(pstrValue);
 	}
-	else if( _tcscmp(pstrName, _T("selimage")) == 0 )
+	else if( _tcscmp(pstrName, _T("selectimage")) == 0 )
 	{
-		SetSelImage(pstrValue);
+		SetSelectImage(pstrValue);
 	}
 	else if( _tcscmp(pstrName, _T("titleimage")) == 0 )
 	{
@@ -1216,10 +1216,6 @@ void CMenuUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		SetSideBarFont(_ttoi(pstrValue));
 	}
-	else if( _tcscmp(pstrName, _T("sidebarfont")) == 0 )
-	{
-		SetSideBarFont(_ttoi(pstrValue));
-	}
 	else if( _tcscmp(pstrName, _T("popup")) == 0 )
 	{
 		m_bPopup = (_tcscmp(pstrValue, _T("true")) == 0);
@@ -1228,7 +1224,7 @@ void CMenuUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		m_bSubMenu = (_tcscmp(pstrValue, _T("true")) == 0);
 	}
-	else if( _tcscmp(pstrName, _T("id")) == 0 )
+	else if( _tcscmp(pstrName, _T("mid")) == 0 )
 	{
 		LPTSTR pstr = NULL;
 		m_dwID = _tcstoul(pstrValue, &pstr, 10);
