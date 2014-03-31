@@ -318,10 +318,7 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		CDuiRect rect = msg.pSender->GetPos();
 		DuiLib::CPoint point(rect.left, rect.bottom);
 		ClientToScreen(m_hWnd, &point);
-		//CMenuUI *pMenu = new CMenuUI(m_hWnd);
-		//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
-
-		CMenuUI *pMenu = static_cast<CMenuUI*>(m_PaintManager.GetMenu(L"system_menu2"));
+		CMenuUI *pMenu = static_cast<CMenuUI*>(m_PaintManager.GetMenu(L"system_menu"));
 		if(pMenu)
 		{
 			pMenu->SetManager(&m_PaintManager, NULL, false);
@@ -551,6 +548,17 @@ LRESULT CMainFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 		return TRUE;
 	}
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
+}
+
+LRESULT CMainFrame::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	wchar_t szDebug[1024];
+	if(HIWORD(wParam)==0)
+	{
+		swprintf(szDebug, L"CMainFrame::OnCommand - Menu ID:%d\n", LOWORD(wParam));
+		OutputDebugStringW(szDebug);
+	}
+	return __super::OnCommand(uMsg, wParam, lParam, bHandled);
 }
 
 LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)

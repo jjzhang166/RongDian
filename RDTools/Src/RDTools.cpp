@@ -9,6 +9,7 @@ const wchar_t*	const	ARGS_ADMIN			= L"-a";
 const wchar_t*	const	ARGS_LONG_ADMIN		= L"--admin";
 const wchar_t*	const	ARGS_ADMIN_DESC		= L"RDTools Run as Administrator Mode";
 
+#define MEMORY_BREAK_POINT -1
 
 DWORD WINAPI UserSignatureThread(LPVOID /*lpData*/)
 {
@@ -493,7 +494,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPWSTR /
 	// ÄÚ´æ¸ú×Ùµ÷ÊÔ
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(1434);
+	_CrtSetBreakAlloc(MEMORY_BREAK_POINT);
 #endif
 
 	g_hInstance = hInstance;

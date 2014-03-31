@@ -1094,4 +1094,48 @@
 		<Attribute name="selitemtextcolor" default="0x00000000" type="DWORD" comment="item被选中时文本颜色"/>
 		<Attribute name="selhotitemtextcolor" default="0x00000000" type="DWORD" comment="item被选中时且鼠标进入时的文本颜色"/>
 	</TreeNode>
+	<Menu>
+		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
+		<Attribute name="normalcolor" default="0x00000000" type="DWORD" comment="菜单项normal状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="normalcolor2" default="0x00000000" type="DWORD" comment="菜单项normal状态渐变色2,和normalcolor配合使用,如(0xFFFFFF00)"/>
+		<Attribute name="normalcolor3" default="0x00000000" type="DWORD" comment="菜单项normal状态渐变色3,和normalcolor、normalcolor2配合使用,如(0xFFFF00FF)"/>
+		<Attribute name="selectcolor" default="0x00000000" type="DWORD" comment="菜单项select状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="selectcolor2" default="0x00000000" type="DWORD" comment="菜单项select状态渐变色2,和selectcolor配合使用,如(0xFFFFFF00)"/>
+		<Attribute name="selectcolor3" default="0x00000000" type="DWORD" comment="菜单项select状态渐变色3,和selectcolor、selectcolor2配合使用,如(0xFFFF00FF)"/>
+		<Attribute name="titlecolor" default="0x00000000" type="DWORD" comment="菜单标题栏颜色,如(0xFFFF0000)"/>
+		<Attribute name="titlecolor2" default="0x00000000" type="DWORD" comment="菜单标题栏渐变色2,和titlecolor配合使用,如(0xFFFFFF00)"/>
+		<Attribute name="titlecolor3" default="0x00000000" type="DWORD" comment="菜单标题栏渐变色3,和titlecolor、titlecolor2配合使用,如(0xFFFF00FF)"/>
+		<Attribute name="sidebarcolor" default="0x00000000" type="DWORD" comment="菜单侧边栏颜色,如(0xFFFF0000)"/>
+		<Attribute name="sidebarcolor2" default="0x00000000" type="DWORD" comment="菜单侧边栏渐变色2,和sidebarcolor配合使用,如(0xFFFFFF00)"/>
+		<Attribute name="sidebarcolor3" default="0x00000000" type="DWORD" comment="菜单侧边栏渐变色3,和sidebarcolor、sidebarcolor2配合使用,如(0xFFFF00FF)"/>
+		<Attribute name="textcolor" default="0x00000000" type="DWORD" comment="菜单字体normal状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="selectedtextcolor" default="0x00000000" type="DWORD" comment="菜单字体selected状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="disabledtextcolor" default="0x00000000" type="DWORD" comment="菜单字体disabled状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="normalimage" default="" type="STRING" comment="菜单项normal状态背景图片,如(bk.bmp或file='aaa.jpg')"/>
+		<Attribute name="selectimage" default="" type="STRING" comment="菜单项select状态背景图片,如(bk.bmp或file='aaa.jpg')"/>
+		<Attribute name="titleimage" default="" type="STRING" comment="菜单标题栏背景图片,如(bk.bmp或file='aaa.jpg')"/>
+		<Attribute name="sidebarimage" default="" type="STRING" comment="菜单侧边栏背景图片,如(bk.bmp或file='aaa.jpg')"/>
+		<Attribute name="separatorimage" default="" type="STRING" comment="菜单分隔条栏背景图片,如(bk.bmp或file='aaa.jpg')"/>
+		<Attribute name="width" default="0" type="INT" comment="菜单项预设的宽度，如(100)"/>
+		<Attribute name="height" default="0" type="INT" comment="菜单项预设的高度，如(30)"/>
+		<Attribute name="textfont" default="-1" type="INT" comment="字体id,如(0)"/>
+		<Attribute name="titlefont" default="-1" type="INT" comment="字体id,如(0)"/>
+		<Attribute name="sidebarfont" default="-1" type="INT" comment="字体id,如(0)"/>
+		<Attribute name="popup" default="false" type="BOOL" comment="是否弹出菜单,如(false)"/>
+		<Attribute name="submenu" default="false" type="BOOL" comment="是否子菜单，如(false)"/>
+		<Attribute name="mid" default="0" type="INT" comment="菜单项id，如(100)"/>
+	</Menu>
+	<MenuItem>
+		<Attribute name="mid" default="0" type="INT" comment="菜单项id，如(100)"/>
+		<Attribute name="vctrl" default="false" type="BOOL" comment="是否启动快捷键Ctrl，如(false)"/>
+		<Attribute name="vatl" default="false" type="BOOL" comment="是否启动快捷键Atl，如(false)"/>
+		<Attribute name="vshift" default="false" type="BOOL" comment="是否启动快捷键Shift，如(false)"/>
+		<Attribute name="text" default="" type="STRING" comment="显示文本,如(测试文本)"/>
+		<Attribute name="bkimage" default="" type="STRING" comment="背景图片,如(bk.bmp或file='aaa.jpg')"/>
+	</MenuItem>
+	<MenuSideBar parent="MenuItem" />
+	<MenuTitle parent="MenuItem" />
+	<MenuSeparator parent="MenuItem" />
+	<MenuText parent="MenuItem" />
+	<MenuButton parent="MenuItem" />
 </Controls>
