@@ -48,6 +48,8 @@ const wchar_t* const kIPConfigCurrentDns1Edit = L"ipconfig_i_dns_edit";
 const wchar_t* const kIPConfigCurrentDns2Edit = L"ipconfig_i_dns2_edit";
 const wchar_t* const kIPConfigMacEdit = L"ipconfig_i_mac_edit";
 const wchar_t* const kIPConfigNewSolution = L"ipconfig_new_solution";
+//
+const wchar_t* const kIPConfigApplyTo = L"ipconfig_apply_to";
 
 DWORD WINAPI RunAsAdminThread(LPVOID /*lpData*/)
 {
@@ -88,6 +90,7 @@ CIPConfig::CIPConfig()
 	m_pDnsAutoCheckBox = NULL;
 	m_pDnsManualCheckBox = NULL;
 	m_pCmdInfo = NULL;
+	m_pApplyBtn = NULL;
 }
 
 BOOL CIPConfig::IsCanQuit(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/)
@@ -149,7 +152,8 @@ BOOL CIPConfig::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 	FIND_CONTROL_BY_ID(m_pIpManualCheckBox, CCheckBoxUI, pManager, kIPConfigManualSetIPCheckBox)
 	FIND_CONTROL_BY_ID(m_pDnsAutoCheckBox, CCheckBoxUI, pManager, kIPConfigAutoSetDnsCheckBox)
 	FIND_CONTROL_BY_ID(m_pDnsManualCheckBox, CCheckBoxUI, pManager, kIPConfigManualSetDnsCheckBox)
-
+	FIND_CONTROL_BY_ID(m_pApplyBtn, CButtonUI, pManager, kIPConfigApplyBtn)
+	
 	//³õÊ¼Öµ
 	LoadSolutions();
 	InitSolutionsList();
@@ -192,6 +196,11 @@ SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
 	SET_CONTROL_TEXT2(kIPConfigCurrentDns2Text)
 	SET_CONTROL_TEXT2(kIPConfigMacText)
 SET_CONTROL_END()
+
+	//
+	CListLabelElementUI* curItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(m_pAdapterList->GetCurSel());
+	LPCTSTR lpszDynamicStr = curItem->GetText().GetData();
+	SET_CONTROL_TIP4(m_pLangSection,m_pApplyBtn,kIPConfigApplyTo,lpszDynamicStr)
 
 	return TRUE;
 }
@@ -267,7 +276,12 @@ void CIPConfig::OnItemSelected(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNo
 		if(sItemName == kIPConfigSolutionList)
 			OnSelectSolution();
 		else if (sItemName == kIPConfigCurrentAdapterList)
+		{
 			OnSelectAdapter();
+			CListLabelElementUI* curItem = (CListLabelElementUI*)m_pAdapterList->GetItemAt(m_pAdapterList->GetCurSel());
+			LPCTSTR lpszDynamicStr = curItem->GetText().GetData();
+			SET_CONTROL_TIP4(m_pLangSection,m_pApplyBtn,kIPConfigApplyTo,lpszDynamicStr)
+		}
 		bHandled = TRUE;
 	}
 }
@@ -430,7 +444,6 @@ BOOL CIPConfig::InitAdaptersList()
 		nIndex++;
 	}
 	m_pAdapterList->SelectItem(nSelected);
-
 	return TRUE;
 }
 

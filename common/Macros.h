@@ -246,7 +246,23 @@
 	Utility::GetINIStr(g_pLangManager->GetLangName(),section,id,tip); \
 	control->SetToolTip(tip);\
 }
-			
+
+/*************************************************************************
+* Method:    		SET_CONTROL_TIP4
+* Description:		设置控件提示信息宏，提取配置文件中包含%s的信息
+* ParameterList:	control section id lpszDynamicStr
+* Return Value:	无
+* CopyRight:		
+************************************************************************/
+#define SET_CONTROL_TIP4(section,control,id,lpszDynamicStr) \
+{\
+	wchar_t szContent[1024]={0};\
+	wchar_t tip[50] = {0}; \
+	Utility::GetINIStr(g_pLangManager->GetLangName(),section,id,tip); \
+	swprintf(szContent, tip, lpszDynamicStr);\
+	control->SetToolTip(szContent);\
+}
+
 //////////////////////////////////////////////////////////////////////////
 #define FIND_CONTROL_BY_ID(ctl, cls, man, id) \
 	assert(man!=NULL);\

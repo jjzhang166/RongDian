@@ -64,6 +64,7 @@ public:
 	CEditUI * m_pCurrentDns1Edit;
 	CEditUI * m_pCurrentDns2Edit;
 	CEditUI * m_pMacEdit;
+	CButtonUI * m_pApplyBtn;
 
 	list<LPIPCONFIG_INFO> m_lstIpConfigInfo;
 	list<LPADAPTER_INFO> m_lstAdaptersInfo;
