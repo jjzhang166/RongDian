@@ -83,7 +83,7 @@
 #include "Layout/UITabLayout.h"
 #include "Layout/UIChildLayout.h"
 
-#include "Control/UIIconImage.h"
+#include "Control/UIIcon.h"
 #include "Control/UIGif.h"
 
 #include "Control/UIList.h"
@@ -94,7 +94,7 @@
 #include "Control/UILabel.h"
 #include "Control/UIText.h"
 #include "Control/UIEdit.h"
-//#include "Control/UIMenu.h"
+#include "Control/MenuEx.h"
 
 #include "Control/UIButton.h"
 #include "Control/UIFade.h"

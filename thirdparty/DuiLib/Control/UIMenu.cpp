@@ -82,6 +82,14 @@ LRESULT CMenuUI::OnCaptureChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 	return 0;
 }
 
+LRESULT CMenuUI::OnWindowPosChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
+{
+	wchar_t szDebug[1024];
+	swprintf(szDebug, L"CMenuUI::OnWindowPosChanged:%d\n", GetTickCount());
+	OutputDebugStringW(szDebug);
+	return 0;
+}
+
 //
 LRESULT CMenuUI::OnKillFocus(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
@@ -100,7 +108,6 @@ LRESULT CMenuUI::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL
 // 
 LRESULT CMenuUI::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL &bHandled)
 {
-
 	bHandled = FALSE;
 	return 0;
 }
@@ -122,8 +129,21 @@ LRESULT CMenuUI::OnMouseLeave(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 // 
 LRESULT CMenuUI::OnActivateApp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL &bHandled)
 {
+	wchar_t szDebug[1024];
+	swprintf(szDebug, L"CMenuUI::OnActivateApp:%d\n", GetTickCount());
+	OutputDebugStringW(szDebug);
 	if(lParam)
 		Close();
+	bHandled = FALSE;
+	return 0;
+}
+
+// 
+LRESULT CMenuUI::OnActivate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL &bHandled)
+{
+	wchar_t szDebug[1024];
+	swprintf(szDebug, L"CMenuUI::OnActivate:%d\n", GetTickCount());
+	OutputDebugStringW(szDebug);
 	bHandled = FALSE;
 	return 0;
 }
@@ -177,8 +197,8 @@ void CMenuUI::AdjustPostion()
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-	DuiLib::CDuiRect rcWork = oMonitor.rcWork;
-	if( rcWnd.bottom > rcWork.bottom )
+	DuiLib::CDuiRect rcWork = oMonitor.rcMonitor;
+	if(rcWnd.bottom > rcWork.bottom)
 	{
 		if(nHeight >= rcWork.GetHeight())
 		{
@@ -191,9 +211,9 @@ void CMenuUI::AdjustPostion()
 			rcWnd.top = rcWnd.bottom - nHeight;
 		}
 	}
-	if( rcWnd.right > rcWork.right )
+	if(rcWnd.right > rcWork.right)
 	{
-		if( nWidth >= rcWork.GetWidth() )
+		if(nWidth >= rcWork.GetWidth())
 		{
 			rcWnd.left = 0;
 			rcWnd.right = nWidth;
@@ -214,7 +234,7 @@ void CMenuUI::AdjustPostion()
 		rcWnd.bottom = base_position.y;
 		rcWnd.top = rcWnd.bottom - nHeight;
 	}
-	::SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER /*| SWP_NOSIZE*/);
+	::SetWindowPos(m_hWnd, NULL, rcWnd.left, rcWnd.top, rcWnd.GetWidth(), rcWnd.GetHeight(), SWP_NOZORDER/* | SWP_NOMOVE*/ | SWP_NOACTIVATE /*| SWP_NOSIZE*/);
 	SetActiveWindow(m_hWnd);
 }
 } // namespace DuiLib

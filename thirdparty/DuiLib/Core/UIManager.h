@@ -90,6 +90,7 @@ typedef struct tagTFontInfo
     bool bBold;
     bool bUnderline;
     bool bItalic;
+	bool bHor;
     TEXTMETRIC tm;
 } TFontInfo;
 
@@ -226,16 +227,16 @@ public:
     DWORD GetDefaultSelectedBkColor() const;
     void SetDefaultSelectedBkColor(DWORD dwColor);
     TFontInfo* GetDefaultFontInfo();
-    void SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    void SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
     DWORD GetCustomFontCount() const;
-    HFONT AddFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
-    HFONT AddFontAt(int index, LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    HFONT AddFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
+    HFONT AddFontAt(int index, LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
     HFONT GetFont(int index);
-    HFONT GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    HFONT GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
     bool FindFont(HFONT hFont);
-    bool FindFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    bool FindFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
     int GetFontIndex(HFONT hFont);
-    int GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    int GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bHor = true);
     bool RemoveFont(HFONT hFont);
     bool RemoveFontAt(int index);
     void RemoveAllFonts();
@@ -265,6 +266,12 @@ public:
     CStdPtrArray* GetOptionGroup(LPCTSTR pStrGroupName);
     void RemoveOptionGroup(LPCTSTR pStrGroupName, CControlUI* pControl);
     void RemoveAllOptionGroups();
+
+	void SetLoadMenu(bool bLoad);
+	bool IsLoadMenu();
+	bool AddMenu(LPCTSTR pStrMenuName, CControlUI* pCountrol);
+	CControlUI* GetMenu(LPCTSTR pStrMenuName);
+	void RemoveMenus();
 
     CControlUI* GetFocus() const;
     void SetFocus(CControlUI* pControl);
@@ -366,6 +373,7 @@ private:
     bool m_bMouseTracking;
     bool m_bMouseCapture;
 	bool m_bUsedVirtualWnd;
+	bool m_bIsLoadMenu;
 
     //
     CStdPtrArray m_aNotifiers;
@@ -377,7 +385,8 @@ private:
     CStdPtrArray m_aAsyncNotify;
     CStdPtrArray m_aFoundControls;
     CStdStringPtrMap m_mNameHash;
-    CStdStringPtrMap m_mOptionGroup;
+	CStdStringPtrMap m_mOptionGroup;
+	CStdStringPtrMap m_mMenuHash;
     //
     CPaintManagerUI* m_pParentResourcePM;
     DWORD m_dwDefaultDisabledColor;

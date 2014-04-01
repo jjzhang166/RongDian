@@ -7,19 +7,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 #include "Stdafx.h"
-#include "UIIconImage.h"
+#include "UIIcon.h"
 
 #define ICON_DEFAULT_SIZE 32
 
 namespace DuiLib 
 {
-	CUIIconImage::CUIIconImage()
+	CIconUI::CIconUI()
 	{
 		m_hdefaultico=NULL;
 		m_hico=NULL;
 	}
 
-	CUIIconImage::~CUIIconImage()
+	CIconUI::~CIconUI()
 	{
 		if (m_hico)
 		{
@@ -32,19 +32,19 @@ namespace DuiLib
 		}
 	}
 
-	LPCTSTR CUIIconImage::GetClass() const
+	LPCTSTR CIconUI::GetClass() const
 	{
 		return _T("IconImageUI");
 	}
 
-	LPVOID CUIIconImage::GetInterface(LPCTSTR pstrName)
+	LPVOID CIconUI::GetInterface(LPCTSTR pstrName)
 	{
 		if( _tcscmp(pstrName, _T("Icon")) == 0 ) 
-			return static_cast<CUIIconImage*>(this);
+			return static_cast<CIconUI*>(this);
 		return CControlUI::GetInterface(pstrName);
 	}
 
-	void CUIIconImage::DoEvent(TEventUI& event)
+	void CIconUI::DoEvent(TEventUI& event)
 	{
 		if( event.Type == UIEVENT_SETFOCUS ) 
 		{
@@ -68,7 +68,7 @@ namespace DuiLib
 		}
 		CControlUI::DoEvent(event);
 	}
-	void CUIIconImage::SetDefaultIcon(LPCTSTR pstrIcoPath)
+	void CIconUI::SetDefaultIcon(LPCTSTR pstrIcoPath)
 	{
 		if (m_hdefaultico == NULL)
 		{ 
@@ -79,7 +79,7 @@ namespace DuiLib
 		}
 	}
 	
-	void CUIIconImage::ClearIcon()
+	void CIconUI::ClearIcon()
 	{
 		if (m_hico)
 		{
@@ -87,7 +87,7 @@ namespace DuiLib
 		}
 	}
 
-	void CUIIconImage::SetIcoImage(LPCTSTR pstrIcoPath)
+	void CIconUI::SetIcoImage(LPCTSTR pstrIcoPath)
 	{
 		if (pstrIcoPath)
 		{
@@ -104,7 +104,7 @@ namespace DuiLib
 		Invalidate();
 	}
 
-	void CUIIconImage::PaintStatusImage(HDC hDC)
+	void CIconUI::PaintStatusImage(HDC hDC)
 	{
 		if (m_hico)
 		{
@@ -119,7 +119,7 @@ namespace DuiLib
 		}
 	}
 
-	void CUIIconImage::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
+	void CIconUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if(_tcscmp(pstrName, _T("icon")) == 0)
 		{

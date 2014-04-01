@@ -395,7 +395,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIIconImage.cpp"
+					RelativePath=".\Control\UIIcon.cpp"
 					>
 				</File>
 				<File
@@ -444,6 +444,14 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\Control\MenuEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\MenuEx.h"
+				>
+			</File>
 			<File
 				RelativePath=".\StdAfx.h"
 				>
@@ -588,7 +596,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIIconImage.h"
+					RelativePath=".\Control\UIIcon.h"
 					>
 				</File>
 				<File

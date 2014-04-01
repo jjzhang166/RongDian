@@ -53,8 +53,6 @@ int wcstrim(wchar_t *str, int len);
 
 int strtrim(char *str, int len);
 
-bool is_wsubstr(const wchar_t* wStr,const wchar_t* wSubStr);
-
 bool replace_all(char *str, const char old_value, const char new_value);
 
 int count_char(const wchar_t *str, const char ch);

@@ -59,7 +59,6 @@ using namespace std;
 #include <PhpTidyLib/phptidy.h>
 #include <SqlTidyLib/sqltidy.h>
 
-#include <Duilib/Control/UIMenu.h>
 #include <DuiMsg.h>
 #include <FileFinder.h>
 #include <RDNet.h>

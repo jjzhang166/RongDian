@@ -50,7 +50,7 @@ SET_CONTROL_END()
 void CAbout::OnClick(HWND hWnd, CPaintManagerUI* /*pManager*/, TNotifyUI& msg, BOOL& bHandled)
 {
 	CDuiString sCtrlName = msg.pSender->GetName();
-	if(StrUtil::is_wsubstr(sCtrlName.GetData(),kAboutMail))
+	if(wcsstr(sCtrlName.GetData(), kAboutMail))
 	{
 		bHandled = TRUE;
 		Utility::OpenMail(hWnd, msg.pSender->GetText().GetData());

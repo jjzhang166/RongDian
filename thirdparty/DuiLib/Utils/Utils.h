@@ -231,6 +231,36 @@ namespace DuiLib
 		int m_nCount;
 	};
 
+	struct IITEM
+	{
+		LONG Key;
+		LPVOID Data;
+		struct IITEM* pPrev;
+		struct IITEM* pNext;
+	};
+
+	class UILIB_API CStdIntPtrMap
+	{
+	public:
+		CStdIntPtrMap(int nSize = 83);
+		~CStdIntPtrMap();
+
+		void Resize(int nSize = 83);
+		LPVOID Find(LONG key, bool optimize = true) const;
+		bool Insert(LONG key, LPVOID pData);
+		LPVOID Set(LONG key, LPVOID pData);
+		bool Remove(LONG key);
+		void RemoveAll();
+		int GetSize() const;
+		LONG GetAt(int iIndex) const;
+		LONG operator[] (int nIndex) const;
+
+	protected:
+		IITEM** m_aT;
+		int m_nBuckets;
+		int m_nCount;
+	};
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 

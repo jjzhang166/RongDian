@@ -227,10 +227,10 @@ void CMainFrame::InitWindow()
 	table.Query(&stTable);
 	if(wcslen(table.GetResults()->szValue)>0&&wcsicmp(table.GetResults()->szValue,L"1")==0)
 	{
-		unsigned int nThread = 0;
-		HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
-		if(hThread)
-			CloseHandle(hThread);
+		//unsigned int nThread = 0;
+		//HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+		//if(hThread)
+		//	CloseHandle(hThread);
 	}
 }
 
@@ -318,14 +318,74 @@ void CMainFrame::OnClick(TNotifyUI& msg)
 		CDuiRect rect = msg.pSender->GetPos();
 		DuiLib::CPoint point(rect.left, rect.bottom);
 		ClientToScreen(m_hWnd, &point);
-		CMenuUI *pMenu = new CMenuUI(m_hWnd);
-		pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
+		CMenuUI *pMenu = static_cast<CMenuUI*>(m_PaintManager.GetMenu(L"system_menu"));
+		if(pMenu)
+		{
+			pMenu->SetManager(&m_PaintManager, NULL, false);
+			pMenu->TrackPopupMenu(TPM_LEFTBUTTON, point.x, point.y, m_hWnd);
+		}
+		//pMenu->CreatePopupMenu();
+		//CDuiString strNormal = L"\\default\\menu_bk_white.png";
+		//CDuiString strSelect = L"\\default\\menu_hot_bk.png";
+		//pMenu->SetNormalImage(strNormal);
+		//pMenu->SetSelImage(strSelect);
+		//pMenu->SetTitleColor(0xFF0F386E);
+		//pMenu->SetSideBarColor(0xFF380F6E);
+		//pMenu->SetSeparatorColor(0xFF380F6E);
+		//CDuiString strTitle = L"\\default\\process_fg.png";
+		//CDuiString strSideBar = L"\\default\\menu_hot_bk.png";
+		//CDuiString strSeparator = L"\\default\\header_line.png";
+		//pMenu->SetTitleImage(strTitle);
+		//pMenu->SetSideBarImage(strSideBar);
+		//pMenu->SetSeparatorImage(strSeparator);
+
+		//pMenu->SetTextFont(0);
+		//pMenu->SetSideBarFont(3);
+		//pMenu->SetTitleFont(1);
+		//pMenu->SetNormalTextColor(0xFF0F386E);
+		//pMenu->SetDisabledTextColor(0xFF380F6E);
+		//pMenu->SetSelectedTextColor(0xFF386E0F);
+		////pMenu->SetWidth(216);
+		//pMenu->SetHeight(20);
+
+		//pMenu->AddSideBar(new CMenuSideBar(34, L"MenuXP"));
+		//pMenu->AddTitle(new CMenuTitle(24, L"MenuXP"));
+		//ACCEL stAccel;
+		//stAccel.fVirt = FCONTROL | FVIRTKEY;
+		//stAccel.key = 0x4E;
+		//pMenu->AddMenu(0, new CMenuText(10, L"写新邮件", L"\\default\\edit.png"), &stAccel);
+		//stAccel.fVirt = FVIRTKEY;
+		//stAccel.key = VK_F4;
+		//pMenu->AddMenu(MF_DISABLED, new CMenuText(11, L"收取所有邮件", L"\\default\\folderx24.png"), &stAccel);
+		//pMenu->AddSeparator();
+		//pMenu->AddMenu(0, new CMenuText(12, L"显示主窗口"));
+		//pMenu->AddSeparator();
+
+		//CMenuUI *pPopup = new CMenuUI();
+		//pPopup->CreatePopupMenu(FALSE);
+		//pPopup->AddMenu(0, new CMenuText(21, L"abc@163.com"));
+
+		//pMenu->AddPopup(0, pPopup, new CMenuText(13, L"一键登录"));
+
+		//pMenu->AddMenu(0, new CMenuText(14, L"注册邮箱"));
+		//pMenu->AddMenu(0, new CMenuButton(15, L"\\default\\process_fg.png"));
+		//pMenu->AddSeparator();
+		//stAccel.fVirt = FVIRTKEY | FCONTROL | FSHIFT;
+		//stAccel.key = 0x4C;
+		//pMenu->AddMenu(0, new CMenuText(16, L"锁定闪电邮"), &stAccel);
+		//stAccel.fVirt = FVIRTKEY;
+		//stAccel.key = VK_F3;
+		//pMenu->AddMenu(0, new CMenuText(17, L"系统设置"), &stAccel);
+		//pMenu->AddMenu(0, new CMenuText(18, L"退出"));
+
+		//pMenu->TrackPopupMenu(TPM_LEFTBUTTON, point.x, point.y, m_hWnd);
+		
+		//delete pMenu;
 	}
 	WindowImplBase::OnClick(msg);
 
 	if(!bHandle)
 		m_pPanelRegister->OnClick(m_hWnd, &m_PaintManager, msg, bHandle);
-
 }
 
 void CMainFrame::OnItemActive(TNotifyUI& msg)
@@ -490,6 +550,17 @@ LRESULT CMainFrame::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	return __super::OnClose(uMsg, wParam, lParam, bHandled);
 }
 
+LRESULT CMainFrame::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	wchar_t szDebug[1024];
+	if(HIWORD(wParam)==0)
+	{
+		swprintf(szDebug, L"CMainFrame::OnCommand - Menu ID:%d\n", LOWORD(wParam));
+		OutputDebugStringW(szDebug);
+	}
+	return __super::OnCommand(uMsg, wParam, lParam, bHandled);
+}
+
 LRESULT CMainFrame::OnCopyData(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
 {
 	PCOPYDATASTRUCT lpData = (PCOPYDATASTRUCT)lParam;
@@ -530,8 +601,9 @@ LRESULT CMainFrame::OnTrayNotification(UINT /*uMsg*/, WPARAM wParam, LPARAM lPar
 		{
 			POINT point;
 			GetCursorPos(&point);
-			CMenuUI *pMenu = new CMenuUI(m_hWnd);
-			pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
+			//CMenuUI *pMenu = new CMenuUI(m_hWnd);
+			//pMenu->SetAlign(eMenuAlignment_Left | eMenuAlignment_Bottom);
+			//pMenu->Init(m_PaintManager.GetRoot(), kSysMenuXml, NULL, point);
 		}
 		else
 		{

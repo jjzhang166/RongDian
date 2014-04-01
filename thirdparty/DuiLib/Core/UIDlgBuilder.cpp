@@ -82,6 +82,7 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                 bool underline = false;
                 bool italic = false;
                 bool defaultfont = false;
+				bool hor = true;
                 for( int i = 0; i < nAttributes; i++ ) {
                     pstrName = node.GetAttributeName(i);
                     pstrValue = node.GetAttributeValue(i);
@@ -99,14 +100,17 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                     }
                     else if( _tcscmp(pstrName, _T("italic")) == 0 ) {
                         italic = (_tcscmp(pstrValue, _T("true")) == 0);
-                    }
+					}
+					else if( _tcscmp(pstrName, _T("hor")) == 0 ) {
+						hor = !(_tcscmp(pstrValue, _T("false")) == 0);
+					}
                     else if( _tcscmp(pstrName, _T("default")) == 0 ) {
                         defaultfont = (_tcscmp(pstrValue, _T("true")) == 0);
                     }
                 }
                 if( pFontName ) {
-                    pManager->AddFont(pFontName, size, bold, underline, italic);
-                    if( defaultfont ) pManager->SetDefaultFont(pFontName, size, bold, underline, italic);
+                    pManager->AddFont(pFontName, size, bold, underline, italic, hor);
+                    if( defaultfont ) pManager->SetDefaultFont(pFontName, size, bold, underline, italic, hor);
                 }
             }
             else if( _tcscmp(pstrClass, _T("Default")) == 0 ) {
@@ -127,8 +131,14 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                     pManager->AddDefaultAttributeList(pControlName, pControlValue);
                 }
             }
+			else if( _tcscmp(pstrClass, DUI_CTR_MENU) == 0 )
+			{
+				if(pManager->IsLoadMenu())
+					continue;
+				_Parse(&root, pParent, pManager, true);
+				pManager->SetLoadMenu(true);
+			}
         }
-
         pstrClass = root.GetName();
         if( _tcscmp(pstrClass, _T("Window")) == 0 ) {
             if( pManager->GetPaintWindow() ) {
@@ -248,7 +258,7 @@ void CDialogBuilder::GetLastErrorLocation(LPTSTR pstrSource, SIZE_T cchMax) cons
     return m_xml.GetLastErrorLocation(pstrSource, cchMax);
 }
 
-CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPaintManagerUI* pManager)
+CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPaintManagerUI* pManager, bool bMenu)
 {
     IContainerUI* pContainer = NULL;
     CControlUI* pReturn = NULL;
@@ -256,6 +266,10 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
         LPCTSTR pstrClass = node.GetName();
         if( _tcscmp(pstrClass, _T("Image")) == 0 || _tcscmp(pstrClass, _T("Font")) == 0 \
             || _tcscmp(pstrClass, _T("Default")) == 0 ) continue;
+		if(_tcscmp(pstrClass, DUI_CTR_MENU) == 0 && pManager->IsLoadMenu()) // Find Menu
+			continue;
+		if(_tcscmp(pstrClass, DUI_CTR_MENU) != 0 && !pParent && bMenu)
+			continue;
 
         CControlUI* pControl = NULL;
         if( _tcscmp(pstrClass, _T("Include")) == 0 ) {
@@ -313,13 +327,13 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 
 			//检索子节点及附加控件
 			if(node.HasChildren()){
-				CControlUI* pSubControl = _Parse(&node,pNode,pManager);
+				CControlUI* pSubControl = _Parse(&node,pNode,pManager,bMenu);
 				if(pSubControl && _tcscmp(pSubControl->GetClass(),_T("TreeNodeUI")) != 0)
 				{
-					// 					pSubControl->SetFixedWidth(30);
-					// 					CHorizontalLayoutUI* pHorz = pNode->GetTreeNodeHoriznotal();
-					// 					pHorz->Add(new CEditUI());
-					// 					continue;
+// 					pSubControl->SetFixedWidth(30);
+// 					CHorizontalLayoutUI* pHorz = pNode->GetTreeNodeHoriznotal();
+// 					pHorz->Add(new CEditUI());
+// 					continue;
 				}
 			}
 
@@ -342,9 +356,10 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				break;
             case 4:
 				if( _tcscmp(pstrClass, DUI_CTR_EDIT) == 0 )                   pControl = new CEditUI;
-				else if( _tcscmp(pstrClass, DUI_CTR_ICON) == 0 )              pControl = new CUIIconImage;
+				else if( _tcscmp(pstrClass, DUI_CTR_ICON) == 0 )              pControl = new CIconUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_LIST) == 0 )              pControl = new CListUI;
-                else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )              pControl = new CTextUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )              pControl = new CTextUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_MENU) == 0 )              pControl = new CMenuUI;
                 break;
             case 5:
                 if( _tcscmp(pstrClass, DUI_CTR_COMBO) == 0 )                  pControl = new CComboUI;
@@ -361,7 +376,8 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 else if( _tcscmp(pstrClass, DUI_CTR_ACTIVEX) == 0 )           pControl = new CActiveXUI;
                 break;
             case 8:
-                if( _tcscmp(pstrClass, DUI_CTR_PROGRESS) == 0 )               pControl = new CProgressUI;
+				if( _tcscmp(pstrClass, DUI_CTR_PROGRESS) == 0 )               pControl = new CProgressUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_MENUTEXT) == 0 )          pControl = new CMenuText;
                 else if( _tcscmp(pstrClass, DUI_CTR_RICHEDIT) == 0 )          pControl = new CRichEditUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_CHECKBOX) == 0 )		  pControl = new CCheckBoxUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_COMBOBOX) == 0 )		  pControl = new CComboBoxUI;
@@ -369,18 +385,24 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if( _tcscmp(pstrClass, DUI_CTR_TREEVIEW) == 0 )		  pControl = new CTreeViewUI;
                 break;
             case 9:
-                if( _tcscmp(pstrClass, DUI_CTR_CONTAINER) == 0 )              pControl = new CContainerUI;
+				if( _tcscmp(pstrClass, DUI_CTR_CONTAINER) == 0 )              pControl = new CContainerUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_MENUTITLE) == 0 )         pControl = new CMenuTitle;
                 else if( _tcscmp(pstrClass, DUI_CTR_TABLAYOUT) == 0 )         pControl = new CTabLayoutUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_SCROLLBAR) == 0 )         pControl = new CScrollBarUI; 
                 break;
             case 10:
 				if( _tcscmp(pstrClass, DUI_CTR_LISTHEADER) == 0 )             pControl = new CListHeaderUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_MENUBUTTON) == 0 )		  pControl = new CMenuButton;
 				else if( _tcscmp(pstrClass, DUI_CTR_FADEBUTTON) == 0 )		  pControl = new CFadeButtonUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_TILELAYOUT) == 0 )        pControl = new CTileLayoutUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_WEBBROWSER) == 0 )        pControl = new CWebBrowserUI;
                 break;
 			case 11:
 				if (_tcscmp(pstrClass, DUI_CTR_CHILDLAYOUT) == 0)			  pControl = new CChildLayoutUI(m_pCallback);
+				else if( _tcscmp(pstrClass, DUI_CTR_MENUSIDEBAR) == 0 )		  pControl = new CMenuSideBar;
+				break;
+			case 13:
+				if( _tcscmp(pstrClass, DUI_CTR_MENUSEPARATOR) == 0 )         pControl = new CMenuSeparator;
 				break;
             case 14:
                 if( _tcscmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )         pControl = new CVerticalLayoutUI;
@@ -417,36 +439,54 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 #ifndef _DEBUG
         ASSERT(pControl);
 #endif // _DEBUG
-			if( pControl == NULL )
-			{
+		if( pControl == NULL )
+		{
 #ifdef _DEBUG
-				DUITRACE(_T("未知控件:%s"),pstrClass);
-#else
-				continue;
+			DUITRACE(_T("未知控件:%s"), pstrClass);
 #endif
-			}
+			continue;
+		}
 
         // Attach to parent
         // 因为某些属性和父窗口相关，比如selected，必须先Add到父窗口
 		if( pParent != NULL ) {
 			CTreeNodeUI* pContainerNode = static_cast<CTreeNodeUI*>(pParent->GetInterface(_T("TreeNode")));
+			pContainer = static_cast<IContainerUI*>(pParent->GetInterface(_T("IContainer")));
 			if(pContainerNode)
-				pContainerNode->GetTreeNodeHoriznotal()->Add(pControl);
-			else
 			{
-				if( pContainer == NULL ) pContainer = static_cast<IContainerUI*>(pParent->GetInterface(_T("IContainer")));
-				ASSERT(pContainer);
-				if( pContainer == NULL ) return NULL;
-				if( !pContainer->Add(pControl) ) {
+				if(!pContainerNode->GetTreeNodeHoriznotal()->Add(pControl))
+				{
 					delete pControl;
 					continue;
 				}
+			}
+			else if(pContainer)
+			{
+				if(!pContainer->Add(pControl))
+				{
+					delete pControl;
+					continue;
+				}
+			}
+			else if(_tcsicmp(pParent->GetClass(), DUI_CTR_MENU)==0)
+			{
+				CMenuUI *pMenuUI = static_cast<CMenuUI*>(pParent);
+				if(!pMenuUI)
+				{
+					delete pControl;
+					continue;
+				}
+				pMenuUI->AddControl(pControl);
+			}
+			else
+			{
+				ASSERT(FALSE);
 			}
 		}
 
 		// Add children
 		if( node.HasChildren() ) {
-			_Parse(&node, pControl, pManager);
+			_Parse(&node, pControl, pManager,bMenu);
 		}
 
         // Init default attributes
@@ -472,6 +512,15 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
         }
         // Return first item
         if( pReturn == NULL ) pReturn = pControl;
+
+		if(bMenu && !pManager->IsLoadMenu())
+		{
+			if(_tcscmp(pControl->GetClass(), DUI_CTR_MENU)==0 && !pParent)
+			{
+				pManager->AddMenu(pControl->GetName(), pControl); // Only Add Root Menu, SubMenu Save in Root Menu
+				((CMenuUI *)pControl)->Init();
+			}
+		}
     }
     return pReturn;
 }

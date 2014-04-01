@@ -735,6 +735,16 @@ namespace DuiLib
 	//
 	//
 
+	static UINT HashKey(LONG Key)
+	{
+		ldiv_t _Qrem = ldiv(Key, 127773);
+
+		_Qrem.rem = 16807 * _Qrem.rem - 2836 * _Qrem.quot;
+		if (_Qrem.rem < 0)
+			_Qrem.rem += 2147483647;
+		return (_Qrem.rem);
+	}
+
 	static UINT HashKey(LPCTSTR Key)
 	{
 		UINT i = 0;
@@ -920,6 +930,187 @@ namespace DuiLib
 	}
 
 	LPCTSTR CStdStringPtrMap::operator[] (int nIndex) const
+	{
+		return GetAt(nIndex);
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	//
+	//
+
+	CStdIntPtrMap::CStdIntPtrMap(int nSize) : m_nCount(0)
+	{
+		if( nSize < 16 ) nSize = 16;
+		m_nBuckets = nSize;
+		m_aT = new IITEM*[nSize];
+		memset(m_aT, 0, nSize * sizeof(IITEM*));
+	}
+
+	CStdIntPtrMap::~CStdIntPtrMap()
+	{
+		if( m_aT ) {
+			int len = m_nBuckets;
+			while( len-- ) {
+				IITEM* pItem = m_aT[len];
+				while( pItem ) {
+					IITEM* pKill = pItem;
+					pItem = pItem->pNext;
+					delete pKill;
+				}
+			}
+			delete [] m_aT;
+			m_aT = NULL;
+		}
+	}
+
+	void CStdIntPtrMap::RemoveAll()
+	{
+		this->Resize(m_nBuckets);
+	}
+
+	void CStdIntPtrMap::Resize(int nSize)
+	{
+		if( m_aT ) {
+			int len = m_nBuckets;
+			while( len-- ) {
+				IITEM* pItem = m_aT[len];
+				while( pItem ) {
+					IITEM* pKill = pItem;
+					pItem = pItem->pNext;
+					delete pKill;
+				}
+			}
+			delete [] m_aT;
+			m_aT = NULL;
+		}
+
+		if( nSize < 0 ) nSize = 0;
+		if( nSize > 0 ) {
+			m_aT = new IITEM*[nSize];
+			memset(m_aT, 0, nSize * sizeof(IITEM*));
+		} 
+		m_nBuckets = nSize;
+		m_nCount = 0;
+	}
+
+	LPVOID CStdIntPtrMap::Find(LONG key, bool optimize) const
+	{
+		if( m_nBuckets == 0 || GetSize() == 0 ) return NULL;
+
+		UINT slot = HashKey(key) % m_nBuckets;
+		for( IITEM* pItem = m_aT[slot]; pItem; pItem = pItem->pNext ) {
+			if( pItem->Key == key ) {
+				if (optimize && pItem != m_aT[slot]) {
+					if (pItem->pNext) {
+						pItem->pNext->pPrev = pItem->pPrev;
+					}
+					pItem->pPrev->pNext = pItem->pNext;
+					pItem->pPrev = NULL;
+					pItem->pNext = m_aT[slot];
+					pItem->pNext->pPrev = pItem;
+					//将item移动至链条头部
+					m_aT[slot] = pItem;
+				}
+				return pItem->Data;
+			}        
+		}
+
+		return NULL;
+	}
+
+	bool CStdIntPtrMap::Insert(LONG key, LPVOID pData)
+	{
+		if( m_nBuckets == 0 ) return false;
+		if( Find(key) ) return false;
+
+		// Add first in bucket
+		UINT slot = HashKey(key) % m_nBuckets;
+		IITEM* pItem = new IITEM;
+		pItem->Key = key;
+		pItem->Data = pData;
+		pItem->pPrev = NULL;
+		pItem->pNext = m_aT[slot];
+		if (pItem->pNext)
+			pItem->pNext->pPrev = pItem;
+		m_aT[slot] = pItem;
+		m_nCount++;
+		return true;
+	}
+
+	LPVOID CStdIntPtrMap::Set(LONG key, LPVOID pData)
+	{
+		if( m_nBuckets == 0 ) return pData;
+
+		if (GetSize()>0) {
+			UINT slot = HashKey(key) % m_nBuckets;
+			// Modify existing item
+			for( IITEM* pItem = m_aT[slot]; pItem; pItem = pItem->pNext ) {
+				if( pItem->Key == key ) {
+					LPVOID pOldData = pItem->Data;
+					pItem->Data = pData;
+					return pOldData;
+				}
+			}
+		}
+
+		Insert(key, pData);
+		return NULL;
+	}
+
+	bool CStdIntPtrMap::Remove(LONG key)
+	{
+		if( m_nBuckets == 0 || GetSize() == 0 ) return false;
+
+		UINT slot = HashKey(key) % m_nBuckets;
+		IITEM** ppItem = &m_aT[slot];
+		while( *ppItem ) {
+			if( (*ppItem)->Key == key ) {
+				IITEM* pKill = *ppItem;
+				*ppItem = (*ppItem)->pNext;
+				if (*ppItem)
+					(*ppItem)->pPrev = pKill->pPrev;
+				delete pKill;
+				m_nCount--;
+				return true;
+			}
+			ppItem = &((*ppItem)->pNext);
+		}
+
+		return false;
+	}
+
+	int CStdIntPtrMap::GetSize() const
+	{
+#if 0//def _DEBUG
+		int nCount = 0;
+		int len = m_nBuckets;
+		while( len-- ) {
+			for( const IITEM* pItem = m_aT[len]; pItem; pItem = pItem->pNext ) nCount++;
+		}
+		ASSERT(m_nCount==nCount);
+#endif
+		return m_nCount;
+	}
+
+	LONG CStdIntPtrMap::GetAt(int iIndex) const
+	{
+		if( m_nBuckets == 0 || GetSize() == 0 ) return false;
+
+		int pos = 0;
+		int len = m_nBuckets;
+		while( len-- ) {
+			for( IITEM* pItem = m_aT[len]; pItem; pItem = pItem->pNext ) {
+				if( pos++ == iIndex ) {
+					return pItem->Key;
+				}
+			}
+		}
+
+		return NULL;
+	}
+
+	LONG CStdIntPtrMap::operator[] (int nIndex) const
 	{
 		return GetAt(nIndex);
 	}
