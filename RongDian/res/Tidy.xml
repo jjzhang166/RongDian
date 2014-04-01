@@ -4,7 +4,7 @@
 	<Default name="TidyHotTabButton" value="height=&quot;22&quot; minwidth=&quot;36&quot; width=&quot;60&quot; align=&quot;center&quot; endellipsis=&quot;true&quot; bordersize=&quot;1&quot; bkcolor=&quot;#FFFFE07B&quot;" />
 	<VerticalLayout name="panel_tidy" inset="4,4,4,4" >
 		<Label height="1" bkcolor="#FF669934" />
-		<HorizontalLayout name="tidy_toolbar" height="36" >
+		<HorizontalLayout name="tidy_toolbar" height="24" >
 			<Control width="5" />
 				<Label name="tidy_languges" width="80" />
 				<Control width="3" />

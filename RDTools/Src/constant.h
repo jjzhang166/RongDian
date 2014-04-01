@@ -11,8 +11,8 @@ const char*	   const kCheckVersionUrl				= "http://www.rongdian.net/rdol.php?typ
 
 //table column constance
 const wchar_t* const tConfigLang 					= L"Lang";
-const wchar_t* const tConfigCheckVersion 	= L"CheckVersion";
-const wchar_t* const tConfigLastVisitTab 	= L"LastVisitTab";
+const wchar_t* const tConfigCheckVersion 			= L"CheckVersion";
+const wchar_t* const tConfigLastVisitTab 			= L"LastVisitTab";
 
 // language files
 #ifdef _DEBUG
@@ -40,12 +40,12 @@ const wchar_t* const kConfigDB						= L"Config.db";
 
 // Config.ini
 const wchar_t* const kConfigIni						= L"config.ini";
-const wchar_t* const kDefaultLangIni			= L"lang_en.ini"; // 语言文件
+const wchar_t* const kDefaultLangIni				= L"lang_en.ini"; // 语言文件
 const wchar_t* const kDefaultTab					= L"plugin_picker"; // 默认显示的tab
 
 // XML文件
-const wchar_t* const kMainFrameXml				= L"MainFrame.xml"; // 主窗体
-const wchar_t* const kUpdateFrameXml			= L"UpdateFrame.xml"; // 更新窗体
+const wchar_t* const kMainFrameXml					= L"MainFrame.xml"; // 主窗体
+const wchar_t* const kUpdateFrameXml				= L"UpdateFrame.xml"; // 更新窗体
 const wchar_t* const kPanelsXml						= L"Panels.xml";
 const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; // 
 
@@ -53,6 +53,12 @@ const wchar_t* const kSysMenuXml					= L"SysMenu.xml"; //
 const wchar_t* const kMsgIconName					= L"RongDian.png";
 const wchar_t* const kImageArrow					= L"ZoomIn.png";
 const wchar_t* const kImageCross					= L"Cross.png";
+
+// System Menu ID
+#define SYS_MENU_ABOUT								10000
+#define SYS_MENU_HELP								10001
+#define SYS_MENU_SHOW								10002
+#define SYS_MENU_QUIT								10003
 
 // Lang Section
 const wchar_t* const LS_SETTINGS					= L"plugin_settings";

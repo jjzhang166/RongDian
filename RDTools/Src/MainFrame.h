@@ -27,7 +27,6 @@ public:
 	void			OnItemActive(TNotifyUI& msg);
 	void			OnItemClick(TNotifyUI& msg);
 	void			OnItemSelected(TNotifyUI& msg);
-	void			OnMenuSelect(TNotifyUI& msg);
 	void			OnTextChanged(TNotifyUI& msg);
 	void			OnFinalMessage(HWND hWnd);
 	CControlUI*		CreateControl(LPCTSTR pstrClass, CControlUI *pParent);

@@ -1,50 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Window >
 	<VerticalLayout name="panel_settings" inset="4,4,4,4" bkcolor="FFE0E0E0" >
-		<VerticalLayout height="22" bordersize="1" bordercolor="FFE0E0E0" >
-			<HorizontalLayout height="22" >
+		<VerticalLayout height="24" bordersize="1" bordercolor="FFC0C0C0" >
+			<HorizontalLayout height="24" >
 				<Control width="20" />
-				<Label text="Language:" width="80" />
+				<Label name="settings_lang_text" width="60" />
 				<Control width="10" />
-				<Combo name="settings_langs" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" >
-				</Combo>
+				<Combo name="settings_langs" tooltip="" normalimage="file='default\combo_normal.png' corner='2,2,24,2'" hotimage="file='default\combo_hover.png' corner='2,2,24,2'" pushedimage="file='default\combo_hover.png' corner='2,2,24,2'" itemtextpadding="3,3,3,3" />
 				<Control width="20" />
 			</HorizontalLayout>
 		</VerticalLayout>
-		
-		<VerticalLayout height="68" bordersize="1" bordercolor="FFE0E0E0" >
-			<HorizontalLayout height="22" >
-				<Control width="10" />
-				<Label bkcolor="FF669934" padding="0,11,0,10" />
-				<Control width="20" />
+		<Control height="1" />
+		<VerticalLayout height="50" bordersize="1" bordercolor="FFC0C0C0" >
+			<HorizontalLayout height="24" >
+			<Control width="10" />
+			<Label name="settings_version_text" width="80" />
+			<Label height="1" bkcolor="FF669934" padding="0,11,0,10" />
+			<Control width="20" />
 			</HorizontalLayout>
-		  <HorizontalLayout height="22" >
-				<Control width="105" />
-				<CheckBox name="settings_check_version_cb" width="22" selectedimage="file='default\checkbox_yes.png' dest='2,2,20,20'" normalimage="file='default\checkbox_no.png'"/>
+			<HorizontalLayout height="26" >
+				<Control width="30" />
+				<CheckBox name="settings_check_version_cb" width="22" selectedimage="file='default\checked.png' dest='5,5,21,21'" normalimage="file='default\unchecked.png' dest='5,5,21,21'"/>
 				<Label name="settings_check_version"/>
 				<Control />
 			</HorizontalLayout>
-			<Control width="2" />
-			<!--
-			<HorizontalLayout height="22" >
-				<Control width="30" />
-				<Label text="Color：" width="42" />
-				<Control width="3" />
-				<Edit minwidth="250" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8"/>
-				<Control width="30" />
-			</HorizontalLayout>
-			<Control width="2" />
-			<HorizontalLayout height="22" >
-				<Control width="30" />
-				<Label text="Path：" width="42" />
-				<Control width="3" />
-				<Edit minwidth="250" bkcolor="#FFD0D4D8" nativebkcolor="#FFD0D4D8"/>
-				<Control width="3" />
-				<Button name="coder_path_open" width="24" bkimage="file='default\folderx24.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" mouse="true" tooltip="" />
-				<Control width="30" />
-			</HorizontalLayout>
-			-->
-			
 		</VerticalLayout>
 		<Control />
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >

@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "Setting.h"
 
+const wchar_t* const kSettingsLangText = L"settings_lang_text";
+const wchar_t* const kSettingsVersionText = L"settings_version_text";
 const wchar_t* const kSettingsLangs = L"settings_langs";
 const wchar_t* const kSettingsApply = L"settings_apply";
 const wchar_t* const kSettingsCheckVersion = L"settings_check_version";
@@ -25,7 +27,6 @@ void CSetting::OnQuit()
 
 BOOL CSetting::OnInit(WPARAM wParam, LPARAM /*lParam*/)
 {
-
 	CPaintManagerUI *pManager = (CPaintManagerUI *)wParam;
 	if(!pManager)
 		return FALSE;
@@ -43,10 +44,12 @@ BOOL CSetting::SetLang(CPaintManagerUI* pManager, LPCWSTR lpszLang, LPCWSTR lpsz
 {
 	if(!pManager)
 		return FALSE;
-	wcscpy(m_pLangSection,lpszLangSection);
-	SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
-		SET_CONTROL_TEXT2(kSettingsCheckVersion)
-	SET_CONTROL_END()
+	wcscpy(m_pLangSection, lpszLangSection);
+SET_CONTROL_BEGIN(pManager, lpszLang, m_pLangSection)
+	SET_CONTROL_TEXT2(kSettingsLangText)
+	SET_CONTROL_TEXT2(kSettingsVersionText)
+	SET_CONTROL_TEXT2(kSettingsCheckVersion)
+SET_CONTROL_END()
 	return TRUE;
 }
 

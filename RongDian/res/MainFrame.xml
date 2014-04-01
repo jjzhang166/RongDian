@@ -17,28 +17,12 @@
 		normalimage="file='default\menu_bk_white.png'" 
 		selectimage="file='default\menu_hot_bk.png'" 
 		separatorimage="file='default\header_line.png'" 
-		titlecolor="0xFF0F386E" sidebarcolor="0xFF380F6E"
-		textfont="0" sidebarfont="3" titlefont="1"
-		textcolor="0xFF0F386E" disabledtextcolor="0xFF380F6E" selectedtextcolor="0xFF386E0F"
-		height="24" >
-		<MenuSideBar name="menu_sidebar" bkimage="file='default\process_fg.png'" text="SideBar" /> <!-- 菜单-SideBar -->
-		<MenuTitle name="menu_title" bkimage="file='default\list_header_bg.png'" text="TitleBar" /> <!-- 菜单-TitleBar -->
-		<MenuText name="menu_about" bkimage="file='default\menu_about.png'" text="关于" key="0x4E" vctrl="true" mid="10" /> <!-- 菜单-关于 -->
-		<MenuText name="menu_update" bkimage="file='default\menu_help.png'" text="检查更新" key="0x73" mid="11" enabled="false" /> <!-- 菜单-检查更新 -->
-		<MenuSeparator /> <!-- 菜单-Separator -->
-		<Menu name="menu_popup" submenu="true" mid="12" text="一键登录" >
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="21" />
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="22" />
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="23" />
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="24" />
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="25" />
-			<MenuText name="menu_subitem" bkimage="file='default\menu_help.png'" text="子窗口" mid="26" />
-		</Menu>
-		<MenuButton name="menu_button" bkimage="file='default\process_fg.png'" text="按钮菜单" mid="14" /> <!-- 菜单-按钮菜单 -->
-		<MenuSeparator /> <!-- 菜单-Separator -->
-		<MenuText name="menu_show" text="显示主窗口" mid="15" /> <!-- 菜单-显示主窗口 -->
-		<MenuSeparator /> <!-- 菜单-Separator -->
-		<MenuText name="menu_quit" bkimage="file='default\menu_quit.png'" text="退出" key="0x72" vctrl="true" vatl="true" vshift="true" mid="16" /> <!-- 菜单-退出 -->
+		textcolor="0xFF0F396E" disabledtextcolor="0xFFA0A0A0" selectedtextcolor="0xFF0F396E"
+		textfont="0" height="26" >
+		<MenuText name="menu_about" bkimage="file='default\menu_about.png'" text="关于" mid="10000" /> <!-- 菜单-关于 -->
+		<MenuText name="menu_update" bkimage="file='default\menu_help.png'" text="检查更新" mid="10001" /> <!-- 菜单-检查更新 -->
+		<MenuText name="menu_show" text="显示主窗口" mid="10002" /> <!-- 菜单-显示主窗口 -->
+		<MenuText name="menu_quit" bkimage="file='default\menu_quit.png'" text="退出" mid="10003" /> <!-- 菜单-退出 -->
 	</Menu> <!-- system_menu -->
 	<!-- frame_container -->
 	<VerticalLayout name="frame_container" bordersize="1" borderround="2,2" colorhsl="true" inset="1,1,1,1" >

@@ -1108,9 +1108,9 @@
 		<Attribute name="sidebarcolor" default="0x00000000" type="DWORD" comment="菜单侧边栏颜色,如(0xFFFF0000)"/>
 		<Attribute name="sidebarcolor2" default="0x00000000" type="DWORD" comment="菜单侧边栏渐变色2,和sidebarcolor配合使用,如(0xFFFFFF00)"/>
 		<Attribute name="sidebarcolor3" default="0x00000000" type="DWORD" comment="菜单侧边栏渐变色3,和sidebarcolor、sidebarcolor2配合使用,如(0xFFFF00FF)"/>
-		<Attribute name="textcolor" default="0x00000000" type="DWORD" comment="菜单字体normal状态颜色,如(0xFFFF0000)"/>
-		<Attribute name="selectedtextcolor" default="0x00000000" type="DWORD" comment="菜单字体selected状态颜色,如(0xFFFF0000)"/>
-		<Attribute name="disabledtextcolor" default="0x00000000" type="DWORD" comment="菜单字体disabled状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="textcolor" default="0xFF0F396E" type="DWORD" comment="菜单字体normal状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="selectedtextcolor" default="0xFF0F396E" type="DWORD" comment="菜单字体selected状态颜色,如(0xFFFF0000)"/>
+		<Attribute name="disabledtextcolor" default="0xFFA0A0A0" type="DWORD" comment="菜单字体disabled状态颜色,如(0xFFFF0000)"/>
 		<Attribute name="normalimage" default="" type="STRING" comment="菜单项normal状态背景图片,如(bk.bmp或file='aaa.jpg')"/>
 		<Attribute name="selectimage" default="" type="STRING" comment="菜单项select状态背景图片,如(bk.bmp或file='aaa.jpg')"/>
 		<Attribute name="titleimage" default="" type="STRING" comment="菜单标题栏背景图片,如(bk.bmp或file='aaa.jpg')"/>
