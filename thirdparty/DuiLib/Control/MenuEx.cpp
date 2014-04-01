@@ -272,17 +272,15 @@ CMenuUI::CMenuUI()
 	, m_uTextStyle(DT_SINGLELINE | DT_VCENTER | DT_LEFT)
 {
 	//initialize colors with system default
-	m_dwSelectedTextColor = ::GetSysColor(COLOR_HIGHLIGHTTEXT);
-	m_dwNormalTextColor = ::GetSysColor(COLOR_MENUTEXT);
-	m_dwDisabledTextColor = ::GetSysColor(COLOR_GRAYTEXT);
+	m_dwSelectedTextColor = 0xFF0F396E;
+	m_dwNormalTextColor = 0xFF0F396E;
+	m_dwDisabledTextColor = 0xFFA0A0A0;
 
 	//initialize Title colors
-	m_dwTitleColor = 0xFF0000C0;
-	m_dwTitleColor2 = 0xFF000000;
+	m_dwTitleColor = 0xFF0F396E;
 
 	//initialize sidebar colors
-	m_dwSideBarColor = 0xFF0000C0;
-	m_dwSideBarColor2 = 0xFF000000;
+	m_dwSideBarColor = 0xFF0F396E;
 
 	m_bPopup = FALSE;
 	m_bBreak = FALSE;
@@ -502,6 +500,12 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 	HDC hDC = pdis->hDC;
 	RECT rcClipBox;
 	::GetClipBox(hDC, &rcClipBox);
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP hBitmap = NULL, hOldBitmap = NULL;
+	hBitmap = CreateCompatibleBitmap(hDC, 
+		rcClipBox.right-rcClipBox.left, 
+		rcClipBox.bottom-rcClipBox.top);
+	hOldBitmap = (HBITMAP)SelectObject(hMemDC, hBitmap);
 	if(pItem->m_bTitle)
 	{
 		//draw the Title
@@ -510,7 +514,7 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 		rcTitle.top = pdis->rcItem.top;
 		rcTitle.right = rcClipBox.right;
 		rcTitle.bottom = pdis->rcItem.bottom;
-		DrawTitle(hDC, rcTitle, pItem->GetText());
+		DrawTitle(hMemDC, rcTitle, pItem->GetText());
 	}
 	else if(pItem->m_bSideBar)
 	{
@@ -520,7 +524,7 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 		rcSideBar.top = rcClipBox.top + m_nTitleHeight;
 		rcSideBar.right = pdis->rcItem.right;
 		rcSideBar.bottom = rcClipBox.bottom;
-		DrawSideBar(hDC, rcSideBar, pItem->GetText());
+		DrawSideBar(hMemDC, rcSideBar, pItem->GetText());
 	}
 	else if(pItem->m_bSeparator) 
 	{
@@ -531,19 +535,19 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 			pdis->rcItem.right, 
 			pdis->rcItem.bottom
 		}; // copy rect
-		DrawBackGround(hDC, rcSeparator, FALSE, FALSE);
+		DrawBackGround(hMemDC, rcSeparator, FALSE, FALSE);
 		// draw the background
 		rcSeparator.top += (rcSeparator.bottom - rcSeparator.top) >> 1; // vertical center
 		if(!m_strSeparatorImage.IsEmpty())
 		{
 			m_rcItem = rcSeparator;
 			m_rcPaint = rcSeparator;
-			if(!DrawImage(hDC, (LPCTSTR)m_strSeparatorImage))
+			if(!DrawImage(hMemDC, (LPCTSTR)m_strSeparatorImage))
 				m_strSeparatorImage.Empty();
 		}
 		else
 		{
-			::DrawEdge(hDC, &rcSeparator, EDGE_ETCHED, BF_TOP); // draw separator line
+			::DrawEdge(hMemDC, &rcSeparator, EDGE_ETCHED, BF_TOP); // draw separator line
 		}
 	} // end of 'else if(pItem->m_bSeparator)'
 	else
@@ -553,12 +557,12 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 		BOOL bChecked  = pdis->itemState & ODS_CHECKED;
 
 		//draw the background first
-		DrawBackGround(hDC, pdis->rcItem, bSelected, bGrayed);
+		DrawBackGround(hMemDC, pdis->rcItem, bSelected, bGrayed);
 
 		//draw the icon
 		RECT rcButton = { 
-			pdis->rcItem.left - 1, 
-			pdis->rcItem.top - 1, 
+			pdis->rcItem.left + 1, 
+			pdis->rcItem.top + 1, 
 			pdis->rcItem.left + pdis->rcItem.bottom - pdis->rcItem.top - 1,
 			pdis->rcItem.top + pdis->rcItem.bottom - pdis->rcItem.top - 1,
 		};
@@ -568,7 +572,7 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 		{
 			m_rcItem = rcButton;
 			m_rcPaint = rcButton;
-			if(!DrawImage(hDC, pItem->GetBkImage()))
+			if(!DrawImage(hMemDC, pItem->GetBkImage()))
 				pItem->SetBkImage(_T(""));
 
 			//if(!bGrayed && (bSelected || bChecked) )
@@ -584,10 +588,22 @@ void CMenuUI::DrawItem(LPDRAWITEMSTRUCT pdis)
 				pdis->rcItem.bottom
 			}; // start w/whole item
 			rcText.left += rcButton.bottom-rcButton.top + CX_GAP + CX_TEXT_MARGIN; // left margin
-			rcText.right -= pItem->m_nSize;				 // right margin
-			DrawText(hDC, rcText, pItem->GetText(), bSelected, bGrayed);
+			rcText.right -= pItem->m_nSize; // right margin
+			DrawText(hMemDC, rcText, pItem->GetText(), bSelected, bGrayed);
 		}
 	}
+	::BitBlt(hDC, 
+		pdis->rcItem.left, 
+		pdis->rcItem.top, 
+		pdis->rcItem.right-pdis->rcItem.left, 
+		pdis->rcItem.bottom-pdis->rcItem.top,
+		hMemDC,
+		pdis->rcItem.left, 
+		pdis->rcItem.top,
+		SRCCOPY);
+	::SelectObject(hMemDC, hOldBitmap);
+	::DeleteDC(hMemDC);
+	::DeleteObject(hOldBitmap);
 }
 
 void CMenuUI::MeasureItem(LPMEASUREITEMSTRUCT pmis)
@@ -1339,13 +1355,13 @@ void CMenuUI::DrawSideBar(HDC hDC, RECT rtPaint, LPCWSTR pszText)
 
 void CMenuUI::DrawText(HDC hDC, RECT rtPaint, LPCWSTR pszText, BOOL bSelected, BOOL bDisabled)
 {
-	if(bDisabled && !bSelected)
-	{
-		DrawItemText(hDC, rtPaint, pszText, m_dwSelectedTextColor);
-	}
 	if(bDisabled)
 	{
 		DrawItemText(hDC, rtPaint, pszText, m_dwDisabledTextColor);
+	}
+	else if(bSelected)
+	{
+		DrawItemText(hDC, rtPaint, pszText, m_dwSelectedTextColor);
 	}
 	else
 	{
