@@ -226,10 +226,10 @@ void CMainFrame::InitWindow()
 	table.Query(&stTable);
 	if(wcslen(table.GetResults()->szValue)>0&&wcsicmp(table.GetResults()->szValue,L"1")==0)
 	{
-		//unsigned int nThread = 0;
-		//HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
-		//if(hThread)
-		//	CloseHandle(hThread);
+		unsigned int nThread = 0;
+		HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+		if(hThread)
+			CloseHandle(hThread);
 	}
 }
 
@@ -465,7 +465,13 @@ LRESULT CMainFrame::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 		case SYS_MENU_ABOUT:
 			SelectPanel(kTabAbout);
 			break;
-		case SYS_MENU_HELP:
+		case SYS_MENU_CHECKVERSION:
+			{
+				unsigned int nThread = 0;
+				HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, UpdateCheckThread, this, 0, &nThread);
+				if(hThread)
+					CloseHandle(hThread);
+			}
 			break;
 		case SYS_MENU_SHOW:
 			if(lpLoader)
@@ -680,7 +686,7 @@ BOOL CMainFrame::SelectPanel(LPCWSTR lpszTab)
 		if(pLayout)	//tab with panel
 		{
 			pLayout->SetVisible();
-			wcscpy(m_szVisiblePanel,lpInfo->szLayout);//改成wcscpy_s会报错
+			wcscpy(m_szVisiblePanel,lpInfo->szLayout);
 		}
 		else if(pNode->GetCountChild()>0)
 		{
@@ -761,52 +767,21 @@ BOOL CMainFrame::InitPanels()
 	// Create Plugin's Panel
 	CreatePanels();
 
-	MAIN_PANEL aboutPanel;
-	wcscpy(aboutPanel.szLayout, kLayoutAbout);
-	wcscpy(aboutPanel.szXml, kXmlAbout);
-	wcscpy(aboutPanel.szTab, kTabAbout);
+	LPMAIN_PANEL aboutPanel = new MAIN_PANEL();
+	wcscpy(aboutPanel->szLayout, kLayoutAbout);
+	wcscpy(aboutPanel->szXml, kXmlAbout);
+	wcscpy(aboutPanel->szTab, kTabAbout);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_ABOUTPANEL, kNameAbout, szName);
 	Utility::GetINIStr(g_pLangManager->GetLangName(), LS_ABOUTPANEL, kDescAbout, szDesc);
-	wcscpy(aboutPanel.szName, szName);
-	wcscpy(aboutPanel.szDesc, szDesc);
-	AddPanel(&aboutPanel);
+	wcscpy(aboutPanel->szName, szName);
+	wcscpy(aboutPanel->szDesc, szDesc);
+	//AddPanel(&aboutPanel);
+	g_lstPanelInfo.push_back(aboutPanel);
+	CreatePanel(aboutPanel,NULL);
 
 	m_pPanelRegister->OnInit((WPARAM)&m_PaintManager, (LPARAM)(IListCallbackUI*)this);
 
 	return bRet;
-}
-
-BOOL CMainFrame::AddPanel(LPMAIN_PANEL lpPanelInfo)
-{
-	static LPCTSTR pTabAttributes = m_PaintManager.GetDefaultAttributeList(kTabNodeAttr);
-	static LPCTSTR pNodeFolderAttributes = m_PaintManager.GetDefaultAttributeList(kTabNodeFloaderAttr);
-	BOOL bRet = FALSE;
-	LPMAIN_PANEL lpNewPanel = new MAIN_PANEL();
-	if(!lpNewPanel)
-		return bRet;
-	wcscpy(lpNewPanel->szLayout, lpPanelInfo->szLayout);
-	wcscpy(lpNewPanel->szXml, lpPanelInfo->szXml);
-	wcscpy(lpNewPanel->szTab, lpPanelInfo->szTab);
-	wcscpy(lpNewPanel->szPanel, lpPanelInfo->szPanel);
-	wcscpy(lpNewPanel->szName, lpPanelInfo->szName);
-	wcscpy(lpNewPanel->szDesc, lpPanelInfo->szDesc);
-	g_lstPanelInfo.push_back(lpNewPanel);
-
-	CTreeNodeUI *pTab = NULL;
-	FIND_CONTROL_BY_ID(pTab, CTreeNodeUI, (&m_PaintManager), lpNewPanel->szTab)
-	if(pTab)
-	{
-		pTab->ApplyAttributeList(pTabAttributes);
-		pTab->GetFolderButton()->ApplyAttributeList(pNodeFolderAttributes);
-		pTab->SetItemText(lpNewPanel->szName);
-		if (lpPanelInfo->childs.empty())
-		{
-			pTab->GetFolderButton()->SetEnabled(false);
-			pTab->GetFolderButton()->SetVisible(false);
-		}
-	}
-
-	return TRUE;
 }
 
 BOOL CMainFrame::CreatePanels()

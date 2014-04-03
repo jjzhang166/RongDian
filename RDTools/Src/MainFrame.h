@@ -46,7 +46,6 @@ public:
 
 	BOOL			SelectPanel(LPCWSTR lpszTab);
 	BOOL			InitPanels();
-	BOOL			AddPanel(LPMAIN_PANEL lpPanelInfo);
 	BOOL			CreatePanels();
 	BOOL			CreatePanel(LPMAIN_PANEL lpPanelInfo,CTreeNodeUI* pParentNode);
 	BOOL			ReleasePanels();

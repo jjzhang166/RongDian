@@ -56,7 +56,7 @@ const wchar_t* const kImageCross					= L"Cross.png";
 
 // System Menu ID
 #define SYS_MENU_ABOUT								10000
-#define SYS_MENU_HELP								10001
+#define SYS_MENU_CHECKVERSION						10001
 #define SYS_MENU_SHOW								10002
 #define SYS_MENU_QUIT								10003
 
