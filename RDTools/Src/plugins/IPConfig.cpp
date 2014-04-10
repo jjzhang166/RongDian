@@ -357,6 +357,7 @@ BOOL CIPConfig::InitSolutionsList()
 
 BOOL CIPConfig::LoadAdapters()
 {
+	m_lstAdaptersInfo.clear();
 	BOOL bRet = FALSE;
 	ULONG uAdapterSize = sizeof(IP_ADAPTER_INFO);
 	PIP_ADAPTER_INFO pAdapterHeader = NULL;
@@ -368,6 +369,8 @@ BOOL CIPConfig::LoadAdapters()
 		if(!pAdapterInfo)
 			return bRet;
 	}
+
+
 	if(GetAdaptersInfo(pAdapterInfo, &uAdapterSize)!=ERROR_SUCCESS)
 	{
 		free(pAdapterInfo);
@@ -384,6 +387,17 @@ BOOL CIPConfig::LoadAdapters()
 	pAdapterHeader = pAdapterInfo;
 	while(pAdapterInfo)
 	{
+		memset(szType,0,STRING_LENGTH);
+		memset(szDesc,0,STRING_LENGTH);
+		memset(szAddr[0],0,STRING_LENGTH);
+		memset(szAddr[1],0,STRING_LENGTH);
+		memset(szAddr[2],0,STRING_LENGTH);
+		memset(szAddr[3],0,STRING_LENGTH);
+		memset(szMask,0,STRING_LENGTH);
+		memset(szGateway,0,STRING_LENGTH);
+		memset(szDns[0],0,STRING_LENGTH);
+		memset(szDns[1],0,STRING_LENGTH);
+		memset(szMac,0,STRING_LENGTH);
 		pAdapter = new ADAPTER_INFO();
 		if(!pAdapter)
 			break;
@@ -417,6 +431,7 @@ BOOL CIPConfig::LoadAdapters()
 
 BOOL CIPConfig::InitAdaptersList()
 {
+	m_pAdapterList->RemoveAll();
 	CListLabelElementUI *pItem = NULL;
 	LPCWSTR lpszAddr = NULL;
 	if(m_pIPEdit)
@@ -433,13 +448,18 @@ BOOL CIPConfig::InitAdaptersList()
 			break;
 		pItem->SetText(lpAdapter->szName);
 		m_pAdapterList->AddAt(pItem, m_pAdapterList->GetCount());
-		for(int i=0; i<_countof(lpAdapter->szAddr) && wcslen(lpAdapter->szAddr[i])>0; i++)
+		/*for(int i=0; i<_countof(lpAdapter->szAddr) && wcslen(lpAdapter->szAddr[i])>0; i++)
 		{
 			if(wcsicmp(lpAdapter->szAddr[0], lpszAddr)==0)
 			{
 				pItem->Select();
 				nSelected = nIndex;
 			}
+		}*/
+		if (wcsicmp(lpAdapter->szAddr[0],L"0.0.0.0")!=0&&wcsicmp(lpAdapter->szMask,L"0.0.0.0")!=0&&wcsicmp(lpAdapter->szGateway,L"0.0.0.0")!=0)
+		{
+			pItem->Select();
+			nSelected = nIndex;
 		}
 		nIndex++;
 	}
@@ -933,9 +953,14 @@ DWORD CIPConfig::ExeCMDThreadFunc(void * pParams)
 	PCMD_EXE_INFO info = (PCMD_EXE_INFO)pParams;
 	HWND hWnd = info->hWnd;
 
-	DuiShowLoading(hWnd, L"Loading...", L"", &info->lpLoader);
-	Utility::ExcuteCommand(info->lpszCommand);
-	Sleep(3000);
+	g_pMainFrame->ShowLoading();
+	wchar_t szError[1024]={0};
+	if(!Utility::ExcuteCommand(info->lpszCommand,szError))
+	{
+		SendMessage(hWnd, WM_CMD_COMPLETE, NULL, NULL);
+		RDMsgBox(hWnd, szError,MSG_ERR, MB_OK | MB_ICONINFORMATION);
+		return 0;
+	}
 	SendMessage(hWnd, WM_CMD_COMPLETE, NULL, NULL);
 
 	return 0;
@@ -945,12 +970,19 @@ BOOL CIPConfig::ExeCMDComplete()
 {
 	if (m_pCmdInfo)
 	{
-		DuiCancelLoading(m_pCmdInfo->lpLoader);
+		//DuiCancelLoading(m_pCmdInfo->lpLoader);
+		g_pMainFrame->CancelLoading();
 		m_pCmdInfo->lpLoader = NULL;
 		if(m_pCmdInfo->lpszCommand)
 			free(m_pCmdInfo->lpszCommand);
 		free(m_pCmdInfo);
 		m_pCmdInfo = NULL;
 	}
+
+	//refresh adapters combo
+	int curSel = m_pAdapterList->GetCurSel();
+	LoadAdapters();
+	InitAdaptersList();
+	m_pAdapterList->SelectItem(curSel);
 	return TRUE;
 }

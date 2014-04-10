@@ -480,7 +480,7 @@ BOOL Utility::GetFolderSize(LPCWSTR lpszFolderPath, DWORD &dwSize)
 	return bRet;
 }
 
-BOOL Utility::ExcuteCommand(LPWSTR pCommandParam)
+BOOL Utility::ExcuteCommand(LPWSTR pCommandParam,LPWSTR pErrorStr)
 {
 	//初始化shellexe信息
 	SHELLEXECUTEINFO   ExeInfo; 
@@ -495,7 +495,23 @@ BOOL Utility::ExcuteCommand(LPWSTR pCommandParam)
 	ExeInfo.lpDirectory = NULL;
 	ExeInfo.hInstApp = NULL;
 	//执行命令
-	ShellExecuteEx(&ExeInfo);
+	if(!ShellExecuteEx(&ExeInfo))
+	{
+		LPVOID lpMsgBuf; 
+		FormatMessage( 
+		    FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+		    FORMAT_MESSAGE_FROM_SYSTEM | 
+		    FORMAT_MESSAGE_IGNORE_INSERTS, 
+		    NULL, 
+		    GetLastError(), 
+		    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		    (LPTSTR)&pErrorStr, 
+		    0, 
+		    NULL 
+		    );
+		return FALSE;
+	}
+	
 	//等待进程结束
 	WaitForSingleObject(ExeInfo.hProcess, INFINITE);//INFINITE	
 	return TRUE;
