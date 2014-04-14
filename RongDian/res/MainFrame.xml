@@ -51,8 +51,8 @@
 		<Label height="1" bkcolor="#FF669934" />
 		<!-- frame_contents -->
 		<HorizontalLayout name="frame_contents" >
-			<TreeView name="panel_tabs" width="150" visiblefolderbtn="true" visiblecheckbtn="false" vscrollbar="true">
-				<TreeNode name="plugin_about"/>
+			<TreeView name="panel_tabs" width="150" minheight="35" visiblefolderbtn="true" visiblecheckbtn="false" vscrollbar="true">
+				<TreeNode height="1"/>
 			</TreeView>
 			<Button name="tab_hide" width="8" bkcolor="0xDDC8C8C8" hotimage="file='default\aio_flexright_normal.png'" />
 			<Button name="tab_show" width="8" bkcolor="0xDDC8C8C8" hotimage="file='default\aio_flexleft_normal.png'" visible="false" />

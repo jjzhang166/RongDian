@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-16" ?>
 <Root>
 	<Plugin>
-		<xml>Picker.xml</xml>
-		<tab>plugin_picker</tab>
-		<Plugin>
-			<tab>plugin_picker2</tab>
-			<Plugin>
-				<tab>plugin_picker3</tab>
-			</Plugin>
-		</Plugin>
-	</Plugin>
-	
-	<Plugin>
 		<tab>cat_coder</tab>
 		<Plugin>
 			<xml>Coder.xml</xml>
@@ -21,6 +10,10 @@
 			<xml>UrlEncoder.xml</xml>
 			<tab>plugin_urlencoder</tab>
 		</Plugin>	
+	</Plugin>
+	<Plugin>
+		<xml>Picker.xml</xml>
+		<tab>plugin_picker</tab>
 	</Plugin>
 	
 	<!--

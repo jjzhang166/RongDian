@@ -829,6 +829,7 @@ BOOL CMainFrame::CreatePanel(LPMAIN_PANEL lpPanelInfo,CTreeNodeUI* pParentNode)
 		pParentNode->AddChildNode(pTab);
 	m_pPanelTabs->AddAt(pTab, m_pPanelTabs->GetCount()-1);
 
+
 	if(wcslen(lpPanelInfo->szXml)>0)
 	{
 		pPanel = new CChildLayoutUI();
@@ -837,8 +838,7 @@ BOOL CMainFrame::CreatePanel(LPMAIN_PANEL lpPanelInfo,CTreeNodeUI* pParentNode)
 		pPanel->SetVisible(false);
 		m_pPanelContents->AddAt(pPanel, m_pPanelContents->GetCount()-1);
 	}
-		
-	
+
 	// sub panel
 	if(!lpPanelInfo->childs.empty())
 	{
@@ -852,9 +852,10 @@ BOOL CMainFrame::CreatePanel(LPMAIN_PANEL lpPanelInfo,CTreeNodeUI* pParentNode)
 	else
 	{
 		pTab->GetFolderButton()->SetEnabled(false);
-		pTab->GetFolderButton()->SetVisible(false);
+		pTab->GetFolderButton()->SetMaxHeight(0);
+		pTab->GetFolderButton()->SetMaxWidth(8);
+		//pTab->GetFolderButton()->SetVisible(false);
 	}
-		
 	return TRUE;
 }
 
