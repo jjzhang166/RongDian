@@ -21,6 +21,7 @@ public:
 	virtual LPCWSTR GetName() { return _TOOL_NAME; };
 	virtual void SetName(LPCWSTR pszName) { if(!pszName) return; memset(_TOOL_NAME, 0, sizeof(_TOOL_NAME)); wcscpy(_TOOL_NAME, pszName); };
 
+	virtual LRESULT OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/) { return 0; };
 	virtual LRESULT HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) { return 0; };
 	virtual LRESULT OnCopyData(WPARAM /*wParam*/, LPARAM /*lParam*/) { return 0; };
 
@@ -100,6 +101,7 @@ typedef struct _tagTOOLS_INFO
 			memset(tool, 0, sizeof(TOOLS_INFO)); \
 			if(entry) \
 			{ \
+				entry->SetName(n); \
 				tool->nIndex = lstToolsEntries.size(); \
 				wcscpy(tool->szName,n);\
 				tool->lpClass = entry; \

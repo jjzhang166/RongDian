@@ -303,3 +303,23 @@ LRESULT CPanelRegister::OnCopyData(WPARAM wParam, LPARAM lParam)
 	}
 	return bRet;
 }
+
+LRESULT CPanelRegister::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	HRESULT hRes = 0;
+	BOOL bHandle = FALSE;
+	list<LPTOOLS_INFO>::iterator iter;
+	LPTOOLS_INFO tool = NULL;
+	for(iter=lstToolsEntries.begin(); iter!=lstToolsEntries.end(); iter++)
+	{
+		tool = (*iter);
+		if(!tool->lpClass)
+		{
+			continue;
+		}
+		hRes = tool->lpClass->OnDropFiles(uMsg, wParam, lParam);
+		if(hRes)
+			break;
+	}
+	return hRes;
+}

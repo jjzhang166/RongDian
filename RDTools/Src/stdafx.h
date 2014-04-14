@@ -166,6 +166,7 @@ extern wchar_t					g_szSnapShot[1024];
 extern wchar_t					g_szCoderPath[1024];
 extern wchar_t					g_szCoderBackupPath[1024];
 extern wchar_t					g_szHostsPath[1024];
+extern wchar_t					g_szDefaultBackground[9];
 extern wchar_t					g_szBackground[1024];
 extern wchar_t					g_szLangFile[1024];
 extern wchar_t					g_szAddrSolution[1024];

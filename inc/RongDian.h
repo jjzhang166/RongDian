@@ -34,6 +34,7 @@ typedef BOOL (WINAPI *PFNChangeWindowMessageFilter)(UINT message, DWORD dwFlag);
 #define WM_CMD_COMPLETE				WM_USER + 112 // cmd命令成功执行结束
 #define WM_UPDATE_RESPONE			WM_USER + 113 // 版本检测查询返回消息
 #define WM_UPDATE_PROGRESS			WM_USER + 114 // 新版本下载进度更新消息
+#define WM_UPDATE_BACKGROUND		WM_USER + 115 // 背景更新
 
 typedef struct _tagSNAPSHOT_INFO
 {

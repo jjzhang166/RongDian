@@ -52,7 +52,7 @@
 			<Control width="3" />
 			<Button name="coder_bom" text="" width="60" bkcolor="0xFFE0E0E0" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" userdata="FALSE" visible="FALSE" />
 			<Control width="3" />
-			<Button name="coder_backup" width="32" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFFF0000" mouse="true" tooltip="" userdata="TRUE" />
+			<Button name="coder_backup" width="32" normalimage="file='default\backup.png'"  hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFFF0000" mouse="true" tooltip="" userdata="TRUE" />
 			<Control />
 		</HorizontalLayout>
 		<HorizontalLayout height="28" inset="2,2,2,2" bordersize="1" bordercolor="#FFE0E0E0" >

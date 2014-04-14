@@ -145,8 +145,8 @@ BOOL CheckInstance()
 
 BOOL IsImageFile(LPCWSTR lpszFileName)
 {
-	BOOL bRet = PathFileExistsW(lpszFileName);
-	if(!bRet)
+	BOOL bRet = FALSE;
+	if(!PathFileExistsW(lpszFileName))
 		return bRet;
 	LPCWSTR lpszExt = PathFindExtensionW(lpszFileName);
 	if(!lpszExt)
@@ -410,6 +410,7 @@ ASSOC_BEGIN()
 	ASSOC_LANG(MSG_MASK_ERR, kInvalidMaskErr, LS_MSG)
 	ASSOC_LANG(MSG_GATEWAY_ERR, kInvalidGatewayErr, LS_MSG)
 	ASSOC_LANG(MSG_DNS_ERR, kInvalidDnsErr, LS_MSG)
+	ASSOC_LANG(MSG_BACKGROUND_ERR, kInvalidBackgroundErr, LS_MSG)
 	ASSOC_LANG(MSG_DELETE_SOLUTION, kDeleteSolution, LS_MSG)
 	ASSOC_LANG(MSG_INVALID_NAME, kInvalidName, LS_MSG)
 	ASSOC_LANG(MSG_DEBUG_TEXT, kDebugText, LS_MSG)

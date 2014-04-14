@@ -249,6 +249,42 @@ void CCoder::OnItemActive(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, TNotifyU
 	}
 }
 
+LRESULT CCoder::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
+{
+	LPCWSTR pluginName = GetName();
+	if (wcsicmp(g_pMainFrame->m_szSelectedNode,pluginName)!=0)
+	{
+		return 0;
+	}
+	HDROP hDrop = (HDROP)wParam;
+	int nCount = DragQueryFileW(hDrop, 0xFFFFFFFF, NULL, 0);
+	int nStrLen = 0;
+	int addedCount = 0;
+	BOOL bRet = FALSE;
+	wchar_t szFileName[1024];
+	LPCWSTR lpszFileName = NULL, lpszExt = NULL;
+	for(int i=0; i<nCount; i++)
+	{
+		nStrLen = DragQueryFileW(hDrop, i, NULL, 100);
+		DragQueryFileW(hDrop, i, szFileName, nStrLen+1);
+		if (GetFileAttributes(szFileName) & FILE_ATTRIBUTE_DIRECTORY)	//dir
+		{
+			bRet = AddCoderFolder(szFileName);
+		}
+		else if (g_pSkinManager)	//file
+		{
+			bRet = AddCoderFile(szFileName,TRUE);
+		}
+		if (bRet)
+		{
+			addedCount++;
+		}
+	}
+	if (addedCount>0)
+		bRet = TRUE;
+	return bRet;
+}
+
 LPCWSTR CCoder::GetItemText(HWND /*hWnd*/, CPaintManagerUI* /*pManager*/, CControlUI* pControl, int iIndex, int iSubItem)
 {
 	LPCWSTR lpszData = NULL;
@@ -500,28 +536,42 @@ BOOL CCoder::AddNewFile(HWND hWnd)
 	bRet = SHHelper::SelectFile(hWnd, szPath, szFilter);
 	if(bRet && pCoderList)
 	{
-		CListTextElementUI* pElement = new CListTextElementUI();
-		if(!pElement)
-			return FALSE;
-		LPCODER_INFO pCoderInfo = new CODER_INFO();
-		if(!pCoderInfo)
-			return bRet;
-		wcscpy(pCoderInfo->szPath, szPath);
-		pCoderInfo->bHandle = FALSE;
-		pCoderInfo->bValid = TRUE;
-		char szFrom[64] = {0};
-		wchar_t szFrom_w[64] = {0};
-		if(GetFileCharSet(szPath, szFrom))
-			strcpy(pCoderInfo->szFrom, szFrom);
-		else
-			strcpy(pCoderInfo->szFrom, "UnKnown");
-		//pElement->SetTag(lstCoderInfo.size());
-		lstCoderInfo.push_back(pCoderInfo);
-		pCoderList->Add(pElement);
+		AddCoderFile(szPath,TRUE);
+	}
+	return bRet;
+}
+
+BOOL CCoder::AddCoderFile(LPCWSTR lpszFile,BOOL selectCharCombo)
+{
+	if (PathIsExe(lpszFile)||IsImageFile(lpszFile))
+	{
+		return FALSE;
+	}
+	BOOL bRet = FALSE;
+	CListTextElementUI* pElement = new CListTextElementUI();
+	if(!pElement)
+		return bRet;
+	LPCODER_INFO pCoderInfo = new CODER_INFO();
+	if(!pCoderInfo)
+		return bRet;
+	wcscpy(pCoderInfo->szPath, lpszFile);
+	pCoderInfo->bHandle = FALSE;
+	pCoderInfo->bValid = TRUE;
+	char szFrom[64] = {0};
+	wchar_t szFrom_w[64] = {0};
+	if(GetFileCharSet(lpszFile, szFrom))
+		strcpy(pCoderInfo->szFrom, szFrom);
+	else
+		strcpy(pCoderInfo->szFrom, "UnKnown");
+	//pElement->SetTag(lstCoderInfo.size());
+	lstCoderInfo.push_back(pCoderInfo);
+	pCoderList->Add(pElement);
+	if (selectCharCombo)
+	{
 		StrUtil::a2w(szFrom, szFrom_w);
 		SelFromCharSet(szFrom_w);
 	}
-	return bRet;
+	return TRUE;
 }
 
 BOOL CCoder::AddNewFolder(HWND hWnd)
@@ -539,6 +589,7 @@ BOOL CCoder::AddNewFolder(HWND hWnd)
 
 BOOL CCoder::AddCoderFolder(LPCWSTR lpszFolder)
 {
+	int addedCount = 0;	//有效增加文件
 	BOOL bRet = FALSE;
 	wchar_t szFolder[1024] = {0};
 	wcscpy_s(szFolder, lpszFolder);
@@ -573,37 +624,26 @@ BOOL CCoder::AddCoderFolder(LPCWSTR lpszFolder)
 		}
 		if(!bFolder)
 		{
-			if(!PathIsExe(szCurPath))
+			if(bFirst)
 			{
-				CListTextElementUI* pElement = new CListTextElementUI();
-				if(!pElement)
-					return FALSE;
-				LPCODER_INFO pCoderInfo = new CODER_INFO();
-				if(!pCoderInfo)
-					return bRet;
-				wcscpy(pCoderInfo->szPath, szCurPath);
-				pCoderInfo->bHandle = FALSE;
-				pCoderInfo->bValid = TRUE;
-				char szFrom[64] = {0};
-				if(GetFileCharSet(szCurPath, szFrom))
-					strcpy(pCoderInfo->szFrom, szFrom);
-				else
-					strcpy(pCoderInfo->szFrom, "UnKnown");
-				strcpy(pCoderInfo->szFrom, szFrom);
-				//pElement->SetTag(lstCoderInfo.size());
-				lstCoderInfo.push_back(pCoderInfo);
-				pCoderList->Add(pElement);
-				if(bFirst)
-				{
-					wchar_t szFrom_w[64] = {0};
-					StrUtil::a2w(szFrom, szFrom_w);
-					SelFromCharSet(szFrom_w);
-					bFirst = FALSE;
-				}
+				bRet = AddCoderFile(szCurPath,TRUE);
+				bFirst = FALSE;
+			}
+			else
+			{
+				bRet = AddCoderFile(szCurPath,FALSE);
+			}
+			if (bRet)
+			{
+				addedCount++;
 			}
 		}
 		if(!FindNextFileW(hFind, &FindFileData))
 			break;
+	}
+	if (addedCount>0)
+	{
+		bRet = TRUE;
 	}
 	return bRet;
 }
@@ -755,7 +795,7 @@ DWORD WINAPI CCoder::ConvertThread(LPVOID lpVoid)
 			}
 		}
 		i++;
-		if(i>=pCoder->lstCoderInfo.size())
+		if(i>=(int)pCoder->lstCoderInfo.size())
 			break;
 	}
 	if(pCoder)

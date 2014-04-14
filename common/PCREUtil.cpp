@@ -25,6 +25,11 @@ BOOL PCREUtil::IsDomain(LPCWSTR lpszText)
 	return IsMatch(L"^([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$", lpszText);
 }
 
+BOOL PCREUtil::IsHTMLColor(LPCWSTR lpszText)
+{
+	return IsMatch(L"^[a-zA-Z\\d]{8}$", lpszText);
+}
+
 BOOL PCREUtil::IsMatch(LPCWSTR lpszPattern, LPCWSTR lpszText)
 {
 	const char *error;

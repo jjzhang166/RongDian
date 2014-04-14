@@ -103,6 +103,7 @@ const wchar_t* const kInvalidDomainErr				= L"invalid_domain_err";
 const wchar_t* const kInvalidMaskErr				= L"invalid_subnet_mask_err";
 const wchar_t* const kInvalidGatewayErr				= L"invalid_gateway_err";
 const wchar_t* const kInvalidDnsErr					= L"invalid_dns_err";
+const wchar_t* const kInvalidBackgroundErr			= L"invalid_background_err";
 const wchar_t* const kDeleteSolution				= L"delete_solution";
 const wchar_t* const kInvalidName					= L"invalid_name";
 const wchar_t* const kDebugText						= L"debug_text";
@@ -166,6 +167,7 @@ typedef enum _tagMSG_ID {
 	MSG_MASK_ERR,
 	MSG_GATEWAY_ERR,
 	MSG_DNS_ERR,
+	MSG_BACKGROUND_ERR,
 	MSG_DELETE_SOLUTION,
 	MSG_INVALID_NAME,
 	MSG_DEBUG_TEXT,

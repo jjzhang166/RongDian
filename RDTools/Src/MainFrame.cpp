@@ -602,8 +602,12 @@ LRESULT CMainFrame::OnParseUpdateRespone(UINT /*uMsg*/, WPARAM wParam, LPARAM lP
 	return 0;
 }
 
-LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CMainFrame::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	BOOL bHandle = m_pPanelRegister->OnDropFiles(uMsg, wParam, lParam);
+	if (bHandle)
+		return 0;
+
 	HDROP hDrop = (HDROP)wParam;
 	int nCount = DragQueryFileW(hDrop, 0xFFFFFFFF, NULL, 0);
 	int nStrLen = 0;
@@ -632,6 +636,8 @@ LRESULT CMainFrame::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/)
 				continue;
 			g_pSkinManager->UpdateBkImage(szDstImage);
 			swprintf(szNewImage, L"custom\\%s", szCoder_w);
+			wcscpy(g_szBackground,szNewImage);
+			SendMessage(WM_UPDATE_BACKGROUND,0,0);
 			//Utility::SetINIStr(g_szAppConfig, LS_SKIN, kBackGround, szNewImage);
 			CConfigTableDB table(&g_SQLite);
 			CONFIG_TABLE config;

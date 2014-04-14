@@ -27,11 +27,14 @@ public:
 	BOOL DelAllFiles();
 	BOOL AddNewFile(HWND /*hWnd*/);
 	BOOL AddNewFolder(HWND /*hWnd*/);
+	BOOL AddCoderFile(LPCWSTR /*lpszFile*/,BOOL /*selectCharCombo*/);
 	BOOL AddCoderFolder(LPCWSTR /*lpszFolder*/);
 	BOOL SelFromCharSet(LPCWSTR /*lpszCharSet*/);
 
 	BOOL GetFileCharSet(LPCWSTR /*lpszPath*/, LPSTR /*lpszSet*/);
 	BOOL ConvertFile(HWND /*hWnd*/, LPCWSTR /*lpszPath*/, LPCSTR /*lpszFrom*/, LPCSTR /*lpszTo*/);
+
+	LRESULT	OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 
 	static DWORD WINAPI ConvertThread(LPVOID /*lpVoid*/);
 

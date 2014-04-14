@@ -24,6 +24,7 @@ public:
 
 	LRESULT HandleCustomMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnCopyData(WPARAM /*wParam*/, LPARAM /*lParam*/);
+	LRESULT	OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/);
 
 public:
 	list<LPTOOLS_INFO> lstToolsEntries;

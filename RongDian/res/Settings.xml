@@ -25,6 +25,24 @@
 				<Control />
 			</HorizontalLayout>
 		</VerticalLayout>
+		<Control height="1" />
+		<VerticalLayout height="54" bordersize="1" bordercolor="FFC0C0C0" >
+			<HorizontalLayout height="24" >
+				<Control width="10" />
+				<Label name="settings_bg_text" width="80" />
+				<Label height="1" bkcolor="FF669934" padding="0,11,0,10" />
+				<Control width="20" />
+			</HorizontalLayout>
+			<HorizontalLayout height="30" >
+				<Control width="30" />
+				<Edit name="settings_bg" minwidth="150" maxwidth="500" height="24"/>
+				<Control width="2" />
+				<Button name="settings_bg_apply" width="50" height="24" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Control width="2" />
+				<Button name="settings_bg_default" width="50" height="24" normalimage="file='default\btn_normal.png'" hotimage="file='default\btn_hot.png'" pushedimage="file='default\btn_push.png'" bordersize="1" bordercolor="#FFE8E8E8" borderround="2,2,2,2" />
+				<Control width="20"/>
+			</HorizontalLayout>
+		</VerticalLayout>
 		<Control />
 		<HorizontalLayout height="24"  minwidth="350" bordersize="1" bordercolor="FFE0E0E0" >
 			<Control />
