@@ -35,8 +35,8 @@ test：测试工程目录
 取色器、文件编码转换、代码格式化、ip地址设置、 hosts文件设置
 
 ###可执行文件下载
-如果不想看代码，可到www.rongdian.net里下载，最新的版本是1.0.0.2，
-http://www.rongdian.net/upload/files/201403/1395225632.rar
-
+如果不想看代码，可到www.rongdian.net里下载，最新的版本是1.0.0.3，
+官网：http://www.rongdian.net/upload/files/201404/1397544444.rar
+百度云盘：http://pan.baidu.com/s/1sjHa2pZ
 ###版权
 > GPL
