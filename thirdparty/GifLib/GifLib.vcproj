@@ -63,11 +63,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName)d.dll"
+				OutputFile="..\..\RongDian\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName)d.lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -139,11 +139,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\..\RongDian\$(ProjectName).dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

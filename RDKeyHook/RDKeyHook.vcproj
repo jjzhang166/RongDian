@@ -62,12 +62,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\RongDian\bin\$(ProjectName)d.dll"
+				OutputFile="..\RongDian\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				SubSystem="2"
-				ImportLibrary="..\RongDian\bin\$(ProjectName)d.lib"
+				ImportLibrary="..\RongDian\$(ProjectName)d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -139,14 +139,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\RongDian\$(ProjectName).dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\RongDian\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

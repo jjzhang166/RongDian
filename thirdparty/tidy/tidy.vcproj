@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\..\RongDian\$(ProjectName).dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="tidy.def"
@@ -78,7 +78,7 @@
 				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -162,7 +162,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\..\RongDian\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile="tidy.def"
@@ -170,7 +170,7 @@
 				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName).pdb"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

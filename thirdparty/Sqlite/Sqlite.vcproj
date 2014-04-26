@@ -62,13 +62,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\..\RongDian\$(ProjectName).dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="sqlite3.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\RongDian\Debug\$(ProjectName)\$(ProjectName)d.pdb"
 				SubSystem="2"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\RongDian\bin\$(ProjectName).dll"
+				OutputFile="..\..\RongDian\$(ProjectName).dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="sqlite3.def"
 				GenerateDebugInformation="true"
@@ -148,7 +148,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="..\..\RongDian\bin\$(ProjectName).lib"
+				ImportLibrary="..\..\RongDian\$(ProjectName).lib"
 				TargetMachine="1"
 			/>
 			<Tool

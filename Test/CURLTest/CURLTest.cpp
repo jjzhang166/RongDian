@@ -15,9 +15,9 @@ using namespace std;
 #include <curl/curl.h>
 
 #ifdef _DEBUG
-#pragma comment(lib, "../../RongDian/bin/curld.lib")
+#pragma comment(lib, "../../RongDian/curld.lib")
 #else
-#pragma comment(lib, "../../RongDian/bin/curl.lib")
+#pragma comment(lib, "../../RongDian/curl.lib")
 #endif
 
 size_t callbackFunc(char *ptr, size_t size, size_t nmemb, void *userdata)

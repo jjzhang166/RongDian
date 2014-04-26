@@ -16,9 +16,9 @@ using namespace DuiLib;
 //#define USE_ZIPRES		1
 
 #ifdef _DEBUG
-#pragma comment(lib, "../RongDian/bin/DuiLibd.lib")
+#pragma comment(lib, "../RongDian/DuiLibd.lib")
 #else
-#pragma comment(lib, "../RongDian/bin/DuiLib.lib")
+#pragma comment(lib, "../RongDian/DuiLib.lib")
 #endif
 
 #include <Shlwapi.h>

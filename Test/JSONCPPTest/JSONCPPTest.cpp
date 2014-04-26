@@ -7,9 +7,9 @@ using namespace std;
 
 #include <JsonTidyLib/json.h>
 #ifdef _DEBUG
-#pragma comment(lib, "../../RongDian/bin/JsonTidyLibd.lib")
+#pragma comment(lib, "../../RongDian/JsonTidyLibd.lib")
 #else
-#pragma comment(lib, "../../RongDian/bin/JsonTidyLib.lib")
+#pragma comment(lib, "../../RongDian/JsonTidyLib.lib")
 #endif
 
 int main()

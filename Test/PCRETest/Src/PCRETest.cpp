@@ -12,9 +12,9 @@
 
 #include <pcre\pcre.h>
 #ifdef _DEBUG
-#pragma comment(lib, "../../RongDian/bin/pcred.lib")
+#pragma comment(lib, "../../RongDian/pcred.lib")
 #else
-#pragma comment(lib, "../../RongDian/bin/pcre.lib")
+#pragma comment(lib, "../../RongDian/pcre.lib")
 #endif
 
 #include <StrUtil.h>

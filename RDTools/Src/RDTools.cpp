@@ -297,7 +297,7 @@ BOOL InitPath()
 	//swprintf(g_szAppConfig, L"%s\\%s", szModule, kConfigIni);
 	swprintf(g_szAppConfigDB, L"%s\\%s", szModule, kConfigDB);
 	wcscpy(g_szModule, szModule);
-	PathRemoveFileSpec(g_szModule);
+	//PathRemoveFileSpec(g_szModule);
 	swprintf(g_szLogPath, L"%s\\log", g_szModule);
 	swprintf(g_szLangPath, L"%s\\lang", g_szModule);
 	swprintf(g_szResPath, L"%s\\res", g_szModule);

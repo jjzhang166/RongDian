@@ -19,9 +19,9 @@ using namespace std;
 
 // Link Lib
 #ifdef _DEBUG
-#pragma comment(lib, "../RongDian/bin/curld.lib")
+#pragma comment(lib, "../RongDian/curld.lib")
 #else
-#pragma comment(lib, "../RongDian/bin/curl.lib")
+#pragma comment(lib, "../RongDian/curl.lib")
 #endif
 
 const int		MAX_RESPONE_SIZE = 4096;

@@ -18,7 +18,7 @@ const wchar_t* const tConfigLastVisitTab 			= L"LastVisitTab";
 #ifdef _DEBUG
 const wchar_t* const kLangFile						= L"..\\RongDian\\lang\\lang_*.ini";
 #else
-const wchar_t* const kLangFile						= L"..\\lang\\lang_*.ini";
+const wchar_t* const kLangFile						= L"lang\\lang_*.ini";
 #endif
 
 // SnapShot.exe
