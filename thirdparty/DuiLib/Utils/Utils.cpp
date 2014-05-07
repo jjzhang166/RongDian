@@ -734,11 +734,19 @@ namespace DuiLib
 	/////////////////////////////////////////////////////////////////////////////
 	//
 	//
+#ifndef _HASH_SEED
+	#define _HASH_SEED (size_t)0xdeadbeef
+#endif
+	inline size_t hash_value(const LONG& _Keyval)
+	{
+		// hash _Keyval to size_t value one-to-one
+		return ((size_t)_Keyval ^ _HASH_SEED);
+	}
 
 	static UINT HashKey(LONG Key)
 	{
-		ldiv_t _Qrem = ldiv(Key, 127773);
-
+		long _Quot = (long)(hash_value(Key) & LONG_MAX); 
+		ldiv_t _Qrem = ldiv(_Quot, 127773);
 		_Qrem.rem = 16807 * _Qrem.rem - 2836 * _Qrem.quot;
 		if (_Qrem.rem < 0)
 			_Qrem.rem += 2147483647;
