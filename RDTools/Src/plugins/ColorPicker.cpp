@@ -421,7 +421,7 @@ BOOL CColorPicker::OpenZoomIn(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024], szArgs[1024];
-	swprintf(szPath, L"%s\\bin\\%s", g_szModule, kSnapShotExec);
+	swprintf(szPath, L"%s\\%s", g_szModule, kSnapShotExec);
 	if(!PathFileExists(szPath))
 	{
 		wchar_t szErr[1024], szNoFound[1024], szTitle[1024];
@@ -454,7 +454,7 @@ BOOL CColorPicker::OpenSnapShot(HWND hWnd)
 {
 	BOOL bRet = FALSE;
 	wchar_t szPath[1024], szArgs[1024];
-	swprintf(szPath, L"%s\\bin\\%s", g_szModule, kSnapShotExec);
+	swprintf(szPath, L"%s\\%s", g_szModule, kSnapShotExec);
 	if(!PathFileExists(szPath))
 	{
 		wchar_t szErr[1024], szNoFound[1024], szTitle[1024];
